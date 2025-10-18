@@ -1,0 +1,373 @@
+{
+  "project": {
+    "name": "Lumera JS/TS SDK",
+    "repository": "github.com/LumeraProtocol/sdk-js",
+    "description": "Official JavaScript/TypeScript SDK for Lumera — unified client for blockchain (CosmJS+REST) and Cascade storage (sn-api) with LEP-1 support",
+    "version": "0.1.0",
+    "node_version": "18.x LTS or higher",
+    "typescript_version": "5.0+",
+    "package_manager": "npm or pnpm",
+    "module_formats": ["ESM", "CommonJS"]
+  },
+  "objectives": {
+    "primary": [
+      "Provide unified client for Lumera blockchain and Cascade storage operations",
+      "Expose Blockchain client surface: Blockchain.Action.*, Blockchain.Supernode.*, Tx.*",
+      "Implement LEP-1 client responsibilities (layout/index/signing) deterministically",
+      "Minimize boilerplate for web and Node apps (wallet-friendly)"
+    ],
+    "secondary": [
+      "Type-safe APIs (TS-first), deterministic serialization",
+      "Examples and docs for browser and Node",
+      "Testnet/Mainnet presets and easy migration from direct API usage",
+      "Adapter seam to add gRPC-web later without breaking apps"
+    ]
+  },
+  "architecture": {
+    "design_pattern": "Unified client with modular sub-clients and pluggable adapters",
+    "layers": [
+      {
+        "name": "Client Layer",
+        "location": "src/client/",
+        "responsibility": "Entry point, configuration, composition of sub-clients",
+        "components": ["LumeraClient", "Config", "Options"]
+      },
+      {
+        "name": "Blockchain Layer",
+        "location": "src/blockchain/",
+        "responsibility": "Blockchain tx + queries",
+        "components": [
+          "CosmjsTxClient",
+          "RestActionQuery",
+          "RestSupernodeQuery",
+          "BlockchainClient (facade)",
+          "TxBuilder (helpers)"
+        ],
+        "notes": "Transactions via CosmJS (simulate/sign/broadcast). Module queries via REST/LCD. gRPC-web is a future optional adapter."
+      },
+      {
+        "name": "Storage Layer",
+        "location": "src/storage/",
+        "responsibility": "Off-chain Cascade storage via sn-api",
+        "components": [
+          "SNApiClient",
+          "CascadeUploader",
+          "CascadeDownloader",
+          "TaskManager",
+          "SSE/Poll EventStream"
+        ],
+        "notes": "Direct REST/SSE integration with sn-api; no SuperNode SDK wrapper."
+      },
+      {
+        "name": "WASM Layer",
+        "location": "src/wasm/",
+        "responsibility": "RaptorQ and data helpers via rq-wasm",
+        "components": ["WasmBridge", "LEP1Helpers", "DataHelpers"],
+        "notes": "rq-wasm is used for layout generation and related data ops; key signing is done by wallets (ADR-036) or CosmJS signers."
+      },
+      {
+        "name": "Types Layer",
+        "location": "src/types/",
+        "responsibility": "Shared types + runtime validation",
+        "components": [
+          "Action types",
+          "Supernode types",
+          "Tx/Msg types",
+          "SN-API types (generated from OpenAPI)",
+          "Guards/validators"
+        ]
+      },
+      {
+        "name": "Internal Layer",
+        "location": "src/internal/",
+        "responsibility": "Utilities and cross-cutting concerns",
+        "components": [
+          "HTTP client (keep-alive, retries, backoff)",
+          "Base64 & canonical JSON utils",
+          "Hash utilities (BLAKE3)",
+          "Stream helpers (ReadableStream/Node streams)",
+          "Wallet adapters (Keplr/Leap ADR-036 signArbitrary)"
+        ]
+      }
+    ]
+  },
+  "dependencies": {
+    "direct": {
+      "blockchain_sdk": {
+        "packages": [
+          "@cosmjs/proto-signing",
+          "@cosmjs/stargate",
+          "@cosmjs/crypto",
+          "@cosmjs/encoding"
+        ],
+        "purpose": "Cosmos SDK tx simulate/sign/broadcast; wallet integration; encoding",
+        "notes": "Primary transport for transactions (Tendermint RPC via CosmJS)."
+      },
+      "http_client": {
+        "packages": ["undici"],
+        "purpose": "HTTP client for REST/LCD and sn-api",
+        "notes": "Use global fetch in browsers; undici/polyfill for Node."
+      },
+      "form_handling": {
+        "packages": ["formdata-node"],
+        "purpose": "Multipart form uploads to sn-api",
+        "notes": "Node-only; browser uses native FormData."
+      },
+      "wasm_runtime": {
+        "package": "rq-wasm",
+        "purpose": "RaptorQ layout/data ops for LEP-1",
+        "notes": "Run in Web Worker where available."
+      },
+      "validation": {
+        "packages": ["zod"],
+        "purpose": "Runtime validation of REST/LCD & sn-api payloads",
+        "notes": "Generate static types + validate critical boundaries."
+      },
+      "crypto_hash": {
+        "packages": ["blake3"],
+        "purpose": "File hashing for data_hash and start/download signatures",
+        "notes": "Use identical hashing across platforms."
+      }
+    },
+    "optional_adapters": {
+      "grpc_web": {
+        "packages": [
+          "@bufbuild/connect-web",
+          "@bufbuild/protobuf"
+        ],
+        "purpose": "Future gRPC-web adapter for queries (if needed)",
+        "notes": "Not required for initial release; keep interface seam."
+      }
+    },
+    "dev_dependencies": {
+      "typescript": "^5.0.0",
+      "openapi_typescript": {
+        "package": "openapi-typescript",
+        "purpose": "Generate SN-API types from docs/sn-api.yaml",
+        "notes": "Keep in sync with sn-api releases."
+      },
+      "testing": ["vitest", "@vitest/browser"],
+      "linting": ["eslint", "prettier", "@typescript-eslint/parser", "@typescript-eslint/eslint-plugin"]
+    },
+    "version_constraints": {
+      "node": ">=18",
+      "typescript": ">=5.0",
+      "cosmjs": "^0.32.0"
+    }
+  },
+  "features": {
+    "blockchain_operations": {
+      "queries": [
+        "Get action params (fee schedule, rq_ids_max) via LCD",
+        "Get action by ID via LCD",
+        "Get supernode params via LCD"
+      ],
+      "transactions": [
+        "Request action (Cascade) via CosmJS (simulate/sign/broadcast)",
+        "Multi-message tx helpers (where useful)"
+      ],
+      "utilities": [
+        "Tx simulate",
+        "Fee calculation helpers",
+        "Msg builders for RegisterAction (Cascade)"
+      ],
+      "notes": "No direct gRPC required; LCD for module queries, CosmJS for tx. Add gRPC-web adapter later if needed."
+    },
+    "storage_operations": {
+      "cascade": [
+        "Upload via sn-api (multipart stream, start signature)",
+        "Download via sn-api (task request + file retrieval)",
+        "Task status via SSE (preferred) or polling",
+        "Public/private objects (empty vs signed download auth)"
+      ],
+      "event_system": [
+        "SSE event stream with reconnect/backoff",
+        "Unified progress events (upload and download)"
+      ],
+      "notes": "sn-api is the off-chain orchestrator for symbol distribution and reconstruction."
+    },
+    "wasm_operations": {
+      "lep1": [
+        "Create single-block layout (rq-wasm)",
+        "Derive 50 layout IDs from (rq_ids_ic, rq_ids_max)",
+        "Build index_file {version, layout_ids, layout_signature}",
+        "Canonical Base64 + canonical JSON bytes for signatures"
+      ],
+      "hashing": [
+        "BLAKE3(file_bytes) → data_hash",
+        "BLAKE3(file_bytes) for start signature"
+      ],
+      "notes": "Signing is performed by wallet/in-app signer (ADR-036) over canonical bytes; rq-wasm not used for private-key ops."
+    },
+    "developer_experience": {
+      "api_design": [
+        "Facade: client.Blockchain.Action.*, client.Blockchain.Supernode.*, client.Blockchain.Tx.*",
+        "Cascade client: buildMetadataFromFile, startCascade, requestDownload, watchTask",
+        "Promise-based async and strong typing"
+      ],
+      "configuration": [
+        "Chain presets (testnet/mainnet RPC/LCD)",
+        "sn-api base URLs",
+        "GasPrice defaults and overrides",
+        "Timeouts and retry policies"
+      ],
+      "type_safety": [
+        "TS-first public API",
+        "OpenAPI-generated types for sn-api",
+        "Zod validation for critical boundaries"
+      ]
+    }
+  },
+  "integration_requirements": {
+    "sn_api_integration": {
+      "approach": "REST + SSE",
+      "spec_source": "docs/sn-api.yaml",
+      "type_generation": "openapi-typescript → src/types/snapi.gen.ts",
+      "endpoints": [
+        "POST /api/v1/actions/cascade",
+        "POST /api/v1/actions/cascade/{action_id}/downloads",
+        "GET  /api/v1/actions/cascade/tasks/{task_id}",
+        "GET  /api/v1/actions/cascade/tasks/{task_id}/status",
+        "GET  /api/v1/downloads/cascade/{task_id}/file"
+      ],
+      "authentication": "Signature-based (Base64(Sign(blake3(file))) for upload; Base64(Sign(actionId)) for private download)",
+      "notes": "SSE strongly recommended for progress; polling fallback provided."
+    },
+    "rq_wasm_integration": {
+      "package": "rq-wasm",
+      "initialization": "Lazy init with worker; Node uses WASM runtime via WasmBridge",
+      "operations": [
+        "Single-block layout generation",
+        "LEP-1 layout IDs derivation (N=50) with wrap(rq_ids_ic+i, rq_ids_max)"
+      ],
+      "notes": "Exact bytes and Base64 (RFC 4648, no wrap) must be preserved across platforms."
+    },
+    "blockchain_proto_integration": {
+      "approach": "CosmJS for tx path; REST/LCD for module queries",
+      "modules": ["action", "supernode"],
+      "alternatives": [
+        "Optional future: Buf/Connect gRPC-web adapter implementing the same BlockchainClient interface"
+      ]
+    },
+    "key_management": {
+      "cosmos_signer": "CosmJS OfflineSigner (Keplr/Leap/Ledger/etc.)",
+      "supported_signers": [
+        "Keplr/Leap via window injection",
+        "DirectSecp256k1HdWallet (dev/test)",
+        "Ledger via CosmJS (where supported)"
+      ],
+      "usage": [
+        "Tx signing (signDirect/signAmino via CosmJS)",
+        "ADR-036 signArbitrary for layout/index/start/download signatures"
+      ]
+    }
+  },
+  "quality_requirements": {
+    "testing": {
+      "unit_tests": "All public APIs",
+      "integration_tests": "Mocked LCD/sn-api + golden vectors for LEP-1 bytes/signatures",
+      "example_tests": "Browser + Node upload/download flows",
+      "coverage_target": "80%+",
+      "frameworks": "Vitest (+ @vitest/browser for web)"
+    },
+    "documentation": {
+      "tsdoc": "Public APIs documented",
+      "examples": "End-to-end examples (Keplr, Node CLI)",
+      "readme": "Quick start with CosmJS + REST",
+      "api_reference": "Generated from TSDoc",
+      "migration_guide": "From direct REST/grpc usage to sdk-js"
+    },
+    "code_quality": {
+      "linting": "ESLint + TS plugin",
+      "formatting": "Prettier",
+      "type_checking": "TS strict mode",
+      "error_handling": "Context-rich errors (HTTP status, endpoint, retryable flag)"
+    },
+    "performance": {
+      "memory": "Streaming uploads/downloads; avoid large buffers",
+      "concurrency": "Configurable concurrency for chunked uploads (if/when added)",
+      "connection_pooling": "Keep-alive for Node via undici",
+      "timeouts": "Configurable via client options",
+      "bundle_size": "Tree-shakeable ESM; lazy WASM init"
+    }
+  },
+  "versioning_strategy": {
+    "semantic_versioning": "MAJOR.MINOR.PATCH",
+    "initial_release": "v0.1.0 (beta)",
+    "stability_target": "v1.0.0 when BlockchainClient and Cascade interfaces stabilize",
+    "breaking_changes": "Major version bump",
+    "backwards_compatibility": "Maintain within major versions",
+    "deprecation_policy": "Support deprecated APIs for one major version"
+  },
+  "release_requirements": {
+    "pre_release": [
+      "All tests pass (Node + browser)",
+      "Examples work (Keplr + Node CLI)",
+      "Docs complete (Quick Start, API, LEP-1 guide)",
+      "No critical bugs",
+      "ESM + CJS builds emitted",
+      "Types emitted (*.d.ts)"
+    ],
+    "release_artifacts": [
+      "npm package",
+      "Git tag (vX.Y.Z)",
+      "GitHub release + changelog",
+      "Docs site updated"
+    ],
+    "compatibility_matrix": [
+      "Lumera chain version",
+      "sn-api version",
+      "Node.js versions",
+      "Browser support (last 2 versions)"
+    ]
+  },
+  "future_enhancements": {
+    "planned_features": [
+      "Optional gRPC-web adapter (Buf/Connect) for module queries",
+      "Batch operations & multisig",
+      "React hooks",
+      "Local cache layer for LCD/sn-api",
+      "WebSocket/SSE unification with backoff strategies"
+    ],
+    "api_additions": [
+      "Sense action support",
+      "Governance/staking helpers",
+      "IBC helpers"
+    ]
+  },
+  "non_functional_requirements": {
+    "determinism": [
+      "Canonical JSON when producing bytes for signatures (stable key order)",
+      "Base64 RFC 4648 (no wrap, no padding trimming)",
+      "Sign exact serialized bytes referenced on chain"
+    ],
+    "security": [
+      "Never expose private keys",
+      "Use ADR-036 signArbitrary for off-chain signatures",
+      "TLS required in production",
+      "Replay protection via domain separation where applicable"
+    ],
+    "reliability": [
+      "Retries with exponential backoff",
+      "Graceful SSE reconnect",
+      "Timeouts and abort (AbortController)"
+    ],
+    "usability": [
+      "Clear error messages with actionable guidance",
+      "Helpful defaults (gasPrice, endpoints)",
+      "Strong typing and IntelliSense"
+    ],
+    "maintainability": [
+      "Clear separation between Blockchain (CosmJS+REST) and Cascade (sn-api)",
+      "Adapter seam for future transports",
+      "Automated tests & CI",
+      "Dependency security audits"
+    ],
+    "browser_compatibility": {
+      "target_browsers": "Modern browsers (last 2 versions)",
+      "polyfills": "Fetch/streams polyfills avoided; document requirements",
+      "bundle_splitting": "Separate browser/Node entrypoints if needed",
+      "notes": "Use Web Workers for rq-wasm; Node uses WasmBridge"
+    }
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "generated_at": "2025-10-17T21:45:02Z",
+  "project": {
+    "name": "Lumera JS/TS SDK",
+    "version": "0.1.0-beta",
+    "repository": "github.com/LumeraProtocol/sdk-js",
+    "description": "Unified JS/TS client for Lumera blockchain (CosmJS+REST) and Cascade storage (sn-api) with LEP-1 support"
+  },
+  "decisions": {
+    "tx_transport": "CosmJS (SigningStargateClient) over Tendermint RPC",
+    "module_queries": "REST/LCD for Action and Supernode",
+    "cascade_storage": "sn-api (REST + SSE)",
+    "rq_processing": "rq-wasm (single-block layouts, LEP-1 IDs) in Web Worker when available",
+    "signing": "Wallet ADR-036 for off-chain bytes; CosmJS signDirect/signAmino for tx",
+    "adapters_seam": "Interfaces for BlockchainClient/TxClient/ActionQuery/SupernodeQuery; can add gRPC-web later without breaking apps"
+  },
+  "sdk_surface": {
+    "facade": [
+      "client.Blockchain.Tx.*",
+      "client.Blockchain.Action.*",
+      "client.Blockchain.Supernode.*",
+      "client.Cascade.*"
+    ],
+    "cascade_methods": [
+      "buildMetadataFromFile",
+      "startCascade",
+      "requestDownload",
+      "watchTask",
+      "buildStartSignature",
+      "buildDownloadSignature"
+    ]
+  },
+  "skeleton_files": [
+    "package.json",
+    "tsconfig.json",
+    "src/index.ts",
+    "src/client.ts",
+    "src/blockchain/interfaces.ts",
+    "src/blockchain/cosmjs.ts",
+    "src/blockchain/rest.ts",
+    "src/blockchain/client.ts",
+    "src/cascade/client.ts",
+    "src/wasm/lep1.ts",
+    "src/internal/encoding.ts",
+    "src/types/snapi.ts",
+    "examples/node/upload.ts"
+  ],
+  "status": {
+    "implemented": [
+      "Project structure agreed",
+      "Interfaces & factories defined",
+      "CosmJS tx client shape",
+      "REST query client shape",
+      "Cascade client surface aligned with LEP-1"
+    ],
+    "pending": [
+      "Wire exact LCD paths for Action/Supernode",
+      "OpenAPI generate sn-api types and implement SNApi client",
+      "Implement rq-wasm bridge + Web Worker",
+      "Keplr/Leap wallet adapters and signArbitrary (ADR-036)",
+      "End-to-end example (browser + Node)",
+      "Vitest unit/integration tests",
+      "Docs site / README polish"
+    ]
+  },
+  "compatibility": {
+    "node": ">=18",
+    "typescript": ">=5",
+    "cosmjs": "^0.32.0",
+    "browsers": "Last 2 versions (Web Worker for rq-wasm)"
+  }
+}
