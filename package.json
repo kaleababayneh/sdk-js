@@ -14,28 +14,45 @@
     }
   },
   "scripts": {
+    "clean": "rm -rf dist",
     "build:esm": "tsc -p tsconfig.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build": "npm run build:esm && npm run build:cjs",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "gen:snapi": "openapi-typescript docs/sn-api.yaml -o src/types/snapi.gen.ts",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "test": "vitest run",
-    "dev": "vitest"
+    "coverage": "vitest run --coverage",
+    "dev": "vitest",
+    "docs": "typedoc --out docs/api src/index.ts"
   },
   "dependencies": {
+    "@cosmjs/crypto": "^0.32.0",
+    "@cosmjs/encoding": "^0.32.0",
     "@cosmjs/proto-signing": "^0.32.0",
     "@cosmjs/stargate": "^0.32.0",
-    "@cosmjs/encoding": "^0.32.0",
-    "blake3": "^2.1.9",
-    "undici": "^6.19.8"
+    "blake3": "^2.1.7",
+    "formdata-node": "^6.0.3",
+    "rq-wasm": "file:vendor/rq-wasm",
+    "undici": "^6.19.8",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "typescript": "^5.6.3",
-    "eslint": "^9.11.1",
-    "@typescript-eslint/parser": "^8.10.0",
     "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
+    "@vitest/browser": "^2.1.2",
+    "eslint": "^9.11.1",
+    "eslint-config-prettier": "^9.1.0",
+    "happy-dom": "^15.8.3",
+    "openapi-typescript": "^7.4.0",
+    "prettier": "^3.3.3",
+    "typedoc": "^0.28.14",
+    "typedoc-plugin-markdown": "^4.9.0",
+    "typescript": "^5.6.3",
     "vitest": "^2.1.2"
   },
-  "engines": { "node": ">=18" },
+  "engines": {
+    "node": ">=18"
+  },
   "license": "Apache-2.0",
   "repository": "github.com/LumeraProtocol/sdk-js"
 }

@@ -1,9 +1,16 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
+    "target": "ES2021",
+    "lib": ["ES2021", "DOM"],
     "module": "CommonJS",
+    "moduleResolution": "Node",
     "outDir": "dist/cjs",
-    "declaration": true,
-    "emitDeclarationOnly": false
-  }
+    "rootDir": "src",
+    "declaration": false,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "noEmitOnError": true
+  },
+  "include": ["src"]
 }

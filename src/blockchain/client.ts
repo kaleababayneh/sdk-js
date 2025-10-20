@@ -1,71 +1,164 @@
-import { SigningStargateClient, GasPrice, type EncodeObject } from "@cosmjs/stargate";
+/**
+ * Blockchain client facade for the Lumera blockchain.
+ * 
+ * This module provides the main entry point for blockchain operations, composing
+ * transaction and query clients into a unified interface. It orchestrates CosmJS
+ * for transaction operations and REST/LCD for module queries.
+ * 
+ * @module blockchain/client
+ */
+
+import { SigningStargateClient, GasPrice } from "@cosmjs/stargate";
 import type { OfflineSigner } from "@cosmjs/proto-signing";
 import type { TxClient, ActionQuery, SupernodeQuery, BlockchainClient } from "./interfaces";
+import { CosmjsTxClient } from "./cosmjs";
+import { RestActionQuery, RestSupernodeQuery } from "./rest";
 
-export class CosmjsTxClient implements TxClient {
-  constructor(private readonly sg: SigningStargateClient) {}
-  async simulate(address: string, msgs: readonly EncodeObject[], memo = ""): Promise<bigint> {
-    const gas = await this.sg.simulate(address, msgs, memo);
-    return BigInt(gas);
-    // NOTE: sequence/accountNumber handling is internal to SigningStargateClient + signer
-  }
-  async broadcast(signedTx: Uint8Array, mode: "sync" | "async" | "block" = "sync") {
-    const res = await this.sg.broadcastTx(signedTx);
-    return { txHash: res.transactionHash, height: BigInt(res.height ?? 0) };
-  }
-}
-
-export class RestActionQuery implements ActionQuery {
-  constructor(private readonly lcdBase: string) {}
-  async getParams() {
-    const r = await fetch(`${this.lcdBase}/lumera/action/v1/params`);
-    const j = await r.json();
-    return {
-      rq_ids_max: Number(j.params?.rq_ids_max ?? 100),
-      fee_base: j.params?.fee_base ?? "0",
-      fee_per_kb: j.params?.fee_per_kb ?? "0",
-    };
-  }
-  async getAction(actionId: string) {
-    const r = await fetch(`${this.lcdBase}/lumera/action/v1/action/${actionId}`);
-    const j = await r.json();
-    return { id: j.action?.id, status: j.action?.status, metadata: j.action?.metadata };
-  }
-}
-
-export class RestSupernodeQuery implements SupernodeQuery {
-  constructor(private readonly lcdBase: string) {}
-  async getParams() {
-    const r = await fetch(`${this.lcdBase}/lumera/supernode/v1/params`);
-    return r.json();
-  }
-}
-
+/**
+ * Implementation of BlockchainClient using CosmJS and REST/LCD.
+ * 
+ * This class combines a CosmJS transaction client with REST-based query clients
+ * to provide a complete blockchain interaction interface. It serves as the facade
+ * for all blockchain operations.
+ */
 export class CosmjsRestBlockchainClient implements BlockchainClient {
+  /**
+   * Create a new blockchain client instance.
+   * 
+   * @param Tx - Transaction client for signing and broadcasting
+   * @param Action - Action module query client
+   * @param Supernode - Supernode module query client
+   * @param chainId - Blockchain network identifier
+   * @param bech32Address - Signer's bech32 address
+   */
   constructor(
     public readonly Tx: TxClient,
     public readonly Action: ActionQuery,
     public readonly Supernode: SupernodeQuery,
     private readonly chainId: string,
-    private readonly bech32: string,
+    private readonly bech32Address: string,
   ) {}
-  async getChainId() { return this.chainId; }
-  async getAddress() { return this.bech32; }
+
+  /**
+   * Get the chain ID.
+   * 
+   * @returns Chain ID (e.g., "lumera-testnet-2")
+   */
+  async getChainId(): Promise<string> {
+    return this.chainId;
+  }
+
+  /**
+   * Get the signer's address.
+   * 
+   * @returns Bech32 address of the account associated with this client
+   */
+  async getAddress(): Promise<string> {
+    return this.bech32Address;
+  }
 }
 
-export async function makeBlockchainClient(opts: {
+/**
+ * Configuration options for creating a blockchain client.
+ */
+export interface BlockchainClientOptions {
+  /** Tendermint RPC URL for transaction operations (e.g., "https://rpc.testnet.lumera.io") */
   rpcUrl: string;
+
+  /** LCD REST API URL for query operations (e.g., "https://lcd.testnet.lumera.io") */
   lcdUrl: string;
+
+  /** Blockchain network identifier (e.g., "lumera-testnet-2") */
   chainId: string;
+
+  /** CosmJS offline signer (wallet) for transaction signing */
   signer: OfflineSigner;
+
+  /** Bech32 address of the signing account */
   address: string;
-  gasPrice?: string; // e.g. "0.025ulume"
-}): Promise<BlockchainClient> {
-  const sg = await SigningStargateClient.connectWithSigner(opts.rpcUrl, opts.signer, {
-    gasPrice: opts.gasPrice ? GasPrice.fromString(opts.gasPrice) : undefined,
-  });
-  const tx = new CosmjsTxClient(sg);
-  const action = new RestActionQuery(opts.lcdUrl);
-  const supernode = new RestSupernodeQuery(opts.lcdUrl);
-  return new CosmjsRestBlockchainClient(tx, action, supernode, opts.chainId, opts.address);
+
+  /** Gas price string (e.g., "0.025ulume"). If not provided, defaults will be used. */
+  gasPrice?: string;
 }
+
+/**
+ * Create a new blockchain client.
+ * 
+ * This factory function initializes a complete blockchain client with transaction
+ * and query capabilities. It connects to the Tendermint RPC for transactions and
+ * the LCD REST API for queries.
+ * 
+ * @param opts - Configuration options for the client
+ * @returns Promise resolving to a configured BlockchainClient
+ * @throws {Error} If connection to RPC fails or configuration is invalid
+ * 
+ * @example
+ * ```typescript
+ * import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
+ * import { makeBlockchainClient } from "@lumera/sdk-js";
+ * 
+ * // Create a wallet
+ * const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
+ *   prefix: "lumera"
+ * });
+ * const [account] = await wallet.getAccounts();
+ * 
+ * // Create the blockchain client
+ * const client = await makeBlockchainClient({
+ *   rpcUrl: "https://rpc.testnet.lumera.io",
+ *   lcdUrl: "https://lcd.testnet.lumera.io",
+ *   chainId: "lumera-testnet-2",
+ *   signer: wallet,
+ *   address: account.address,
+ *   gasPrice: "0.025ulume"
+ * });
+ * 
+ * // Query action parameters
+ * const params = await client.Action.getParams();
+ * console.log("Max RQ IDs:", params.rq_ids_max);
+ * 
+ * // Simulate and broadcast a transaction
+ * const msgs = [buildMsgRegisterAction(metadata, fee, account.address)];
+ * const gas = await client.Tx.simulate(account.address, msgs);
+ * const result = await client.Tx.signAndBroadcast(
+ *   account.address,
+ *   msgs,
+ *   { amount: [{ denom: "ulume", amount: "5000" }], gas: gas.toString() }
+ * );
+ * console.log("TX Hash:", result.txHash);
+ * ```
+ */
+export async function makeBlockchainClient(
+  opts: BlockchainClientOptions
+): Promise<BlockchainClient> {
+  // Connect to Tendermint RPC via CosmJS SigningStargateClient
+  const signingClient = await SigningStargateClient.connectWithSigner(
+    opts.rpcUrl,
+    opts.signer,
+    {
+      gasPrice: opts.gasPrice ? GasPrice.fromString(opts.gasPrice) : undefined,
+    }
+  );
+
+  // Create transaction client
+  const txClient = new CosmjsTxClient(signingClient);
+
+  // Create query clients for modules
+  const actionQuery = new RestActionQuery(opts.lcdUrl);
+  const supernodeQuery = new RestSupernodeQuery(opts.lcdUrl);
+
+  // Compose into the unified blockchain client facade
+  return new CosmjsRestBlockchainClient(
+    txClient,
+    actionQuery,
+    supernodeQuery,
+    opts.chainId,
+    opts.address
+  );
+}
+
+// Export classes and types for direct use if needed
+export { CosmjsTxClient } from "./cosmjs";
+export { RestActionQuery, RestSupernodeQuery } from "./rest";
+export * from "./interfaces";
+export * from "./messages";
