@@ -28,7 +28,7 @@ A unified SDK providing seamless access to the Lumera blockchain and Cascade dis
 ## 📦 Installation
 
 ```bash
-npm install @lumera/sdk
+pnpm install @lumera/sdk
 ```
 
 ### Peer Dependencies
@@ -36,7 +36,7 @@ npm install @lumera/sdk
 For blockchain operations, you'll also need CosmJS packages:
 
 ```bash
-npm install @cosmjs/proto-signing @cosmjs/stargate
+pnpm install @cosmjs/proto-signing @cosmjs/stargate
 ```
 
 ## 🚀 Quick Start
@@ -213,22 +213,22 @@ const stream = await downloader.download("action-id");
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Run tests
-npm test
+pnpm test
 
 # Run tests with coverage
-npm run coverage
+pnpm run coverage
 
 # Build the SDK
-npm run build
+pnpm build
 
 # Generate API documentation
-npm run docs
+pnpm run docs
 
 # Lint code
-npm run lint
+pnpm lint
 ```
 
 ## 📋 Requirements

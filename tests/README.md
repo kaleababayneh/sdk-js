@@ -1,7 +1,7 @@
 # Lumera SDK Testing & Mocking Strategy
 
 ## Framework & Coverage Targets
-- Test runner: Vitest (`npm run test` / `npm run dev` for watch mode).
+- Test runner: Vitest (`pnpm test` / `pnpm dev` for watch mode).
 - Coverage threshold: ≥ 80% lines/branches/functions using Vitest's built-in coverage (`vitest run --coverage`).
 - Test layout: mirror source tree under `tests/`, using `*.test.ts` for unit tests and `*.spec.ts` for integration flows.
 
@@ -68,8 +68,8 @@
 
 ## Coverage & Execution
 - Configure `vitest.config.ts` with alias mappings (`src`), coverage thresholds, and test environment (`happy-dom` for browser-like globals).
-- Add npm script `"test:coverage": "vitest run --coverage"`.
-- Integrate CI step to run `npm run test:coverage` and enforce coverage gates.
+- Add pnpm script `"test:coverage": "vitest run --coverage"`.
+- Integrate CI step to run `pnpm run test:coverage` and enforce coverage gates.
 
 ## Next Steps
 1. Scaffold `tests/utils/` helpers for shared mocks/spies.

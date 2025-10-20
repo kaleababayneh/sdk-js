@@ -491,7 +491,7 @@ const client = await createLumeraClient({
 
 1. **Install the SDK**:
    ```bash
-   npm install @lumera/sdk @cosmjs/proto-signing @cosmjs/stargate
+   pnpm install @lumera/sdk @cosmjs/proto-signing @cosmjs/stargate
    ```
 
 2. **Replace direct fetch calls** with SDK methods using this guide

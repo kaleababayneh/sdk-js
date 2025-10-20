@@ -27,7 +27,7 @@ This interactive web application showcases:
 
 2. Install dependencies:
    ```bash
-   npm install
+   pnpm install
    ```
 
 ## Running the Example
@@ -35,7 +35,7 @@ This interactive web application showcases:
 Start the development server:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 This will:
@@ -80,7 +80,7 @@ The activity log at the bottom of the page shows:
 To create a production build:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 The built files will be in the `dist/` directory and can be deployed to any static hosting service.
@@ -88,7 +88,7 @@ The built files will be in the `dist/` directory and can be deployed to any stat
 To preview the production build locally:
 
 ```bash
-npm run preview
+pnpm run preview
 ```
 
 ## Project Structure
@@ -203,7 +203,7 @@ Vite provides automatic HMR - changes to `main.ts` will instantly reflect in the
 To check for TypeScript errors without building:
 
 ```bash
-npx tsc --noEmit
+pnpm exec tsc --noEmit
 ```
 
 ### Browser Console

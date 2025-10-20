@@ -12,7 +12,7 @@ This directory contains Node.js examples demonstrating the Lumera SDK capabiliti
 
 1. Install dependencies from the root of the repository:
    ```bash
-   npm install
+   pnpm install
    ```
 
 2. Set your mnemonic as an environment variable:
@@ -37,7 +37,7 @@ A comprehensive end-to-end example demonstrating the complete Lumera SDK workflo
 
 **Run it:**
 ```bash
-MNEMONIC="your mnemonic here" npx tsx examples/node/full-workflow.ts
+MNEMONIC="your mnemonic here" pnpm exec tsx examples/node/full-workflow.ts
 ```
 
 **Expected Output:**
@@ -88,7 +88,7 @@ A simpler example showing basic LumeraClient usage with blockchain queries and C
 
 **Run it:**
 ```bash
-MNEMONIC="your mnemonic here" npx tsx examples/node/lumera-client-demo.ts
+MNEMONIC="your mnemonic here" pnpm exec tsx examples/node/lumera-client-demo.ts
 ```
 
 ### 3. Upload Example (`upload.ts`)
@@ -97,7 +97,7 @@ A minimal example focusing on the upload workflow using the lower-level API.
 
 **Run it:**
 ```bash
-MNEMONIC="your mnemonic here" npx tsx examples/node/upload.ts
+MNEMONIC="your mnemonic here" pnpm exec tsx examples/node/upload.ts
 ```
 
 ## Common Issues
@@ -111,7 +111,7 @@ export MNEMONIC="your mnemonic phrase here"
 
 Or run the command with the mnemonic inline:
 ```bash
-MNEMONIC="your mnemonic phrase here" npx tsx examples/node/full-workflow.ts
+MNEMONIC="your mnemonic phrase here" pnpm exec tsx examples/node/full-workflow.ts
 ```
 
 ### "Insufficient funds" or Transaction Errors
