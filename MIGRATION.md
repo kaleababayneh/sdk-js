@@ -4,16 +4,36 @@ This guide helps developers migrate from direct `fetch` calls to the Lumera LCD 
 
 ## Table of Contents
 
-- [Why Migrate?](#why-migrate)
-- [Blockchain Operations](#blockchain-operations)
-  - [Query Chain Parameters](#query-chain-parameters)
-  - [Query Action Module](#query-action-module)
-  - [Query Supernode Module](#query-supernode-module)
-- [Cascade Storage Operations](#cascade-storage-operations)
-  - [Start Upload Task](#start-upload-task)
-  - [Request Download](#request-download)
-  - [Poll Task Status](#poll-task-status)
-- [Benefits Summary](#benefits-summary)
+- [Migration Guide](#migration-guide)
+  - [Table of Contents](#table-of-contents)
+  - [Why Migrate?](#why-migrate)
+  - [Blockchain Operations](#blockchain-operations)
+    - [Query Chain Parameters](#query-chain-parameters)
+      - [Before (Direct fetch)](#before-direct-fetch)
+      - [After (SDK)](#after-sdk)
+    - [Query Action Module](#query-action-module)
+      - [Before (Direct fetch)](#before-direct-fetch-1)
+      - [After (SDK)](#after-sdk-1)
+    - [Query Supernode Module](#query-supernode-module)
+      - [Before (Direct fetch)](#before-direct-fetch-2)
+      - [After (SDK)](#after-sdk-2)
+  - [Cascade Storage Operations](#cascade-storage-operations)
+    - [Start Upload Task](#start-upload-task)
+      - [Before (Direct fetch with manual FormData)](#before-direct-fetch-with-manual-formdata)
+      - [After (SDK)](#after-sdk-3)
+    - [Request Download](#request-download)
+      - [Before (Direct fetch with manual signatures)](#before-direct-fetch-with-manual-signatures)
+      - [After (SDK)](#after-sdk-4)
+    - [Poll Task Status](#poll-task-status)
+      - [Before (Direct fetch with manual polling)](#before-direct-fetch-with-manual-polling)
+      - [After (SDK)](#after-sdk-5)
+  - [Benefits Summary](#benefits-summary)
+    - [Code Reduction](#code-reduction)
+    - [Type Safety](#type-safety)
+    - [Error Handling](#error-handling)
+    - [Configuration](#configuration)
+    - [Maintenance](#maintenance)
+  - [Getting Started](#getting-started)
 
 ## Why Migrate?
 
@@ -74,7 +94,7 @@ console.log("Chain ID:", chainId);
 ```typescript
 // Query action module parameters
 const paramsResponse = await fetch(
-  "https://lcd.testnet.lumera.io/lumera/action/v1/params"
+  "https://lcd.testnet.lumera.io/LumeraProtocol/lumera/action/params"
 );
 
 if (!paramsResponse.ok) {
@@ -87,7 +107,7 @@ const actionParams = paramsData.params;
 // Query specific action
 const actionId = "my-action-id";
 const actionResponse = await fetch(
-  `https://lcd.testnet.lumera.io/lumera/action/v1/action/${actionId}`
+  `https://lcd.testnet.lumera.io/LumeraProtocol/lumera/action/action/${actionId}`
 );
 
 if (!actionResponse.ok) {
@@ -123,7 +143,7 @@ const action = await client.Blockchain.Action.getAction("my-action-id");
 ```typescript
 // Query supernode parameters
 const response = await fetch(
-  "https://lcd.testnet.lumera.io/lumera/supernode/v1/params"
+  "https://lcd.testnet.lumera.io/LumeraProtocol/lumera/supernode/params"
 );
 
 if (!response.ok) {
@@ -135,7 +155,7 @@ const supernodeParams = data.params;
 
 // List all supernodes
 const listResponse = await fetch(
-  "https://lcd.testnet.lumera.io/lumera/supernode/v1/supernodes"
+  "https://lcd.testnet.lumera.io/LumeraProtocol/lumera/supernode/supernodes"
 );
 
 if (!listResponse.ok) {

@@ -81,17 +81,16 @@ export interface TxClient {
 
 /**
  * Action module parameters.
- * 
- * Contains configuration for the action module including fee schedule
- * and RaptorQ layout constraints.
+ *
+ * Contains configuration for the action module including fee schedule.
  */
 export interface ActionParams {
-  /** Maximum number of RQ IDs allowed in layout derivation */
-  rq_ids_max: number;
   /** Base fee for action registration in uLUME */
   fee_base: string;
   /** Per-kilobyte fee in uLUME */
   fee_per_kb: string;
+  /** Maximum number of RaptorQ symbols allowed */
+  max_raptor_q_symbols: string;
 }
 
 /**
@@ -138,9 +137,8 @@ export interface ActionQuery {
 
 /**
  * Supernode module parameters.
- * 
- * Contains configuration for the supernode module. The exact structure
- * depends on the module's current implementation.
+ *
+ * Contains configuration for the supernode module.
  */
 export interface SupernodeParams {
   [key: string]: unknown;

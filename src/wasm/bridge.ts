@@ -129,15 +129,19 @@ export class WasmBridge {
       const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
       
       if (isBrowser) {
-        // Browser environment: dynamically import from /wasm/rq_library.js
-        // @ts-expect-error -- public wasm asset is resolved by the bundler at runtime
-        const initWasm = await import("/wasm/rq_library.js");
+        // Browser environment: access globally loaded WASM module from window
+        // The script tag in index.html loads /wasm/rq_library.js into window.rq_library
+        const globalWasm = (window as any).rq_library;
+        
+        if (!globalWasm) {
+          throw new Error('WASM module not found on window.rq_library. Ensure /wasm/rq_library.js is loaded via script tag.');
+        }
         
         // Call the default export init function with the path to the wasm file
-        await initWasm.default('/wasm/rq_library_bg.wasm');
+        await globalWasm.default('/wasm/rq_library_bg.wasm');
         
         // The module's exports are available on the initialized wasm object
-        this.wasmModule = initWasm as unknown as RqWasmModule;
+        this.wasmModule = globalWasm as unknown as RqWasmModule;
       } else {
         // Node.js environment: read files from filesystem
         const fs = await import('fs');
@@ -170,7 +174,7 @@ export class WasmBridge {
         
         // Import the JS module
         const jsModulePath = path.join(publicWasmDir, 'rq_library.js');
-        const initWasm = await import(jsModulePath);
+        const initWasm = await import(/* @vite-ignore */ jsModulePath);
         
         // Initialize with the WASM buffer
         await initWasm.default(wasmBuffer);

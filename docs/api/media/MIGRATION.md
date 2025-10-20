@@ -74,7 +74,7 @@ console.log("Chain ID:", chainId);
 ```typescript
 // Query action module parameters
 const paramsResponse = await fetch(
-  "https://lcd.testnet.lumera.io/lumera/action/v1/params"
+  "https://lcd.testnet.lumera.io/LumeraProtocol/lumera/action/params"
 );
 
 if (!paramsResponse.ok) {
@@ -87,7 +87,7 @@ const actionParams = paramsData.params;
 // Query specific action
 const actionId = "my-action-id";
 const actionResponse = await fetch(
-  `https://lcd.testnet.lumera.io/lumera/action/v1/action/${actionId}`
+  `https://lcd.testnet.lumera.io/LumeraProtocol/lumera/action/action/${actionId}`
 );
 
 if (!actionResponse.ok) {
@@ -123,7 +123,7 @@ const action = await client.Blockchain.Action.getAction("my-action-id");
 ```typescript
 // Query supernode parameters
 const response = await fetch(
-  "https://lcd.testnet.lumera.io/lumera/supernode/v1/params"
+  "https://lcd.testnet.lumera.io/LumeraProtocol/lumera/supernode/params"
 );
 
 if (!response.ok) {
@@ -135,7 +135,7 @@ const supernodeParams = data.params;
 
 // List all supernodes
 const listResponse = await fetch(
-  "https://lcd.testnet.lumera.io/lumera/supernode/v1/supernodes"
+  "https://lcd.testnet.lumera.io/LumeraProtocol/lumera/supernode/supernodes"
 );
 
 if (!listResponse.ok) {

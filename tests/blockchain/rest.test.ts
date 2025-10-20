@@ -56,7 +56,7 @@ describe("RestActionQuery", () => {
 
     const params = await query.getParams();
 
-    expect(httpGet).toHaveBeenCalledWith("/lumera/action/v1/params");
+    expect(httpGet).toHaveBeenCalledWith("/LumeraProtocol/lumera/action/params");
     expect(params).toEqual({
       rq_ids_max: 500,
       fee_base: "10",
@@ -89,7 +89,7 @@ describe("RestActionQuery", () => {
 
     const action = await query.getAction("abc");
 
-    expect(httpGet).toHaveBeenCalledWith("/lumera/action/v1/action/abc");
+    expect(httpGet).toHaveBeenCalledWith("/LumeraProtocol/lumera/action/action/abc");
     expect(action).toEqual({
       id: "abc",
       status: "completed",
@@ -116,7 +116,7 @@ describe("RestSupernodeQuery", () => {
 
     const params = await query.getParams();
 
-    expect(httpGet).toHaveBeenCalledWith("/lumera/supernode/v1/params");
+    expect(httpGet).toHaveBeenCalledWith("/LumeraProtocol/lumera/supernode/params");
     expect(params).toEqual({ foo: "bar" });
 
     console.debug("supernode params instrumentation", { params, calls: httpGet.mock.calls.length });

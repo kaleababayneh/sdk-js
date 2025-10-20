@@ -224,11 +224,11 @@
       "spec_source": "docs/sn-api.yaml",
       "type_generation": "openapi-typescript → src/types/snapi.gen.ts",
       "endpoints": [
-        "POST /api/v1/actions/cascade",
-        "POST /api/v1/actions/cascade/{action_id}/downloads",
-        "GET  /api/v1/actions/cascade/tasks/{task_id}",
-        "GET  /api/v1/actions/cascade/tasks/{task_id}/status",
-        "GET  /api/v1/downloads/cascade/{task_id}/file"
+        "POST /api/actions/cascade",
+        "POST /api/actions/cascade/{action_id}/downloads",
+        "GET  /api/actions/cascade/tasks/{task_id}",
+        "GET  /api/actions/cascade/tasks/{task_id}/status",
+        "GET  /api/downloads/cascade/{task_id}/file"
       ],
       "authentication": "Signature-based (Base64(Sign(blake3(file))) for upload; Base64(Sign(actionId)) for private download)",
       "notes": "SSE strongly recommended for progress; polling fallback provided."

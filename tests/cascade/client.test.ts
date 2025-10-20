@@ -43,7 +43,7 @@ describe("SNApiClient", () => {
 
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     const [url, options] = fetchSpy.mock.calls[0];
-    expect(url).toBe("https://snapi.test/api/v1/actions/cascade");
+    expect(url).toBe("https://snapi.test/api/actions/cascade");
     expect(options?.method).toBe("POST");
 
     const body = options?.body as FormData;
@@ -59,7 +59,7 @@ describe("SNApiClient", () => {
       hasFile: appended instanceof Blob,
     });
     expect(debugSpy).toHaveBeenCalledWith("startCascade request", {
-      url: "https://snapi.test/api/v1/actions/cascade",
+      url: "https://snapi.test/api/actions/cascade",
       method: "POST",
       hasFile: true,
     });
@@ -75,17 +75,17 @@ describe("SNApiClient", () => {
     const result = await client.requestDownload("action-xyz", {});
 
     expect(httpStub.post).toHaveBeenCalledWith(
-      "/api/v1/actions/cascade/action-xyz/downloads",
+      "/api/actions/cascade/action-xyz/downloads",
       {}
     );
     expect(result).toBe(response);
 
     console.debug("requestDownload call", {
-      path: "/api/v1/actions/cascade/action-xyz/downloads",
+      path: "/api/actions/cascade/action-xyz/downloads",
       response,
     });
     expect(debugSpy).toHaveBeenCalledWith("requestDownload call", {
-      path: "/api/v1/actions/cascade/action-xyz/downloads",
+      path: "/api/actions/cascade/action-xyz/downloads",
       response,
     });
     debugSpy.mockRestore();
@@ -104,8 +104,8 @@ describe("SNApiClient", () => {
     const taskResult = await client.getTask("abc");
     const statusResult = await client.getTaskStatus("abc");
 
-    expect(httpStub.get).toHaveBeenNthCalledWith(1, "/api/v1/actions/cascade/tasks/abc");
-    expect(httpStub.get).toHaveBeenNthCalledWith(2, "/api/v1/actions/cascade/tasks/abc/status");
+    expect(httpStub.get).toHaveBeenNthCalledWith(1, "/api/actions/cascade/tasks/abc");
+    expect(httpStub.get).toHaveBeenNthCalledWith(2, "/api/actions/cascade/tasks/abc/status");
 
     expect(taskResult).toBe(task);
     expect(statusResult).toBe(status);
@@ -132,7 +132,7 @@ describe("SNApiClient", () => {
     const stream = await client.downloadFile("task-stream");
 
     expect(fetchSpy).toHaveBeenCalledWith(
-      "https://snapi.test/api/v1/downloads/cascade/task-stream/file",
+      "https://snapi.test/api/downloads/cascade/task-stream/file",
       {
         method: "GET",
         headers: httpStub.config.headers,

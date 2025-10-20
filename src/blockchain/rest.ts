@@ -44,33 +44,32 @@ export class RestActionQuery implements ActionQuery {
 
   /**
    * Get action module parameters.
-   * 
-   * Retrieves the current parameters for the action module, including fee schedule and RQ ID limits.
-   * 
+   *
+   * Retrieves the current parameters for the action module, including fee schedule.
+   *
    * @returns Action module parameters
    * @throws {HttpError} If the LCD query fails
-   * 
+   *
    * @example
    * ```typescript
    * const params = await actionQuery.getParams();
    * console.log("Fee base:", params.fee_base);
    * console.log("Fee per KB:", params.fee_per_kb);
-   * console.log("Max RQ IDs:", params.rq_ids_max);
    * ```
    */
   async getParams(): Promise<ActionParams> {
     const response = await this.http.get<{
       params?: {
-        rq_ids_max?: number | string;
         fee_base?: string;
         fee_per_kb?: string;
+        max_raptor_q_symbols?: string;
       };
-    }>("/lumera/action/v1/params");
+    }>("/LumeraProtocol/lumera/action/params");
 
     return {
-      rq_ids_max: Number(response.params?.rq_ids_max ?? 100),
       fee_base: response.params?.fee_base ?? "0",
       fee_per_kb: response.params?.fee_per_kb ?? "0",
+      max_raptor_q_symbols: response.params?.max_raptor_q_symbols ?? "0",
     };
   }
 
@@ -97,7 +96,9 @@ export class RestActionQuery implements ActionQuery {
         status?: string;
         metadata?: unknown;
       };
-    }>(`/lumera/action/v1/action/${actionId}`);
+    }>(`/LumeraProtocol/lumera/action/action/${actionId}`);
+
+    console.debug("Action query response:", response);
 
     return {
       id: response.action?.id ?? actionId,
@@ -141,23 +142,31 @@ export class RestSupernodeQuery implements SupernodeQuery {
 
   /**
    * Get supernode module parameters.
-   * 
-   * Retrieves the current parameters for the supernode module.
-   * 
+   *
+   * Retrieves the current parameters for the supernode module, including RaptorQ symbol limits.
+   *
    * @returns Supernode module parameters
    * @throws {HttpError} If the LCD query fails
-   * 
+   *
    * @example
    * ```typescript
    * const params = await supernodeQuery.getParams();
-   * console.log("Params:", params);
+   * console.log("Max RaptorQ symbols:", params.max_raptor_q_symbols);
    * ```
    */
   async getParams(): Promise<SupernodeParams> {
     const response = await this.http.get<{
-      params?: SupernodeParams;
-    }>("/lumera/supernode/v1/params");
+      data?: {
+        params?: {
+          [key: string]: unknown;
+        };
+      };
+    }>("/LumeraProtocol/lumera/supernode/params");
 
-    return response.params ?? {};
+    console.debug("Supernode params response:", response);
+
+    return {
+      ...(response.data?.params || {}),
+    };
   }
 }

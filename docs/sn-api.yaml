@@ -7,7 +7,7 @@ servers:
   - url: https://api.example.com
     description: Storage Node API server
 paths:
-  /api/v1/actions/cascade:
+  /api/actions/cascade:
     post:
       summary: Start Cascade Action
       description: Initiates a new Cascade storage action
@@ -33,7 +33,7 @@ paths:
                   taskId:
                     type: string
                     description: Unique identifier for the task
-  /api/v1/actions/cascade/{action_id}/downloads:
+  /api/actions/cascade/{action_id}/downloads:
     post:
       summary: Request Cascade Download
       description: Request a download for a specific action
@@ -56,7 +56,7 @@ paths:
                   taskId:
                     type: string
                     description: Download task identifier
-  /api/v1/actions/cascade/tasks/{task_id}:
+  /api/actions/cascade/tasks/{task_id}:
     get:
       summary: Get Cascade Task
       description: Retrieve task information
@@ -82,7 +82,7 @@ paths:
                     type: string
                   progress:
                     type: number
-  /api/v1/actions/cascade/tasks/{task_id}/status:
+  /api/actions/cascade/tasks/{task_id}/status:
     get:
       summary: Get Cascade Task Status
       description: Retrieve the status of a task
@@ -107,7 +107,7 @@ paths:
                     enum: [pending, processing, completed, failed]
                   progress:
                     type: number
-  /api/v1/downloads/cascade/{task_id}/file:
+  /api/downloads/cascade/{task_id}/file:
     get:
       summary: Download Cascade File
       description: Download the file associated with a task
