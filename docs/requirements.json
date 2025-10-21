@@ -47,7 +47,7 @@
       },
       {
         "name": "Storage Layer",
-        "location": "src/storage/",
+        "location": "src/cascade/",
         "responsibility": "Off-chain Cascade storage via sn-api",
         "components": [
           "SNApiClient",
@@ -98,7 +98,8 @@
           "@cosmjs/proto-signing",
           "@cosmjs/stargate",
           "@cosmjs/crypto",
-          "@cosmjs/encoding"
+          "@cosmjs/encoding",
+          "cosmjs-types"
         ],
         "purpose": "Cosmos SDK tx simulate/sign/broadcast; wallet integration; encoding",
         "notes": "Primary transport for transactions (Tendermint RPC via CosmJS)."
@@ -112,11 +113,6 @@
         "packages": ["formdata-node"],
         "purpose": "Multipart form uploads to sn-api",
         "notes": "Node-only; browser uses native FormData."
-      },
-      "wasm_runtime": {
-        "package": "rq-wasm",
-        "purpose": "RaptorQ layout/data ops for LEP-1",
-        "notes": "Run in Web Worker where available."
       },
       "validation": {
         "packages": ["zod"],
@@ -152,7 +148,8 @@
     "version_constraints": {
       "node": ">=18",
       "typescript": ">=5.0",
-      "cosmjs": "^0.32.0"
+      "cosmjs": "^0.32.0",
+      "cosmjs-types": "^0.9.0"
     }
   },
   "features": {
