@@ -42,7 +42,7 @@ export {
   buildBatchMessages,
   estimateGas,
   type CascadeActionMetadata,
-  type SenseMetadata,
+  type SenseActionMetadata,
 } from "./blockchain/messages";
 
 // Storage layer - SNApiClient and types

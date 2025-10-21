@@ -1,14 +1,140 @@
 /**
  * REST/LCD query clients for Lumera blockchain modules.
- * 
+ *
  * These clients provide read-only access to on-chain state via the LCD (Light Client Daemon) REST API.
  * Uses the HttpClient from the Internal Layer for automatic retries and error handling.
- * 
+ *
  * @module blockchain/rest
  */
 
 import { HttpClient } from "../internal/http";
-import type { ActionParams, ActionRecord, ActionQuery, SupernodeParams, SupernodeQuery } from "./interfaces";
+import type { 
+  ActionParams, 
+  ActionRecord, 
+  ActionQuery, 
+  SupernodeParams, 
+  SupernodeQuery,
+  SuperNodeStateRecord,
+  IPAddressHistory,
+  Evidence,
+  MetricsAggregate,
+  SupernodeAccountHistory,
+} from "./interfaces";
+import { decodeActionMetadata } from "./prototypes";
+
+/**
+ * Helper function to get the current value from a historical array.
+ * Finds the entry with the highest block height.
+ * 
+ * @param history - Array of objects with height property
+ * @returns The entry with the highest height, or undefined if array is empty
+ */
+function getCurrentFromHistory<T extends { height: number | string }>(
+  history: T[] | undefined
+): T | undefined {
+  if (!history || history.length === 0) return undefined;
+  
+  return history.reduce((current, item) => {
+    const itemHeight = typeof item.height === 'string' ? parseInt(item.height, 10) : item.height;
+    const currentHeight = typeof current.height === 'string' ? parseInt(current.height, 10) : current.height;
+    return itemHeight > currentHeight ? item : current;
+  });
+}
+
+/**
+ * Type definition for the raw supernode API response.
+ */
+interface RawSupernodeResponse {
+  validator_address?: string;
+  supernode_account?: string;
+  p2p_port?: string;
+  states?: Array<{
+    state?: string;
+    height?: string;
+  }>;
+  evidence?: Array<{
+    reporter_address?: string;
+    validator_address?: string;
+    action_id?: string;
+    evidence_type?: string;
+    description?: string;
+    severity?: string;
+    height?: string;
+  }>;
+  prev_ip_addresses?: Array<{
+    address?: string;
+    height?: string;
+  }>;
+  note?: string;
+  metrics?: {
+    metrics?: Record<string, string>;
+    report_count?: string;
+    height?: string;
+  };
+  prev_supernode_accounts?: Array<{
+    account?: string;
+    height?: string;
+  }>;
+}
+
+/**
+ * Parse a raw supernode API response into a SupernodeRecord.
+ * 
+ * @param sn - Raw supernode data from the API
+ * @returns Parsed SupernodeRecord
+ */
+function parseSupernodeResponse(sn: RawSupernodeResponse): import("./interfaces").SupernodeRecord {
+  // Parse states array
+  const states: SuperNodeStateRecord[] = (sn.states || []).map((s) => ({
+    state: (s.state as any) ?? "SUPERNODE_STATE_UNSPECIFIED",
+    height: parseInt(s.height ?? "0", 10),
+  }));
+
+  // Parse evidence array
+  const evidence: Evidence[] = (sn.evidence || []).map((e) => ({
+    reporterAddress: e.reporter_address ?? "",
+    validatorAddress: e.validator_address ?? "",
+    actionId: e.action_id ?? "",
+    evidenceType: e.evidence_type ?? "",
+    description: e.description ?? "",
+    severity: parseInt(e.severity ?? "0", 10),
+    height: parseInt(e.height ?? "0", 10),
+  }));
+
+  // Parse IP address history
+  const prevIpAddresses: IPAddressHistory[] = (sn.prev_ip_addresses || []).map((ip) => ({
+    address: ip.address ?? "",
+    height: parseInt(ip.height ?? "0", 10),
+  }));
+
+  // Parse supernode account history
+  const prevSupernodeAccounts: SupernodeAccountHistory[] = (sn.prev_supernode_accounts || []).map((acc) => ({
+    account: acc.account ?? "",
+    height: parseInt(acc.height ?? "0", 10),
+  }));
+
+  // Parse metrics
+  const metricsData = sn.metrics?.metrics || {};
+  const metrics: MetricsAggregate = {
+    metrics: Object.fromEntries(
+      Object.entries(metricsData).map(([key, value]) => [key, parseFloat(value ?? "0")])
+    ),
+    reportCount: parseInt(sn.metrics?.report_count ?? "0", 10),
+    height: parseInt(sn.metrics?.height ?? "0", 10),
+  };
+
+  return {
+    validatorAddress: sn.validator_address ?? "",
+    supernodeAccount: sn.supernode_account ?? "",
+    p2pPort: sn.p2p_port ?? "",
+    states,
+    evidence,
+    prevIpAddresses,
+    note: sn.note ?? "",
+    metrics,
+    prevSupernodeAccounts,
+  };
+}
 
 /**
  * REST query client for the Action module.
@@ -75,35 +201,69 @@ export class RestActionQuery implements ActionQuery {
 
   /**
    * Get an action record by ID.
-   * 
+   *
    * Retrieves the details of a specific action from the blockchain, including its current status and metadata.
-   * 
+   * The metadata field is automatically decoded from Base64 and deserialized based on the action type.
+   *
    * @param actionId - The unique identifier of the action
-   * @returns Action record details
+   * @returns Action record details with deserialized metadata
    * @throws {HttpError} If the LCD query fails or action is not found
-   * 
+   * @throws {Error} If metadata decoding fails
+   *
    * @example
    * ```typescript
-   * const action = await actionQuery.getAction("action123");
-   * console.log("Status:", action.status);
-   * console.log("Metadata:", action.metadata);
+   * const action = await actionQuery.getAction("1111");
+   * console.log("State:", action.state);
+   * if (action.actionType === ActionType.CASCADE) {
+   *   const cascadeMetadata = action.metadata as CascadeMetadata;
+   *   console.log("File:", cascadeMetadata.file_name);
+   * }
    * ```
    */
   async getAction(actionId: string): Promise<ActionRecord> {
     const response = await this.http.get<{
       action?: {
-        id?: string;
-        status?: string;
-        metadata?: unknown;
+        creator?: string;
+        actionID?: string;
+        actionType?: string;
+        metadata?: string;
+        price?: {
+          denom?: string;
+          amount?: string;
+        };
+        expirationTime?: string;
+        state?: string;
+        blockHeight?: string;
+        superNodes?: string[];
       };
     }>(`/LumeraProtocol/lumera/action/v1/get_action/${actionId}`);
 
     console.debug("Action query response:", response);
 
+    if (!response.action) {
+      throw new Error(`Action not found: ${actionId}`);
+    }
+
+    const action = response.action;
+
+    // Decode the Base64 metadata into the appropriate type
+    const decodedMetadata = decodeActionMetadata({
+      actionType: action.actionType ?? "ACTION_TYPE_UNSPECIFIED",
+      metadata: action.metadata ?? "",
+    });
+
     return {
-      id: response.action?.id ?? actionId,
-      status: response.action?.status ?? "unknown",
-      metadata: response.action?.metadata,
+      creator: action.creator ?? "",
+      actionID: action.actionID ?? actionId,
+      actionType: action.actionType as any,
+      metadata: decodedMetadata,
+      price: action.price
+        ? `${action.price.amount ?? "0"}${action.price.denom ?? "ulume"}`
+        : "0ulume",
+      expirationTime: parseInt(action.expirationTime ?? "0", 10),
+      state: action.state as any,
+      blockHeight: parseInt(action.blockHeight ?? "0", 10),
+      superNodes: action.superNodes ?? [],
     };
   }
 
@@ -208,31 +368,21 @@ export class RestSupernodeQuery implements SupernodeQuery {
    * @example
    * ```typescript
    * const supernode = await supernodeQuery.getSupernode("lumeravaloper1abc...");
-   * console.log("IP:", supernode.ipAddress);
+   * console.log("IP:", supernode.prevIpAddresses);
    * ```
    */
   async getSupernode(validatorAddress: string): Promise<import("./interfaces").SupernodeRecord> {
     const response = await this.http.get<{
-      supernode?: {
-        validatorAddress?: string;
-        supernodeAccount?: string;
-        ipAddress?: string;
-        p2pPort?: string;
-        state?: string;
-        [key: string]: unknown;
-      };
+      supernode?: RawSupernodeResponse;
     }>(`/LumeraProtocol/lumera/supernode/v1/get_super_node/${validatorAddress}`);
 
     console.debug("Supernode query response:", response);
 
-    return {
-      validatorAddress: response.supernode?.validatorAddress ?? validatorAddress,
-      supernodeAccount: response.supernode?.supernodeAccount ?? "",
-      ipAddress: response.supernode?.ipAddress ?? "",
-      p2pPort: response.supernode?.p2pPort ?? "",
-      state: response.supernode?.state ?? "unknown",
-      ...(response.supernode || {}),
-    };
+    if (!response.supernode) {
+      throw new Error(`Supernode not found: ${validatorAddress}`);
+    }
+
+    return parseSupernodeResponse(response.supernode);
   }
 
   /**
@@ -252,26 +402,16 @@ export class RestSupernodeQuery implements SupernodeQuery {
    */
   async getSupernodeByAddress(supernodeAddress: string): Promise<import("./interfaces").SupernodeRecord> {
     const response = await this.http.get<{
-      supernode?: {
-        validatorAddress?: string;
-        supernodeAccount?: string;
-        ipAddress?: string;
-        p2pPort?: string;
-        state?: string;
-        [key: string]: unknown;
-      };
+      supernode?: RawSupernodeResponse;
     }>(`/LumeraProtocol/lumera/supernode/v1/get_super_node_by_address/${supernodeAddress}`);
 
     console.debug("Supernode by address query response:", response);
 
-    return {
-      validatorAddress: response.supernode?.validatorAddress ?? "",
-      supernodeAccount: response.supernode?.supernodeAccount ?? supernodeAddress,
-      ipAddress: response.supernode?.ipAddress ?? "",
-      p2pPort: response.supernode?.p2pPort ?? "",
-      state: response.supernode?.state ?? "unknown",
-      ...(response.supernode || {}),
-    };
+    if (!response.supernode) {
+      throw new Error(`Supernode not found: ${supernodeAddress}`);
+    }
+
+    return parseSupernodeResponse(response.supernode);
   }
 
   /**
@@ -290,25 +430,11 @@ export class RestSupernodeQuery implements SupernodeQuery {
    */
   async listSupernodes(): Promise<import("./interfaces").SupernodeRecord[]> {
     const response = await this.http.get<{
-      supernodes?: Array<{
-        validatorAddress?: string;
-        supernodeAccount?: string;
-        ipAddress?: string;
-        p2pPort?: string;
-        state?: string;
-        [key: string]: unknown;
-      }>;
+      supernodes?: RawSupernodeResponse[];
     }>("/LumeraProtocol/lumera/supernode/v1/list_super_nodes");
 
     console.debug("List supernodes response:", response);
 
-    return (response.supernodes || []).map((sn) => ({
-      validatorAddress: sn.validatorAddress ?? "",
-      supernodeAccount: sn.supernodeAccount ?? "",
-      ipAddress: sn.ipAddress ?? "",
-      p2pPort: sn.p2pPort ?? "",
-      state: sn.state ?? "unknown",
-      ...sn,
-    }));
+    return (response.supernodes || []).map(parseSupernodeResponse);
   }
 }

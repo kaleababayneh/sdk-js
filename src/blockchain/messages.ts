@@ -10,11 +10,14 @@
 import type { EncodeObject } from "@cosmjs/proto-signing";
 
 /**
- * Metadata for a Sense action.
+ * Metadata for building a Sense action message.
  *
- * Contains information for Sense actions according to the proto definition.
+ * This is the input format for constructing MsgRequestAction/MsgFinalizeAction.
+ * Uses `number` types (not `bigint`) as required by protobuf encoding.
+ * 
+ * Note: For queried metadata from the blockchain, see `SenseMetadata` in interfaces.ts
  */
-export interface SenseMetadata {
+export interface SenseActionMetadata {
   /** Data hash - required for RequestAction */
   data_hash: string;
   /** DD and fingerprints IC - required for RequestAction */
@@ -32,9 +35,12 @@ export interface SenseMetadata {
 }
 
 /**
- * Metadata for a Cascade action.
+ * Metadata for building a Cascade action message.
  *
- * Contains information for Cascade actions according to the proto definition.
+ * This is the input format for constructing MsgRequestAction/MsgFinalizeAction.
+ * Uses `number` types (not `bigint`) as required by protobuf encoding.
+ * 
+ * Note: For queried metadata from the blockchain, see `CascadeMetadata` in interfaces.ts
  */
 export interface CascadeActionMetadata {
   /** Data hash - required for RequestAction */
@@ -84,7 +90,7 @@ export interface CascadeActionMetadata {
  * ```
  */
 export function buildMsgRequestAction(
-  metadata: CascadeActionMetadata | SenseMetadata,
+  metadata: CascadeActionMetadata | SenseActionMetadata,
   price: string,
   expirationTime: string,
   creator: string
@@ -128,7 +134,7 @@ export function buildMsgRequestAction(
 export function buildMsgFinalizeAction(
   actionId: string,
   actionType: string,
-  metadata: Partial<CascadeActionMetadata> | Partial<SenseMetadata>,
+  metadata: Partial<CascadeActionMetadata> | Partial<SenseActionMetadata>,
   creator: string
 ): EncodeObject {
   return {

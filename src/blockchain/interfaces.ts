@@ -94,6 +94,58 @@ export interface ActionParams {
 }
 
 /**
+ * CascadeMetadata interface.
+ *
+ * Metadata for CASCADE action types returned from blockchain queries.
+ * Includes file information, RaptorQ encoding parameters, and signatures.
+ * 
+ * Note: Uses `bigint` for numeric fields as returned from blockchain queries.
+ * For building transaction messages, see `CascadeActionMetadata` in messages.ts
+ */
+export interface CascadeMetadata {
+  /** Hash of the data being stored */
+  data_hash: string;
+  /** Original filename */
+  file_name: string;
+  /** RaptorQ IDs initial count */
+  rq_ids_ic: bigint;
+  /** RaptorQ IDs maximum count */
+  rq_ids_max: bigint;
+  /** Array of RaptorQ IDs */
+  rq_ids_ids: string[];
+  /** Signatures for verification */
+  signatures: string;
+  /** Whether the data is public */
+  public: boolean;
+}
+
+/**
+ * SenseMetadata interface.
+ *
+ * Metadata for SENSE action types returned from blockchain queries.
+ * Includes data hash, collection information, and fingerprints.
+ * 
+ * Note: Uses `bigint` for numeric fields as returned from blockchain queries.
+ * For building transaction messages, see `SenseActionMetadata` in messages.ts
+ */
+export interface SenseMetadata {
+  /** Hash of the data being sensed */
+  data_hash: string;
+  /** DD and fingerprints initial count */
+  dd_and_fingerprints_ic: bigint;
+  /** Collection ID for grouping */
+  collection_id: string;
+  /** Group ID within collection */
+  group_id: string;
+  /** DD and fingerprints maximum count */
+  dd_and_fingerprints_max: bigint;
+  /** Array of DD and fingerprint IDs */
+  dd_and_fingerprints_ids: string[];
+  /** Signatures for verification */
+  signatures: string;
+}
+
+/**
  * ActionState enum represents the various states an action can be in.
  */
 export enum ActionState {
@@ -128,8 +180,8 @@ export interface ActionRecord {
   actionID: string;
   /** Action type */
   actionType: ActionType;
-  /** Action-specific metadata as bytes */
-  metadata: Uint8Array;
+  /** Action-specific metadata (deserialized based on action type) */
+  metadata: CascadeMetadata | SenseMetadata;
   /** Price as a Coin (string representation) */
   price: string;
   /** Expiration time (Unix timestamp) */

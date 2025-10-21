@@ -26,6 +26,7 @@
     "docs": "typedoc --out docs/api src/index.ts"
   },
   "dependencies": {
+    "@bufbuild/protobuf": "^2.2.2",
     "@cosmjs/amino": "^0.32.0",
     "@cosmjs/crypto": "^0.32.0",
     "@cosmjs/encoding": "^0.32.0",
