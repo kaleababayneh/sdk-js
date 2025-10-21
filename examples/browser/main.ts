@@ -171,9 +171,6 @@ async function connectWallet() {
     const chainId = await state.client.Blockchain.getChainId();
     log(`Chain ID: ${chainId}`, "info");
     
-    const actionParams = await state.client.Blockchain.Action.getParams();
-    log(`Action params: max_raptor_q_symbols=${actionParams.max_raptor_q_symbols}`, "info");
-    
     updateWalletUI(true);
     
   } catch (error) {
@@ -215,24 +212,14 @@ async function uploadFile() {
     showProgress("upload", 20);
     log("File loaded into memory", "info");
     
-    // Get action params for max_raptor_q_symbols
-    const actionParams = await state.client.Blockchain.Action.getParams();
-    showProgress("upload", 30);
-    
     // Generate unique action ID
     const timestamp = Date.now();
     const randomHex = Math.random().toString(16).slice(2, 10);
-    const actionId = `browser-upload-${timestamp}-${randomHex}`;
-    state.lastActionId = actionId;
-    
-    log(`Action ID: ${actionId}`, "info");
     showProgress("upload", 40);
     
     // Upload to Cascade
     log("Uploading to Cascade storage...", "info");
     const uploadResult = await state.client.Cascade.uploader.uploadFile(fileBytes, {
-      actionId: actionId,
-      rq_ids_max: Number(actionParams.max_raptor_q_symbols),
       taskOptions: {
         pollInterval: 2000,
         timeout: 300000,

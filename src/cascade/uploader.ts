@@ -26,6 +26,7 @@
  */
 
 import type { SNApiClient, Task } from './client';
+import type { CascadeChainPort } from './ports';
 import { TaskManager, TaskManagerOptions } from './task';
 import { blake3Hash } from '../internal/hash';
 import { toBase64, toCanonicalJsonBytes } from '../internal/encoding';
@@ -35,16 +36,6 @@ import { createSingleBlockLayout, deriveLayoutIds, buildIndexFile } from '../was
  * Parameters required for a Cascade upload operation
  */
 export interface UploadParams {
-  /**
-   * The blockchain action ID for this upload
-   */
-  actionId: string;
-  
-  /**
-   * Maximum layout ID value (from blockchain params)
-   */
-  rq_ids_max: number;
-  
   /**
    * Optional task monitoring configuration
    */
@@ -57,6 +48,7 @@ export interface UploadParams {
 export interface CascadeUploaderOptions {
   /**
    * Number of layout IDs to derive per LEP-1 specification
+   * in practice, that's the same number as max_raptor_q_symbols
    * @default 50
    */
   layoutIdCount?: number;
@@ -83,12 +75,14 @@ export class CascadeUploader {
 
   /**
    * Create a new CascadeUploader instance
-   * 
+   *
    * @param client - SNApiClient for making sn-api requests
+   * @param chainPort - Port for accessing blockchain capabilities
    * @param options - Optional configuration
    */
   constructor(
     private readonly client: SNApiClient,
+    private readonly chainPort: CascadeChainPort,
     options: CascadeUploaderOptions = {}
   ) {
     this.layoutIdCount = options.layoutIdCount ?? 50;
@@ -96,41 +90,42 @@ export class CascadeUploader {
 
   /**
    * Upload a file to Cascade storage
-   * 
+   *
    * This method orchestrates the complete upload workflow:
    *
-   * 1. Generates a random initial counter (rq_ids_ic) for layout ID derivation
-   * 2. Converts the file to bytes and calculates data_hash (BLAKE3)
-   * 3. Generates a single-block RaptorQ layout using rq-wasm
-   * 4. Derives 50 layout IDs per LEP-1 specification
-   * 5. Constructs the index file with layout metadata
-   * 6. Simulates the start_signature (placeholder for wallet integration)
-   * 7. Initiates upload via sn-api with multipart form data
-   * 8. Monitors the upload task until completion
-   * 9. Returns the completed task details
-   * 
+   * 1. Fetches action parameters from the blockchain (max_raptor_q_symbols)
+   * 2. Generates a random initial counter (rq_ids_ic) for layout ID derivation
+   * 3. Converts the file to bytes and calculates data_hash (BLAKE3)
+   * 4. Generates a single-block RaptorQ layout using rq-wasm
+   * 5. Derives layout IDs per LEP-1 specification
+   * 6. Constructs the index file with layout metadata
+   * 7. Registers the action on-chain via single-call transaction flow
+   * 8. Simulates the start_signature (placeholder for wallet integration)
+   * 9. Initiates upload via sn-api with multipart form data
+   * 10. Monitors the upload task until completion
+   * 11. Returns the completed task details
+   *
    * @param file - The file to upload (as Blob, ArrayBuffer, or Uint8Array)
-   * @param params - Upload parameters including action ID and blockchain params
+   * @param params - Upload parameters including action ID
    * @returns Promise resolving to the completed upload task
    * @throws {Error} If any step of the upload workflow fails
-   * 
+   *
    * @example
    * ```typescript
-   * const uploader = new CascadeUploader(snapiClient);
-   * 
+   * const uploader = new CascadeUploader(snapiClient, chainPort);
+   *
    * // Upload from a file input
    * const fileInput = document.querySelector('input[type="file"]');
    * const file = fileInput.files[0];
-   * 
+   *
    * const result = await uploader.uploadFile(file, {
    *   actionId: 'action-123',
-   *   rq_ids_max: 10000,
    *   taskOptions: {
    *     pollInterval: 2000,
    *     timeout: 300000
    *   }
    * });
-   * 
+   *
    * console.log('Upload complete:', result);
    * ```
    */
@@ -138,43 +133,63 @@ export class CascadeUploader {
     file: Blob | ArrayBuffer | Uint8Array,
     params: UploadParams
   ): Promise<Task> {
-    // Step 1: Generate random initial counter for layout ID derivation
-    // This should be a random integer between 0 and rq_ids_max (max_raptor_q_symbols)
-    const rq_ids_ic = Math.floor(Math.random() * params.rq_ids_max);
+    // Step 1: Get action params from blockchain
+    const actionParams = await this.chainPort.getActionParams();
+    const rq_ids_max = actionParams.max_raptor_q_symbols;
     
-    // Step 2: Convert file to bytes
+    // Step 2: Generate random initial counter for layout ID derivation
+    const rq_ids_ic = Math.floor(Math.random() * rq_ids_max);
+    
+    // Step 3: Convert file to bytes
     const fileBytes = await this.toBytes(file);
     
-    // Step 3: Calculate data_hash using BLAKE3
+    // Step 4: Calculate data_hash using BLAKE3
     const dataHash = await blake3Hash(fileBytes);
     
-    // Step 4: Generate LEP-1 layout using rq-wasm
+    // Step 5: Generate LEP-1 layout using rq-wasm
     const layout = await createSingleBlockLayout(fileBytes);
     
-    // Step 5: Derive layout IDs per LEP-1 specification
+    // Step 6: Derive layout IDs per LEP-1 specification
     const layoutIds = deriveLayoutIds(
       rq_ids_ic,
-      params.rq_ids_max,
+      rq_ids_max,
       this.layoutIdCount
     );
     
-    // Step 6: Build index_file
+    // Step 7: Build index_file
     // In production, layout_signature should be computed by signing the canonical
     // JSON bytes of the layout using ADR-036 signArbitrary with the uploader's wallet.
     // For now, we simulate with a placeholder signature.
     const layoutSignature = await this.simulateLayoutSignature(layout);
     const indexFile = buildIndexFile(layoutIds, layoutSignature);
     
-    // Step 7: Prepare start_signature
+    // Step 8: Register the action on-chain
+    const txOutcome = await this.chainPort.requestActionTx({
+      actionId: params.actionId,
+      msg: {
+        data_hash: dataHash,
+        file_size: fileBytes.length,
+        rq_ids_ic,
+        rq_ids_max,
+        layout_ids_count: this.layoutIdCount,
+        layout_signature: toBase64(layoutSignature),
+        public: false, // TODO: Make this configurable
+      },
+      memo: `Cascade upload: ${params.actionId}`,
+    });
+    
+    console.debug('Action registered on-chain:', txOutcome);
+    
+    // Step 9: Prepare start_signature
     // In production, this should be a wallet signature over BLAKE3(file_bytes).
     // For now, we simulate with a placeholder.
     const startSignatureB64 = await this.simulateStartSignature(fileBytes);
     
-    // Step 8: Convert index file to Base64 for transmission
+    // Step 10: Convert index file to Base64 for transmission
     const indexFileBytes = toCanonicalJsonBytes(indexFile);
     const indexFileB64 = toBase64(indexFileBytes);
     
-    // Step 9: Initiate upload via sn-api
+    // Step 11: Initiate upload via sn-api
     // Convert file to Blob if needed for FormData
     let fileBlob: Blob;
     if (file instanceof Blob) {
@@ -200,7 +215,7 @@ export class CascadeUploader {
       // These would be included in the FormData within the SNApiClient implementation
     });
     
-    // Step 10: Monitor upload task until completion
+    // Step 12: Monitor upload task until completion
     const taskManager = new TaskManager(
       this.client,
       response.taskId!,

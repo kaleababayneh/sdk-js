@@ -10,6 +10,7 @@
 
 import type { OfflineSigner } from "@cosmjs/proto-signing";
 import { makeBlockchainClient, type BlockchainClient } from "./blockchain/client";
+import { BlockchainActionAdapter } from "./blockchain/adapters/cascade-port";
 import { HttpClient } from "./internal/http";
 import { SNApiClient } from "./cascade/client";
 import { CascadeUploader } from "./cascade/uploader";
@@ -169,18 +170,23 @@ export class LumeraClient {
 
   /**
    * Create a new LumeraClient instance
-   * 
+   *
    * @param blockchain - Initialized blockchain client
    * @param snapiClient - Initialized SN-API client
-   * 
+   * @param chainPort - Port for Cascade to access blockchain capabilities
+   *
    * @remarks
    * This constructor is typically not called directly. Use the `createLumeraClient`
    * factory function instead, which handles all initialization automatically.
    */
-  constructor(blockchain: BlockchainClient, snapiClient: SNApiClient) {
+  constructor(
+    blockchain: BlockchainClient,
+    snapiClient: SNApiClient,
+    chainPort: import("./cascade/ports").CascadeChainPort
+  ) {
     this.Blockchain = blockchain;
     this.Cascade = {
-      uploader: new CascadeUploader(snapiClient),
+      uploader: new CascadeUploader(snapiClient, chainPort),
       downloader: new CascadeDownloader(snapiClient),
     };
   }
@@ -287,6 +293,17 @@ export async function createLumeraClient(
   // Initialize SN-API client
   const snapiClient = new SNApiClient(httpClient);
   
+  // Create blockchain adapter for Cascade operations
+  const chainPort = new BlockchainActionAdapter(
+    blockchain,
+    config.address,
+    {
+      paramsCacheTtlMs: 300000, // 5 minutes
+      defaultGasPrice: config.gasPrice ?? "0.025ulume",
+      gasMultiplier: 1.3, // 30% gas buffer
+    }
+  );
+  
   // Create and return the unified client
-  return new LumeraClient(blockchain, snapiClient);
+  return new LumeraClient(blockchain, snapiClient, chainPort);
 }

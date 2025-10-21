@@ -48,6 +48,18 @@ export {
   type Task,
   type TaskStatus,
 } from "./cascade/client";
+// Storage layer - Cascade chain port (for dependency injection)
+export type {
+  CascadeChainPort,
+  CascadeActionParams,
+  RequestActionTxInput,
+  TxOutcome,
+} from "./cascade/ports";
+
+// Blockchain adapter for Cascade port
+export { BlockchainActionAdapter } from "./blockchain/adapters/cascade-port";
+export type { BlockchainActionAdapterOptions } from "./blockchain/adapters/cascade-port";
+
 
 // Storage layer - Cascade uploader and downloader
 export {
