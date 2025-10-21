@@ -118,6 +118,7 @@ dist/
 build/
 *.d.ts
 !src/**/*.d.ts
+!public/wasm/*.d.ts
 
 # IDE files
 .vscode/

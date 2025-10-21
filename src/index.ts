@@ -31,11 +31,18 @@ export { RestActionQuery, RestSupernodeQuery } from "./blockchain/rest";
 
 // Blockchain layer - message builders and helpers
 export {
-  buildMsgRegisterAction,
-  calculateCascadeFee,
+  buildMsgRequestAction,
+  buildMsgFinalizeAction,
+  buildMsgApproveAction,
+  buildMsgRegisterSupernode,
+  buildMsgDeregisterSupernode,
+  buildMsgStartSupernode,
+  buildMsgStopSupernode,
+  buildMsgUpdateSupernode,
   buildBatchMessages,
   estimateGas,
   type CascadeActionMetadata,
+  type SenseMetadata,
 } from "./blockchain/messages";
 
 // Storage layer - SNApiClient and types
@@ -81,3 +88,35 @@ export {
 
 // Internal layer - HTTP client
 export { HttpClient, type HttpClientConfig, type RequestOptions, HttpError } from "./internal/http";
+
+// WASM layer - RaptorQ bridge and LEP-1 helpers
+export { WasmBridge } from "./wasm/bridge";
+export type {
+  RaptorQSession,
+  RaptorQSessionConstructor,
+  WasmModule,
+  EncodeResult,
+  MetadataResult
+} from "./wasm/bridge";
+
+export {
+  createSingleBlockLayout,
+  deriveLayoutIds,
+  buildIndexFile,
+  type Layout,
+  type IndexFile,
+  type SourceBlock,
+} from "./wasm/lep1";
+
+// WASM layer - In-memory filesystem
+export {
+  initializeGlobalFunctions,
+  writeFileChunk,
+  readFileChunk,
+  getFileSize,
+  createDirAll,
+  flushFile,
+  dirExists,
+  syncDirExists,
+  clearStorage,
+} from "./wasm/mem-fs";

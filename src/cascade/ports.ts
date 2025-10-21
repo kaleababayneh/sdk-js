@@ -114,29 +114,31 @@ export interface CascadeChainPort {
 
   /**
    * Request an action transaction (single-call: simulate → sign → broadcast).
-   * 
+   *
    * This method:
-   * 1. Builds the RegisterAction message with the provided payload
-   * 2. Simulates the transaction to compute the exact gas needed
-   * 3. Calculates the fee based on gas used and gas price
-   * 4. Signs the transaction using the configured signer
-   * 5. Broadcasts the transaction to the network
-   * 6. Returns the transaction outcome
-   * 
+   * 1. Fetches the action fee from the blockchain based on file size
+   * 2. Builds the RegisterAction message with the provided payload
+   * 3. Simulates the transaction to compute the exact gas needed
+   * 4. Calculates the fee based on gas used and gas price
+   * 5. Signs the transaction using the configured signer
+   * 6. Broadcasts the transaction to the network
+   * 7. Returns the transaction outcome
+   *
    * @param input - Transaction input parameters
+   * @param fileSize - Size of the file in bytes
    * @returns Transaction outcome with hash, height, code, gas, and fee
    * @throws {Error} If simulation, signing, or broadcast fails
-   * 
+   *
    * @example
    * ```typescript
    * const outcome = await chainPort.requestActionTx({
    *   actionId: 'cascade-upload-123',
    *   msg: { data_hash: '...', index_file: '...' },
    *   gasPrice: '0.025ulume'
-   * });
-   * 
+   * }, 1024000); // 1MB file
+   *
    * console.log(`Tx ${outcome.txHash} at height ${outcome.height}`);
    * ```
    */
-  requestActionTx(input: RequestActionTxInput): Promise<TxOutcome>;
+  requestActionTx(input: RequestActionTxInput, fileSize: number): Promise<TxOutcome>;
 }

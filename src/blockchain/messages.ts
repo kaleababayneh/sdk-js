@@ -10,113 +10,298 @@
 import type { EncodeObject } from "@cosmjs/proto-signing";
 
 /**
- * Metadata for a Cascade action registration.
- * 
- * Contains all information required to register a Cascade storage action on-chain.
+ * Metadata for a Sense action.
+ *
+ * Contains information for Sense actions according to the proto definition.
+ */
+export interface SenseMetadata {
+  /** Data hash - required for RequestAction */
+  data_hash: string;
+  /** DD and fingerprints IC - required for RequestAction */
+  dd_and_fingerprints_ic: number;
+  /** Collection ID - optional for RequestAction */
+  collection_id?: string;
+  /** Group ID - optional for RequestAction */
+  group_id?: string;
+  /** DD and fingerprints max - added by Keeper */
+  dd_and_fingerprints_max?: number;
+  /** DD and fingerprints IDs - required for FinalizeAction */
+  dd_and_fingerprints_ids?: string[];
+  /** Signatures - required for FinalizeAction */
+  signatures?: string;
+}
+
+/**
+ * Metadata for a Cascade action.
+ *
+ * Contains information for Cascade actions according to the proto definition.
  */
 export interface CascadeActionMetadata {
-  /** Data hash (BLAKE3) of the file being stored */
+  /** Data hash - required for RequestAction */
   data_hash: string;
-  /** Size of the file in bytes */
-  file_size: number;
-  /** RaptorQ block identifier (rq_ids_ic) */
+  /** File name - required for RequestAction */
+  file_name: string;
+  /** RaptorQ IDs IC - required for RequestAction */
   rq_ids_ic: number;
-  /** Maximum RQ IDs for layout derivation (rq_ids_max) */
-  rq_ids_max: number;
-  /** Number of layout IDs (typically 50 for LEP-1) */
-  layout_ids_count: number;
-  /** Base64-encoded layout signature */
-  layout_signature: string;
-  /** Whether the action is public (empty download signature) or private */
+  /** RaptorQ IDs max - added by Keeper */
+  rq_ids_max?: number;
+  /** RaptorQ IDs - required for FinalizeAction */
+  rq_ids_ids?: string[];
+  /** Signatures - required for RequestAction */
+  signatures: string;
+  /** Whether the action is publicly visible */
   public: boolean;
 }
 
 /**
- * Build a MsgRegisterAction for Cascade storage.
- * 
- * Constructs an EncodeObject for registering a Cascade action on the Lumera blockchain.
+ * Build a MsgRequestAction for Cascade storage.
+ *
+ * Constructs an EncodeObject for requesting a Cascade action on the Lumera blockchain.
  * This message type is used to initiate storage of data via the Cascade protocol.
- * 
- * @param metadata - Cascade action metadata
- * @param fee - Action fee in uLUME (as string, e.g., "100000")
+ *
+ * @param metadata - Cascade action metadata (will be JSON serialized)
+ * @param price - Action price in uLUME (as string, e.g., "100000")
+ * @param expirationTime - Action expiration time (Unix timestamp as string)
  * @param creator - Address of the account creating the action
  * @returns EncodeObject ready for transaction signing
- * 
+ *
  * @example
  * ```typescript
- * const msg = buildMsgRegisterAction(
+ * const msg = buildMsgRequestAction(
  *   {
  *     data_hash: "abc123...",
- *     file_size: 1024000,
+ *     file_name: "example.txt",
  *     rq_ids_ic: 12345,
- *     rq_ids_max: 100000,
- *     layout_ids_count: 50,
- *     layout_signature: "base64signature==",
+ *     signatures: "base64signature==",
  *     public: false
  *   },
  *   "100000",
+ *   "1735689600",
  *   "lumera1abc..."
  * );
- * 
+ *
  * const result = await client.signAndBroadcast(address, [msg], fee);
  * ```
  */
-export function buildMsgRegisterAction(
-  metadata: CascadeActionMetadata,
-  fee: string,
+export function buildMsgRequestAction(
+  metadata: CascadeActionMetadata | SenseMetadata,
+  price: string,
+  expirationTime: string,
   creator: string
 ): EncodeObject {
   return {
-    typeUrl: "/lumera.action.v1.MsgRegisterAction",
+    typeUrl: "/lumera.action.v1.MsgRequestAction",
     value: {
       creator,
-      fee,
-      metadata: {
-        type: "cascade",
-        data_hash: metadata.data_hash,
-        file_size: metadata.file_size.toString(),
-        rq_ids_ic: metadata.rq_ids_ic,
-        rq_ids_max: metadata.rq_ids_max,
-        layout_ids_count: metadata.layout_ids_count,
-        layout_signature: metadata.layout_signature,
-        public: metadata.public,
-      },
+      actionType: "data_hash" in metadata && "rq_ids_ic" in metadata ? "cascade" : "sense",
+      metadata: JSON.stringify(metadata),
+      price,
+      expirationTime,
     },
   };
 }
 
 /**
- * Calculate the fee for a Cascade action based on file size.
- * 
- * Computes the total fee required for a Cascade action using the action module's
- * fee schedule (base fee + per-KB fee).
- * 
- * @param fileSizeBytes - Size of the file in bytes
- * @param feeBase - Base fee in uLUME (from action params)
- * @param feePerKb - Per-kilobyte fee in uLUME (from action params)
- * @returns Total fee in uLUME as a string
- * 
+ * Build a MsgFinalizeAction.
+ *
+ * Constructs an EncodeObject for finalizing an action on the Lumera blockchain.
+ * This message must be sent by a supernode address.
+ *
+ * @param actionId - The ID of the action to finalize
+ * @param actionType - Type of action ("cascade" or "sense")
+ * @param metadata - Action-specific metadata (will be JSON serialized)
+ * @param creator - Supernode address finalizing the action
+ * @returns EncodeObject ready for transaction signing
+ *
  * @example
  * ```typescript
- * const params = await client.Action.getParams();
- * const fee = calculateCascadeFee(
- *   1024000, // 1MB file
- *   params.fee_base,
- *   params.fee_per_kb
+ * const msg = buildMsgFinalizeAction(
+ *   "action123",
+ *   "cascade",
+ *   { rq_ids_ids: ["id1", "id2", "id3"] },
+ *   "lumera1supernode..."
  * );
- * console.log("Fee:", fee, "uLUME");
+ *
+ * const result = await client.signAndBroadcast(address, [msg], fee);
  * ```
  */
-export function calculateCascadeFee(
-  fileSizeBytes: number,
-  feeBase: string,
-  feePerKb: string
-): string {
-  const base = BigInt(feeBase);
-  const perKb = BigInt(feePerKb);
-  const kb = BigInt(Math.ceil(fileSizeBytes / 1024));
-  const totalFee = base + perKb * kb;
-  return totalFee.toString();
+export function buildMsgFinalizeAction(
+  actionId: string,
+  actionType: string,
+  metadata: Partial<CascadeActionMetadata> | Partial<SenseMetadata>,
+  creator: string
+): EncodeObject {
+  return {
+    typeUrl: "/lumera.action.v1.MsgFinalizeAction",
+    value: {
+      creator,
+      actionId,
+      actionType,
+      metadata: JSON.stringify(metadata),
+    },
+  };
+}
+
+/**
+ * Build a MsgApproveAction.
+ *
+ * Constructs an EncodeObject for approving an action on the Lumera blockchain.
+ *
+ * @param actionId - The ID of the action to approve
+ * @param creator - Address of the account approving the action
+ * @returns EncodeObject ready for transaction signing
+ *
+ * @example
+ * ```typescript
+ * const msg = buildMsgApproveAction("action123", "lumera1abc...");
+ * const result = await client.signAndBroadcast(address, [msg], fee);
+ * ```
+ */
+export function buildMsgApproveAction(
+  actionId: string,
+  creator: string
+): EncodeObject {
+  return {
+    typeUrl: "/lumera.action.v1.MsgApproveAction",
+    value: {
+      creator,
+      actionId,
+    },
+  };
+}
+
+/**
+ * Build a MsgRegisterSupernode.
+ *
+ * Constructs an EncodeObject for registering a supernode on the Lumera blockchain.
+ *
+ * @param validatorAddress - Validator address
+ * @param ipAddress - IP address of the supernode
+ * @param supernodeAccount - Supernode account address
+ * @param p2pPort - P2P port
+ * @param creator - Address of the account creating the registration
+ * @returns EncodeObject ready for transaction signing
+ */
+export function buildMsgRegisterSupernode(
+  validatorAddress: string,
+  ipAddress: string,
+  supernodeAccount: string,
+  p2pPort: string,
+  creator: string
+): EncodeObject {
+  return {
+    typeUrl: "/lumera.supernode.v1.MsgRegisterSupernode",
+    value: {
+      creator,
+      validatorAddress,
+      ipAddress,
+      supernodeAccount,
+      p2p_port: p2pPort,
+    },
+  };
+}
+
+/**
+ * Build a MsgDeregisterSupernode.
+ *
+ * Constructs an EncodeObject for deregistering a supernode from the Lumera blockchain.
+ *
+ * @param validatorAddress - Validator address
+ * @param creator - Address of the account requesting deregistration
+ * @returns EncodeObject ready for transaction signing
+ */
+export function buildMsgDeregisterSupernode(
+  validatorAddress: string,
+  creator: string
+): EncodeObject {
+  return {
+    typeUrl: "/lumera.supernode.v1.MsgDeregisterSupernode",
+    value: {
+      creator,
+      validatorAddress,
+    },
+  };
+}
+
+/**
+ * Build a MsgStartSupernode.
+ *
+ * Constructs an EncodeObject for starting a supernode on the Lumera blockchain.
+ *
+ * @param validatorAddress - Validator address
+ * @param creator - Address of the account starting the supernode
+ * @returns EncodeObject ready for transaction signing
+ */
+export function buildMsgStartSupernode(
+  validatorAddress: string,
+  creator: string
+): EncodeObject {
+  return {
+    typeUrl: "/lumera.supernode.v1.MsgStartSupernode",
+    value: {
+      creator,
+      validatorAddress,
+    },
+  };
+}
+
+/**
+ * Build a MsgStopSupernode.
+ *
+ * Constructs an EncodeObject for stopping a supernode on the Lumera blockchain.
+ *
+ * @param validatorAddress - Validator address
+ * @param reason - Reason for stopping the supernode
+ * @param creator - Address of the account stopping the supernode
+ * @returns EncodeObject ready for transaction signing
+ */
+export function buildMsgStopSupernode(
+  validatorAddress: string,
+  reason: string,
+  creator: string
+): EncodeObject {
+  return {
+    typeUrl: "/lumera.supernode.v1.MsgStopSupernode",
+    value: {
+      creator,
+      validatorAddress,
+      reason,
+    },
+  };
+}
+
+/**
+ * Build a MsgUpdateSupernode.
+ *
+ * Constructs an EncodeObject for updating a supernode on the Lumera blockchain.
+ *
+ * @param validatorAddress - Validator address
+ * @param ipAddress - New IP address
+ * @param note - Update note
+ * @param supernodeAccount - New supernode account address
+ * @param p2pPort - New P2P port
+ * @param creator - Address of the account updating the supernode
+ * @returns EncodeObject ready for transaction signing
+ */
+export function buildMsgUpdateSupernode(
+  validatorAddress: string,
+  ipAddress: string,
+  note: string,
+  supernodeAccount: string,
+  p2pPort: string,
+  creator: string
+): EncodeObject {
+  return {
+    typeUrl: "/lumera.supernode.v1.MsgUpdateSupernode",
+    value: {
+      creator,
+      validatorAddress,
+      ipAddress,
+      note,
+      supernodeAccount,
+      p2p_port: p2pPort,
+    },
+  };
 }
 
 /**
@@ -131,8 +316,8 @@ export function calculateCascadeFee(
  * @example
  * ```typescript
  * const msgs = buildBatchMessages([
- *   buildMsgRegisterAction(metadata1, fee1, creator),
- *   buildMsgRegisterAction(metadata2, fee2, creator),
+ *   buildMsgRequestAction(metadata1, price1, expTime1, creator),
+ *   buildMsgRequestAction(metadata2, price2, expTime2, creator),
  * ]);
  * 
  * const result = await client.signAndBroadcast(address, msgs, totalFee);

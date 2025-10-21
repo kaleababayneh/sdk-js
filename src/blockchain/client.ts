@@ -118,7 +118,7 @@ export interface BlockchainClientOptions {
  * console.log("Max RQ IDs:", params.rq_ids_max);
  * 
  * // Simulate and broadcast a transaction
- * const msgs = [buildMsgRegisterAction(metadata, fee, account.address)];
+ * const msgs = [buildMsgRequestAction(metadata, price, expirationTime, account.address)];
  * const gas = await client.Tx.simulate(account.address, msgs);
  * const result = await client.Tx.signAndBroadcast(
  *   account.address,

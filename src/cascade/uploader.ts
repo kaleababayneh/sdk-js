@@ -176,7 +176,7 @@ export class CascadeUploader {
         public: false, // TODO: Make this configurable
       },
       memo: `Cascade upload: ${params.actionId}`,
-    });
+    }, fileBytes.length);
     
     console.debug('Action registered on-chain:', txOutcome);
     

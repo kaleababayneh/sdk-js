@@ -9,7 +9,7 @@
 
 import type { CascadeChainPort, CascadeActionParams, RequestActionTxInput, TxOutcome } from "../../cascade/ports";
 import type { BlockchainClient } from "../interfaces";
-import { buildMsgRegisterAction, calculateCascadeFee } from "../messages";
+import { buildMsgRequestAction } from "../messages";
 
 /**
  * Cache entry for action parameters with TTL.
@@ -160,61 +160,58 @@ export class BlockchainActionAdapter implements CascadeChainPort {
 
   /**
    * Request an action transaction (single-call: simulate → sign → broadcast).
-   * 
+   *
    * This method orchestrates the complete transaction flow:
-   * 1. Builds the RegisterAction message with the provided payload
-   * 2. Simulates the transaction to get the exact gas required
-   * 3. Calculates the fee based on simulated gas and gas price
-   * 4. Signs the transaction
-   * 5. Broadcasts the transaction
-   * 6. Returns the transaction outcome
-   * 
+   * 1. Fetches the action fee from the blockchain based on file size
+   * 2. Builds the RequestAction message with the provided payload
+   * 3. Simulates the transaction to get the exact gas required
+   * 4. Calculates the fee based on simulated gas and gas price
+   * 5. Signs the transaction
+   * 6. Broadcasts the transaction
+   * 7. Returns the transaction outcome
+   *
    * @param input - Transaction input parameters
+   * @param fileSize - Size of the file in bytes
    * @returns Transaction outcome with hash, height, code, gas, and fee
    * @throws {Error} If any step fails (simulation, signing, or broadcast)
-   * 
+   *
    * @example
    * ```typescript
    * const outcome = await adapter.requestActionTx({
    *   actionId: 'cascade-123',
    *   msg: {
    *     data_hash: 'abc...',
-   *     file_size: 1024,
+   *     file_name: 'example.txt',
    *     rq_ids_ic: 100,
-   *     rq_ids_max: 1000,
-   *     layout_ids_count: 50,
-   *     layout_signature: 'sig...',
+   *     signatures: 'sig...',
    *     public: false
    *   }
-   * });
-   * 
+   * }, 1024000); // 1MB file
+   *
    * console.log(`TX ${outcome.txHash} succeeded with code ${outcome.code}`);
    * ```
    */
-  async requestActionTx(input: RequestActionTxInput): Promise<TxOutcome> {
-    // Step 1: Get action params to calculate fee
-    const params = await this.blockchainClient.Action.getParams();
+  async requestActionTx(input: RequestActionTxInput, fileSize: number): Promise<TxOutcome> {
+    // Step 1: Fetch action fee from blockchain based on data size
+    const feeInfo = await this.blockchainClient.Action.getActionFee(fileSize);
+    const priceAmount = feeInfo.amount;
     const metadata = input.msg as any; // Type assertion for the metadata payload
 
-    // Step 2: Calculate the fee based on file size
-    const feeAmount = calculateCascadeFee(
-      metadata.file_size,
-      params.fee_base,
-      params.fee_per_kb
-    );
+    // Step 2: Calculate expiration time (default to 1 hour from now)
+    const expirationTime = metadata.expirationTime ||
+      Math.floor(Date.now() / 1000 + 3600).toString();
 
-    // Step 3: Build the RegisterAction message
-    const msg = buildMsgRegisterAction(
+    // Step 3: Build the RequestAction message
+    const msg = buildMsgRequestAction(
       {
         data_hash: metadata.data_hash,
-        file_size: metadata.file_size,
+        file_name: metadata.file_name,
         rq_ids_ic: metadata.rq_ids_ic,
-        rq_ids_max: metadata.rq_ids_max,
-        layout_ids_count: metadata.layout_ids_count,
-        layout_signature: metadata.layout_signature,
+        signatures: metadata.signatures,
         public: metadata.public,
       },
-      feeAmount,
+      priceAmount,
+      expirationTime,
       this.signerAddress
     );
 

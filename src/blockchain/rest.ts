@@ -64,7 +64,7 @@ export class RestActionQuery implements ActionQuery {
         fee_per_kb?: string;
         max_raptor_q_symbols?: string;
       };
-    }>("/LumeraProtocol/lumera/action/params");
+    }>("/LumeraProtocol/lumera/action/v1/params");
 
     return {
       fee_base: response.params?.fee_base ?? "0",
@@ -96,7 +96,7 @@ export class RestActionQuery implements ActionQuery {
         status?: string;
         metadata?: unknown;
       };
-    }>(`/LumeraProtocol/lumera/action/action/${actionId}`);
+    }>(`/LumeraProtocol/lumera/action/v1/get_action/${actionId}`);
 
     console.debug("Action query response:", response);
 
@@ -104,6 +104,34 @@ export class RestActionQuery implements ActionQuery {
       id: response.action?.id ?? actionId,
       status: response.action?.status ?? "unknown",
       metadata: response.action?.metadata,
+    };
+  }
+
+  /**
+   * Get the action fee for a given data size.
+   *
+   * Queries the blockchain to calculate the required fee for an action
+   * based on the size of the data being stored.
+   *
+   * @param dataSize - Size of the data in bytes
+   * @returns Object containing the fee amount as a string
+   * @throws {HttpError} If the LCD query fails
+   *
+   * @example
+   * ```typescript
+   * const feeInfo = await actionQuery.getActionFee(1024000); // 1MB
+   * console.log("Fee amount:", feeInfo.amount, "uLUME");
+   * ```
+   */
+  async getActionFee(dataSize: number): Promise<{ amount: string }> {
+    const response = await this.http.get<{
+      amount?: string;
+    }>(`/LumeraProtocol/lumera/action/v1/get_action_fee/${dataSize}`);
+
+    console.debug("Action fee query response:", response);
+
+    return {
+      amount: response.amount ?? "0",
     };
   }
 }
@@ -156,17 +184,131 @@ export class RestSupernodeQuery implements SupernodeQuery {
    */
   async getParams(): Promise<SupernodeParams> {
     const response = await this.http.get<{
-      data?: {
-        params?: {
-          [key: string]: unknown;
-        };
+      params?: {
+        [key: string]: unknown;
       };
-    }>("/LumeraProtocol/lumera/supernode/params");
+    }>("/LumeraProtocol/lumera/supernode/v1/params");
 
     console.debug("Supernode params response:", response);
 
     return {
-      ...(response.data?.params || {}),
+      ...(response.params || {}),
     };
+  }
+
+  /**
+   * Get a supernode by validator address.
+   *
+   * Retrieves the details of a specific supernode from the blockchain.
+   *
+   * @param validatorAddress - The validator address of the supernode
+   * @returns Supernode record details
+   * @throws {HttpError} If the LCD query fails or supernode is not found
+   *
+   * @example
+   * ```typescript
+   * const supernode = await supernodeQuery.getSupernode("lumeravaloper1abc...");
+   * console.log("IP:", supernode.ipAddress);
+   * ```
+   */
+  async getSupernode(validatorAddress: string): Promise<import("./interfaces").SupernodeRecord> {
+    const response = await this.http.get<{
+      supernode?: {
+        validatorAddress?: string;
+        supernodeAccount?: string;
+        ipAddress?: string;
+        p2pPort?: string;
+        state?: string;
+        [key: string]: unknown;
+      };
+    }>(`/LumeraProtocol/lumera/supernode/v1/get_super_node/${validatorAddress}`);
+
+    console.debug("Supernode query response:", response);
+
+    return {
+      validatorAddress: response.supernode?.validatorAddress ?? validatorAddress,
+      supernodeAccount: response.supernode?.supernodeAccount ?? "",
+      ipAddress: response.supernode?.ipAddress ?? "",
+      p2pPort: response.supernode?.p2pPort ?? "",
+      state: response.supernode?.state ?? "unknown",
+      ...(response.supernode || {}),
+    };
+  }
+
+  /**
+   * Get a supernode by supernode address.
+   *
+   * Retrieves the details of a specific supernode by its supernode account address.
+   *
+   * @param supernodeAddress - The supernode account address
+   * @returns Supernode record details
+   * @throws {HttpError} If the LCD query fails or supernode is not found
+   *
+   * @example
+   * ```typescript
+   * const supernode = await supernodeQuery.getSupernodeByAddress("lumera1xyz...");
+   * console.log("Validator:", supernode.validatorAddress);
+   * ```
+   */
+  async getSupernodeByAddress(supernodeAddress: string): Promise<import("./interfaces").SupernodeRecord> {
+    const response = await this.http.get<{
+      supernode?: {
+        validatorAddress?: string;
+        supernodeAccount?: string;
+        ipAddress?: string;
+        p2pPort?: string;
+        state?: string;
+        [key: string]: unknown;
+      };
+    }>(`/LumeraProtocol/lumera/supernode/v1/get_super_node_by_address/${supernodeAddress}`);
+
+    console.debug("Supernode by address query response:", response);
+
+    return {
+      validatorAddress: response.supernode?.validatorAddress ?? "",
+      supernodeAccount: response.supernode?.supernodeAccount ?? supernodeAddress,
+      ipAddress: response.supernode?.ipAddress ?? "",
+      p2pPort: response.supernode?.p2pPort ?? "",
+      state: response.supernode?.state ?? "unknown",
+      ...(response.supernode || {}),
+    };
+  }
+
+  /**
+   * List all supernodes.
+   *
+   * Retrieves a list of all registered supernodes from the blockchain.
+   *
+   * @returns Array of supernode records
+   * @throws {HttpError} If the LCD query fails
+   *
+   * @example
+   * ```typescript
+   * const supernodes = await supernodeQuery.listSupernodes();
+   * console.log(`Found ${supernodes.length} supernodes`);
+   * ```
+   */
+  async listSupernodes(): Promise<import("./interfaces").SupernodeRecord[]> {
+    const response = await this.http.get<{
+      supernodes?: Array<{
+        validatorAddress?: string;
+        supernodeAccount?: string;
+        ipAddress?: string;
+        p2pPort?: string;
+        state?: string;
+        [key: string]: unknown;
+      }>;
+    }>("/LumeraProtocol/lumera/supernode/v1/list_super_nodes");
+
+    console.debug("List supernodes response:", response);
+
+    return (response.supernodes || []).map((sn) => ({
+      validatorAddress: sn.validatorAddress ?? "",
+      supernodeAccount: sn.supernodeAccount ?? "",
+      ipAddress: sn.ipAddress ?? "",
+      p2pPort: sn.p2pPort ?? "",
+      state: sn.state ?? "unknown",
+      ...sn,
+    }));
   }
 }

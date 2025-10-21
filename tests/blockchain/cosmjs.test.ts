@@ -4,7 +4,7 @@ import type { DeliverTxResponse } from "@cosmjs/stargate";
 import { CosmjsTxClient } from "src/blockchain/cosmjs";
 import {
   buildBatchMessages,
-  buildMsgRegisterAction,
+  buildMsgRequestAction,
   calculateCascadeFee,
   estimateGas,
 } from "src/blockchain/messages";
@@ -155,42 +155,40 @@ describe("blockchain message helpers", () => {
     vi.restoreAllMocks();
   });
 
-  it("buildMsgRegisterAction constructs EncodeObject with metadata", () => {
+  it("buildMsgRequestAction constructs EncodeObject with metadata", () => {
     const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
-    const msg = buildMsgRegisterAction(
+    const msg = buildMsgRequestAction(
       {
         data_hash: "hash",
-        file_size: 1024,
+        file_name: "test.txt",
         rq_ids_ic: 5,
-        rq_ids_max: 500,
-        layout_ids_count: 50,
-        layout_signature: "sig==",
+        signatures: "sig==",
         public: false,
       },
       "1000",
+      "1735689600",
       "lumera1creator",
     );
 
     expect(msg).toEqual({
-      typeUrl: "/lumera.action.v1.MsgRegisterAction",
+      typeUrl: "/lumera.action.v1.MsgRequestAction",
       value: {
         creator: "lumera1creator",
-        fee: "1000",
-        metadata: {
-          type: "cascade",
+        actionType: "cascade",
+        metadata: JSON.stringify({
           data_hash: "hash",
-          file_size: "1024",
+          file_name: "test.txt",
           rq_ids_ic: 5,
-          rq_ids_max: 500,
-          layout_ids_count: 50,
-          layout_signature: "sig==",
+          signatures: "sig==",
           public: false,
-        },
+        }),
+        price: "1000",
+        expirationTime: "1735689600",
       },
     });
 
-    console.debug("register action message", msg.value.metadata);
-    expect(debugSpy).toHaveBeenCalledWith("register action message", msg.value.metadata);
+    console.debug("request action message", msg.value);
+    expect(debugSpy).toHaveBeenCalledWith("request action message", msg.value);
     debugSpy.mockRestore();
   });
 
