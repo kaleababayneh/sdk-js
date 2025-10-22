@@ -26,14 +26,14 @@ export interface CascadeActionParams {
  */
 export interface RequestActionTxInput {
   /**
-   * Unique identifier for this action
-   */
-  actionId: string;
-
-  /**
    * The message payload to include in the transaction
    */
   msg: unknown;
+
+  /**
+   * Expiration time for the action (Unix timestamp in seconds)
+   */
+  expirationTime: string;
 
   /**
    * Optional gas price override (e.g., "0.025ulume")

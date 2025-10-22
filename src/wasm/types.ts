@@ -89,13 +89,14 @@ export interface IndexFile {
   
   /**
    * Array of 50 derived layout IDs.
-   * 
+   *
    * @remarks
-   * Derived from (rq_ids_ic + i) % rq_ids_max for i in [0, 50),
-   * where rq_ids_ic is the initial counter from blockchain params
-   * and rq_ids_max is the maximum layout ID from blockchain params.
+   * Derived using the LEP-1 algorithm:
+   * Base58(BLAKE3(zstd(layout_with_signature + "." + counter)))
+   * where layout_with_signature = Base64(layout_file) + "." + Base64(layout_signature)
+   * and counter = rq_ids_ic + i for i in [0, rq_ids_max)
    */
-  layout_ids: number[];
+  layout_ids: string[];
   
   /**
    * Cryptographic signature over the layout data.
@@ -105,5 +106,5 @@ export interface IndexFile {
    * using ADR-036 signArbitrary with the uploader's wallet.
    * Stored as Base64-encoded bytes.
    */
-  layout_signature: Uint8Array;
+  layout_signature: string;
 }

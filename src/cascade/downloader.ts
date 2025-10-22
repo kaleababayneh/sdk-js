@@ -32,6 +32,7 @@ import type { SNApiClient } from './client';
 import { TaskManager, TaskManagerOptions } from './task';
 import { toBase64 } from '../internal/encoding';
 import { blake3Hash } from '../internal/hash';
+import type { UniversalSigner } from '../wallets/signer';
 
 /**
  * Parameters for a Cascade download operation
@@ -73,10 +74,18 @@ export interface DownloadParams {
 export class CascadeDownloader {
   /**
    * Create a new CascadeDownloader instance
-   * 
+   *
    * @param client - SNApiClient for making sn-api requests
+   * @param signerAddress - Bech32 address of the signer
+   * @param signer - Universal signer for signing operations
+   * @param chainId - Chain ID for signing operations
    */
-  constructor(private readonly client: SNApiClient) {}
+  constructor(
+    private readonly client: SNApiClient,
+    private readonly signerAddress: string,
+    private readonly signer: UniversalSigner,
+    private readonly chainId: string
+  ) {}
 
   /**
    * Download a file from Cascade storage
@@ -218,26 +227,20 @@ export class CascadeDownloader {
   }
 
   /**
-   * Simulate download signature generation
-   * 
-   * @remarks
-   * In production, this should:
-   * 1. Sign the action ID using ADR-036 signArbitrary with wallet
-   * 2. Return Base64-encoded signature
-   * 
-   * For now, returns a placeholder signature.
-   * 
+   * Generate download signature for private file authentication
+   *
+   * Signs the action ID using ADR-036 signArbitrary with the wallet.
+   * This signature authenticates the download request for private files.
+   *
    * @param actionId - The action ID to sign
-   * @returns Promise resolving to Base64-encoded simulated signature
+   * @returns Promise resolving to Base64-encoded signature
    */
   private async simulateDownloadSignature(actionId: string): Promise<string> {
-    // Placeholder: In production, replace with actual wallet signing
-    const actionIdBytes = new TextEncoder().encode(actionId);
-    const hash = await blake3Hash(actionIdBytes);
-    const simulatedSig = new Uint8Array(
-      Buffer.from(`simulated_download_sig_${hash.slice(0, 16)}`, 'utf8')
+    const signatureResponse = await this.signer.signArbitrary(
+      this.chainId,
+      this.signerAddress,
+      actionId
     );
-    
-    return toBase64(simulatedSig);
+    return signatureResponse.signature;
   }
 }

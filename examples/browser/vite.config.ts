@@ -6,6 +6,8 @@ export default defineConfig({
     alias: {
       // Alias for the SDK to use the local source
       '@lumera/sdk-js': path.resolve(__dirname, '../../src'),
+      // Force blake3 to use browser build
+      'blake3': path.resolve(__dirname, '../../node_modules/blake3/dist/browser/index.js'),
     },
   },
   build: {

@@ -101,7 +101,7 @@ export type {
 
 export {
   createSingleBlockLayout,
-  deriveLayoutIds,
+  generateIds,
   buildIndexFile,
   type Layout,
   type IndexFile,

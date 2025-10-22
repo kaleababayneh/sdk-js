@@ -212,14 +212,16 @@ async function uploadFile() {
     showProgress("upload", 20);
     log("File loaded into memory", "info");
     
-    // Generate unique action ID
-    const timestamp = Date.now();
-    const randomHex = Math.random().toString(16).slice(2, 10);
-    showProgress("upload", 40);
-    
+    // Calculate expiration time (default to 24 hours from now)
+    // Date.now() returns milliseconds, convert to seconds
+    const expirationTime = Math.floor(Date.now() / 1000 + 86400).toString();  
+  
     // Upload to Cascade
     log("Uploading to Cascade storage...", "info");
     const uploadResult = await state.client.Cascade.uploader.uploadFile(fileBytes, {
+      fileName: state.selectedFile.name,
+      isPublic: false,
+      expirationTime: expirationTime,
       taskOptions: {
         pollInterval: 2000,
         timeout: 300000,
@@ -228,7 +230,7 @@ async function uploadFile() {
     
     showProgress("upload", 100);
     
-    log(`✓ Upload completed! Task ID: ${uploadResult.id}`, "success");
+    log(`✓ Upload completed! Task ID: ${uploadResult.taskId}`, "success");
     log(`Status: ${uploadResult.status}`, "success");
     
     // Enable download button

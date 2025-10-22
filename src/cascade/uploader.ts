@@ -29,13 +29,30 @@ import type { SNApiClient, Task } from './client';
 import type { CascadeChainPort } from './ports';
 import { TaskManager, TaskManagerOptions } from './task';
 import { blake3Hash } from '../internal/hash';
-import { toBase64, toCanonicalJsonBytes } from '../internal/encoding';
-import { createSingleBlockLayout, deriveLayoutIds, buildIndexFile } from '../wasm/lep1';
+import { toBase64, fromBase64, toCanonicalJsonBytes } from '../internal/encoding';
+import { createSingleBlockLayout, generateIds, buildIndexFile } from '../wasm/lep1';
+import type { UniversalSigner } from '../wallets/signer';
 
 /**
  * Parameters required for a Cascade upload operation
  */
 export interface UploadParams {
+  /**
+   * File name
+   */
+  fileName?: string;
+
+  /**
+   * Cascade is public or private storage
+   */
+  isPublic?: boolean;
+
+  /**
+   * Expiration time for action (Unix timestamp in seconds)
+   * The action will be invalid after this time and action fee refunded (not transaction fee!).
+   */
+  expirationTime: string;
+
   /**
    * Optional task monitoring configuration
    */
@@ -46,12 +63,6 @@ export interface UploadParams {
  * Optional configuration for CascadeUploader
  */
 export interface CascadeUploaderOptions {
-  /**
-   * Number of layout IDs to derive per LEP-1 specification
-   * in practice, that's the same number as max_raptor_q_symbols
-   * @default 50
-   */
-  layoutIdCount?: number;
 }
 
 /**
@@ -64,29 +75,27 @@ export interface CascadeUploaderOptions {
  * - RaptorQ layout generation
  * - LEP-1 compliant index file construction
  * - Upload task initiation and monitoring
- * 
- * @remarks
- * The current implementation uses a simulated signature for `start_signature`.
- * In production, this should be replaced with a real wallet signature over
- * the BLAKE3 hash of the file data using ADR-036 signArbitrary.
  */
 export class CascadeUploader {
-  private readonly layoutIdCount: number;
 
   /**
    * Create a new CascadeUploader instance
    *
    * @param client - SNApiClient for making sn-api requests
    * @param chainPort - Port for accessing blockchain capabilities
+   * @param signerAddress - Bech32 address of the signer
+   * @param signer - Universal signer for signing operations
+   * @param chainId - Chain ID for signing operations
    * @param options - Optional configuration
    */
   constructor(
     private readonly client: SNApiClient,
     private readonly chainPort: CascadeChainPort,
+    private readonly signerAddress: string,
+    private readonly signer: UniversalSigner,
+    private readonly chainId: string,
     options: CascadeUploaderOptions = {}
-  ) {
-    this.layoutIdCount = options.layoutIdCount ?? 50;
-  }
+  ) {}
 
   /**
    * Upload a file to Cascade storage
@@ -100,7 +109,7 @@ export class CascadeUploader {
    * 5. Derives layout IDs per LEP-1 specification
    * 6. Constructs the index file with layout metadata
    * 7. Registers the action on-chain via single-call transaction flow
-   * 8. Simulates the start_signature (placeholder for wallet integration)
+   * 8. Signs hash of file bytes to create start_signature
    * 9. Initiates upload via sn-api with multipart form data
    * 10. Monitors the upload task until completion
    * 11. Returns the completed task details
@@ -144,52 +153,65 @@ export class CascadeUploader {
     const fileBytes = await this.toBytes(file);
     
     // Step 4: Calculate data_hash using BLAKE3
-    const dataHash = await blake3Hash(fileBytes);
-    
+    // returns Base64-encoded string
+    const dataHash64 = await blake3Hash(fileBytes);
+
     // Step 5: Generate LEP-1 layout using rq-wasm
-    const layout = await createSingleBlockLayout(fileBytes);
+    // Returns raw layout file bytes (JSON format)
+    const layoutBytes = await createSingleBlockLayout(fileBytes);
+    const layoutBytesB64 = toBase64(layoutBytes);
+
+    // Sign the layout using wallet (ADR-036 signArbitrary)
+    const layoutSignatureResponse = await this.signer.signArbitrary(
+      this.chainId,
+      this.signerAddress,
+      layoutBytesB64
+    );
+
+    const layoutSignatureB64 = layoutSignatureResponse.signature; // this is already Base64
     
-    // Step 6: Derive layout IDs per LEP-1 specification
-    const layoutIds = deriveLayoutIds(
+    // Step 6: Generate layout IDs using the new algorithm
+    const layoutIds = await generateIds(
+      layoutBytesB64,
+      layoutSignatureB64,
       rq_ids_ic,
-      rq_ids_max,
-      this.layoutIdCount
+      rq_ids_max
     );
     
     // Step 7: Build index_file
-    // In production, layout_signature should be computed by signing the canonical
-    // JSON bytes of the layout using ADR-036 signArbitrary with the uploader's wallet.
-    // For now, we simulate with a placeholder signature.
-    const layoutSignature = await this.simulateLayoutSignature(layout);
-    const indexFile = buildIndexFile(layoutIds, layoutSignature);
-    
+    const indexFile = buildIndexFile(layoutIds, layoutSignatureB64);
+    const indexFileBytes = toCanonicalJsonBytes(indexFile);
+    const indexFileB64 = toBase64(indexFileBytes);
+    const indexSignatureResponse = await this.signer.signArbitrary(
+      this.chainId,
+      this.signerAddress,
+      indexFileB64
+    );
+    const indexWithSignature = `${indexFileB64}.${indexSignatureResponse.signature}`; // indexSignatureResponse.signature is Base64
+
     // Step 8: Register the action on-chain
     const txOutcome = await this.chainPort.requestActionTx({
-      actionId: params.actionId,
       msg: {
-        data_hash: dataHash,
-        file_size: fileBytes.length,
+        data_hash: dataHash64,
+        file_name: params.fileName,
         rq_ids_ic,
-        rq_ids_max,
-        layout_ids_count: this.layoutIdCount,
-        layout_signature: toBase64(layoutSignature),
-        public: false, // TODO: Make this configurable
+        signature: indexWithSignature,
+        public: params.isPublic,
       },
-      memo: `Cascade upload: ${params.actionId}`,
+      expirationTime: params.expirationTime
     }, fileBytes.length);
     
     console.debug('Action registered on-chain:', txOutcome);
     
-    // Step 9: Prepare start_signature
-    // In production, this should be a wallet signature over BLAKE3(file_bytes).
-    // For now, we simulate with a placeholder.
-    const startSignatureB64 = await this.simulateStartSignature(fileBytes);
+    // Step 9: Prepare auth_signature
+    // Use wallet for signature over BLAKE3(file_bytes).
+    const authSignature = await this.signer.signArbitrary(
+      this.chainId,
+      this.signerAddress,
+      dataHash64
+    );
     
-    // Step 10: Convert index file to Base64 for transmission
-    const indexFileBytes = toCanonicalJsonBytes(indexFile);
-    const indexFileB64 = toBase64(indexFileBytes);
-    
-    // Step 11: Initiate upload via sn-api
+    // Step 10: Initiate upload via sn-api
     // Convert file to Blob if needed for FormData
     let fileBlob: Blob;
     if (file instanceof Blob) {
@@ -247,52 +269,5 @@ export class CascadeUploader {
     // Blob
     const arrayBuffer = await file.arrayBuffer();
     return new Uint8Array(arrayBuffer);
-  }
-
-  /**
-   * Simulate layout signature generation
-   * 
-   * @remarks
-   * In production, this should:
-   * 1. Serialize layout to canonical JSON bytes
-   * 2. Sign using ADR-036 signArbitrary with wallet
-   * 3. Return the signature bytes
-   * 
-   * For now, returns a placeholder signature.
-   * 
-   * @param layout - The RaptorQ layout to sign
-   * @returns Promise resolving to simulated signature bytes
-   */
-  private async simulateLayoutSignature(layout: any): Promise<Uint8Array> {
-    // Placeholder: In production, replace with actual wallet signing
-    const canonicalBytes = toCanonicalJsonBytes(layout);
-    const hash = await blake3Hash(canonicalBytes);
-    
-    // Return a deterministic but simulated signature
-    return new Uint8Array(Buffer.from(`simulated_layout_sig_${hash.slice(0, 16)}`, 'utf8'));
-  }
-
-  /**
-   * Simulate start signature generation
-   * 
-   * @remarks
-   * In production, this should:
-   * 1. Compute BLAKE3(file_bytes)
-   * 2. Sign the hash using ADR-036 signArbitrary with wallet
-   * 3. Return Base64-encoded signature
-   * 
-   * For now, returns a placeholder signature.
-   * 
-   * @param fileBytes - The file data to sign
-   * @returns Promise resolving to Base64-encoded simulated signature
-   */
-  private async simulateStartSignature(fileBytes: Uint8Array): Promise<string> {
-    // Placeholder: In production, replace with actual wallet signing
-    const hash = await blake3Hash(fileBytes);
-    const simulatedSig = new Uint8Array(
-      Buffer.from(`simulated_start_sig_${hash.slice(0, 16)}`, 'utf8')
-    );
-    
-    return toBase64(simulatedSig);
   }
 }

@@ -174,6 +174,9 @@ export class LumeraClient {
    * @param blockchain - Initialized blockchain client
    * @param snapiClient - Initialized SN-API client
    * @param chainPort - Port for Cascade to access blockchain capabilities
+   * @param signerAddress - Bech32 address of the signer
+   * @param signer - Universal signer for signing operations
+   * @param chainId - Chain ID for signing operations
    *
    * @remarks
    * This constructor is typically not called directly. Use the `createLumeraClient`
@@ -182,12 +185,15 @@ export class LumeraClient {
   constructor(
     blockchain: BlockchainClient,
     snapiClient: SNApiClient,
-    chainPort: import("./cascade/ports").CascadeChainPort
+    chainPort: import("./cascade/ports").CascadeChainPort,
+    signerAddress: string,
+    signer: import("./wallets/signer").UniversalSigner,
+    chainId: string
   ) {
     this.Blockchain = blockchain;
     this.Cascade = {
-      uploader: new CascadeUploader(snapiClient, chainPort),
-      downloader: new CascadeDownloader(snapiClient),
+      uploader: new CascadeUploader(snapiClient, chainPort, signerAddress, signer, chainId),
+      downloader: new CascadeDownloader(snapiClient, signerAddress, signer, chainId),
     };
   }
 }
@@ -304,6 +310,9 @@ export async function createLumeraClient(
     }
   );
   
+  // Cast signer to UniversalSigner (assumes it implements signArbitrary)
+  const universalSigner = config.signer as import("./wallets/signer").UniversalSigner;
+  
   // Create and return the unified client
-  return new LumeraClient(blockchain, snapiClient, chainPort);
+  return new LumeraClient(blockchain, snapiClient, chainPort, config.address, universalSigner, chainId);
 }

@@ -34,7 +34,7 @@ vi.mock("src/internal/encoding", () => ({
 
 vi.mock("src/wasm/lep1", () => ({
   createSingleBlockLayout: hoisted.createSingleBlockLayoutMock,
-  deriveLayoutIds: hoisted.deriveLayoutIdsMock,
+  generateIds: hoisted.deriveLayoutIdsMock,
   buildIndexFile: hoisted.buildIndexFileMock,
 }));
 

@@ -197,10 +197,6 @@ export class BlockchainActionAdapter implements CascadeChainPort {
     const priceAmount = feeInfo.amount;
     const metadata = input.msg as any; // Type assertion for the metadata payload
 
-    // Step 2: Calculate expiration time (default to 1 hour from now)
-    const expirationTime = metadata.expirationTime ||
-      Math.floor(Date.now() / 1000 + 3600).toString();
-
     // Step 3: Build the RequestAction message
     const msg = buildMsgRequestAction(
       {
@@ -211,7 +207,7 @@ export class BlockchainActionAdapter implements CascadeChainPort {
         public: metadata.public,
       },
       priceAmount,
-      expirationTime,
+      input.expirationTime,
       this.signerAddress
     );
 

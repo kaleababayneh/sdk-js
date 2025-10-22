@@ -3,7 +3,7 @@ import { WasmBridge } from "src/wasm/bridge";
 import {
   buildIndexFile,
   createSingleBlockLayout,
-  deriveLayoutIds,
+  generateIds,
 } from "src/wasm/lep1";
 import type { Layout } from "src/wasm/types";
 
@@ -50,15 +50,15 @@ describe("LEP-1 helpers", () => {
   });
 
   it("derives sequential layout IDs with wrap-around", () => {
-    const ids = deriveLayoutIds(8, 10, 5);
+    const ids = generateIds(8, 10);
     expect(ids).toEqual([8, 9, 0, 1, 2]);
   });
 
-  it("throws when deriveLayoutIds receives invalid inputs", () => {
-    expect(() => deriveLayoutIds(0, 0, 10)).toThrow(
+  it("throws when generateIds receives invalid inputs", () => {
+    expect(() => generateIds(0, 0)).toThrow(
       /rq_ids_max must be positive/
     );
-    expect(() => deriveLayoutIds(0, 10, -1)).toThrow(
+    expect(() => generateIds(0, -1)).toThrow(
       /count must be non-negative/
     );
   });

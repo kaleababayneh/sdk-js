@@ -238,20 +238,21 @@ export class WasmBridge {
 
   /**
    * Creates a single-block RaptorQ layout from file bytes.
-   * 
+   *
    * This generates metadata for a file, which includes the RaptorQ layout
    * configuration needed for encoding and decoding.
-   * 
+   *
    * @param fileBytes - The file content as a Uint8Array
-   * @returns A promise that resolves to the RaptorQ layout
-   * 
+   * @returns A promise that resolves to the raw layout file bytes (JSON format)
+   *
    * @throws {Error} If layout creation fails
-   * 
+   *
    * @remarks
    * This method writes the file to in-memory storage, creates metadata,
-   * then reads the layout back from the generated metadata file.
+   * then reads the layout file back as raw bytes. Use parseLayoutFile() to
+   * parse the bytes into a Layout object if needed.
    */
-  public async createSingleBlockLayout(fileBytes: Uint8Array): Promise<Layout> {
+  public async createSingleBlockLayout(fileBytes: Uint8Array): Promise<Uint8Array> {
     await this.ensureInitialized();
     
     try {
@@ -267,16 +268,14 @@ export class WasmBridge {
       // Create metadata with block_size = 0 (auto)
       await session.create_metadata(inputPath, layoutPath, 0);
       
-      // Read the layout file
+      // Read the layout file as raw bytes
       const layoutSize = getFileSize(layoutPath);
       const layoutBytes = await readFileChunk(layoutPath, 0, layoutSize);
-      const layoutJson = new TextDecoder('utf-8').decode(layoutBytes);
-      const layout = JSON.parse(layoutJson) as Layout;
       
       // Clean up session
       session.free();
       
-      return layout;
+      return layoutBytes;
     } catch (error) {
       throw new Error(
         `Failed to create RaptorQ layout: ${error instanceof Error ? error.message : String(error)}`
