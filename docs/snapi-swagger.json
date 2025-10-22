@@ -1,0 +1,247 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0",
+        "title": "Supernode API Server"
+    },
+    "paths": {
+        "/api/v1/actions/cascade": {
+            "post": {
+                "summary": "Start an action",
+                "operationId": "startCascade",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["action_id", "file", "signature"],
+                                "properties": {
+                                    "action_id": {
+                                        "type": "string",
+                                        "description": "Action identifier"
+                                    },
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "description": "File to upload"
+                                    },
+                                    "signature": {
+                                        "type": "string",
+                                        "description": "Authentication signature"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/StartCascadeResponse"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/actions/cascade/{action_id}/downloads": {
+            "post": {
+                "summary": "Request Cascade Download",
+                "operationId": "requestCascadeDownload",
+                "parameters": [
+                    {
+                        "name": "action_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Action ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "taskId": {
+                                            "type": "string",
+                                            "description": "Download task identifier"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/actions/cascade/tasks/{task_id}": {
+            "get": {
+                "summary": "Get Cascade Task",
+                "operationId": "getCascadeTask",
+                "parameters": [
+                    {
+                        "name": "task_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Task ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "taskId": {
+                                            "type": "string"
+                                        },
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "progress": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/actions/cascade/tasks/{task_id}/status": {
+            "get": {
+                "summary": "Get Cascade Task Status",
+                "operationId": "getCascadeTaskStatus",
+                "parameters": [
+                    {
+                        "name": "task_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Task ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "enum": ["pending", "processing", "completed", "failed"]
+                                        },
+                                        "progress": {
+                                            "type": "number"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/downloads/cascade/{task_id}/file": {
+            "get": {
+                "summary": "Download Cascade File",
+                "operationId": "downloadCascadeFile",
+                "parameters": [
+                    {
+                        "name": "task_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Task ID"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/octet-stream": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/downloads/cascade/{task_id}/status": {
+            "get": {
+                "summary": "Get download status",
+                "operationId": "watchDownloadStatus",
+                "parameters": [
+                    {
+                        "name": "task_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Task identifier"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "text/event-stream": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "StartCascadeResponse": {
+                "type": "object",
+                "properties": {
+                    "task_id": {
+                        "type": "string",
+                        "description": "Unique identifier for the task"
+                    }
+                }
+            },
+            "ActionStatusResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string",
+                        "description": "Status of the action"
+                    }
+                }
+            }
+        }
+    }
+}

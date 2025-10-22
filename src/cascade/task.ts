@@ -119,8 +119,78 @@ export class TaskManager {
   }
 
   /**
+   * Wait for download task completion using Server-Sent Events (SSE)
+   *
+   * This method provides real-time monitoring of download task status via SSE,
+   * which is more efficient than polling. It listens for the `sdk:completed` event
+   * to detect task completion, and handles error events appropriately.
+   *
+   * @returns Promise resolving when the task completes successfully
+   * @throws {Error} If the task fails or the connection closes unexpectedly
+   *
+   * @example
+   * ```typescript
+   * const taskManager = new TaskManager(client, 'task-123');
+   *
+   * try {
+   *   await taskManager.waitForDownloadCompletion();
+   *   console.log('Download task completed successfully');
+   * } catch (error) {
+   *   console.error('Download task failed:', error.message);
+   * }
+   * ```
+   */
+  async waitForDownloadCompletion(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const eventSource = this.client.watchDownloadTask(this.taskId);
+      
+      // Set up timeout
+      const timeoutId = setTimeout(() => {
+        eventSource.close();
+        reject(new Error(
+          `Download task ${this.taskId} timed out after ${this.timeout}ms`
+        ));
+      }, this.timeout);
+
+      // Listen for completion event
+      eventSource.addEventListener('sdk:completed', (event) => {
+        clearTimeout(timeoutId);
+        eventSource.close();
+        console.debug('Download task completed:', this.taskId);
+        resolve();
+      });
+
+      // Listen for error events
+      eventSource.addEventListener('error', (event) => {
+        clearTimeout(timeoutId);
+        eventSource.close();
+        
+        // Check if this is a connection error or a task error
+        const errorMessage = (event as any).data
+          ? JSON.parse((event as any).data).message || 'Unknown error'
+          : 'Connection error or stream closed';
+        
+        reject(new Error(
+          `Download task ${this.taskId} failed: ${errorMessage}`
+        ));
+      });
+
+      // Handle generic EventSource errors (connection issues)
+      eventSource.onerror = (event) => {
+        // Only handle if not already closed
+        if (eventSource.readyState === EventSource.CLOSED) {
+          clearTimeout(timeoutId);
+          reject(new Error(
+            `Download task ${this.taskId} connection closed unexpectedly`
+          ));
+        }
+      };
+    });
+  }
+
+  /**
    * Sleep for a specified duration
-   * 
+   *
    * @param ms - Duration in milliseconds
    * @returns Promise that resolves after the specified duration
    */

@@ -203,13 +203,21 @@ export class CascadeUploader {
     
     console.debug('Action registered on-chain:', txOutcome);
     
-    // Step 9: Prepare auth_signature
-    // Use wallet for signature over BLAKE3(file_bytes).
-    const authSignature = await this.signer.signArbitrary(
+    // Extract action ID from transaction outcome
+    // The action ID should be in the transaction events or response
+    const actionId = (txOutcome as any).actionId || (txOutcome as any).action_id;
+    if (!actionId) {
+      throw new Error('Failed to extract action ID from transaction outcome');
+    }
+    
+    // Step 9: Prepare auth_signature for upload
+    // Use wallet signature over BLAKE3(file_bytes)
+    const authSignatureResponse = await this.signer.signArbitrary(
       this.chainId,
       this.signerAddress,
       dataHash64
     );
+    const authSignature = authSignatureResponse.signature;
     
     // Step 10: Initiate upload via sn-api
     // Convert file to Blob if needed for FormData
@@ -226,21 +234,23 @@ export class CascadeUploader {
     }
 
     console.debug("CascadeUploader.uploadFile startCascade", {
+      actionId,
       inputType: file instanceof Blob ? "Blob" : file.constructor?.name ?? typeof file,
       blobSize: fileBlob.size,
       blobType: fileBlob.type || "application/octet-stream",
     });
 
+    // Step 10: Initiate upload via sn-api with required fields
     const response = await this.client.startCascade({
+      actionId,
+      signature: authSignature,
       file: fileBlob,
-      // Note: The actual API might require additional fields like action_id and signature
-      // These would be included in the FormData within the SNApiClient implementation
     });
     
-    // Step 12: Monitor upload task until completion
+    // Step 11: Monitor upload task until completion
     const taskManager = new TaskManager(
       this.client,
-      response.taskId!,
+      response.task_id!,
       params.taskOptions
     );
     

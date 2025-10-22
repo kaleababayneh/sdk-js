@@ -89,30 +89,30 @@ export class CascadeDownloader {
 
   /**
    * Download a file from Cascade storage
-   * 
+   *
    * This method orchestrates the complete download workflow:
-   * 
-   * 1. Prepares the download_auth signature (simulated for now)
+   *
+   * 1. Prepares the download_auth signature (for private downloads)
    * 2. Initiates a download task via sn-api
-   * 3. Monitors the task until the file is ready
+   * 3. Monitors the task using SSE until the file is ready
    * 4. Retrieves and returns the file as a ReadableStream
-   * 
+   *
    * The returned stream can be processed incrementally, making it suitable
    * for large files without loading them entirely into memory.
-   * 
+   *
    * @param params - Download parameters including action ID and options
    * @returns Promise resolving to a ReadableStream of the file data
    * @throws {Error} If any step of the download workflow fails
-   * 
+   *
    * @example
    * ```typescript
-   * const downloader = new CascadeDownloader(snapiClient);
-   * 
+   * const downloader = new CascadeDownloader(snapiClient, signerAddress, signer, chainId);
+   *
    * // Download a public file
    * const stream = await downloader.downloadFile({
    *   actionId: 'action-123'
    * });
-   * 
+   *
    * // Download a private file (requires authentication)
    * const privateStream = await downloader.downloadFile({
    *   actionId: 'action-456',
@@ -122,17 +122,17 @@ export class CascadeDownloader {
    *     timeout: 300000
    *   }
    * });
-   * 
+   *
    * // Process the stream
    * const reader = stream.getReader();
    * const chunks: Uint8Array[] = [];
-   * 
+   *
    * while (true) {
    *   const { done, value } = await reader.read();
    *   if (done) break;
    *   chunks.push(value);
    * }
-   * 
+   *
    * // Combine chunks into a single Uint8Array
    * const totalLength = chunks.reduce((acc, chunk) => acc + chunk.length, 0);
    * const fileData = new Uint8Array(totalLength);
@@ -157,15 +157,15 @@ export class CascadeDownloader {
       {} // Empty body as per API spec
     );
     
-    // Step 3: Monitor download task until ready
+    // Step 3: Monitor download task until ready using SSE
     const taskManager = new TaskManager(
       this.client,
       response.taskId!,
       params.taskOptions
     );
     
-    // Wait for the download task to complete (file is ready)
-    await taskManager.waitForCompletion();
+    // Use SSE-based monitoring for real-time status updates
+    await taskManager.waitForDownloadCompletion();
     
     // Step 4: Retrieve the file stream
     const fileStream = await this.client.downloadFile(response.taskId!);

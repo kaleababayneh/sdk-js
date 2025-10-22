@@ -10,16 +10,20 @@ import type { operations } from "../types/snapi.gen";
 
 /**
  * Request body for starting a Cascade action
- * Maps to POST /api/actions/cascade
+ * Maps to POST /api/v1/actions/cascade
  */
 export type StartCascadeBody = operations["startCascade"]["requestBody"]["content"]["multipart/form-data"];
 export type StartCascadeFile = StartCascadeBody["file"] | Blob | Uint8Array | ArrayBuffer;
-export type StartCascadeRequest = { file?: StartCascadeFile };
+export type StartCascadeRequest = {
+  actionId: string;
+  signature: string;
+  file?: StartCascadeFile;
+};
 
 /**
  * Response from starting a Cascade action
  */
-export type StartCascadeResponse = operations["startCascade"]["responses"]["200"]["content"]["application/json"];
+export type StartCascadeResponse = operations["startCascade"]["responses"]["202"]["content"]["application/json"];
 
 /**
  * Request body for requesting a download
@@ -80,21 +84,31 @@ export class SNApiClient {
   /**
    * Start a new Cascade storage action
    *
-   * Initiates a new Cascade storage action by uploading a file.
-   * Maps to: POST /api/actions/cascade
-   * 
-   * @param body - Request body containing the file to upload
+   * Initiates a new Cascade storage action by uploading a file with required authentication.
+   * Maps to: POST /api/v1/actions/cascade
+   *
+   * @param body - Request body containing the action ID, signature, and file to upload
    * @returns Promise resolving to the response with task ID
    * @throws {HttpError} If the request fails
-   * 
+   *
    * @example
    * ```typescript
-   * const response = await client.startCascade({ file: myFile });
-   * console.log('Started task:', response.taskId);
+   * const response = await client.startCascade({
+   *   actionId: 'action-123',
+   *   signature: 'base64_signature',
+   *   file: myFile
+   * });
+   * console.log('Started task:', response.task_id);
    * ```
    */
   async startCascade(body: StartCascadeRequest): Promise<StartCascadeResponse> {
     const formData = new FormData();
+
+    // Append required action_id parameter
+    formData.append("action_id", body.actionId);
+    
+    // Append required signature parameter
+    formData.append("signature", body.signature);
 
     if (body.file !== undefined) {
       const normalizedFile = this.normalizeFilePart(body.file);
@@ -108,6 +122,8 @@ export class SNApiClient {
       }
 
       console.debug("SNApiClient.startCascade FormData", {
+        actionId: body.actionId,
+        hasSignature: true,
         hasFile: true,
         fileType:
           normalizedFile instanceof Blob
@@ -116,10 +132,14 @@ export class SNApiClient {
         fileSize: normalizedFile instanceof Blob ? normalizedFile.size : undefined,
       });
     } else {
-      console.debug("SNApiClient.startCascade FormData", { hasFile: false });
+      console.debug("SNApiClient.startCascade FormData", {
+        actionId: body.actionId,
+        hasSignature: true,
+        hasFile: false
+      });
     }
 
-    const response = await fetch(`${this.http["config"].baseUrl}/api/actions/cascade`, {
+    const response = await fetch(`${this.http["config"].baseUrl}/api/v1/actions/cascade`, {
       method: "POST",
       body: formData,
     });
@@ -154,30 +174,6 @@ export class SNApiClient {
     }
 
     throw new Error("Unsupported file type for startCascade request");
-  }
-
-  /**
-   * Request a download for a specific Cascade action
-   *
-   * Initiates a download task for a previously stored Cascade action.
-   * Maps to: POST /api/actions/cascade/{action_id}/downloads
-   * 
-   * @param actionId - The action ID to download
-   * @param body - Request body (currently unused in spec)
-   * @returns Promise resolving to the response with download task ID
-   * @throws {HttpError} If the request fails
-   * 
-   * @example
-   * ```typescript
-   * const response = await client.requestDownload('action-123', {});
-   * console.log('Download task:', response.taskId);
-   * ```
-   */
-  async requestDownload(
-    actionId: string,
-    body: RequestDownloadBody
-  ): Promise<RequestDownloadResponse> {
-    return this.http.post(`/api/actions/cascade/${actionId}/downloads`, body);
   }
 
   /**
@@ -226,16 +222,40 @@ export class SNApiClient {
   }
 
   /**
+   * Request a download for a specific Cascade action
+   *
+   * Initiates a download task for a previously stored Cascade action.
+   * Maps to: POST /api/actions/cascade/{action_id}/downloads
+   * 
+   * @param actionId - The action ID to download
+   * @param body - Request body (currently unused in spec)
+   * @returns Promise resolving to the response with download task ID
+   * @throws {HttpError} If the request fails
+   * 
+   * @example
+   * ```typescript
+   * const response = await client.requestDownload('action-123', {});
+   * console.log('Download task:', response.taskId);
+   * ```
+   */
+  async requestDownload(
+    actionId: string,
+    body: RequestDownloadBody
+  ): Promise<RequestDownloadResponse> {
+    return this.http.post(`/api/actions/cascade/${actionId}/downloads`, body);
+  }
+
+  /**
    * Download the file associated with a task
    *
    * Downloads the file data as a ReadableStream for efficient streaming
    * of large files without loading them entirely into memory.
    * Maps to: GET /api/downloads/cascade/{task_id}/file
-   * 
+   *
    * @param taskId - The task ID to download
    * @returns Promise resolving to a ReadableStream of the file data
    * @throws {HttpError} If the request fails
-   * 
+   *
    * @example
    * ```typescript
    * const stream = await client.downloadFile('task-456');
@@ -267,5 +287,35 @@ export class SNApiClient {
     }
 
     return response.body;
+  }
+
+  /**
+   * Watch download task status via Server-Sent Events (SSE)
+   *
+   * Creates an EventSource connection to monitor task status updates in real-time.
+   * The SSE stream will emit events until the task completes or fails.
+   * Maps to: GET /api/v1/downloads/cascade/{task_id}/status
+   *
+   * @param taskId - The task ID to watch
+   * @returns EventSource instance for receiving status updates
+   *
+   * @example
+   * ```typescript
+   * const eventSource = client.watchDownloadTask('task-456');
+   *
+   * eventSource.addEventListener('sdk:completed', (event) => {
+   *   console.log('Task completed:', event.data);
+   *   eventSource.close();
+   * });
+   *
+   * eventSource.addEventListener('error', (event) => {
+   *   console.error('Task error:', event);
+   *   eventSource.close();
+   * });
+   * ```
+   */
+  watchDownloadTask(taskId: string): EventSource {
+    const url = `${this.http['config'].baseUrl}/api/v1/downloads/cascade/${taskId}/status`;
+    return new EventSource(url);
   }
 }

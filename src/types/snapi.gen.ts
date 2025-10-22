@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/actions/cascade": {
+    "/api/v1/actions/cascade": {
         parameters: {
             query?: never;
             header?: never;
@@ -13,10 +13,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * Start Cascade Action
-         * @description Initiates a new Cascade storage action
-         */
+        /** Start an action */
         post: operations["startCascade"];
         delete?: never;
         options?: never;
@@ -33,10 +30,7 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /**
-         * Request Cascade Download
-         * @description Request a download for a specific action
-         */
+        /** Request Cascade Download */
         post: operations["requestCascadeDownload"];
         delete?: never;
         options?: never;
@@ -51,10 +45,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get Cascade Task
-         * @description Retrieve task information
-         */
+        /** Get Cascade Task */
         get: operations["getCascadeTask"];
         put?: never;
         post?: never;
@@ -71,10 +62,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Get Cascade Task Status
-         * @description Retrieve the status of a task
-         */
+        /** Get Cascade Task Status */
         get: operations["getCascadeTaskStatus"];
         put?: never;
         post?: never;
@@ -91,11 +79,25 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /**
-         * Download Cascade File
-         * @description Download the file associated with a task
-         */
+        /** Download Cascade File */
         get: operations["downloadCascadeFile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/downloads/cascade/{task_id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get download status */
+        get: operations["watchDownloadStatus"];
         put?: never;
         post?: never;
         delete?: never;
@@ -107,7 +109,16 @@ export interface paths {
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: never;
+    schemas: {
+        StartCascadeResponse: {
+            /** @description Unique identifier for the task */
+            task_id?: string;
+        };
+        ActionStatusResponse: {
+            /** @description Status of the action */
+            status?: string;
+        };
+    };
     responses: never;
     parameters: never;
     requestBodies: never;
@@ -126,22 +137,26 @@ export interface operations {
         requestBody: {
             content: {
                 "multipart/form-data": {
-                    /** Format: binary */
-                    file?: string;
+                    /** @description Action identifier */
+                    action_id: string;
+                    /**
+                     * Format: binary
+                     * @description File to upload
+                     */
+                    file: string;
+                    /** @description Authentication signature */
+                    signature: string;
                 };
             };
         };
         responses: {
-            /** @description Successful response */
-            200: {
+            /** @description Accepted */
+            202: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": {
-                        /** @description Unique identifier for the task */
-                        taskId?: string;
-                    };
+                    "application/json": components["schemas"]["StartCascadeResponse"];
                 };
             };
         };
@@ -245,6 +260,29 @@ export interface operations {
                 };
                 content: {
                     "application/octet-stream": string;
+                };
+            };
+        };
+    };
+    watchDownloadStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Task identifier */
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Success */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/event-stream": string;
                 };
             };
         };
