@@ -1,12 +1,18 @@
 import { defineConfig } from 'vite';
 import path from 'path';
-import basicSsl from '@vitejs/plugin-basic-ssl';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
   plugins: [
-    basicSsl(), // Enable HTTPS for secure context
+    viteStaticCopy({
+      targets: [
+        {
+          src: '../../node_modules/rq-library-wasm/rq_library_bg.wasm',
+          dest: '.'
+        }
+      ]
+    })
   ],
-  assetsInclude: ['**/*.wasm'], // Ensure .wasm files are treated as assets
   resolve: {
     alias: {
       // Alias for compat modules to use browser versions (must come before main alias)
@@ -22,10 +28,12 @@ export default defineConfig({
   },
   server: {
     port: 3001,
+    fs: {
+      // Allow serving files from node_modules
+      allow: ['../..']
+    }
   },
   optimizeDeps: {
-    exclude: ['@lumera/sdk-js'],
+    exclude: ['@lumera/sdk-js', 'rq-library-wasm'],
   },
-  // Configure public directory to serve WASM assets
-  publicDir: path.resolve(__dirname, '../../public'),
 });

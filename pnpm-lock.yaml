@@ -41,6 +41,9 @@ importers:
       formdata-node:
         specifier: ^6.0.3
         version: 6.0.3
+      rq-library-wasm:
+        specifier: ^1.0.1
+        version: 1.0.1
       undici:
         specifier: ^6.19.8
         version: 6.22.0
@@ -1521,6 +1524,9 @@ packages:
     resolution: {integrity: sha512-3GuObel8h7Kqdjt0gxkEzaifHTqLVW56Y/bjN7PSQtkKr0w3V/QYSdt6QWYtd7A1xUtYQigtdUfgj1RvWVtorw==}
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
+
+  rq-library-wasm@1.0.1:
+    resolution: {integrity: sha512-wOTADRkdmICgwJs8J2BkgzsDAPX0SnlwsxG2jQas4X+QRASAAfUaS8MdJ46ys/NWqxrutmL2HP7DR8vItTeupQ==}
 
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
@@ -3322,6 +3328,8 @@ snapshots:
       '@rollup/rollup-win32-x64-gnu': 4.52.5
       '@rollup/rollup-win32-x64-msvc': 4.52.5
       fsevents: 2.3.3
+
+  rq-library-wasm@1.0.1: {}
 
   run-parallel@1.2.0:
     dependencies:

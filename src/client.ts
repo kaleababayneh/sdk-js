@@ -108,12 +108,6 @@ export interface LumeraClientConfig {
     /** Maximum retry attempts @default 3 */
     maxRetries?: number;
   };
-  
-  /**
-   * Base URL for WASM assets (browser only)
-   * @default "/wasm/"
-   */
-  wasmBaseUrl?: string;
 }
 
 /**
@@ -285,15 +279,12 @@ export async function createLumeraClient(
 
   console.debug(`Creating LumeraClient for chainId=${chainId}, rpcUrl=${rpcUrl}, lcdUrl=${lcdUrl}, snapiUrl=${snapiUrl}`);
   
-  // Initialize WASM bridge in browser if wasmBaseUrl is provided
-  const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
-  if (isBrowser && config.wasmBaseUrl) {
-    console.debug(`Initializing WASM bridge with baseUrl=${config.wasmBaseUrl}`);
-    const { WasmBridge } = await import('./wasm/bridge.js');
-    const bridge = WasmBridge.getInstance();
-    await bridge.initialize(config.wasmBaseUrl);
-    console.debug("WASM bridge initialized");
-  }
+  // Initialize WASM bridge
+  console.debug(`Initializing WASM bridge`);
+  const { WasmBridge } = await import('./wasm/bridge.js');
+  const bridge = WasmBridge.getInstance();
+  await bridge.initialize();
+  console.debug("WASM bridge initialized");
   
   // Initialize blockchain client
   const blockchain = await makeBlockchainClient({
