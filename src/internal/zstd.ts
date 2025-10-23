@@ -1,4 +1,4 @@
-import { compress as zstdCompress } from '@mongodb-js/zstd';
+import { compress as zstdCompress } from "@lumera/sdk-js/compat/zstd";
 
 /**
  * Compress a string using ZSTD compression
@@ -8,10 +8,8 @@ import { compress as zstdCompress } from '@mongodb-js/zstd';
 export async function compress(data: string): Promise<Uint8Array> {
   const encoder = new TextEncoder();
   const bytes = encoder.encode(data);
-  // Convert Uint8Array to Buffer for @mongodb-js/zstd
-  const buffer = Buffer.from(bytes);
   // Compress with level 3 (balances speed and compression ratio)
-  const compressed = await zstdCompress(buffer, 3);
+  const compressed = await zstdCompress(bytes, 3);
   // Return as Uint8Array for consistency with the API
-  return new Uint8Array(compressed);
+  return compressed;
 }

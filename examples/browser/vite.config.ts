@@ -1,29 +1,14 @@
-import { defineConfig, type PluginOption } from 'vite';
+import { defineConfig } from 'vite';
 import path from 'path';
 
-const logZstdShimPlugin = (): PluginOption => ({
-  name: 'log-zstd-browser-shim',
-  enforce: 'pre',
-  resolveId(source) {
-    if (source === '@mongodb-js/zstd') {
-      console.info(
-        '[vite] Replacing @mongodb-js/zstd with browser shim at examples/browser/stubs/zstd-browser.ts',
-      );
-    }
-    return null;
-  },
-});
-
 export default defineConfig({
-  plugins: [logZstdShimPlugin()],
   resolve: {
     alias: {
+      // Alias for compat modules to use browser versions (must come before main alias)
+      '@lumera/sdk-js/compat/blake3': path.resolve(__dirname, '../../src/compat/blake3.browser.ts'),
+      '@lumera/sdk-js/compat/zstd': path.resolve(__dirname, '../../src/compat/zstd.browser.ts'),
       // Alias for the SDK to use the local source
       '@lumera/sdk-js': path.resolve(__dirname, '../../src'),
-      // Force blake3 to use browser build
-      'blake3': path.resolve(__dirname, '../../node_modules/blake3/dist/browser/index.js'),
-      // Replace native zstd with a browser-safe shim
-      '@mongodb-js/zstd': path.resolve(__dirname, './stubs/zstd-browser.ts'),
     },
   },
   build: {
@@ -35,10 +20,7 @@ export default defineConfig({
     open: true,
   },
   optimizeDeps: {
-    exclude: ['@lumera/sdk-js', '@mongodb-js/zstd'],
-  },
-  ssr: {
-    external: ['@mongodb-js/zstd'],
+    exclude: ['@lumera/sdk-js'],
   },
   // Configure public directory to serve WASM assets
   publicDir: path.resolve(__dirname, '../../public'),

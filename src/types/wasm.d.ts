@@ -7,3 +7,9 @@ declare module "/wasm/rq_library.js" {
   const module: RaptorQModule;
   export default module;
 }
+
+// Vite's ?url import suffix
+declare module "*?url" {
+  const url: string;
+  export default url;
+}

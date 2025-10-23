@@ -11,6 +11,16 @@
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.cjs",
       "types": "./dist/types/index.d.ts"
+    },
+    "./compat/blake3": {
+      "browser": "./dist/esm/compat/blake3.browser.js",
+      "node": "./dist/esm/compat/blake3.node.js",
+      "types": "./dist/types/compat/blake3.node.d.ts"
+    },
+    "./compat/zstd": {
+      "browser": "./dist/esm/compat/zstd.browser.js",
+      "node": "./dist/esm/compat/zstd.node.js",
+      "types": "./dist/types/compat/zstd.node.d.ts"
     }
   },
   "scripts": {

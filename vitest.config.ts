@@ -6,6 +6,8 @@ export default defineConfig({
     alias: {
       src: path.resolve(__dirname, "src"),
       tests: path.resolve(__dirname, "tests"),
+      "@lumera/sdk-js/compat/blake3": path.resolve(__dirname, "src/compat/blake3.node.ts"),
+      "@lumera/sdk-js/compat/zstd": path.resolve(__dirname, "src/compat/zstd.node.ts"),
     },
   },
   test: {

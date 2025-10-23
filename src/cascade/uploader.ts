@@ -32,6 +32,7 @@ import { blake3Hash } from '../internal/hash';
 import { toBase64, fromBase64, toCanonicalJsonBytes } from '../internal/encoding';
 import { createSingleBlockLayout, generateIds, buildIndexFile } from '../wasm/lep1';
 import type { UniversalSigner } from '../wallets/signer';
+import { c } from 'node_modules/formdata-node/lib/File-cfd9c54a';
 
 /**
  * Parameters required for a Cascade upload operation
@@ -145,21 +146,31 @@ export class CascadeUploader {
     // Step 1: Get action params from blockchain
     const actionParams = await this.chainPort.getActionParams();
     const rq_ids_max = actionParams.max_raptor_q_symbols;
+
+    console.debug('CascadeUploader.uploadFile actionParams', { actionParams });
     
     // Step 2: Generate random initial counter for layout ID derivation
     const rq_ids_ic = Math.floor(Math.random() * rq_ids_max);
     
+    console.debug('CascadeUploader.uploadFile generated rq_ids_ic', { rq_ids_ic });
+
     // Step 3: Convert file to bytes
     const fileBytes = await this.toBytes(file);
+
+    console.debug('CascadeUploader.uploadFile fileBytes', { length: fileBytes.length });
     
     // Step 4: Calculate data_hash using BLAKE3
     // returns Base64-encoded string
     const dataHash64 = await blake3Hash(fileBytes);
 
+    console.debug('CascadeUploader.uploadFile dataHash64', { dataHash64 });
+
     // Step 5: Generate LEP-1 layout using rq-wasm
     // Returns raw layout file bytes (JSON format)
     const layoutBytes = await createSingleBlockLayout(fileBytes);
     const layoutBytesB64 = toBase64(layoutBytes);
+
+    console.debug('CascadeUploader.uploadFile layoutBytes', { length: layoutBytes.length });
 
     // Sign the layout using wallet (ADR-036 signArbitrary)
     const layoutSignatureResponse = await this.signer.signArbitrary(
@@ -167,8 +178,9 @@ export class CascadeUploader {
       this.signerAddress,
       layoutBytesB64
     );
-
     const layoutSignatureB64 = layoutSignatureResponse.signature; // this is already Base64
+
+    console.debug('CascadeUploader.uploadFile layoutSignatureB64', { layoutSignatureB64 });
     
     // Step 6: Generate layout IDs using the new algorithm
     const layoutIds = await generateIds(
@@ -177,17 +189,27 @@ export class CascadeUploader {
       rq_ids_ic,
       rq_ids_max
     );
+
+    console.debug('CascadeUploader.uploadFile layoutIds', { layoutIds });
     
     // Step 7: Build index_file
     const indexFile = buildIndexFile(layoutIds, layoutSignatureB64);
+
+    console.debug('CascadeUploader.uploadFile built indexFile', { indexFile });
+
     const indexFileBytes = toCanonicalJsonBytes(indexFile);
     const indexFileB64 = toBase64(indexFileBytes);
+
+    console.debug('CascadeUploader.uploadFile indexFile', { length: indexFileBytes.length });
+
     const indexSignatureResponse = await this.signer.signArbitrary(
       this.chainId,
       this.signerAddress,
       indexFileB64
     );
     const indexWithSignature = `${indexFileB64}.${indexSignatureResponse.signature}`; // indexSignatureResponse.signature is Base64
+
+    console.debug('CascadeUploader.uploadFile indexWithSignature', { length: indexWithSignature });
 
     // Step 8: Register the action on-chain
     const txOutcome = await this.chainPort.requestActionTx({
@@ -209,6 +231,8 @@ export class CascadeUploader {
     if (!actionId) {
       throw new Error('Failed to extract action ID from transaction outcome');
     }
+
+    console.debug('CascadeUploader.uploadFile actionId', { actionId });
     
     // Step 9: Prepare auth_signature for upload
     // Use wallet signature over BLAKE3(file_bytes)
@@ -218,6 +242,8 @@ export class CascadeUploader {
       dataHash64
     );
     const authSignature = authSignatureResponse.signature;
+
+    console.debug('CascadeUploader.uploadFile authSignature', { authSignature });
     
     // Step 10: Initiate upload via sn-api
     // Convert file to Blob if needed for FormData
@@ -246,6 +272,8 @@ export class CascadeUploader {
       signature: authSignature,
       file: fileBlob,
     });
+
+    console.debug('CascadeUploader.uploadFile startCascade response', { response });
     
     // Step 11: Monitor upload task until completion
     const taskManager = new TaskManager(
@@ -253,8 +281,12 @@ export class CascadeUploader {
       response.task_id!,
       params.taskOptions
     );
+
+    console.debug('CascadeUploader.uploadFile taskManager created', { taskId: response.task_id });
     
     const completedTask = await taskManager.waitForCompletion();
+
+    console.debug('CascadeUploader.uploadFile upload completed', { completedTask });
     
     return completedTask;
   }

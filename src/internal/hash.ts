@@ -1,4 +1,4 @@
-import { createHash as createBlake3Hash } from "blake3";
+import { createHash as createBlake3Hash } from "@lumera/sdk-js/compat/blake3";
 import { toBase64 } from "./encoding.js";
 
 /**
@@ -23,7 +23,7 @@ import { toBase64 } from "./encoding.js";
  * ```
  */
 export async function blake3Hash(data: Uint8Array): Promise<string> {
-  const hasher = createBlake3Hash();
+  const hasher = await createBlake3Hash();
   hasher.update(data);
   const digest = hasher.digest();
   // Get the hash as Uint8Array and encode to Base64
@@ -48,7 +48,7 @@ export async function blake3Hash(data: Uint8Array): Promise<string> {
  * ```
  */
 export async function blake3HashBytes(data: Uint8Array): Promise<Uint8Array> {
-  const hasher = createBlake3Hash();
+  const hasher = await createBlake3Hash();
   hasher.update(data);
   const digest = hasher.digest();
   // Handle both Node.js and browser (both return Uint8Array or compatible)
@@ -74,7 +74,7 @@ export async function blake3HashBytes(data: Uint8Array): Promise<Uint8Array> {
  * ```
  */
 export async function blake3HashStream(stream: ReadableStream<Uint8Array>): Promise<string> {
-  const hasher = createBlake3Hash();
+  const hasher = await createBlake3Hash();
   const reader = stream.getReader();
   
   try {
@@ -111,7 +111,7 @@ export async function blake3HashStream(stream: ReadableStream<Uint8Array>): Prom
  * ```
  */
 export async function blake3HashStreamBytes(stream: ReadableStream<Uint8Array>): Promise<Uint8Array> {
-  const hasher = createBlake3Hash();
+  const hasher = await createBlake3Hash();
   const reader = stream.getReader();
   
   try {
