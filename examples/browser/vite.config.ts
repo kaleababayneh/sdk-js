@@ -1,7 +1,12 @@
 import { defineConfig } from 'vite';
 import path from 'path';
+import basicSsl from '@vitejs/plugin-basic-ssl';
 
 export default defineConfig({
+  plugins: [
+    basicSsl(), // Enable HTTPS for secure context
+  ],
+  assetsInclude: ['**/*.wasm'], // Ensure .wasm files are treated as assets
   resolve: {
     alias: {
       // Alias for compat modules to use browser versions (must come before main alias)
@@ -16,8 +21,7 @@ export default defineConfig({
     sourcemap: true,
   },
   server: {
-    port: 3000,
-    open: true,
+    port: 3001,
   },
   optimizeDeps: {
     exclude: ['@lumera/sdk-js'],

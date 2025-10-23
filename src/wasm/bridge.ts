@@ -75,6 +75,7 @@ export class WasmBridge {
   private wasmModule: WasmModule | null = null;
   private initPromise: Promise<void> | null = null;
   private initialized: boolean = false;
+  private wasmBaseUrl: string = '/wasm/';
 
   /**
    * Default RaptorQ session parameters
@@ -115,13 +116,15 @@ export class WasmBridge {
 
   /**
    * Ensures the WASM module is initialized.
-   * 
+   *
    * @remarks
    * This method is idempotent - multiple calls will only initialize once.
-   * 
+   *
+   * @param wasmBaseUrl - Base URL for WASM assets (browser only)
+   *
    * @private
    */
-  private async ensureInitialized(): Promise<void> {
+  private async ensureInitialized(wasmBaseUrl?: string): Promise<void> {
     if (this.initialized && this.wasmModule) {
       return;
     }
@@ -130,7 +133,7 @@ export class WasmBridge {
       return this.initPromise;
     }
 
-    this.initPromise = this.initialize();
+    this.initPromise = this.initialize(wasmBaseUrl);
     await this.initPromise;
   }
 
@@ -138,35 +141,77 @@ export class WasmBridge {
    * Initializes the WASM module for browser environments.
    *
    * @remarks
-   * Uses fetch() to load the WASM binary from a URL and initializes
-   * the module with the browser-compatible import.
+   * Dynamically loads the WASM module by creating a script tag and fetching the WASM binary.
+   * This approach avoids issues with bundlers treating static assets incorrectly.
    *
+   * @param wasmBaseUrl - Base URL for WASM assets (default: '/wasm/')
    * @throws {Error} If the WASM module cannot be loaded
    *
    * @private
    */
-  private async initializeBrowser(): Promise<void> {
+  private async initializeBrowser(wasmBaseUrl: string = '/wasm/'): Promise<void> {
     // Initialize global filesystem functions for WASM to call
     initializeGlobalFunctions();
     
-    // Fetch the WASM binary
-    const wasmUrl = '/wasm/rq_library_bg.wasm';
+    // Ensure wasmBaseUrl ends with a slash
+    const baseUrl = wasmBaseUrl.endsWith('/') ? wasmBaseUrl : `${wasmBaseUrl}/`;
+    
+    // Load the JavaScript module via script tag
+    await new Promise<void>((resolve, reject) => {
+      const script = document.createElement('script');
+      script.type = 'module';
+      script.textContent = `
+        import init, { RaptorQSession } from '${baseUrl}rq_library.js';
+        window.__rqWasmModule = { init, RaptorQSession };
+        window.__rqWasmModuleLoaded = true;
+      `;
+      
+      script.onerror = () => {
+        reject(new Error(`Failed to load WASM module script from ${baseUrl}rq_library.js`));
+      };
+      
+      // Script execution is synchronous for inline scripts
+      document.head.appendChild(script);
+      
+      // Wait for the module to be available
+      const checkInterval = setInterval(() => {
+        if ((window as any).__rqWasmModuleLoaded) {
+          clearInterval(checkInterval);
+          resolve();
+        }
+      }, 10);
+      
+      // Timeout after 10 seconds
+      setTimeout(() => {
+        clearInterval(checkInterval);
+        reject(new Error('Timeout waiting for WASM module to load'));
+      }, 10000);
+    });
+    
+    // Get the module from the global scope
+    const globalModule = (window as any).__rqWasmModule;
+    if (!globalModule || !globalModule.init || !globalModule.RaptorQSession) {
+      throw new Error('WASM module not properly loaded');
+    }
+    
+    // Fetch and initialize the WASM binary
+    const wasmUrl = `${baseUrl}rq_library_bg.wasm`;
     const wasmResponse = await fetch(wasmUrl);
     
     if (!wasmResponse.ok) {
-      throw new Error(`Failed to fetch WASM module from ${wasmUrl}: ${wasmResponse.statusText}`);
+      throw new Error(`Failed to fetch WASM binary from ${wasmUrl}: ${wasmResponse.statusText}`);
     }
     
     const wasmBuffer = await wasmResponse.arrayBuffer();
     
-    // Import the JS module
-    const jsModuleUrl = '/wasm/rq_library.js';
-    const module = await import(/* @vite-ignore */ jsModuleUrl) as WasmModule;
+    // Initialize WASM with the fetched binary
+    await globalModule.init(wasmBuffer);
     
-    // Initialize WASM with the buffer
-    await module.default(wasmBuffer);
-    
-    this.wasmModule = module;
+    // Store the module
+    this.wasmModule = {
+      default: globalModule.init,
+      RaptorQSession: globalModule.RaptorQSession,
+    };
   }
 
   /**
@@ -222,9 +267,10 @@ export class WasmBridge {
    * detects the environment (browser vs Node.js) and uses the appropriate
    * initialization method.
    *
+   * @param wasmBaseUrl - Base URL for WASM assets (browser only, default: '/wasm/')
    * @throws {Error} If the WASM module cannot be loaded
    */
-  public async initialize(): Promise<void> {
+  public async initialize(wasmBaseUrl?: string): Promise<void> {
     if (this.initialized && this.wasmModule) {
       return;
     }
@@ -233,7 +279,10 @@ export class WasmBridge {
       const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
       
       if (isBrowser) {
-        await this.initializeBrowser();
+        if (wasmBaseUrl) {
+          this.wasmBaseUrl = wasmBaseUrl;
+        }
+        await this.initializeBrowser(this.wasmBaseUrl);
       } else {
         await this.initializeNode();
       }

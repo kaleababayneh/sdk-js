@@ -18,6 +18,9 @@ importers:
         specifier: file:../..
         version: file:../..
     devDependencies:
+      '@vitejs/plugin-basic-ssl':
+        specifier: ^2.1.0
+        version: 2.1.0(vite@5.4.21(@types/node@24.9.0))
       typescript:
         specifier: ^5.6.3
         version: 5.9.3
@@ -366,6 +369,12 @@ packages:
 
   '@types/node@24.9.0':
     resolution: {integrity: sha512-MKNwXh3seSK8WurXF7erHPJ2AONmMwkI7zAMrXZDPIru8jRqkk6rGDBVbw4mLwfqA+ZZliiDPg05JQ3uW66tKQ==}
+
+  '@vitejs/plugin-basic-ssl@2.1.0':
+    resolution: {integrity: sha512-dOxxrhgyDIEUADhb/8OlV9JIqYLgos03YorAueTIeOUskLJSEsfwCByjbu98ctXitUN3znXKp0bYD/WHSudCeA==}
+    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
+    peerDependencies:
+      vite: ^6.0.0 || ^7.0.0
 
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
@@ -1053,6 +1062,10 @@ snapshots:
   '@types/node@24.9.0':
     dependencies:
       undici-types: 7.16.0
+
+  '@vitejs/plugin-basic-ssl@2.1.0(vite@5.4.21(@types/node@24.9.0))':
+    dependencies:
+      vite: 5.4.21(@types/node@24.9.0)
 
   asynckit@0.4.0: {}
 

@@ -159,6 +159,7 @@ async function connectWallet() {
       signer,
       address: state.address,
       gasPrice: "0.025ulume",
+      wasmBaseUrl: "/wasm/",
       http: {
         timeout: 45000,
         maxRetries: 3,
