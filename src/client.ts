@@ -276,7 +276,8 @@ export async function createLumeraClient(
     lcdUrl = config.lcdUrl;
     snapiUrl = config.snapiUrl;
   }
-  
+
+  console.debug(`Creating LumeraClient for chainId=${chainId}, rpcUrl=${rpcUrl}, lcdUrl=${lcdUrl}, snapiUrl=${snapiUrl}`);
   // Initialize blockchain client
   const blockchain = await makeBlockchainClient({
     rpcUrl,
@@ -286,7 +287,9 @@ export async function createLumeraClient(
     address: config.address,
     gasPrice: config.gasPrice ?? "0.025ulume",
   });
+  console.debug("Blockchain client initialized");
   
+  console.debug("Initializing SN-API client");
   // Initialize HTTP client for sn-api
   const httpClient = new HttpClient({
     baseUrl: snapiUrl,
@@ -298,7 +301,9 @@ export async function createLumeraClient(
   
   // Initialize SN-API client
   const snapiClient = new SNApiClient(httpClient);
+  console.debug("SN-API client initialized");
   
+  console.debug("Creating Cascade blockchain adapter");
   // Create blockchain adapter for Cascade operations
   const chainPort = new BlockchainActionAdapter(
     blockchain,
@@ -309,7 +314,9 @@ export async function createLumeraClient(
       gasMultiplier: 1.3, // 30% gas buffer
     }
   );
+  console.debug("Cascade blockchain adapter created");
   
+  console.debug("Creating LumeraClient instance");
   // Cast signer to UniversalSigner (assumes it implements signArbitrary)
   const universalSigner = config.signer as import("./wallets/signer").UniversalSigner;
   

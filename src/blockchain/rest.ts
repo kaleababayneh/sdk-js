@@ -190,7 +190,7 @@ export class RestActionQuery implements ActionQuery {
         fee_per_kb?: string;
         max_raptor_q_symbols?: string;
       };
-    }>("/LumeraProtocol/lumera/action/v1/params");
+    }>("/LumeraProtocol/lumera/action/params");
 
     return {
       fee_base: response.params?.fee_base ?? "0",
@@ -236,7 +236,7 @@ export class RestActionQuery implements ActionQuery {
         blockHeight?: string;
         superNodes?: string[];
       };
-    }>(`/LumeraProtocol/lumera/action/v1/get_action/${actionId}`);
+    }>(`/LumeraProtocol/lumera/action/get_action/${actionId}`);
 
     console.debug("Action query response:", response);
 
@@ -286,7 +286,7 @@ export class RestActionQuery implements ActionQuery {
   async getActionFee(dataSize: number): Promise<{ amount: string }> {
     const response = await this.http.get<{
       amount?: string;
-    }>(`/LumeraProtocol/lumera/action/v1/get_action_fee/${dataSize}`);
+    }>(`/LumeraProtocol/lumera/action/get_action_fee/${dataSize}`);
 
     console.debug("Action fee query response:", response);
 
@@ -347,7 +347,7 @@ export class RestSupernodeQuery implements SupernodeQuery {
       params?: {
         [key: string]: unknown;
       };
-    }>("/LumeraProtocol/lumera/supernode/v1/params");
+    }>("/LumeraProtocol/lumera/supernode/params");
 
     console.debug("Supernode params response:", response);
 
@@ -374,7 +374,7 @@ export class RestSupernodeQuery implements SupernodeQuery {
   async getSupernode(validatorAddress: string): Promise<import("./interfaces").SupernodeRecord> {
     const response = await this.http.get<{
       supernode?: RawSupernodeResponse;
-    }>(`/LumeraProtocol/lumera/supernode/v1/get_super_node/${validatorAddress}`);
+    }>(`/LumeraProtocol/lumera/supernode/get_super_node/${validatorAddress}`);
 
     console.debug("Supernode query response:", response);
 
@@ -403,7 +403,7 @@ export class RestSupernodeQuery implements SupernodeQuery {
   async getSupernodeByAddress(supernodeAddress: string): Promise<import("./interfaces").SupernodeRecord> {
     const response = await this.http.get<{
       supernode?: RawSupernodeResponse;
-    }>(`/LumeraProtocol/lumera/supernode/v1/get_super_node_by_address/${supernodeAddress}`);
+    }>(`/LumeraProtocol/lumera/supernode/get_super_node_by_address/${supernodeAddress}`);
 
     console.debug("Supernode by address query response:", response);
 
@@ -431,7 +431,7 @@ export class RestSupernodeQuery implements SupernodeQuery {
   async listSupernodes(): Promise<import("./interfaces").SupernodeRecord[]> {
     const response = await this.http.get<{
       supernodes?: RawSupernodeResponse[];
-    }>("/LumeraProtocol/lumera/supernode/v1/list_super_nodes");
+    }>("/LumeraProtocol/lumera/supernode/list_super_nodes");
 
     console.debug("List supernodes response:", response);
 

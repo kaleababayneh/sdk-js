@@ -1,15 +1,22 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 type ModuleFactory = () => Promise<{
-  init?: () => Promise<void>;
-  create_single_block_layout: (data: Uint8Array) => unknown;
+  default: (wasmBuffer?: any) => Promise<void>;
+  RaptorQSession: any;
 }>;
+
+const fakeLayout = new Uint8Array([1, 2, 3]);
 
 const moduleRef = vi.hoisted(() => ({
   current: undefined as ModuleFactory | undefined,
+  sessionMock: undefined as any,
 }));
 
-vi.mock("rq-wasm", async () => {
+// Mock fetch for browser environment
+global.fetch = vi.fn();
+
+// Mock dynamic import for WASM module
+vi.mock("/wasm/rq_library.js", async () => {
   const factory = moduleRef.current;
   if (!factory) {
     throw new Error("Module factory not set");
@@ -17,19 +24,42 @@ vi.mock("rq-wasm", async () => {
   return factory();
 });
 
+// Mock in-memory filesystem functions
+vi.mock("src/wasm/mem-fs", () => ({
+  initializeGlobalFunctions: vi.fn(),
+  writeFileChunk: vi.fn().mockResolvedValue(undefined),
+  readFileChunk: vi.fn().mockResolvedValue(fakeLayout),
+  getFileSize: vi.fn().mockReturnValue(fakeLayout.length),
+  createDirAll: vi.fn().mockResolvedValue(undefined),
+}));
+
 const loadBridge = async () => {
   const mod = await import("src/wasm/bridge");
   return mod.WasmBridge;
 };
 
 describe("WasmBridge", () => {
-  const fakeLayout = { layout: true };
-
   beforeEach(() => {
     vi.resetModules();
+    
+    // Mock RaptorQSession
+    const sessionMock = {
+      create_metadata: vi.fn().mockResolvedValue(undefined),
+      free: vi.fn(),
+    };
+    
+    moduleRef.sessionMock = sessionMock;
+    
+    // Set up default mock for WASM module
     moduleRef.current = async () => ({
-      init: vi.fn().mockResolvedValue(undefined),
-      create_single_block_layout: vi.fn().mockReturnValue(fakeLayout),
+      default: vi.fn().mockResolvedValue(undefined),
+      RaptorQSession: vi.fn(() => sessionMock),
+    });
+    
+    // Mock fetch to return a successful response
+    (global.fetch as any).mockResolvedValue({
+      ok: true,
+      arrayBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(8)),
     });
   });
 
@@ -41,24 +71,16 @@ describe("WasmBridge", () => {
     const result1 = await bridge.createSingleBlockLayout(new Uint8Array([1]));
     const result2 = await bridge.createSingleBlockLayout(new Uint8Array([2]));
 
-    expect(result1).toBe(fakeLayout);
-    expect(result2).toBe(fakeLayout);
+    expect(result1).toEqual(fakeLayout);
+    expect(result2).toEqual(fakeLayout);
 
     const impl = await moduleRef.current!();
-    expect(impl.init).toHaveBeenCalledTimes(1);
-    expect(impl.create_single_block_layout).toHaveBeenCalledTimes(2);
+    expect(impl.default).toHaveBeenCalledTimes(1);
+    expect(moduleRef.sessionMock.create_metadata).toHaveBeenCalledTimes(2);
     expect(bridge.isInitialized()).toBe(true);
   });
 
   it("ensures concurrent calls share a single initialization", async () => {
-    const initSpy = vi.fn().mockResolvedValue(undefined);
-    const createSpy = vi.fn().mockReturnValue(fakeLayout);
-
-    moduleRef.current = async () => ({
-      init: initSpy,
-      create_single_block_layout: createSpy,
-    });
-
     const WasmBridge = await loadBridge();
     WasmBridge.resetInstance();
 
@@ -70,26 +92,28 @@ describe("WasmBridge", () => {
       bridge.createSingleBlockLayout(new Uint8Array([3])),
     ]);
 
-    expect(initSpy).toHaveBeenCalledTimes(1);
-    expect(createSpy).toHaveBeenCalledTimes(3);
+    const impl = await moduleRef.current!();
+    expect(impl.default).toHaveBeenCalledTimes(1);
+    expect(moduleRef.sessionMock.create_metadata).toHaveBeenCalledTimes(3);
   });
 
   it("resets initialization promise after failure and retries successfully", async () => {
     let attempts = 0;
 
-    const initSpy = vi.fn().mockResolvedValue(undefined);
-    const createSpy = vi.fn().mockReturnValue(fakeLayout);
-
-    moduleRef.current = async () => {
+    // Mock fetch to fail on first attempt
+    (global.fetch as any).mockImplementation(() => {
       attempts += 1;
       if (attempts === 1) {
-        throw new Error("load fail");
+        return Promise.resolve({
+          ok: false,
+          statusText: "Not Found",
+        });
       }
-      return {
-        init: initSpy,
-        create_single_block_layout: createSpy,
-      };
-    };
+      return Promise.resolve({
+        ok: true,
+        arrayBuffer: vi.fn().mockResolvedValue(new ArrayBuffer(8)),
+      });
+    });
 
     const WasmBridge = await loadBridge();
     WasmBridge.resetInstance();
@@ -98,13 +122,14 @@ describe("WasmBridge", () => {
 
     await expect(
       bridge.createSingleBlockLayout(new Uint8Array([7]))
-    ).rejects.toThrow(/Failed to initialize rq-wasm module: load fail/);
+    ).rejects.toThrow(/Failed to initialize WASM module/);
 
     await expect(
       bridge.createSingleBlockLayout(new Uint8Array([8]))
-    ).resolves.toBe(fakeLayout);
+    ).resolves.toEqual(fakeLayout);
 
-    expect(initSpy).toHaveBeenCalledTimes(1);
-    expect(createSpy).toHaveBeenCalledTimes(1);
+    const impl = await moduleRef.current!();
+    expect(impl.default).toHaveBeenCalledTimes(1);
+    expect(moduleRef.sessionMock.create_metadata).toHaveBeenCalledTimes(1);
   });
 });

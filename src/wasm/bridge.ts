@@ -135,12 +135,93 @@ export class WasmBridge {
   }
 
   /**
+   * Initializes the WASM module for browser environments.
+   *
+   * @remarks
+   * Uses fetch() to load the WASM binary from a URL and initializes
+   * the module with the browser-compatible import.
+   *
+   * @throws {Error} If the WASM module cannot be loaded
+   *
+   * @private
+   */
+  private async initializeBrowser(): Promise<void> {
+    // Initialize global filesystem functions for WASM to call
+    initializeGlobalFunctions();
+    
+    // Fetch the WASM binary
+    const wasmUrl = '/wasm/rq_library_bg.wasm';
+    const wasmResponse = await fetch(wasmUrl);
+    
+    if (!wasmResponse.ok) {
+      throw new Error(`Failed to fetch WASM module from ${wasmUrl}: ${wasmResponse.statusText}`);
+    }
+    
+    const wasmBuffer = await wasmResponse.arrayBuffer();
+    
+    // Import the JS module
+    const jsModuleUrl = '/wasm/rq_library.js';
+    const module = await import(/* @vite-ignore */ jsModuleUrl) as WasmModule;
+    
+    // Initialize WASM with the buffer
+    await module.default(wasmBuffer);
+    
+    this.wasmModule = module;
+  }
+
+  /**
+   * Initializes the WASM module for Node.js environments.
+   *
+   * @remarks
+   * Reads the WASM file from the filesystem and imports the JS module
+   * using Node.js-specific APIs.
+   *
+   * @throws {Error} If the WASM module cannot be loaded
+   *
+   * @private
+   */
+  private async initializeNode(): Promise<void> {
+    // Dynamically import Node.js modules
+    const fs = await import('fs');
+    const path = await import('path');
+    const { pathToFileURL } = await import('url');
+    
+    // Determine module directory
+    let currentDir: string;
+    if (typeof __dirname !== 'undefined') {
+      currentDir = __dirname;
+    } else {
+      const { fileURLToPath } = await import('url');
+      const metaUrl = new Function('return import.meta.url')() as string;
+      currentDir = path.dirname(fileURLToPath(metaUrl));
+    }
+    
+    const publicWasmDir = path.resolve(currentDir, '../../../public/wasm');
+    const wasmPath = path.join(publicWasmDir, 'rq_library_bg.wasm');
+    const jsModulePath = path.join(publicWasmDir, 'rq_library.js');
+    
+    // Read WASM file
+    const wasmBuffer = fs.readFileSync(wasmPath);
+    
+    // Import JS module
+    const fileUrl = pathToFileURL(jsModulePath).href;
+    const module = await import(/* @vite-ignore */ fileUrl) as WasmModule;
+    
+    // Initialize with WASM buffer
+    await module.default(wasmBuffer);
+    
+    this.wasmModule = module;
+  }
+
+  /**
    * Initializes the WASM module and filesystem.
-   * 
+   *
    * @remarks
    * This loads the WASM module and sets up the in-memory filesystem
-   * with global functions that the WASM module can call.
-   * 
+   * with global functions that the WASM module can call. Automatically
+   * detects the environment (browser vs Node.js) and uses the appropriate
+   * initialization method.
+   *
    * @throws {Error} If the WASM module cannot be loaded
    */
   public async initialize(): Promise<void> {
@@ -152,48 +233,9 @@ export class WasmBridge {
       const isBrowser = typeof window !== 'undefined' && typeof window.document !== 'undefined';
       
       if (isBrowser) {
-        // Initialize global filesystem functions for WASM to call
-        initializeGlobalFunctions();
-        
-        // Browser: dynamically import the WASM module
-        const wasmPath = '/wasm/rq_library.js';
-        const module = await import(/* @vite-ignore */ wasmPath) as WasmModule;
-        
-        // Initialize WASM with the path to the .wasm file
-        await module.default('/wasm/rq_library_bg.wasm');
-        
-        this.wasmModule = module;
+        await this.initializeBrowser();
       } else {
-        // Node.js: load from filesystem
-        const fs = await import('fs');
-        const path = await import('path');
-        const { pathToFileURL } = await import('url');
-        
-        // Determine module directory
-        let currentDir: string;
-        if (typeof __dirname !== 'undefined') {
-          currentDir = __dirname;
-        } else {
-          const { fileURLToPath } = await import('url');
-          const metaUrl = new Function('return import.meta.url')() as string;
-          currentDir = path.dirname(fileURLToPath(metaUrl));
-        }
-        
-        const publicWasmDir = path.resolve(currentDir, '../../../public/wasm');
-        const wasmPath = path.join(publicWasmDir, 'rq_library_bg.wasm');
-        const jsModulePath = path.join(publicWasmDir, 'rq_library.js');
-        
-        // Read WASM file
-        const wasmBuffer = fs.readFileSync(wasmPath);
-        
-        // Import JS module
-        const fileUrl = pathToFileURL(jsModulePath).href;
-        const module = await import(fileUrl) as WasmModule;
-        
-        // Initialize with WASM buffer
-        await module.default(wasmBuffer);
-        
-        this.wasmModule = module;
+        await this.initializeNode();
       }
       
       this.initialized = true;

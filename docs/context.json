@@ -1,5 +1,5 @@
 {
-  "generated_at": "2025-10-17T21:45:02Z",
+  "generated_at": "2025-10-22T03:39:31Z",
   "project": {
     "name": "Lumera JS/TS SDK",
     "version": "0.1.0-beta",
@@ -22,12 +22,18 @@
       "client.Cascade.*"
     ],
     "cascade_methods": [
-      "buildMetadataFromFile",
-      "startCascade",
-      "requestDownload",
-      "watchTask",
-      "buildStartSignature",
-      "buildDownloadSignature"
+      "CascadeUploader.uploadFile",
+      "CascadeDownloader.download",
+      "CascadeDownloader.downloadFile",
+      "CascadeDownloader.downloadPrivate",
+      "TaskManager.waitForCompletion",
+      "TaskManager.waitForDownloadCompletion",
+      "SNApiClient.startCascade",
+      "SNApiClient.requestDownload",
+      "SNApiClient.downloadFile",
+      "SNApiClient.watchDownloadTask",
+      "SNApiClient.getTask",
+      "SNApiClient.getTaskStatus"
     ]
   },
   "skeleton_files": [
@@ -40,6 +46,7 @@
     "src/blockchain/rest.ts",
     "src/blockchain/client.ts",
     "src/blockchain/messages.ts",
+    "src/blockchain/prototypes.ts",
     "src/blockchain/adapters/cascade-port.ts",
     "src/cascade/client.ts",
     "src/cascade/uploader.ts",
@@ -49,6 +56,7 @@
     "src/internal/encoding.ts",
     "src/internal/hash.ts",
     "src/internal/http.ts",
+    "src/internal/zstd.ts",
     "src/types/snapi.ts",
     "src/types/snapi.gen.ts",
     "src/types/wasm.d.ts",
@@ -57,25 +65,32 @@
     "src/wallets/signer.ts",
     "src/wasm/bridge.ts",
     "src/wasm/lep1.ts",
+    "src/wasm/mem-fs.ts",
     "src/wasm/types.ts",
-    "examples/node/upload.ts"
+    "examples/node/upload.ts",
+    "examples/node/full-workflow.ts",
+    "examples/node/lumera-client-demo.ts",
+    "examples/browser/index.html",
+    "examples/browser/main.ts"
   ],
   "status": {
     "implemented": [
       "Project structure agreed",
       "Interfaces & factories defined",
-      "CosmJS tx client shape",
-      "REST query client shape",
-      "Cascade client surface aligned with LEP-1"
+      "CosmJS tx client implemented (CosmjsTxClient)",
+      "REST query clients implemented (RestActionQuery, RestSupernodeQuery)",
+      "Cascade client surface aligned with LEP-1",
+      "Wire exact LCD paths for Action/Supernode modules",
+      "OpenAPI-generated sn-api types (src/types/snapi.gen.ts)",
+      "SNApiClient implementation with REST and SSE support",
+      "Keplr/Leap wallet adapters with ADR-036 signArbitrary",
+      "End-to-end examples (browser and Node.js)",
+      "Vitest unit and integration tests",
+      "API documentation generated (TypeDoc)",
+      "README and migration guide complete"
     ],
     "pending": [
-      "Wire exact LCD paths for Action/Supernode",
-      "OpenAPI generate sn-api types and implement SNApi client",
-      "Implement rq-wasm bridge + Web Worker",
-      "Keplr/Leap wallet adapters and signArbitrary (ADR-036)",
-      "End-to-end example (browser + Node)",
-      "Vitest unit/integration tests",
-      "Docs site / README polish"
+      "Implement Web Worker offload for rq-wasm (bridge exists, worker pattern pending)"
     ]
   },
   "compatibility": {
