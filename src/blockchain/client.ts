@@ -14,6 +14,7 @@ import type { TxClient, ActionQuery, SupernodeQuery, BlockchainClient } from "./
 import { CosmjsTxClient } from "./cosmjs";
 import { RestActionQuery, RestSupernodeQuery } from "./rest";
 import { createLumeraRegistry } from "./registry";
+import { c } from "node_modules/formdata-node/lib/File-cfd9c54a";
 
 /**
  * Implementation of BlockchainClient using CosmJS and REST/LCD.
@@ -132,8 +133,12 @@ export interface BlockchainClientOptions {
 export async function makeBlockchainClient(
   opts: BlockchainClientOptions
 ): Promise<BlockchainClient> {
+  console.debug(`Connecting to RPC at ${opts.rpcUrl} with address ${opts.address}`);
+
   // Create registry with Lumera-specific message types
   const registry = createLumeraRegistry();
+
+  console.debug("Creating SigningStargateClient");
   
   // Connect to Tendermint RPC via CosmJS SigningStargateClient
   const signingClient = await SigningStargateClient.connectWithSigner(
@@ -145,12 +150,18 @@ export async function makeBlockchainClient(
     }
   );
 
+  console.debug("Creating CosmjsTxClient");
+
   // Create transaction client
   const txClient = new CosmjsTxClient(signingClient);
+
+  console.debug("Creating query clients");
 
   // Create query clients for modules
   const actionQuery = new RestActionQuery(opts.lcdUrl);
   const supernodeQuery = new RestSupernodeQuery(opts.lcdUrl);
+
+  console.debug("Blockchain client created successfully");
 
   // Compose into the unified blockchain client facade
   return new CosmjsRestBlockchainClient(

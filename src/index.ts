@@ -76,6 +76,9 @@ export {
   CascadeUploader,
   type UploadParams,
   type CascadeUploaderOptions,
+  type SignaturePrompter,
+  type SignaturePromptContext,
+  type CascadeSignatureKind,
 } from "./cascade/uploader";
 
 export {
@@ -96,10 +99,6 @@ export { HttpClient, type HttpClientConfig, type RequestOptions, HttpError } fro
 export { WasmBridge } from "./wasm/bridge";
 export type {
   RaptorQSession,
-  RaptorQSessionConstructor,
-  WasmModule,
-  EncodeResult,
-  MetadataResult
 } from "./wasm/bridge";
 
 export {
@@ -111,15 +110,8 @@ export {
   type SourceBlock,
 } from "./wasm/lep1";
 
-// WASM layer - In-memory filesystem
+// Wallet utilities - Signature prompter
 export {
-  initializeGlobalFunctions,
-  writeFileChunk,
-  readFileChunk,
-  getFileSize,
-  createDirAll,
-  flushFile,
-  dirExists,
-  syncDirExists,
-  clearStorage,
-} from "./wasm/mem-fs";
+  createDefaultSignaturePrompter,
+  defaultSignaturePrompter,
+} from "./wallets/prompter";

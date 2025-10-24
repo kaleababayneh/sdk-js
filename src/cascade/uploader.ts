@@ -32,6 +32,7 @@ import { blake3Hash } from '../internal/hash';
 import { toBase64, fromBase64, toCanonicalJsonBytes } from '../internal/encoding';
 import { createSingleBlockLayout, generateIds, buildIndexFile } from '../wasm/lep1';
 import type { UniversalSigner, ArbitrarySignResponse } from '../wallets/signer';
+import { createDefaultSignaturePrompter } from '../wallets/prompter';
 
 export type CascadeSignatureKind = "layout" | "index" | "auth";
 
@@ -164,7 +165,11 @@ export class CascadeUploader {
     params: UploadParams
   ): Promise<Task> {
     const uploadStartMs = Date.now();
-    const signaturePrompter = params.signaturePrompter;
+    // Use default prompter if none provided (only in browser environments)
+    const signaturePrompter = params.signaturePrompter ||
+      (typeof window !== 'undefined' && typeof document !== 'undefined'
+        ? createDefaultSignaturePrompter()
+        : undefined);
 
     // Step 1: Get action params from blockchain
     const actionParams = await this.chainPort.getActionParams();
