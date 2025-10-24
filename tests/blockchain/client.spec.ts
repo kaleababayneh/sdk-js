@@ -15,10 +15,14 @@ const {
   RestSupernodeQueryMock: vi.fn(),
 }));
 
-vi.mock("@cosmjs/stargate", () => ({
-  SigningStargateClient: { connectWithSigner: connectWithSignerMock },
-  GasPrice: { fromString: gasPriceFromStringMock },
-}));
+vi.mock("@cosmjs/stargate", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@cosmjs/stargate")>();
+  return {
+    ...actual,
+    SigningStargateClient: { connectWithSigner: connectWithSignerMock },
+    GasPrice: { fromString: gasPriceFromStringMock },
+  };
+});
 
 vi.mock("src/blockchain/cosmjs", () => ({
   CosmjsTxClient: CosmjsTxClientMock,
@@ -69,7 +73,9 @@ describe("makeBlockchainClient", () => {
     expect(connectWithSignerMock).toHaveBeenCalledWith(
       "https://rpc.test",
       signer,
-      { gasPrice: { denom: "ulume", amount: "0.025" } },
+      expect.objectContaining({
+        gasPrice: { denom: "ulume", amount: "0.025" },
+      }),
     );
     expect(gasPriceFromStringMock).toHaveBeenCalledWith("0.025ulume");
 
@@ -118,7 +124,9 @@ describe("makeBlockchainClient", () => {
     expect(connectWithSignerMock).toHaveBeenCalledWith(
       "https://rpc.alt",
       signer,
-      { gasPrice: undefined },
+      expect.objectContaining({
+        gasPrice: undefined,
+      }),
     );
 
     console.debug("blockchain client gas price", {

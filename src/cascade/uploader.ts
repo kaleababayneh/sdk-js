@@ -31,8 +31,21 @@ import { TaskManager, TaskManagerOptions } from './task';
 import { blake3Hash } from '../internal/hash';
 import { toBase64, fromBase64, toCanonicalJsonBytes } from '../internal/encoding';
 import { createSingleBlockLayout, generateIds, buildIndexFile } from '../wasm/lep1';
-import type { UniversalSigner } from '../wallets/signer';
-import { c } from 'node_modules/formdata-node/lib/File-cfd9c54a';
+import type { UniversalSigner, ArbitrarySignResponse } from '../wallets/signer';
+
+export type CascadeSignatureKind = "layout" | "index" | "auth";
+
+export interface SignaturePromptContext {
+  kind: CascadeSignatureKind;
+  chainId: string;
+  signerAddress: string;
+  data: string;
+}
+
+export type SignaturePrompter = (
+  context: SignaturePromptContext,
+  sign: () => Promise<ArbitrarySignResponse>
+) => Promise<ArbitrarySignResponse>;
 
 /**
  * Parameters required for a Cascade upload operation
@@ -58,6 +71,13 @@ export interface UploadParams {
    * Optional task monitoring configuration
    */
   taskOptions?: TaskManagerOptions;
+
+  /**
+   * Optional callback used to wrap wallet signature requests in a user gesture.
+   * Provide this when integrating with wallets (like Keplr) that require
+   * interactions to originate from explicit user actions.
+   */
+  signaturePrompter?: SignaturePrompter;
 }
 
 /**
@@ -143,6 +163,9 @@ export class CascadeUploader {
     file: Blob | ArrayBuffer | Uint8Array,
     params: UploadParams
   ): Promise<Task> {
+    const uploadStartMs = Date.now();
+    const signaturePrompter = params.signaturePrompter;
+
     // Step 1: Get action params from blockchain
     const actionParams = await this.chainPort.getActionParams();
     const rq_ids_max = actionParams.max_raptor_q_symbols;
@@ -171,12 +194,13 @@ export class CascadeUploader {
     const layoutBytesB64 = toBase64(layoutBytes);
 
     console.debug('CascadeUploader.uploadFile layoutBytes', { length: layoutBytes.length });
-
+    
     // Sign the layout using wallet (ADR-036 signArbitrary)
-    const layoutSignatureResponse = await this.signer.signArbitrary(
-      this.chainId,
-      this.signerAddress,
-      layoutBytesB64
+    const layoutSignatureResponse = await this.requestSignature(
+      "layout",
+      layoutBytesB64,
+      signaturePrompter,
+      uploadStartMs
     );
     const layoutSignatureB64 = layoutSignatureResponse.signature; // this is already Base64
 
@@ -201,11 +225,12 @@ export class CascadeUploader {
     const indexFileB64 = toBase64(indexFileBytes);
 
     console.debug('CascadeUploader.uploadFile indexFile', { length: indexFileBytes.length });
-
-    const indexSignatureResponse = await this.signer.signArbitrary(
-      this.chainId,
-      this.signerAddress,
-      indexFileB64
+    
+    const indexSignatureResponse = await this.requestSignature(
+      "index",
+      indexFileB64,
+      signaturePrompter,
+      uploadStartMs
     );
     const indexWithSignature = `${indexFileB64}.${indexSignatureResponse.signature}`; // indexSignatureResponse.signature is Base64
 
@@ -236,10 +261,11 @@ export class CascadeUploader {
     
     // Step 9: Prepare auth_signature for upload
     // Use wallet signature over BLAKE3(file_bytes)
-    const authSignatureResponse = await this.signer.signArbitrary(
-      this.chainId,
-      this.signerAddress,
-      dataHash64
+    const authSignatureResponse = await this.requestSignature(
+      "auth",
+      dataHash64,
+      signaturePrompter,
+      uploadStartMs
     );
     const authSignature = authSignatureResponse.signature;
 
@@ -289,6 +315,47 @@ export class CascadeUploader {
     console.debug('CascadeUploader.uploadFile upload completed', { completedTask });
     
     return completedTask;
+  }
+
+  private async requestSignature(
+    kind: CascadeSignatureKind,
+    data: string,
+    prompter: SignaturePrompter | undefined,
+    uploadStartMs: number
+  ): Promise<ArbitrarySignResponse> {
+    const context: SignaturePromptContext = {
+      kind,
+      chainId: this.chainId,
+      signerAddress: this.signerAddress,
+      data,
+    };
+
+    console.debug('CascadeUploader.uploadFile signature requested', {
+      kind,
+      viaPrompter: Boolean(prompter),
+      elapsedMs: Date.now() - uploadStartMs,
+      chainId: this.chainId,
+      signerAddress: this.signerAddress,
+    });
+
+    let invoked = false;
+    const sign = async (): Promise<ArbitrarySignResponse> => {
+      if (invoked) {
+        throw new Error("signArbitrary has already been invoked for this request");
+      }
+      invoked = true;
+      return this.signer.signArbitrary(this.chainId, this.signerAddress, data);
+    };
+
+    const response = prompter ? await prompter(context, sign) : await sign();
+
+    console.debug('CascadeUploader.uploadFile signature received', {
+      kind,
+      elapsedMs: Date.now() - uploadStartMs,
+      signerAddress: this.signerAddress,
+    });
+
+    return response;
   }
 
   /**

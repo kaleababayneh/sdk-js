@@ -11,6 +11,7 @@
 
 import { createLumeraClient, type LumeraClient } from "../../src/client";
 import { getKeplrSigner, isKeplrAvailable } from "../../src/wallets/keplr";
+import type { SignaturePrompter, SignaturePromptContext } from "../../src/cascade/uploader";
 
 // ============================================================================
 // State Management
@@ -49,6 +50,7 @@ const elements = {
   uploadProgressFill: document.getElementById("upload-progress-fill") as HTMLDivElement,
   downloadProgress: document.getElementById("download-progress") as HTMLDivElement,
   downloadProgressFill: document.getElementById("download-progress-fill") as HTMLDivElement,
+  signaturePrompts: document.getElementById("signing-prompts") as HTMLDivElement,
 };
 
 // ============================================================================
@@ -70,6 +72,101 @@ function log(message: string, level: LogLevel = "info") {
 function clearLogs() {
   elements.logContainer.innerHTML = "";
 }
+
+function describeSignatureKind(kind: SignaturePromptContext["kind"]): string {
+  switch (kind) {
+    case "layout":
+      return "layout";
+    case "index":
+      return "index";
+    case "auth":
+      return "file authorization";
+    default:
+      return "signature";
+  }
+}
+
+const keplrSignaturePrompter: SignaturePrompter = async (context, signAction) => {
+  log(
+    `User confirmation required for ${describeSignatureKind(context.kind)} signing.`,
+    "warning"
+  );
+
+  return new Promise((resolve, reject) => {
+    elements.signaturePrompts.innerHTML = "";
+
+    const promptEl = document.createElement("div");
+    promptEl.className = "signing-prompt";
+
+    const message = document.createElement("p");
+    message.textContent = `Authorize the ${describeSignatureKind(context.kind)} in Keplr to continue.`;
+    promptEl.appendChild(message);
+
+    const actions = document.createElement("div");
+    actions.className = "signing-prompt-actions";
+
+    const signButton = document.createElement("button");
+    signButton.type = "button";
+    signButton.textContent = `Sign ${describeSignatureKind(context.kind)} in Keplr`;
+
+    const cancelButton = document.createElement("button");
+    cancelButton.type = "button";
+    cancelButton.className = "secondary";
+    cancelButton.textContent = "Cancel";
+
+    const cleanup = () => {
+      if (promptEl.parentElement) {
+        promptEl.parentElement.removeChild(promptEl);
+      }
+    };
+
+    signButton.addEventListener("click", () => {
+      if (signButton.disabled) {
+        return;
+      }
+
+      signButton.disabled = true;
+      cancelButton.disabled = true;
+
+      (async () => {
+        try {
+          const result = await signAction();
+          log(
+            `Keplr prompt completed for ${describeSignatureKind(context.kind)}.`,
+            "success"
+          );
+          cleanup();
+          resolve(result);
+        } catch (error) {
+          log(
+            `Signature failed: ${error instanceof Error ? error.message : String(error)}`,
+            "error"
+          );
+          cleanup();
+          reject(error);
+        }
+      })();
+    });
+
+    cancelButton.addEventListener("click", () => {
+      cancelButton.disabled = true;
+      signButton.disabled = true;
+      log(
+        `User cancelled ${describeSignatureKind(context.kind)} signing.`,
+        "warning"
+      );
+      cleanup();
+      reject(new Error("User cancelled signature prompt"));
+    });
+
+    actions.appendChild(signButton);
+    actions.appendChild(cancelButton);
+    promptEl.appendChild(actions);
+
+    elements.signaturePrompts.appendChild(promptEl);
+    signButton.focus();
+  });
+};
 
 // ============================================================================
 // Progress Bar Utilities
@@ -201,6 +298,7 @@ async function uploadFile() {
   
   try {
     elements.uploadBtn.disabled = true;
+    elements.signaturePrompts.innerHTML = "";
     showProgress("upload", 0);
     
     log(`Starting upload: ${state.selectedFile.name} (${state.selectedFile.size} bytes)`, "info");
@@ -226,6 +324,7 @@ async function uploadFile() {
         pollInterval: 2000,
         timeout: 300000,
       },
+      signaturePrompter: keplrSignaturePrompter,
     });
     
     showProgress("upload", 100);
@@ -242,8 +341,10 @@ async function uploadFile() {
     log(`Upload failed: ${error instanceof Error ? error.message : String(error)}`, "error");
     console.error("Upload error:", error);
     hideProgress("upload");
+    elements.signaturePrompts.innerHTML = "";
   } finally {
     elements.uploadBtn.disabled = false;
+    elements.signaturePrompts.innerHTML = "";
   }
 }
 

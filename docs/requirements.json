@@ -3,7 +3,7 @@
     "name": "Lumera JS/TS SDK",
     "repository": "github.com/LumeraProtocol/sdk-js",
     "description": "Official JavaScript/TypeScript SDK for Lumera — unified client for blockchain (CosmJS+REST) and Cascade storage (sn-api) with LEP-1 support",
-    "version": "0.1.0",
+    "version": "0.1.0-beta",
     "node_version": "18.x LTS or higher",
     "typescript_version": "5.0+",
     "package_manager": "npm or pnpm",
@@ -61,9 +61,9 @@
       {
         "name": "WASM Layer",
         "location": "src/wasm/",
-        "responsibility": "RaptorQ and data helpers via rq-wasm",
+        "responsibility": "RaptorQ and data helpers via rq-library-wasm",
         "components": ["WasmBridge", "LEP1Helpers", "DataHelpers"],
-        "notes": "rq-wasm is used for layout generation and related data ops; key signing is done by wallets (ADR-036) or CosmJS signers."
+        "notes": "rq-library-wasm is used for layout generation and related data ops; key signing is done by wallets (ADR-036) or CosmJS signers."
       },
       {
         "name": "Types Layer",
@@ -113,11 +113,6 @@
         "packages": ["formdata-node"],
         "purpose": "Multipart form uploads to sn-api",
         "notes": "Node-only; browser uses native FormData."
-      },
-      "validation": {
-        "packages": ["zod"],
-        "purpose": "Runtime validation of REST/LCD & sn-api payloads",
-        "notes": "Generate static types + validate critical boundaries."
       },
       "crypto_hash": {
         "packages": ["blake3"],
@@ -178,7 +173,8 @@
         "Public/private objects (empty vs signed download auth)"
       ],
       "event_system": [
-        "SSE event stream with reconnect/backoff",
+        "SSE event stream for download task monitoring",
+        "Polling fallback for upload task monitoring",
         "Unified progress events (upload and download)"
       ],
       "notes": "sn-api is the off-chain orchestrator for symbol distribution and reconstruction."
@@ -231,7 +227,7 @@
       "notes": "SSE strongly recommended for progress; polling fallback provided."
     },
     "rq_wasm_integration": {
-      "package": "rq-wasm",
+      "package": "rq-library-wasm",
       "initialization": "Lazy init with worker; Node uses WASM runtime via WasmBridge",
       "operations": [
         "Single-block layout generation",

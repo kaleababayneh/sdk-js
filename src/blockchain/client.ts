@@ -13,6 +13,7 @@ import type { OfflineSigner } from "@cosmjs/proto-signing";
 import type { TxClient, ActionQuery, SupernodeQuery, BlockchainClient } from "./interfaces";
 import { CosmjsTxClient } from "./cosmjs";
 import { RestActionQuery, RestSupernodeQuery } from "./rest";
+import { createLumeraRegistry } from "./registry";
 
 /**
  * Implementation of BlockchainClient using CosmJS and REST/LCD.
@@ -131,11 +132,15 @@ export interface BlockchainClientOptions {
 export async function makeBlockchainClient(
   opts: BlockchainClientOptions
 ): Promise<BlockchainClient> {
+  // Create registry with Lumera-specific message types
+  const registry = createLumeraRegistry();
+  
   // Connect to Tendermint RPC via CosmJS SigningStargateClient
   const signingClient = await SigningStargateClient.connectWithSigner(
     opts.rpcUrl,
     opts.signer,
     {
+      registry,
       gasPrice: opts.gasPrice ? GasPrice.fromString(opts.gasPrice) : undefined,
     }
   );
@@ -162,3 +167,4 @@ export { CosmjsTxClient } from "./cosmjs";
 export { RestActionQuery, RestSupernodeQuery } from "./rest";
 export * from "./interfaces";
 export * from "./messages";
+export * from "./registry";

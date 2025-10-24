@@ -45,6 +45,9 @@ export {
   type SenseActionMetadata,
 } from "./blockchain/messages";
 
+// Blockchain layer - message registry
+export { createLumeraRegistry, lumeraTypes } from "./blockchain/registry";
+
 // Storage layer - SNApiClient and types
 export {
   SNApiClient,

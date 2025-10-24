@@ -5,6 +5,7 @@ This example demonstrates the full Lumera SDK workflow in a browser environment 
 ## Overview
 
 This interactive web application showcases:
+
 - **Keplr Wallet Connection**: Seamless integration with the Keplr browser extension
 - **Blockchain Queries**: Real-time queries to the Lumera testnet
 - **File Upload**: Upload files to Cascade distributed storage
@@ -21,11 +22,13 @@ This interactive web application showcases:
 ## Installation
 
 1. Navigate to the browser example directory:
+
    ```bash
    cd examples/browser
    ```
 
 2. Install dependencies:
+
    ```bash
    pnpm install
    ```
@@ -39,6 +42,7 @@ pnpm run dev
 ```
 
 This will:
+
 - Build the application with Vite
 - Start a local development server (typically at `http://localhost:3000`)
 - Automatically open your browser
@@ -70,6 +74,7 @@ This will:
 ### Activity Log
 
 The activity log at the bottom of the page shows:
+
 - ℹ️ **Info** messages (blue) - General operations
 - ✓ **Success** messages (green) - Completed operations
 - ⚠️ **Warning** messages (yellow) - Important notices
@@ -93,7 +98,7 @@ pnpm run preview
 
 ## Project Structure
 
-```
+```bash
 examples/browser/
 ├── index.html         # Main HTML file with UI structure
 ├── main.ts           # TypeScript application logic
@@ -108,6 +113,7 @@ examples/browser/
 ### State Management
 
 The application maintains state for:
+
 - **client**: LumeraClient instance
 - **address**: Connected wallet address
 - **chainId**: Target blockchain network
@@ -117,18 +123,21 @@ The application maintains state for:
 ### Key Functions
 
 #### `connectWallet()`
+
 - Checks for Keplr availability
 - Requests wallet connection
 - Creates LumeraClient with Keplr signer
 - Queries blockchain parameters
 
 #### `uploadFile()`
+
 - Reads selected file as ArrayBuffer
 - Generates unique action ID
 - Uploads to Cascade storage via SDK
 - Tracks progress and displays results
 
 #### `downloadFile()`
+
 - Requests file from Cascade storage
 - Streams file chunks
 - Combines chunks into complete file
@@ -137,6 +146,7 @@ The application maintains state for:
 ### UI Updates
 
 The application provides real-time feedback through:
+
 - Status indicators (connected/disconnected)
 - Progress bars for uploads and downloads
 - Activity log with color-coded messages
@@ -151,9 +161,11 @@ The application provides real-time feedback through:
 ### Connection timeout or network errors
 
 **Solutions**:
+
 - Check your internet connection
 - Verify the Lumera testnet is operational
 - Try increasing timeout values in `main.ts`:
+
   ```typescript
   http: {
     timeout: 60000,  // Increase to 60 seconds
@@ -168,6 +180,7 @@ The application provides real-time feedback through:
 ### Upload or download fails
 
 **Troubleshooting steps**:
+
 1. Check the activity log for specific error messages
 2. Verify your wallet is still connected
 3. Ensure the file size is reasonable (< 10MB for testing)
@@ -177,6 +190,7 @@ The application provides real-time feedback through:
 ### Keplr doesn't prompt for connection
 
 **Solutions**:
+
 - Refresh the page and try again
 - Check if Keplr is locked (unlock it)
 - Disable other wallet extensions that might interfere
@@ -214,7 +228,7 @@ Use the browser's developer console (F12) to see detailed logs and debug issues.
 
 ### 1. Wallet Connection Flow
 
-```
+```bash
 User clicks "Connect"
     ↓
 Check Keplr availability
@@ -232,7 +246,7 @@ Update UI with connection status
 
 ### 2. Upload Flow
 
-```
+```bash
 User selects file
     ↓
 Read file as ArrayBuffer
@@ -252,7 +266,7 @@ Display completion status
 
 ### 3. Download Flow
 
-```
+```bash
 User clicks "Download"
     ↓
 Request download via action ID
@@ -285,6 +299,7 @@ Trigger browser download
 ## Support
 
 For issues or questions:
+
 - **GitHub Issues**: https://github.com/LumeraProtocol/sdk-js/issues
 - **Documentation**: https://docs.lumera.io
 - **Discord**: https://discord.gg/lumera
