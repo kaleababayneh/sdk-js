@@ -139,8 +139,7 @@ const PROMPT_STYLES = `
   .lumera-modal-dialog {
     max-width: 100%;
     margin: 0;
-    border-radius: 12px 12px 0 0;
-    align-self: flex-end;
+    border-radius: 12px;
   }
   
   .lumera-modal-footer {
