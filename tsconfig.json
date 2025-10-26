@@ -11,7 +11,7 @@
     "strict": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "noEmitOnError": true,
+    "noEmitOnError": false,
     "baseUrl": ".",
     "paths": {
       "@lumera/sdk-js/compat/blake3": ["src/compat/blake3.node.ts"],

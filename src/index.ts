@@ -26,27 +26,17 @@ export {
 // Blockchain layer - transaction client
 export { CosmjsTxClient, type BroadcastResult } from "./blockchain/cosmjs";
 
-// Blockchain layer - query clients
-export { RestActionQuery, RestSupernodeQuery } from "./blockchain/rest";
-
-// Blockchain layer - message builders and helpers
+// Blockchain layer - message utilities
 export {
-  buildMsgRequestAction,
-  buildMsgFinalizeAction,
-  buildMsgApproveAction,
-  buildMsgRegisterSupernode,
-  buildMsgDeregisterSupernode,
-  buildMsgStartSupernode,
-  buildMsgStopSupernode,
-  buildMsgUpdateSupernode,
   buildBatchMessages,
   estimateGas,
+  calculateCascadeFee,
   type CascadeActionMetadata,
   type SenseActionMetadata,
 } from "./blockchain/messages";
 
 // Blockchain layer - message registry
-export { createLumeraRegistry, lumeraTypes } from "./blockchain/registry";
+export { createLumeraRegistry } from "./blockchain/registry";
 
 // Storage layer - SNApiClient and types
 export {

@@ -9,7 +9,7 @@
 
 import type { CascadeChainPort, CascadeActionParams, RequestActionTxInput, TxOutcome } from "../../cascade/ports";
 import type { BlockchainClient } from "../interfaces";
-import { buildMsgRequestAction } from "../messages";
+import { lumera } from "../../codegen";
 
 /**
  * Cache entry for action parameters with TTL.
@@ -197,19 +197,20 @@ export class BlockchainActionAdapter implements CascadeChainPort {
     const priceAmount = feeInfo.amount;
     const metadata = input.msg as any; // Type assertion for the metadata payload
 
-    // Step 3: Build the RequestAction message
-    const msg = buildMsgRequestAction(
-      {
+    // Step 3: Build the RequestAction message using generated message composer
+    const msg = lumera.action.MessageComposer.withTypeUrl.requestAction({
+      creator: this.signerAddress,
+      actionType: "cascade",
+      metadata: JSON.stringify({
         data_hash: metadata.data_hash,
         file_name: metadata.file_name,
         rq_ids_ic: metadata.rq_ids_ic,
         signatures: metadata.signatures,
         public: metadata.public,
-      },
-      priceAmount,
-      input.expirationTime,
-      this.signerAddress
-    );
+      }),
+      price: priceAmount,
+      expirationTime: input.expirationTime,
+    });
 
     // Step 4: Simulate to get exact gas
     const gasEstimate = await this.blockchainClient.Tx.simulate(

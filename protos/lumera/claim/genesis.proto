@@ -1,0 +1,24 @@
+syntax = "proto3";
+package lumera.claim;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "lumera/claim/params.proto";
+import "lumera/claim/claim_record.proto";
+import "cosmos_proto/cosmos.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+
+option go_package = "github.com/LumeraProtocol/lumera/x/claim/types";
+
+// GenesisState defines the claim module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+  repeated ClaimRecord claim_records = 2 [(gogoproto.nullable) = false];
+  uint64 total_claimable_amount = 3;
+  string claims_denom = 4;
+}

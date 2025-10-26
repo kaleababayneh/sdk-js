@@ -2,7 +2,7 @@
   "project": {
     "name": "Lumera JS/TS SDK",
     "repository": "github.com/LumeraProtocol/sdk-js",
-    "description": "Official JavaScript/TypeScript SDK for Lumera — unified client for blockchain (CosmJS+REST) and Cascade storage (sn-api) with LEP-1 support",
+    "description": "Official JavaScript/TypeScript SDK for Lumera — unified client for blockchain (CosmJS+RPC) and Cascade storage (sn-api) with LEP-1 support",
     "version": "0.1.0-beta",
     "node_version": "18.x LTS or higher",
     "typescript_version": "5.0+",
@@ -38,12 +38,12 @@
         "responsibility": "Blockchain tx + queries",
         "components": [
           "CosmjsTxClient",
-          "RestActionQuery",
-          "RestSupernodeQuery",
+          "RpcActionQuery",
+          "RpcSupernodeQuery",
           "BlockchainClient (facade)",
           "TxBuilder (helpers)"
         ],
-        "notes": "Transactions via CosmJS (simulate/sign/broadcast). Module queries via REST/LCD. gRPC-web is a future optional adapter."
+        "notes": "Transactions via CosmJS (simulate/sign/broadcast). Module queries via Tendermint RPC. gRPC-web is a future optional adapter."
       },
       {
         "name": "Storage Layer",
@@ -137,6 +137,11 @@
         "purpose": "Generate SN-API types from docs/sn-api.yaml",
         "notes": "Keep in sync with sn-api releases."
       },
+      "telescope": {
+        "packages": ["@hyperweb/telescope", "@cosmology/ast"],
+        "purpose": "Generate TypeScript RPC clients and types from Lumera protobuf definitions",
+        "notes": "Generates code into src/codegen/; post-generation fixes applied via scripts/post-codegen-fix.ts"
+      },
       "testing": ["vitest", "@vitest/browser"],
       "linting": ["eslint", "prettier", "@typescript-eslint/parser", "@typescript-eslint/eslint-plugin"]
     },
@@ -150,9 +155,9 @@
   "features": {
     "blockchain_operations": {
       "queries": [
-        "Get action params (fee schedule, rq_ids_max) via LCD",
-        "Get action by ID via LCD",
-        "Get supernode params via LCD"
+        "Get action params (fee schedule, rq_ids_max) via RPC",
+        "Get action by ID via RPC",
+        "Get supernode params via RPC"
       ],
       "transactions": [
         "Request action (Cascade) via CosmJS (simulate/sign/broadcast)",
@@ -163,7 +168,7 @@
         "Fee calculation helpers",
         "Msg builders for RegisterAction (Cascade)"
       ],
-      "notes": "No direct gRPC required; LCD for module queries, CosmJS for tx. Add gRPC-web adapter later if needed."
+      "notes": "No direct gRPC required; RPC for module queries, CosmJS for tx. Add gRPC-web adapter later if needed."
     },
     "storage_operations": {
       "cascade": [
@@ -236,7 +241,7 @@
       "notes": "Exact bytes and Base64 (RFC 4648, no wrap) must be preserved across platforms."
     },
     "blockchain_proto_integration": {
-      "approach": "CosmJS for tx path; REST/LCD for module queries",
+      "approach": "CosmJS for tx path; RPC for module queries",
       "modules": ["action", "supernode"],
       "alternatives": [
         "Optional future: Buf/Connect gRPC-web adapter implementing the same BlockchainClient interface"
@@ -266,7 +271,7 @@
     "documentation": {
       "tsdoc": "Public APIs documented",
       "examples": "End-to-end examples (Keplr, Node CLI)",
-      "readme": "Quick start with CosmJS + REST",
+      "readme": "Quick start with CosmJS + RPC",
       "api_reference": "Generated from TSDoc",
       "migration_guide": "From direct REST/grpc usage to sdk-js"
     },

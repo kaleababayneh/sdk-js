@@ -20,21 +20,25 @@ import type { StdFee, DeliverTxResponse } from "@cosmjs/stargate";
 export interface TxClient {
   /**
    * Simulate a transaction to estimate gas usage.
-   * 
+   *
    * Performs a dry-run of the transaction without broadcasting it,
    * returning the estimated gas amount needed for execution.
-   * 
+   *
+   * Returns `null` if simulation is unavailable (e.g., when gRPC reflection
+   * service is not available). In this case, callers should use a fallback
+   * gas estimate or rely on alternative broadcasting methods.
+   *
    * @param address - Signer's address
    * @param msgs - Transaction messages to simulate
    * @param memo - Optional transaction memo
-   * @returns Estimated gas amount
-   * @throws {Error} If simulation fails
+   * @returns Estimated gas amount, or null if simulation is unavailable
+   * @throws {Error} If simulation fails for reasons other than unavailability
    */
   simulate(
     address: string,
     msgs: readonly EncodeObject[],
     memo?: string
-  ): Promise<bigint>;
+  ): Promise<bigint | null>;
 
   /**
    * Broadcast a pre-signed transaction.

@@ -76,7 +76,7 @@ describe("CosmjsTxClient", () => {
     debugSpy.mockRestore();
   });
 
-  it("signAndBroadcast forwards arguments and converts timeout height to number", async () => {
+  it("signAndBroadcast forwards arguments and converts timeout height to bigint", async () => {
     const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
     const deliverResponse = {
       transactionHash: "DEF456",
@@ -87,6 +87,8 @@ describe("CosmjsTxClient", () => {
       gasWanted: 6000,
     } as unknown as DeliverTxResponse;
 
+    // Mock simulate to return a successful gas estimate
+    signingClient.simulate.mockResolvedValue(200000);
     signingClient.signAndBroadcast.mockResolvedValue(deliverResponse);
 
     const client = new CosmjsTxClient(signingClient as unknown as any);
@@ -96,6 +98,10 @@ describe("CosmjsTxClient", () => {
 
     const result = await client.signAndBroadcast("lumera1xyz", messages, fee, "memo", timeoutHeight);
 
+    // Verify simulate was called first
+    expect(signingClient.simulate).toHaveBeenCalledWith("lumera1xyz", messages, "memo");
+
+    // Verify signAndBroadcast was called after successful simulation
     expect(signingClient.signAndBroadcast).toHaveBeenCalledWith(
       "lumera1xyz",
       messages,
@@ -171,7 +177,7 @@ describe("blockchain message helpers", () => {
     );
 
     expect(msg).toEqual({
-      typeUrl: "/lumera.action.v1.MsgRequestAction",
+      typeUrl: "/lumera.action.MsgRequestAction",
       value: {
         creator: "lumera1creator",
         actionType: "cascade",

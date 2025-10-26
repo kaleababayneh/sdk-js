@@ -5,14 +5,18 @@ const {
   connectWithSignerMock,
   gasPriceFromStringMock,
   CosmjsTxClientMock,
-  RestActionQueryMock,
-  RestSupernodeQueryMock,
+  createProtobufRpcClientMock,
+  QueryClientMock,
+  ActionQueryClientMock,
+  SupernodeQueryClientMock,
 } = vi.hoisted(() => ({
   connectWithSignerMock: vi.fn(),
   gasPriceFromStringMock: vi.fn(),
   CosmjsTxClientMock: vi.fn(),
-  RestActionQueryMock: vi.fn(),
-  RestSupernodeQueryMock: vi.fn(),
+  createProtobufRpcClientMock: vi.fn(),
+  QueryClientMock: vi.fn(),
+  ActionQueryClientMock: vi.fn(),
+  SupernodeQueryClientMock: vi.fn(),
 }));
 
 vi.mock("@cosmjs/stargate", async (importOriginal) => {
@@ -21,6 +25,8 @@ vi.mock("@cosmjs/stargate", async (importOriginal) => {
     ...actual,
     SigningStargateClient: { connectWithSigner: connectWithSignerMock },
     GasPrice: { fromString: gasPriceFromStringMock },
+    QueryClient: QueryClientMock,
+    createProtobufRpcClient: createProtobufRpcClientMock,
   };
 });
 
@@ -28,9 +34,12 @@ vi.mock("src/blockchain/cosmjs", () => ({
   CosmjsTxClient: CosmjsTxClientMock,
 }));
 
-vi.mock("src/blockchain/rest", () => ({
-  RestActionQuery: RestActionQueryMock,
-  RestSupernodeQuery: RestSupernodeQueryMock,
+vi.mock("src/codegen/lumera/action/query.rpc.Query", () => ({
+  QueryClientImpl: ActionQueryClientMock,
+}));
+
+vi.mock("src/codegen/lumera/supernode/query.rpc.Query", () => ({
+  QueryClientImpl: SupernodeQueryClientMock,
 }));
 
 import { makeBlockchainClient, CosmjsRestBlockchainClient } from "src/blockchain/client";
@@ -42,24 +51,38 @@ describe("makeBlockchainClient", () => {
     connectWithSignerMock.mockReset();
     gasPriceFromStringMock.mockReset();
     CosmjsTxClientMock.mockReset();
-    RestActionQueryMock.mockReset();
-    RestSupernodeQueryMock.mockReset();
+    createProtobufRpcClientMock.mockReset();
+    QueryClientMock.mockReset();
+    ActionQueryClientMock.mockReset();
+    SupernodeQueryClientMock.mockReset();
   });
 
-  it("composes CosmJS and REST clients into facade", async () => {
+  it("composes CosmJS and RPC query clients into facade", async () => {
     const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
-    const signingClientStub = { disconnect: vi.fn() };
+    const tmClient = { status: vi.fn() };
+    const signingClientStub = {
+      disconnect: vi.fn(),
+      tmClient,
+    };
     connectWithSignerMock.mockResolvedValue(signingClientStub);
     gasPriceFromStringMock.mockReturnValue({ denom: "ulume", amount: "0.025" });
 
     const txClientStub = { simulate: vi.fn(), signAndBroadcast: vi.fn() };
     CosmjsTxClientMock.mockImplementation(() => txClientStub);
 
-    const actionQueryStub = { getParams: vi.fn() };
-    RestActionQueryMock.mockImplementation(() => actionQueryStub);
+    // Mock the QueryClient and RPC client creation
+    const queryClientStub = {};
+    QueryClientMock.mockImplementation(() => queryClientStub);
+    
+    const rpcStub = {};
+    createProtobufRpcClientMock.mockReturnValue(rpcStub);
 
-    const supernodeQueryStub = { getParams: vi.fn() };
-    RestSupernodeQueryMock.mockImplementation(() => supernodeQueryStub);
+    // Mock the generated query clients
+    const actionQueryClientStub = { params: vi.fn(), getAction: vi.fn(), getActionFee: vi.fn() };
+    ActionQueryClientMock.mockImplementation(() => actionQueryClientStub);
+
+    const supernodeQueryClientStub = { params: vi.fn(), getSuperNode: vi.fn() };
+    SupernodeQueryClientMock.mockImplementation(() => supernodeQueryClientStub);
 
     const client = await makeBlockchainClient({
       rpcUrl: "https://rpc.test",
@@ -79,21 +102,30 @@ describe("makeBlockchainClient", () => {
     );
     expect(gasPriceFromStringMock).toHaveBeenCalledWith("0.025ulume");
 
-    expect(CosmjsTxClientMock).toHaveBeenCalledWith(signingClientStub);
-    expect(RestActionQueryMock).toHaveBeenCalledWith("https://lcd.test");
-    expect(RestSupernodeQueryMock).toHaveBeenCalledWith("https://lcd.test");
+    expect(CosmjsTxClientMock).toHaveBeenCalledWith(
+      signingClientStub,
+      expect.objectContaining({
+        lcdBaseUrl: "https://lcd.test",
+      })
+    );
+    
+    // Verify RPC clients were created
+    expect(QueryClientMock).toHaveBeenCalledWith(tmClient);
+    expect(createProtobufRpcClientMock).toHaveBeenCalledWith(queryClientStub);
+    expect(ActionQueryClientMock).toHaveBeenCalledWith(rpcStub);
+    expect(SupernodeQueryClientMock).toHaveBeenCalledWith(rpcStub);
 
     expect(client).toBeInstanceOf(CosmjsRestBlockchainClient);
     expect(client.Tx).toBe(txClientStub);
-    expect(client.Action).toBe(actionQueryStub);
-    expect(client.Supernode).toBe(supernodeQueryStub);
+    expect(client.Action).toBeDefined();
+    expect(client.Supernode).toBeDefined();
     expect(await client.getChainId()).toBe("chain-test");
     expect(await client.getAddress()).toBe("lumera1address");
 
     console.debug("blockchain client composition", {
       txCreated: CosmjsTxClientMock.mock.calls.length,
-      actionClient: RestActionQueryMock.mock.calls.length,
-      supernodeClient: RestSupernodeQueryMock.mock.calls.length,
+      actionClient: ActionQueryClientMock.mock.calls.length,
+      supernodeClient: SupernodeQueryClientMock.mock.calls.length,
     });
     expect(debugSpy).toHaveBeenCalledWith("blockchain client composition", {
       txCreated: 1,
@@ -105,12 +137,23 @@ describe("makeBlockchainClient", () => {
 
   it("omits gas price override when config lacks gasPrice", async () => {
     const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
-    const signingClientStub = { disconnect: vi.fn() };
+    const tmClient = { status: vi.fn() };
+    const signingClientStub = {
+      disconnect: vi.fn(),
+      tmClient,
+    };
     connectWithSignerMock.mockResolvedValue(signingClientStub);
 
     CosmjsTxClientMock.mockImplementation(() => ({}));
-    RestActionQueryMock.mockImplementation(() => ({}));
-    RestSupernodeQueryMock.mockImplementation(() => ({}));
+    
+    const queryClientStub = {};
+    QueryClientMock.mockImplementation(() => queryClientStub);
+    
+    const rpcStub = {};
+    createProtobufRpcClientMock.mockReturnValue(rpcStub);
+    
+    ActionQueryClientMock.mockImplementation(() => ({ params: vi.fn() }));
+    SupernodeQueryClientMock.mockImplementation(() => ({ params: vi.fn() }));
 
     await makeBlockchainClient({
       rpcUrl: "https://rpc.alt",

@@ -1,9 +1,22 @@
 /**
- * Transaction message builders for Lumera blockchain.
- * 
- * Provides helper functions to construct properly typed and formatted Cosmos SDK messages
- * for Lumera-specific operations, particularly for the Action module (Cascade operations).
- * 
+ * Transaction message utilities for Lumera blockchain.
+ *
+ * This module provides utility functions for transaction message handling.
+ * For building messages, use the Telescope-generated message composers:
+ *
+ * ```typescript
+ * import { lumera } from '@lumera/sdk-js';
+ *
+ * // Action messages
+ * lumera.action.MessageComposer.withTypeUrl.requestAction({...});
+ * lumera.action.MessageComposer.withTypeUrl.finalizeAction({...});
+ *
+ * // Supernode messages
+ * lumera.supernode.MessageComposer.withTypeUrl.registerSupernode({...});
+ * ```
+ *
+ * See [`MIGRATION.md`](../../../MIGRATION.md) for complete migration guide.
+ *
  * @module blockchain/messages
  */
 
@@ -60,254 +73,27 @@ export interface CascadeActionMetadata {
 }
 
 /**
- * Build a MsgRequestAction for Cascade storage.
+ * Calculate the fee for a Cascade action based on file size.
  *
- * Constructs an EncodeObject for requesting a Cascade action on the Lumera blockchain.
- * This message type is used to initiate storage of data via the Cascade protocol.
+ * Applies ceiling rounding per kilobyte and returns the total fee as a string in uLUME.
  *
- * @param metadata - Cascade action metadata (will be JSON serialized)
- * @param price - Action price in uLUME (as string, e.g., "100000")
- * @param expirationTime - Action expiration time (Unix timestamp as string)
- * @param creator - Address of the account creating the action
- * @returns EncodeObject ready for transaction signing
- *
- * @example
- * ```typescript
- * const msg = buildMsgRequestAction(
- *   {
- *     data_hash: "abc123...",
- *     file_name: "example.txt",
- *     rq_ids_ic: 12345,
- *     signatures: "base64signature==",
- *     public: false
- *   },
- *   "100000",
- *   "1735689600",
- *   "lumera1abc..."
- * );
- *
- * const result = await client.signAndBroadcast(address, [msg], fee);
- * ```
+ * @param fileSizeBytes - File size in bytes
+ * @param feeBase - Base fee component as a string
+ * @param feePerKb - Per-kilobyte fee component as a string
+ * @returns Total fee (base + per-KB component) as a string
  */
-export function buildMsgRequestAction(
-  metadata: CascadeActionMetadata | SenseActionMetadata,
-  price: string,
-  expirationTime: string,
-  creator: string
-): EncodeObject {
-  return {
-    typeUrl: "/lumera.action.v1.MsgRequestAction",
-    value: {
-      creator,
-      actionType: "data_hash" in metadata && "rq_ids_ic" in metadata ? "cascade" : "sense",
-      metadata: JSON.stringify(metadata),
-      price,
-      expirationTime,
-    },
-  };
-}
-
-/**
- * Build a MsgFinalizeAction.
- *
- * Constructs an EncodeObject for finalizing an action on the Lumera blockchain.
- * This message must be sent by a supernode address.
- *
- * @param actionId - The ID of the action to finalize
- * @param actionType - Type of action ("cascade" or "sense")
- * @param metadata - Action-specific metadata (will be JSON serialized)
- * @param creator - Supernode address finalizing the action
- * @returns EncodeObject ready for transaction signing
- *
- * @example
- * ```typescript
- * const msg = buildMsgFinalizeAction(
- *   "action123",
- *   "cascade",
- *   { rq_ids_ids: ["id1", "id2", "id3"] },
- *   "lumera1supernode..."
- * );
- *
- * const result = await client.signAndBroadcast(address, [msg], fee);
- * ```
- */
-export function buildMsgFinalizeAction(
-  actionId: string,
-  actionType: string,
-  metadata: Partial<CascadeActionMetadata> | Partial<SenseActionMetadata>,
-  creator: string
-): EncodeObject {
-  return {
-    typeUrl: "/lumera.action.v1.MsgFinalizeAction",
-    value: {
-      creator,
-      actionId,
-      actionType,
-      metadata: JSON.stringify(metadata),
-    },
-  };
-}
-
-/**
- * Build a MsgApproveAction.
- *
- * Constructs an EncodeObject for approving an action on the Lumera blockchain.
- *
- * @param actionId - The ID of the action to approve
- * @param creator - Address of the account approving the action
- * @returns EncodeObject ready for transaction signing
- *
- * @example
- * ```typescript
- * const msg = buildMsgApproveAction("action123", "lumera1abc...");
- * const result = await client.signAndBroadcast(address, [msg], fee);
- * ```
- */
-export function buildMsgApproveAction(
-  actionId: string,
-  creator: string
-): EncodeObject {
-  return {
-    typeUrl: "/lumera.action.v1.MsgApproveAction",
-    value: {
-      creator,
-      actionId,
-    },
-  };
-}
-
-/**
- * Build a MsgRegisterSupernode.
- *
- * Constructs an EncodeObject for registering a supernode on the Lumera blockchain.
- *
- * @param validatorAddress - Validator address
- * @param ipAddress - IP address of the supernode
- * @param supernodeAccount - Supernode account address
- * @param p2pPort - P2P port
- * @param creator - Address of the account creating the registration
- * @returns EncodeObject ready for transaction signing
- */
-export function buildMsgRegisterSupernode(
-  validatorAddress: string,
-  ipAddress: string,
-  supernodeAccount: string,
-  p2pPort: string,
-  creator: string
-): EncodeObject {
-  return {
-    typeUrl: "/lumera.supernode.v1.MsgRegisterSupernode",
-    value: {
-      creator,
-      validatorAddress,
-      ipAddress,
-      supernodeAccount,
-      p2p_port: p2pPort,
-    },
-  };
-}
-
-/**
- * Build a MsgDeregisterSupernode.
- *
- * Constructs an EncodeObject for deregistering a supernode from the Lumera blockchain.
- *
- * @param validatorAddress - Validator address
- * @param creator - Address of the account requesting deregistration
- * @returns EncodeObject ready for transaction signing
- */
-export function buildMsgDeregisterSupernode(
-  validatorAddress: string,
-  creator: string
-): EncodeObject {
-  return {
-    typeUrl: "/lumera.supernode.v1.MsgDeregisterSupernode",
-    value: {
-      creator,
-      validatorAddress,
-    },
-  };
-}
-
-/**
- * Build a MsgStartSupernode.
- *
- * Constructs an EncodeObject for starting a supernode on the Lumera blockchain.
- *
- * @param validatorAddress - Validator address
- * @param creator - Address of the account starting the supernode
- * @returns EncodeObject ready for transaction signing
- */
-export function buildMsgStartSupernode(
-  validatorAddress: string,
-  creator: string
-): EncodeObject {
-  return {
-    typeUrl: "/lumera.supernode.v1.MsgStartSupernode",
-    value: {
-      creator,
-      validatorAddress,
-    },
-  };
-}
-
-/**
- * Build a MsgStopSupernode.
- *
- * Constructs an EncodeObject for stopping a supernode on the Lumera blockchain.
- *
- * @param validatorAddress - Validator address
- * @param reason - Reason for stopping the supernode
- * @param creator - Address of the account stopping the supernode
- * @returns EncodeObject ready for transaction signing
- */
-export function buildMsgStopSupernode(
-  validatorAddress: string,
-  reason: string,
-  creator: string
-): EncodeObject {
-  return {
-    typeUrl: "/lumera.supernode.v1.MsgStopSupernode",
-    value: {
-      creator,
-      validatorAddress,
-      reason,
-    },
-  };
-}
-
-/**
- * Build a MsgUpdateSupernode.
- *
- * Constructs an EncodeObject for updating a supernode on the Lumera blockchain.
- *
- * @param validatorAddress - Validator address
- * @param ipAddress - New IP address
- * @param note - Update note
- * @param supernodeAccount - New supernode account address
- * @param p2pPort - New P2P port
- * @param creator - Address of the account updating the supernode
- * @returns EncodeObject ready for transaction signing
- */
-export function buildMsgUpdateSupernode(
-  validatorAddress: string,
-  ipAddress: string,
-  note: string,
-  supernodeAccount: string,
-  p2pPort: string,
-  creator: string
-): EncodeObject {
-  return {
-    typeUrl: "/lumera.supernode.v1.MsgUpdateSupernode",
-    value: {
-      creator,
-      validatorAddress,
-      ipAddress,
-      note,
-      supernodeAccount,
-      p2p_port: p2pPort,
-    },
-  };
+export function calculateCascadeFee(
+  fileSizeBytes: number,
+  feeBase: string,
+  feePerKb: string
+): string {
+  const kbUnit = 1024n;
+  const fileSize = BigInt(fileSizeBytes);
+  const baseFee = BigInt(feeBase);
+  const perKbFee = BigInt(feePerKb);
+  const kbCount = fileSize === 0n ? 0n : (fileSize + kbUnit - 1n) / kbUnit;
+  const total = baseFee + perKbFee * kbCount;
+  return total.toString();
 }
 
 /**

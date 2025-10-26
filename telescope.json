@@ -1,0 +1,40 @@
+{
+  "protoDirs": ["protos"],
+  "outPath": "src/codegen",
+  "options": {
+    "prototypes": {
+      "enabled": true,
+      "typingsFormat": {
+        "useExact": true,
+        "setDefaultEnumToUnrecognized": true,
+        "autoFixUndefinedEnumDefault": true
+      }
+    },
+    "aminoEncoding": {
+      "enabled": true
+    },
+    "lcdClients": {
+      "enabled": false
+    },
+    "rpcClients": {
+      "enabled": true,
+      "camelCase": true,
+      "useConnectComet": false
+    },
+    "stargateClients": {
+      "enabled": true,
+      "includeCosmosDefaultTypes": true
+    },
+    "bundle": {
+      "enabled": true
+    },
+    "tsDisable": {
+      "disableAll": false
+    },
+    "eslintDisable": {
+      "disableAll": true
+    },
+    "removeUnusedImports": true,
+    "useSDKTypes": true
+  }
+}
