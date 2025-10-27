@@ -243,7 +243,7 @@ import { createRegistry } from "./codegen/registry";
 import { createAminoTypes } from "./codegen/amino";
 
 // Import Lumera message types
-import { MsgRegisterAction } from "./codegen/lumera/action/v1beta1/tx";
+import { MsgRegisterAction } from "./codegen/lumera/action/v1/v1beta1/tx";
 
 async function main() {
   // Create wallet (replace with your mnemonic)
@@ -271,7 +271,7 @@ async function main() {
   
   // Create message using generated types
   const msg = {
-    typeUrl: "/lumera.action.v1beta1.MsgRegisterAction",
+    typeUrl: "/lumera.action.v1.MsgRegisterAction",
     value: MsgRegisterAction.fromPartial({
       creator: account.address,
       // Add your custom fields here
@@ -310,10 +310,10 @@ import { createProtobufRpcClient } from "@cosmjs/stargate";
 // Import generated query clients
 import { 
   QueryClientImpl as ActionQueryClient 
-} from "./codegen/lumera/action/v1beta1/query";
+} from "./codegen/lumera/action/v1/v1beta1/query";
 import { 
   QueryClientImpl as SupernodeQueryClient 
-} from "./codegen/lumera/supernode/v1beta1/query";
+} from "./codegen/lumera/supernode/v1/v1beta1/query";
 
 async function queryExample() {
   // Connect to Tendermint RPC
@@ -687,7 +687,7 @@ Create stable public API by re-exporting from generated code:
 // src/index.ts
 export { createRegistry } from './codegen/registry';
 export { createAminoTypes } from './codegen/amino';
-export type { MsgRegisterAction } from './codegen/lumera/action/v1beta1/tx';
+export type { MsgRegisterAction } from './codegen/lumera/action/v1/v1beta1/tx';
 ```
 
 ### 4. Documentation

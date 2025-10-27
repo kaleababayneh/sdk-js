@@ -5,6 +5,7 @@ import { BinaryReader, BinaryWriter } from "../../binary";
 import { DeepPartial } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
+ * ClaimRecord represents a record of a claim made by a user.
  * @name ClaimRecord
  * @package lumera.claim
  * @see proto type: lumera.claim.ClaimRecord
@@ -22,6 +23,7 @@ export interface ClaimRecordProtoMsg {
   value: Uint8Array;
 }
 /**
+ * ClaimRecord represents a record of a claim made by a user.
  * @name ClaimRecordAmino
  * @package lumera.claim
  * @see proto type: lumera.claim.ClaimRecord
@@ -49,6 +51,7 @@ function createBaseClaimRecord(): ClaimRecord {
   };
 }
 /**
+ * ClaimRecord represents a record of a claim made by a user.
  * @name ClaimRecord
  * @package lumera.claim
  * @see proto type: lumera.claim.ClaimRecord

@@ -73,6 +73,7 @@ export interface MsgUpdateParamsResponseAminoMsg {
   value: MsgUpdateParamsResponseAmino;
 }
 /**
+ * MsgClaim is the Msg/Claim request type.
  * @name MsgClaim
  * @package lumera.claim
  * @see proto type: lumera.claim.MsgClaim
@@ -89,6 +90,7 @@ export interface MsgClaimProtoMsg {
   value: Uint8Array;
 }
 /**
+ * MsgClaim is the Msg/Claim request type.
  * @name MsgClaimAmino
  * @package lumera.claim
  * @see proto type: lumera.claim.MsgClaim
@@ -105,6 +107,7 @@ export interface MsgClaimAminoMsg {
   value: MsgClaimAmino;
 }
 /**
+ * MsgClaimResponse defines the response structure for executing a
  * @name MsgClaimResponse
  * @package lumera.claim
  * @see proto type: lumera.claim.MsgClaimResponse
@@ -115,6 +118,7 @@ export interface MsgClaimResponseProtoMsg {
   value: Uint8Array;
 }
 /**
+ * MsgClaimResponse defines the response structure for executing a
  * @name MsgClaimResponseAmino
  * @package lumera.claim
  * @see proto type: lumera.claim.MsgClaimResponse
@@ -346,6 +350,7 @@ function createBaseMsgClaim(): MsgClaim {
   };
 }
 /**
+ * MsgClaim is the Msg/Claim request type.
  * @name MsgClaim
  * @package lumera.claim
  * @see proto type: lumera.claim.MsgClaim
@@ -463,6 +468,7 @@ function createBaseMsgClaimResponse(): MsgClaimResponse {
   return {};
 }
 /**
+ * MsgClaimResponse defines the response structure for executing a
  * @name MsgClaimResponse
  * @package lumera.claim
  * @see proto type: lumera.claim.MsgClaimResponse

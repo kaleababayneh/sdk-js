@@ -36,7 +36,7 @@
     "docs": "typedoc --out docs/api src/index.ts",
     "proto:clean": "rm -rf proto",
     "proto:download": "npm run proto:clean && npm run proto:download:lumera && npm run proto:download:deps",
-    "proto:download:lumera": "buf export buf.build/lumera-protocol/lumera:c295734a4bed4c689888f309149678f6 -o protos",
+    "proto:download:lumera": "buf export buf.build/lumera-protocol/lumera:07e42f602a344ef3bfb4437457553cc4 -o protos",
     "proto:download:deps": "buf export buf.build/cosmos/cosmos-sdk:5a6ab7bc14314acaa912d5e53aef1c2f -o protos && buf export buf.build/cosmos/cosmos-proto:04467658e59e44bbb22fe568206e1f70 -o protos && buf export buf.build/googleapis/googleapis:61b203b9a9164be9a834f58c37be6f62 -o protos",
     "codegen:clean": "rm -rf src/codegen",
     "codegen": "telescope transpile --config telescope.json",

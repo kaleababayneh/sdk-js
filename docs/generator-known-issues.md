@@ -10,7 +10,7 @@ Versions, scope, and inputs
 - AST library: @cosmology/ast 2.0.2 (see pnpm-lock: [pnpm-lock.yaml](pnpm-lock.yaml))
 - CosmJS tendermint RPC: @cosmjs/tendermint-rpc ^0.36.2 (package.json), examples use 0.32.4 (examples lock)
 - Config files reviewed: [telescope.json](telescope.json), [telescope-config.json](telescope-config.json)
-- Generated sources reviewed: [src/codegen/lumera/rpc.query.ts](src/codegen/lumera/rpc.query.ts:2), [src/codegen/lumera/supernode/genesis.ts](src/codegen/lumera/supernode/genesis.ts:12), [src/codegen/lumera/supernode/metrics_aggregate.ts](src/codegen/lumera/supernode/metrics_aggregate.ts:223), [src/codegen/extern.ts](src/codegen/extern.ts:35)
+- Generated sources reviewed: [src/codegen/lumera/rpc.query.ts](src/codegen/lumera/rpc.query.ts:2), [src/codegen/lumera/supernode/v1/genesis.ts](src/codegen/lumera/supernode/v1/genesis.ts:12), [src/codegen/lumera/supernode/v1/metrics_aggregate.ts](src/codegen/lumera/supernode/v1/metrics_aggregate.ts:223), [src/codegen/extern.ts](src/codegen/extern.ts:35)
 - Post-generation script: [scripts/post-codegen-fix.ts](scripts/post-codegen-fix.ts)
 
 Final configuration review (findings)
@@ -36,11 +36,11 @@ Evidence in this repo
   - Generated file imports Tendermint34Client and connects via .connect(): [src/codegen/lumera/rpc.query.ts](src/codegen/lumera/rpc.query.ts:2), [connect call](src/codegen/lumera/rpc.query.ts:9)
   - The generator templates toggled by useConnectComet apply to extern.ts/react hooks, not to rpc.query.ts factory: [create-helpers.ts switch](node_modules/@hyperweb/telescope/src/generators/create-helpers.ts:79), [external.ts uses Tendermint34Client](node_modules/@hyperweb/telescope/src/helpers/external.ts:21), [external-comet.ts uses connectComet](node_modules/@hyperweb/telescope/src/helpers/external-comet.ts:29), but rpc.query.ts is emitted by @cosmology/ast’s factory (no useConnectComet integration): [create-rpc-query-client-all.ts](node_modules/@hyperweb/telescope/src/generators/create-rpc-query-client-all.ts:91)
 - Nested message optionality defect (interfaces vs fromPartial)
-  - Interface marks message fields as required, e.g., params: Params; [GenesisState interface](src/codegen/lumera/supernode/genesis.ts:12)
-  - fromPartial correctly assigns undefined when absent: [fromPartial](src/codegen/lumera/supernode/genesis.ts:92)
+  - Interface marks message fields as required, e.g., params: Params; [GenesisState interface](src/codegen/lumera/supernode/v1/genesis.ts:12)
+  - fromPartial correctly assigns undefined when absent: [fromPartial](src/codegen/lumera/supernode/v1/genesis.ts:92)
   - This creates TS errors: "Type 'undefined' is not assignable to type 'Params'" across many modules.
 - Invalid double scalar mapping
-  - Example occurrences: [metrics_aggregate.ts map uses double.fromPartial](src/codegen/lumera/supernode/metrics_aggregate.ts:223) and .toAmino/.fromAmino follow-ups (same file)
+  - Example occurrences: [metrics_aggregate.ts map uses double.fromPartial](src/codegen/lumera/supernode/v1/metrics_aggregate.ts:223) and .toAmino/.fromAmino follow-ups (same file)
   - Also see Binary stubs that throw for double as a scalar: [src/codegen/binary.ts double unsupported](src/codegen/binary.ts:221)
 
 Root causes (upstream defects)
@@ -97,8 +97,8 @@ Appendix: pointers for reviewers
 - Telescope options reference (upstream docs): hyperweb-io/telescope README, see sections for General Options, RPC Client Options, Prototypes Options, Typings and Formatting.
 - Files illustrating current generator behavior in this repo:
   - [src/codegen/lumera/rpc.query.ts](src/codegen/lumera/rpc.query.ts:2)
-  - [src/codegen/lumera/supernode/genesis.ts](src/codegen/lumera/supernode/genesis.ts:12)
-  - [src/codegen/lumera/supernode/metrics_aggregate.ts](src/codegen/lumera/supernode/metrics_aggregate.ts:223)
+  - [src/codegen/lumera/supernode/v1/genesis.ts](src/codegen/lumera/supernode/v1/genesis.ts:12)
+  - [src/codegen/lumera/supernode/v1/metrics_aggregate.ts](src/codegen/lumera/supernode/v1/metrics_aggregate.ts:223)
   - [src/codegen/binary.ts](src/codegen/binary.ts:221)
   - [node_modules/@hyperweb/telescope/src/generators/create-helpers.ts](node_modules/@hyperweb/telescope/src/generators/create-helpers.ts:79)
   - [node_modules/@hyperweb/telescope/src/helpers/external.ts](node_modules/@hyperweb/telescope/src/helpers/external.ts:21)

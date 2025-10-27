@@ -7,7 +7,6 @@ import * as cosmosVestingV1beta1TxRegistry from "./vesting/v1beta1/tx.registry";
 import * as cosmosUpgradeV1beta1TxRegistry from "./upgrade/v1beta1/tx.registry";
 import * as cosmosStakingV1beta1TxRegistry from "./staking/v1beta1/tx.registry";
 import * as cosmosSlashingV1beta1TxRegistry from "./slashing/v1beta1/tx.registry";
-import * as cosmosProtocolpoolV1TxRegistry from "./protocolpool/v1/tx.registry";
 import * as cosmosNftV1beta1TxRegistry from "./nft/v1beta1/tx.registry";
 import * as cosmosMintV1beta1TxRegistry from "./mint/v1beta1/tx.registry";
 import * as cosmosGroupV1TxRegistry from "./group/v1/tx.registry";
@@ -17,10 +16,8 @@ import * as cosmosFeegrantV1beta1TxRegistry from "./feegrant/v1beta1/tx.registry
 import * as cosmosEvidenceV1beta1TxRegistry from "./evidence/v1beta1/tx.registry";
 import * as cosmosDistributionV1beta1TxRegistry from "./distribution/v1beta1/tx.registry";
 import * as cosmosCrisisV1beta1TxRegistry from "./crisis/v1beta1/tx.registry";
-import * as cosmosCounterV1TxRegistry from "./counter/v1/tx.registry";
 import * as cosmosConsensusV1TxRegistry from "./consensus/v1/tx.registry";
 import * as cosmosCircuitV1TxRegistry from "./circuit/v1/tx.registry";
-import * as cosmosBenchmarkV1TxRegistry from "./benchmark/v1/tx.registry";
 import * as cosmosBankV1beta1TxRegistry from "./bank/v1beta1/tx.registry";
 import * as cosmosAuthzV1beta1TxRegistry from "./authz/v1beta1/tx.registry";
 import * as cosmosAuthV1beta1TxRegistry from "./auth/v1beta1/tx.registry";
@@ -28,7 +25,6 @@ import * as cosmosVestingV1beta1TxAmino from "./vesting/v1beta1/tx.amino";
 import * as cosmosUpgradeV1beta1TxAmino from "./upgrade/v1beta1/tx.amino";
 import * as cosmosStakingV1beta1TxAmino from "./staking/v1beta1/tx.amino";
 import * as cosmosSlashingV1beta1TxAmino from "./slashing/v1beta1/tx.amino";
-import * as cosmosProtocolpoolV1TxAmino from "./protocolpool/v1/tx.amino";
 import * as cosmosNftV1beta1TxAmino from "./nft/v1beta1/tx.amino";
 import * as cosmosMintV1beta1TxAmino from "./mint/v1beta1/tx.amino";
 import * as cosmosGroupV1TxAmino from "./group/v1/tx.amino";
@@ -38,10 +34,8 @@ import * as cosmosFeegrantV1beta1TxAmino from "./feegrant/v1beta1/tx.amino";
 import * as cosmosEvidenceV1beta1TxAmino from "./evidence/v1beta1/tx.amino";
 import * as cosmosDistributionV1beta1TxAmino from "./distribution/v1beta1/tx.amino";
 import * as cosmosCrisisV1beta1TxAmino from "./crisis/v1beta1/tx.amino";
-import * as cosmosCounterV1TxAmino from "./counter/v1/tx.amino";
 import * as cosmosConsensusV1TxAmino from "./consensus/v1/tx.amino";
 import * as cosmosCircuitV1TxAmino from "./circuit/v1/tx.amino";
-import * as cosmosBenchmarkV1TxAmino from "./benchmark/v1/tx.amino";
 import * as cosmosBankV1beta1TxAmino from "./bank/v1beta1/tx.amino";
 import * as cosmosAuthzV1beta1TxAmino from "./authz/v1beta1/tx.amino";
 import * as cosmosAuthV1beta1TxAmino from "./auth/v1beta1/tx.amino";
@@ -50,7 +44,6 @@ export const cosmosAminoConverters = {
   ...cosmosUpgradeV1beta1TxAmino.AminoConverter,
   ...cosmosStakingV1beta1TxAmino.AminoConverter,
   ...cosmosSlashingV1beta1TxAmino.AminoConverter,
-  ...cosmosProtocolpoolV1TxAmino.AminoConverter,
   ...cosmosNftV1beta1TxAmino.AminoConverter,
   ...cosmosMintV1beta1TxAmino.AminoConverter,
   ...cosmosGroupV1TxAmino.AminoConverter,
@@ -60,15 +53,13 @@ export const cosmosAminoConverters = {
   ...cosmosEvidenceV1beta1TxAmino.AminoConverter,
   ...cosmosDistributionV1beta1TxAmino.AminoConverter,
   ...cosmosCrisisV1beta1TxAmino.AminoConverter,
-  ...cosmosCounterV1TxAmino.AminoConverter,
   ...cosmosConsensusV1TxAmino.AminoConverter,
   ...cosmosCircuitV1TxAmino.AminoConverter,
-  ...cosmosBenchmarkV1TxAmino.AminoConverter,
   ...cosmosBankV1beta1TxAmino.AminoConverter,
   ...cosmosAuthzV1beta1TxAmino.AminoConverter,
   ...cosmosAuthV1beta1TxAmino.AminoConverter
 };
-export const cosmosProtoRegistry: ReadonlyArray<[string, GeneratedType]> = [...cosmosVestingV1beta1TxRegistry.registry, ...cosmosUpgradeV1beta1TxRegistry.registry, ...cosmosStakingV1beta1TxRegistry.registry, ...cosmosSlashingV1beta1TxRegistry.registry, ...cosmosProtocolpoolV1TxRegistry.registry, ...cosmosNftV1beta1TxRegistry.registry, ...cosmosMintV1beta1TxRegistry.registry, ...cosmosGroupV1TxRegistry.registry, ...cosmosGovV1beta1TxRegistry.registry, ...cosmosGovV1TxRegistry.registry, ...cosmosFeegrantV1beta1TxRegistry.registry, ...cosmosEvidenceV1beta1TxRegistry.registry, ...cosmosDistributionV1beta1TxRegistry.registry, ...cosmosCrisisV1beta1TxRegistry.registry, ...cosmosCounterV1TxRegistry.registry, ...cosmosConsensusV1TxRegistry.registry, ...cosmosCircuitV1TxRegistry.registry, ...cosmosBenchmarkV1TxRegistry.registry, ...cosmosBankV1beta1TxRegistry.registry, ...cosmosAuthzV1beta1TxRegistry.registry, ...cosmosAuthV1beta1TxRegistry.registry];
+export const cosmosProtoRegistry: ReadonlyArray<[string, GeneratedType]> = [...cosmosVestingV1beta1TxRegistry.registry, ...cosmosUpgradeV1beta1TxRegistry.registry, ...cosmosStakingV1beta1TxRegistry.registry, ...cosmosSlashingV1beta1TxRegistry.registry, ...cosmosNftV1beta1TxRegistry.registry, ...cosmosMintV1beta1TxRegistry.registry, ...cosmosGroupV1TxRegistry.registry, ...cosmosGovV1beta1TxRegistry.registry, ...cosmosGovV1TxRegistry.registry, ...cosmosFeegrantV1beta1TxRegistry.registry, ...cosmosEvidenceV1beta1TxRegistry.registry, ...cosmosDistributionV1beta1TxRegistry.registry, ...cosmosCrisisV1beta1TxRegistry.registry, ...cosmosConsensusV1TxRegistry.registry, ...cosmosCircuitV1TxRegistry.registry, ...cosmosBankV1beta1TxRegistry.registry, ...cosmosAuthzV1beta1TxRegistry.registry, ...cosmosAuthV1beta1TxRegistry.registry];
 export const getSigningCosmosClientOptions = (): {
   registry: Registry;
   aminoTypes: AminoTypes;

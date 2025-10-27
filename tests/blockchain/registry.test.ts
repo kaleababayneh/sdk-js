@@ -11,7 +11,7 @@ describe("Lumera Registry", () => {
 
   it("includes MsgRequestAction type", () => {
     const hasRequestAction = lumeraProtoRegistry.some(
-      ([typeUrl]) => typeUrl === "/lumera.action.MsgRequestAction"
+      ([typeUrl]) => typeUrl === "/lumera.action.v1.MsgRequestAction"
     );
     
     expect(hasRequestAction).toBe(true);
@@ -19,7 +19,7 @@ describe("Lumera Registry", () => {
 
   it("includes MsgFinalizeAction type", () => {
     const hasFinalizeAction = lumeraProtoRegistry.some(
-      ([typeUrl]) => typeUrl === "/lumera.action.MsgFinalizeAction"
+      ([typeUrl]) => typeUrl === "/lumera.action.v1.MsgFinalizeAction"
     );
     
     expect(hasFinalizeAction).toBe(true);
@@ -27,7 +27,7 @@ describe("Lumera Registry", () => {
 
   it("includes MsgApproveAction type", () => {
     const hasApproveAction = lumeraProtoRegistry.some(
-      ([typeUrl]) => typeUrl === "/lumera.action.MsgApproveAction"
+      ([typeUrl]) => typeUrl === "/lumera.action.v1.MsgApproveAction"
     );
     
     expect(hasApproveAction).toBe(true);
@@ -35,7 +35,7 @@ describe("Lumera Registry", () => {
 
   it("includes MsgUpdateParams type", () => {
     const hasUpdateParams = lumeraProtoRegistry.some(
-      ([typeUrl]) => typeUrl === "/lumera.action.MsgUpdateParams"
+      ([typeUrl]) => typeUrl === "/lumera.action.v1.MsgUpdateParams"
     );
     
     expect(hasUpdateParams).toBe(true);
@@ -45,10 +45,10 @@ describe("Lumera Registry", () => {
     const registry = createRegistry();
     
     // Verify registry has lookup method
-    const requestActionType = registry.lookupType("/lumera.action.MsgRequestAction");
+    const requestActionType = registry.lookupType("/lumera.action.v1.MsgRequestAction");
     expect(requestActionType).toBeDefined();
-    
-    const finalizeActionType = registry.lookupType("/lumera.action.MsgFinalizeAction");
+
+    const finalizeActionType = registry.lookupType("/lumera.action.v1.MsgFinalizeAction");
     expect(finalizeActionType).toBeDefined();
   });
 

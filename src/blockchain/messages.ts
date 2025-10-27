@@ -8,11 +8,11 @@
  * import { lumera } from '@lumera/sdk-js';
  *
  * // Action messages
- * lumera.action.MessageComposer.withTypeUrl.requestAction({...});
- * lumera.action.MessageComposer.withTypeUrl.finalizeAction({...});
+ * lumera.action.v1.MessageComposer.withTypeUrl.requestAction({...});
+ * lumera.action.v1.MessageComposer.withTypeUrl.finalizeAction({...});
  *
  * // Supernode messages
- * lumera.supernode.MessageComposer.withTypeUrl.registerSupernode({...});
+ * lumera.supernode.v1.MessageComposer.withTypeUrl.registerSupernode({...});
  * ```
  *
  * See [`MIGRATION.md`](../../../MIGRATION.md) for complete migration guide.

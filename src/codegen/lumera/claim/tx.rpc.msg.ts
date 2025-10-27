@@ -10,6 +10,7 @@ export interface Msg {
    * parameters. The authority defaults to the x/gov module account.
    */
   updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse>;
+  /** Claim defines a message for claiming tokens. */
   claim(request: MsgClaim): Promise<MsgClaimResponse>;
   delayedClaim(request: MsgDelayedClaim): Promise<MsgDelayedClaimResponse>;
 }
@@ -25,7 +26,7 @@ export class MsgClientImpl implements Msg {
     const promise = this.rpc.request("lumera.claim.Msg", "UpdateParams", data);
     return promise.then(data => MsgUpdateParamsResponse.decode(new BinaryReader(data)));
   };
-  /* Claim */
+  /* Claim defines a message for claiming tokens. */
   claim = async (request: MsgClaim): Promise<MsgClaimResponse> => {
     const data = MsgClaim.encode(request).finish();
     const promise = this.rpc.request("lumera.claim.Msg", "Claim", data);

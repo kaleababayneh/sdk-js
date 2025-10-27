@@ -25,14 +25,14 @@ import type {
 } from "./interfaces";
 import { CosmjsTxClient } from "./cosmjs";
 import { createRegistry, createAminoTypes } from "./registry";
-import { QueryClientImpl as ActionQueryClient } from "../codegen/lumera/action/query.rpc.Query";
-import { QueryClientImpl as SupernodeQueryClient } from "../codegen/lumera/supernode/query.rpc.Query";
+import { QueryClientImpl as ActionQueryClient } from "../codegen/lumera/action/v1/query.rpc.Query";
+import { QueryClientImpl as SupernodeQueryClient } from "../codegen/lumera/supernode/v1/query.rpc.Query";
 import { base64FromBytes } from "../codegen/helpers";
-import type { SuperNode } from "../codegen/lumera/supernode/super_node";
-import type { SuperNodeStateRecord } from "../codegen/lumera/supernode/supernode_state";
-import type { Evidence } from "../codegen/lumera/supernode/evidence";
-import type { IPAddressHistory } from "../codegen/lumera/supernode/ip_address_history";
-import type { SupernodeAccountHistory } from "../codegen/lumera/supernode/supernode_account_history";
+import type { SuperNode } from "../codegen/lumera/supernode/v1/super_node";
+import type { SuperNodeStateRecord } from "../codegen/lumera/supernode/v1/supernode_state";
+import type { Evidence } from "../codegen/lumera/supernode/v1/evidence";
+import type { IPAddressHistory } from "../codegen/lumera/supernode/v1/ip_address_history";
+import type { SupernodeAccountHistory } from "../codegen/lumera/supernode/v1/supernode_account_history";
 
 /**
  * RPC-based Action query client adapter.
@@ -307,7 +307,7 @@ export interface BlockchainClientOptions {
  * console.log("Max RaptorQ Symbols:", params.max_raptor_q_symbols);
  *
  * // Build messages using generated MessageComposer
- * const msg = lumera.action.MessageComposer.withTypeUrl.requestAction({
+ * const msg = lumera.action.v1.MessageComposer.withTypeUrl.requestAction({
  *   creator: account.address,
  *   actionType: "cascade",
  *   metadata: JSON.stringify(metadata),

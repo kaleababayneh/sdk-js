@@ -1,0 +1,5 @@
+// @ts-nocheck
+/* eslint-disable */
+import { TelescopeGeneratedType } from "../../../types";
+import { MsgUpdateParams, MsgRegisterSupernode, MsgDeregisterSupernode, MsgStartSupernode, MsgStopSupernode, MsgUpdateSupernode } from "./tx";
+export const registry: ReadonlyArray<[string, TelescopeGeneratedType<any, any, any>]> = [["/lumera.supernode.v1.MsgUpdateParams", MsgUpdateParams], ["/lumera.supernode.v1.MsgRegisterSupernode", MsgRegisterSupernode], ["/lumera.supernode.v1.MsgDeregisterSupernode", MsgDeregisterSupernode], ["/lumera.supernode.v1.MsgStartSupernode", MsgStartSupernode], ["/lumera.supernode.v1.MsgStopSupernode", MsgStopSupernode], ["/lumera.supernode.v1.MsgUpdateSupernode", MsgUpdateSupernode]];

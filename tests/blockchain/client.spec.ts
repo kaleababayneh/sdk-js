@@ -34,11 +34,11 @@ vi.mock("src/blockchain/cosmjs", () => ({
   CosmjsTxClient: CosmjsTxClientMock,
 }));
 
-vi.mock("src/codegen/lumera/action/query.rpc.Query", () => ({
+vi.mock("src/codegen/lumera/action/v1/query.rpc.Query", () => ({
   QueryClientImpl: ActionQueryClientMock,
 }));
 
-vi.mock("src/codegen/lumera/supernode/query.rpc.Query", () => ({
+vi.mock("src/codegen/lumera/supernode/v1/query.rpc.Query", () => ({
   QueryClientImpl: SupernodeQueryClientMock,
 }));
 

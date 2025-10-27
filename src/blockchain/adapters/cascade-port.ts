@@ -199,8 +199,8 @@ export class BlockchainActionAdapter implements CascadeChainPort {
 
     // Step 3: Build the RequestAction message using the new fromPartial API
     const msg = {
-      typeUrl: '/lumera.action.MsgRequestAction',
-      value: lumera.action.MsgRequestAction.fromPartial({
+      typeUrl: '/lumera.action.v1.MsgRequestAction',
+      value: lumera.action.v1.MsgRequestAction.fromPartial({
         creator: this.signerAddress,
         actionType: "cascade",
         metadata: JSON.stringify({
@@ -210,10 +210,12 @@ export class BlockchainActionAdapter implements CascadeChainPort {
           signatures: metadata.signatures,
           public: metadata.public,
         }),
-        price: priceAmount,
+        price: priceAmount+"ulume",
         expirationTime: input.expirationTime,
       }),
     };
+
+    console.log("Built MsgRequestAction:", msg);
 
     // Step 4: Simulate to get exact gas
     const gasEstimate = await this.blockchainClient.Tx.simulate(

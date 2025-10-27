@@ -25,11 +25,11 @@ vi.mock("@cosmjs/stargate", async (importOriginal) => {
 });
 
 // Mock the generated query clients
-vi.mock("src/codegen/lumera/action/query.rpc.Query", () => ({
+vi.mock("src/codegen/lumera/action/v1/query.rpc.Query", () => ({
   QueryClientImpl: vi.fn(() => mockActionQueryClient),
 }));
 
-vi.mock("src/codegen/lumera/supernode/query.rpc.Query", () => ({
+vi.mock("src/codegen/lumera/supernode/v1/query.rpc.Query", () => ({
   QueryClientImpl: vi.fn(() => mockSupernodeQueryClient),
 }));
 

@@ -2452,7 +2452,9 @@ export interface FieldOptions {
    */
   deprecated: boolean;
   /**
+   * DEPRECATED. DO NOT USE!
    * For Google-internal migration only. Do not use.
+   * @deprecated
    */
   weak: boolean;
   /**
@@ -2559,7 +2561,9 @@ export interface FieldOptionsAmino {
    */
   deprecated: boolean;
   /**
+   * DEPRECATED. DO NOT USE!
    * For Google-internal migration only. Do not use.
+   * @deprecated
    */
   weak: boolean;
   /**

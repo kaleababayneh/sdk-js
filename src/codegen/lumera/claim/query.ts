@@ -61,6 +61,7 @@ export interface QueryParamsResponseAminoMsg {
   value: QueryParamsResponseAmino;
 }
 /**
+ * QueryClaimRecordRequest is request type for the Query/ClaimRecord RPC method.
  * @name QueryClaimRecordRequest
  * @package lumera.claim
  * @see proto type: lumera.claim.QueryClaimRecordRequest
@@ -73,6 +74,7 @@ export interface QueryClaimRecordRequestProtoMsg {
   value: Uint8Array;
 }
 /**
+ * QueryClaimRecordRequest is request type for the Query/ClaimRecord RPC method.
  * @name QueryClaimRecordRequestAmino
  * @package lumera.claim
  * @see proto type: lumera.claim.QueryClaimRecordRequest
@@ -85,6 +87,7 @@ export interface QueryClaimRecordRequestAminoMsg {
   value: QueryClaimRecordRequestAmino;
 }
 /**
+ * QueryClaimRecordResponse is response type for the Query/ClaimRecord RPC method.
  * @name QueryClaimRecordResponse
  * @package lumera.claim
  * @see proto type: lumera.claim.QueryClaimRecordResponse
@@ -97,6 +100,7 @@ export interface QueryClaimRecordResponseProtoMsg {
   value: Uint8Array;
 }
 /**
+ * QueryClaimRecordResponse is response type for the Query/ClaimRecord RPC method.
  * @name QueryClaimRecordResponseAmino
  * @package lumera.claim
  * @see proto type: lumera.claim.QueryClaimRecordResponse
@@ -310,6 +314,7 @@ function createBaseQueryClaimRecordRequest(): QueryClaimRecordRequest {
   };
 }
 /**
+ * QueryClaimRecordRequest is request type for the Query/ClaimRecord RPC method.
  * @name QueryClaimRecordRequest
  * @package lumera.claim
  * @see proto type: lumera.claim.QueryClaimRecordRequest
@@ -385,6 +390,7 @@ function createBaseQueryClaimRecordResponse(): QueryClaimRecordResponse {
   };
 }
 /**
+ * QueryClaimRecordResponse is response type for the Query/ClaimRecord RPC method.
  * @name QueryClaimRecordResponse
  * @package lumera.claim
  * @see proto type: lumera.claim.QueryClaimRecordResponse

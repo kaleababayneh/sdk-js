@@ -13,6 +13,7 @@ export const updateParams = buildTx<MsgUpdateParams>({
   msg: MsgUpdateParams
 });
 /**
+ * Claim defines a message for claiming tokens.
  * @name claim
  * @package lumera.claim
  * @see proto service: lumera.claim.Claim

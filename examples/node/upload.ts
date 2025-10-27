@@ -116,7 +116,7 @@ async function main() {
   console.log("\n[Step 4] Building MsgRequestAction with generated composer...");
 
   // Use the Telescope-generated message composer
-  const msgRequestAction = lumera.action.MessageComposer.withTypeUrl.requestAction({
+  const msgRequestAction = lumera.action.v1.MessageComposer.withTypeUrl.requestAction({
     creator: account.address,
     actionType: "cascade",
     metadata: JSON.stringify(metadata),
@@ -168,7 +168,7 @@ async function main() {
   };
 
   // Use the Telescope-generated message composer
-  const msgFinalizeAction = lumera.action.MessageComposer.withTypeUrl.finalizeAction({
+  const msgFinalizeAction = lumera.action.v1.MessageComposer.withTypeUrl.finalizeAction({
     creator: account.address,
     actionId,
     actionType: "cascade",
@@ -220,7 +220,7 @@ async function main() {
   console.log("SUCCESS! Demonstrated direct message composition workflow");
   console.log("=".repeat(60));
   console.log("\nKey takeaways:");
-  console.log("  - Used lumera.action.MessageComposer.withTypeUrl for messages");
+  console.log("  - Used lumera.action.v1.MessageComposer.withTypeUrl for messages");
   console.log("  - Demonstrated both RequestAction and FinalizeAction");
   console.log("  - Showed gas estimation and transaction broadcasting");
   console.log("  - This is the low-level approach for advanced use cases");

@@ -11,10 +11,14 @@ export const createRPCQueryClient = async ({
   const client = new QueryClient(tmClient);
   return {
     lumera: {
-      supernode: (await import("./supernode/query.rpc.Query")).createRpcQueryExtension(client),
+      supernode: {
+        v1: (await import("./supernode/v1/query.rpc.Query")).createRpcQueryExtension(client)
+      },
       lumeraid: (await import("./lumeraid/query.rpc.Query")).createRpcQueryExtension(client),
       claim: (await import("./claim/query.rpc.Query")).createRpcQueryExtension(client),
-      action: (await import("./action/query.rpc.Query")).createRpcQueryExtension(client)
+      action: {
+        v1: (await import("./action/v1/query.rpc.Query")).createRpcQueryExtension(client)
+      }
     },
     cosmos: {
       upgrade: {
@@ -28,9 +32,6 @@ export const createRPCQueryClient = async ({
       },
       slashing: {
         v1beta1: (await import("../cosmos/slashing/v1beta1/query.rpc.Query")).createRpcQueryExtension(client)
-      },
-      protocolpool: {
-        v1: (await import("../cosmos/protocolpool/v1/query.rpc.Query")).createRpcQueryExtension(client)
       },
       params: {
         v1beta1: (await import("../cosmos/params/v1beta1/query.rpc.Query")).createRpcQueryExtension(client)
@@ -59,14 +60,8 @@ export const createRPCQueryClient = async ({
       evidence: {
         v1beta1: (await import("../cosmos/evidence/v1beta1/query.rpc.Query")).createRpcQueryExtension(client)
       },
-      epochs: {
-        v1beta1: (await import("../cosmos/epochs/v1beta1/query.rpc.Query")).createRpcQueryExtension(client)
-      },
       distribution: {
         v1beta1: (await import("../cosmos/distribution/v1beta1/query.rpc.Query")).createRpcQueryExtension(client)
-      },
-      counter: {
-        v1: (await import("../cosmos/counter/v1/query.rpc.Query")).createRpcQueryExtension(client)
       },
       consensus: {
         v1: (await import("../cosmos/consensus/v1/query.rpc.Query")).createRpcQueryExtension(client)

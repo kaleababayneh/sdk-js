@@ -247,7 +247,7 @@ export class CascadeUploader {
         data_hash: dataHash64,
         file_name: params.fileName,
         rq_ids_ic,
-        signature: indexWithSignature,
+        signatures: indexWithSignature,
         public: params.isPublic,
       },
       expirationTime: params.expirationTime

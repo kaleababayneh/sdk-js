@@ -177,7 +177,7 @@ describe("blockchain message helpers", () => {
     );
 
     expect(msg).toEqual({
-      typeUrl: "/lumera.action.MsgRequestAction",
+      typeUrl: "/lumera.action.v1.MsgRequestAction",
       value: {
         creator: "lumera1creator",
         actionType: "cascade",

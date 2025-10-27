@@ -7,10 +7,14 @@ export const createRPCMsgClient = async ({
   rpc: Rpc;
 }) => ({
   lumera: {
-    supernode: new (await import("./supernode/tx.rpc.msg")).MsgClientImpl(rpc),
+    supernode: {
+      v1: new (await import("./supernode/v1/tx.rpc.msg")).MsgClientImpl(rpc)
+    },
     lumeraid: new (await import("./lumeraid/tx.rpc.msg")).MsgClientImpl(rpc),
     claim: new (await import("./claim/tx.rpc.msg")).MsgClientImpl(rpc),
-    action: new (await import("./action/tx.rpc.msg")).MsgClientImpl(rpc)
+    action: {
+      v1: new (await import("./action/v1/tx.rpc.msg")).MsgClientImpl(rpc)
+    }
   },
   cosmos: {
     vesting: {
@@ -24,9 +28,6 @@ export const createRPCMsgClient = async ({
     },
     slashing: {
       v1beta1: new (await import("../cosmos/slashing/v1beta1/tx.rpc.msg")).MsgClientImpl(rpc)
-    },
-    protocolpool: {
-      v1: new (await import("../cosmos/protocolpool/v1/tx.rpc.msg")).MsgClientImpl(rpc)
     },
     nft: {
       v1beta1: new (await import("../cosmos/nft/v1beta1/tx.rpc.msg")).MsgClientImpl(rpc)
@@ -53,17 +54,11 @@ export const createRPCMsgClient = async ({
     crisis: {
       v1beta1: new (await import("../cosmos/crisis/v1beta1/tx.rpc.msg")).MsgClientImpl(rpc)
     },
-    counter: {
-      v1: new (await import("../cosmos/counter/v1/tx.rpc.msg")).MsgClientImpl(rpc)
-    },
     consensus: {
       v1: new (await import("../cosmos/consensus/v1/tx.rpc.msg")).MsgClientImpl(rpc)
     },
     circuit: {
       v1: new (await import("../cosmos/circuit/v1/tx.rpc.msg")).MsgClientImpl(rpc)
-    },
-    benchmark: {
-      v1: new (await import("../cosmos/benchmark/v1/tx.rpc.msg")).MsgClientImpl(rpc)
     },
     bank: {
       v1beta1: new (await import("../cosmos/bank/v1beta1/tx.rpc.msg")).MsgClientImpl(rpc)

@@ -19,9 +19,6 @@ export const createRPCMsgClient = async ({
     slashing: {
       v1beta1: new (await import("./slashing/v1beta1/tx.rpc.msg")).MsgClientImpl(rpc)
     },
-    protocolpool: {
-      v1: new (await import("./protocolpool/v1/tx.rpc.msg")).MsgClientImpl(rpc)
-    },
     nft: {
       v1beta1: new (await import("./nft/v1beta1/tx.rpc.msg")).MsgClientImpl(rpc)
     },
@@ -47,17 +44,11 @@ export const createRPCMsgClient = async ({
     crisis: {
       v1beta1: new (await import("./crisis/v1beta1/tx.rpc.msg")).MsgClientImpl(rpc)
     },
-    counter: {
-      v1: new (await import("./counter/v1/tx.rpc.msg")).MsgClientImpl(rpc)
-    },
     consensus: {
       v1: new (await import("./consensus/v1/tx.rpc.msg")).MsgClientImpl(rpc)
     },
     circuit: {
       v1: new (await import("./circuit/v1/tx.rpc.msg")).MsgClientImpl(rpc)
-    },
-    benchmark: {
-      v1: new (await import("./benchmark/v1/tx.rpc.msg")).MsgClientImpl(rpc)
     },
     bank: {
       v1beta1: new (await import("./bank/v1beta1/tx.rpc.msg")).MsgClientImpl(rpc)

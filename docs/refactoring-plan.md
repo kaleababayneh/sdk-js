@@ -284,14 +284,14 @@ Use generated message composers:
 import { lumera } from '../codegen';
 
 // Use message composer
-const msg = lumera.action.v1beta1.MessageComposer.withTypeUrl.registerAction({
+const msg = lumera.action.v1.MessageComposer.withTypeUrl.registerAction({
   creator: address,
   // ... fields
 });
 
 // Or construct manually with generated types
 const msg = {
-  typeUrl: '/lumera.action.v1beta1.MsgRegisterAction',
+  typeUrl: '/lumera.action.v1.MsgRegisterAction',
   value: MsgRegisterAction.fromPartial({
     creator: address,
     // ... fields
@@ -318,10 +318,10 @@ import { createProtobufRpcClient } from '@cosmjs/stargate';
 // Import generated query clients
 import { 
   QueryClientImpl as ActionQueryClient 
-} from '../codegen/lumera/action/v1beta1/query';
+} from '../codegen/lumera/action/v1/v1beta1/query';
 import { 
   QueryClientImpl as SupernodeQueryClient 
-} from '../codegen/lumera/supernode/v1beta1/query';
+} from '../codegen/lumera/supernode/v1/v1beta1/query';
 
 export async function createQueryClients(rpcEndpoint: string) {
   // Connect to Tendermint RPC
@@ -368,7 +368,7 @@ export function buildRegisterActionMsg(params: {
   creator: string;
   // ... other fields
 }) {
-  return lumera.action.v1beta1.MessageComposer.withTypeUrl.registerAction(params);
+  return lumera.action.v1.MessageComposer.withTypeUrl.registerAction(params);
 }
 ```
 
@@ -420,7 +420,7 @@ import { lumera } from '../src/codegen';
 
 // Use generated types and helpers
 const registry = createRegistry();
-const msg = lumera.action.v1beta1.MessageComposer.withTypeUrl.registerAction({
+const msg = lumera.action.v1.MessageComposer.withTypeUrl.registerAction({
   // ...
 });
 ```
@@ -453,7 +453,7 @@ Document the changes for existing users:
 **Before:**
 \`\`\`typescript
 const registry = new Registry();
-registry.register('/lumera.action.MsgRegisterAction', MsgRegisterAction);
+registry.register('/lumera.action.v1.MsgRegisterAction', MsgRegisterAction);
 \`\`\`
 
 **After:**
