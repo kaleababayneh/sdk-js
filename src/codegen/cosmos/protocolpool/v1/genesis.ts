@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { ContinuousFund, ContinuousFundAmino, ContinuousFundSDKType, Params, ParamsAmino, ParamsSDKType } from "./types";
+import { ContinuousFund, ContinuousFundAmino, Params, ParamsAmino } from "./types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * GenesisState defines the protocolpool module's genesis state.
  * @name GenesisState
@@ -35,26 +35,16 @@ export interface GenesisStateAmino {
   /**
    * ContinuousFunds defines the continuous funds at genesis.
    */
-  continuous_funds?: ContinuousFundAmino[];
+  continuous_funds: ContinuousFundAmino[];
   /**
    * Params defines the parameters of this module, currently only contains the
    * denoms that will be used for continuous fund distributions.
    */
-  params?: ParamsAmino;
+  params: ParamsAmino;
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
-}
-/**
- * GenesisState defines the protocolpool module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.GenesisState
- */
-export interface GenesisStateSDKType {
-  continuous_funds: ContinuousFundSDKType[];
-  params: ParamsSDKType;
 }
 function createBaseGenesisState(): GenesisState {
   return {
@@ -73,9 +63,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.continuousFunds) && (!o.continuousFunds.length || ContinuousFund.is(o.continuousFunds[0])) && Params.is(o.params));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.continuous_funds) && (!o.continuous_funds.length || ContinuousFund.isSDK(o.continuous_funds[0])) && Params.isSDK(o.params));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.continuous_funds) && (!o.continuous_funds.length || ContinuousFund.isAmino(o.continuous_funds[0])) && Params.isAmino(o.params));
@@ -109,7 +96,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.continuousFunds = object.continuousFunds?.map(e => ContinuousFund.fromPartial(e)) || [];
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;

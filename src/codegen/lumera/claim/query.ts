@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../cosmos/base/query/v1beta1/pagination";
-import { Params, ParamsAmino, ParamsSDKType } from "./params";
-import { ClaimRecord, ClaimRecordAmino, ClaimRecordSDKType } from "./claim_record";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../cosmos/base/query/v1beta1/pagination";
+import { Params, ParamsAmino } from "./params";
+import { ClaimRecord, ClaimRecordAmino } from "./claim_record";
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
  * QueryParamsRequest is request type for the Query/Params RPC method.
@@ -28,13 +28,6 @@ export interface QueryParamsRequestAminoMsg {
   type: "/lumera.claim.QueryParamsRequest";
   value: QueryParamsRequestAmino;
 }
-/**
- * QueryParamsRequest is request type for the Query/Params RPC method.
- * @name QueryParamsRequestSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {}
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
  * @name QueryParamsResponse
@@ -68,15 +61,6 @@ export interface QueryParamsResponseAminoMsg {
   value: QueryParamsResponseAmino;
 }
 /**
- * QueryParamsResponse is response type for the Query/Params RPC method.
- * @name QueryParamsResponseSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  params: ParamsSDKType;
-}
-/**
  * @name QueryClaimRecordRequest
  * @package lumera.claim
  * @see proto type: lumera.claim.QueryClaimRecordRequest
@@ -94,19 +78,11 @@ export interface QueryClaimRecordRequestProtoMsg {
  * @see proto type: lumera.claim.QueryClaimRecordRequest
  */
 export interface QueryClaimRecordRequestAmino {
-  address?: string;
+  address: string;
 }
 export interface QueryClaimRecordRequestAminoMsg {
   type: "/lumera.claim.QueryClaimRecordRequest";
   value: QueryClaimRecordRequestAmino;
-}
-/**
- * @name QueryClaimRecordRequestSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.QueryClaimRecordRequest
- */
-export interface QueryClaimRecordRequestSDKType {
-  address: string;
 }
 /**
  * @name QueryClaimRecordResponse
@@ -133,14 +109,6 @@ export interface QueryClaimRecordResponseAminoMsg {
   value: QueryClaimRecordResponseAmino;
 }
 /**
- * @name QueryClaimRecordResponseSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.QueryClaimRecordResponse
- */
-export interface QueryClaimRecordResponseSDKType {
-  record?: ClaimRecordSDKType;
-}
-/**
  * @name QueryListClaimedRequest
  * @package lumera.claim
  * @see proto type: lumera.claim.QueryListClaimedRequest
@@ -159,21 +127,12 @@ export interface QueryListClaimedRequestProtoMsg {
  * @see proto type: lumera.claim.QueryListClaimedRequest
  */
 export interface QueryListClaimedRequestAmino {
-  vestedTerm?: number;
+  vestedTerm: number;
   pagination?: PageRequestAmino;
 }
 export interface QueryListClaimedRequestAminoMsg {
   type: "/lumera.claim.QueryListClaimedRequest";
   value: QueryListClaimedRequestAmino;
-}
-/**
- * @name QueryListClaimedRequestSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.QueryListClaimedRequest
- */
-export interface QueryListClaimedRequestSDKType {
-  vestedTerm: number;
-  pagination?: PageRequestSDKType;
 }
 /**
  * @name QueryListClaimedResponse
@@ -194,21 +153,12 @@ export interface QueryListClaimedResponseProtoMsg {
  * @see proto type: lumera.claim.QueryListClaimedResponse
  */
 export interface QueryListClaimedResponseAmino {
-  claims?: ClaimRecordAmino[];
+  claims: ClaimRecordAmino[];
   pagination?: PageResponseAmino;
 }
 export interface QueryListClaimedResponseAminoMsg {
   type: "/lumera.claim.QueryListClaimedResponse";
   value: QueryListClaimedResponseAmino;
-}
-/**
- * @name QueryListClaimedResponseSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.QueryListClaimedResponse
- */
-export interface QueryListClaimedResponseSDKType {
-  claims: ClaimRecordSDKType[];
-  pagination?: PageResponseSDKType;
 }
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
@@ -222,9 +172,6 @@ function createBaseQueryParamsRequest(): QueryParamsRequest {
 export const QueryParamsRequest = {
   typeUrl: "/lumera.claim.QueryParamsRequest",
   is(o: any): o is QueryParamsRequest {
-    return o && o.$typeUrl === QueryParamsRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
   isAmino(o: any): o is QueryParamsRequestAmino {
@@ -247,7 +194,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(_: I): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -292,9 +239,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.is(o.params));
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isSDK(o.params));
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isAmino(o.params));
   },
@@ -321,7 +265,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;
@@ -375,9 +319,6 @@ export const QueryClaimRecordRequest = {
   is(o: any): o is QueryClaimRecordRequest {
     return o && (o.$typeUrl === QueryClaimRecordRequest.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is QueryClaimRecordRequestSDKType {
-    return o && (o.$typeUrl === QueryClaimRecordRequest.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is QueryClaimRecordRequestAmino {
     return o && (o.$typeUrl === QueryClaimRecordRequest.typeUrl || typeof o.address === "string");
   },
@@ -404,7 +345,7 @@ export const QueryClaimRecordRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryClaimRecordRequest>, I>>(object: I): QueryClaimRecordRequest {
+  fromPartial(object: DeepPartial<QueryClaimRecordRequest>): QueryClaimRecordRequest {
     const message = createBaseQueryClaimRecordRequest();
     message.address = object.address ?? "";
     return message;
@@ -453,9 +394,6 @@ export const QueryClaimRecordResponse = {
   is(o: any): o is QueryClaimRecordResponse {
     return o && o.$typeUrl === QueryClaimRecordResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryClaimRecordResponseSDKType {
-    return o && o.$typeUrl === QueryClaimRecordResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryClaimRecordResponseAmino {
     return o && o.$typeUrl === QueryClaimRecordResponse.typeUrl;
   },
@@ -482,7 +420,7 @@ export const QueryClaimRecordResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryClaimRecordResponse>, I>>(object: I): QueryClaimRecordResponse {
+  fromPartial(object: DeepPartial<QueryClaimRecordResponse>): QueryClaimRecordResponse {
     const message = createBaseQueryClaimRecordResponse();
     message.record = object.record !== undefined && object.record !== null ? ClaimRecord.fromPartial(object.record) : undefined;
     return message;
@@ -537,9 +475,6 @@ export const QueryListClaimedRequest = {
   is(o: any): o is QueryListClaimedRequest {
     return o && (o.$typeUrl === QueryListClaimedRequest.typeUrl || typeof o.vestedTerm === "number");
   },
-  isSDK(o: any): o is QueryListClaimedRequestSDKType {
-    return o && (o.$typeUrl === QueryListClaimedRequest.typeUrl || typeof o.vestedTerm === "number");
-  },
   isAmino(o: any): o is QueryListClaimedRequestAmino {
     return o && (o.$typeUrl === QueryListClaimedRequest.typeUrl || typeof o.vestedTerm === "number");
   },
@@ -572,7 +507,7 @@ export const QueryListClaimedRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryListClaimedRequest>, I>>(object: I): QueryListClaimedRequest {
+  fromPartial(object: DeepPartial<QueryListClaimedRequest>): QueryListClaimedRequest {
     const message = createBaseQueryListClaimedRequest();
     message.vestedTerm = object.vestedTerm ?? 0;
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -632,9 +567,6 @@ export const QueryListClaimedResponse = {
   is(o: any): o is QueryListClaimedResponse {
     return o && (o.$typeUrl === QueryListClaimedResponse.typeUrl || Array.isArray(o.claims) && (!o.claims.length || ClaimRecord.is(o.claims[0])));
   },
-  isSDK(o: any): o is QueryListClaimedResponseSDKType {
-    return o && (o.$typeUrl === QueryListClaimedResponse.typeUrl || Array.isArray(o.claims) && (!o.claims.length || ClaimRecord.isSDK(o.claims[0])));
-  },
   isAmino(o: any): o is QueryListClaimedResponseAmino {
     return o && (o.$typeUrl === QueryListClaimedResponse.typeUrl || Array.isArray(o.claims) && (!o.claims.length || ClaimRecord.isAmino(o.claims[0])));
   },
@@ -667,7 +599,7 @@ export const QueryListClaimedResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryListClaimedResponse>, I>>(object: I): QueryListClaimedResponse {
+  fromPartial(object: DeepPartial<QueryListClaimedResponse>): QueryListClaimedResponse {
     const message = createBaseQueryListClaimedResponse();
     message.claims = object.claims?.map(e => ClaimRecord.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;

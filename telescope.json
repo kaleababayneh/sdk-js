@@ -2,16 +2,71 @@
   "protoDirs": ["protos"],
   "outPath": "src/codegen",
   "options": {
+    "classesUseArrowFunctions": true,
+    "env": "v-next",
+    "useInterchainJs": true,
+    "useSDKTypes": false,
     "prototypes": {
       "enabled": true,
+      "enableRegistryLoader": false,
+      "enableMessageComposer": false,
+      "parser": {
+        "keepCase": false
+      },
+      "methods": {
+        "fromJSON": false,
+        "toJSON": false,
+        "encode": true,
+        "decode": true,
+        "fromPartial": true,
+        "toAmino": true,
+        "fromAmino": true,
+        "fromProto": false,
+        "toProto": false,
+        "fromProtoMsg": false,
+        "toProtoMsg": false,
+        "toAminoMsg": true,
+        "fromAminoMsg": true
+      },
+      "addTypeUrlToDecoders": false,
+      "addTypeUrlToObjects": true,
+      "addAminoTypeToObjects": true,
       "typingsFormat": {
-        "useExact": true,
-        "setDefaultEnumToUnrecognized": true,
+        "duration": "duration",
+        "timestamp": "date",
+        "useExact": false,
+        "useDeepPartial": true,
+        "num64": "bigint",
+        "customTypes": {
+          "useCosmosSDKDec": true,
+          "useEnhancedDecimal": false
+        },
+        "useTelescopeGeneratedType": true,
         "autoFixUndefinedEnumDefault": true
       }
     },
     "aminoEncoding": {
-      "enabled": true
+      "enabled": true,
+      "useLegacyInlineEncoding": false,
+      "disableMsgTypes": false,
+      "useProtoOptionality": true,
+      "customTypes": {
+        "useCosmosSDKDec": true
+      }
+    },
+    "helperFunctions": {
+      "enabled": true,
+      "useGlobalDecoderRegistry": true,
+      "hooks": {
+        "react": false,
+        "vue": false
+      }
+    },
+    "interfaces": {
+      "enabled": true,
+      "useGlobalDecoderRegistry": true,
+      "registerAllDecodersToGlobal": false,
+      "useUnionTypes": true
     },
     "lcdClients": {
       "enabled": false
@@ -19,7 +74,10 @@
     "rpcClients": {
       "enabled": true,
       "camelCase": true,
-      "useConnectComet": false
+      "useConnectComet": true,
+      "reactQuery": {
+        "enabled": false
+      }
     },
     "stargateClients": {
       "enabled": true,
@@ -34,7 +92,6 @@
     "eslintDisable": {
       "disableAll": true
     },
-    "removeUnusedImports": true,
-    "useSDKTypes": true
+    "removeUnusedImports": true
   }
 }

@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { Timestamp } from "../protobuf/timestamp";
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { toTimestamp, fromTimestamp, Exact } from "../../helpers";
+import { toTimestamp, fromTimestamp, DeepPartial } from "../../helpers";
 /**
  * Represents a time interval, encoded as a Timestamp start (inclusive) and a
  * Timestamp end (exclusive).
@@ -65,21 +65,6 @@ export interface IntervalAminoMsg {
   type: "/google.type.Interval";
   value: IntervalAmino;
 }
-/**
- * Represents a time interval, encoded as a Timestamp start (inclusive) and a
- * Timestamp end (exclusive).
- * 
- * The start must be less than or equal to the end.
- * When the start equals the end, the interval is empty (matches no time).
- * When both start and end are unspecified, the interval matches any time.
- * @name IntervalSDKType
- * @package google.type
- * @see proto type: google.type.Interval
- */
-export interface IntervalSDKType {
-  start_time?: Date;
-  end_time?: Date;
-}
 function createBaseInterval(): Interval {
   return {
     startTime: undefined,
@@ -100,9 +85,6 @@ function createBaseInterval(): Interval {
 export const Interval = {
   typeUrl: "/google.type.Interval",
   is(o: any): o is Interval {
-    return o && o.$typeUrl === Interval.typeUrl;
-  },
-  isSDK(o: any): o is IntervalSDKType {
     return o && o.$typeUrl === Interval.typeUrl;
   },
   isAmino(o: any): o is IntervalAmino {
@@ -137,7 +119,7 @@ export const Interval = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Interval>, I>>(object: I): Interval {
+  fromPartial(object: DeepPartial<Interval>): Interval {
     const message = createBaseInterval();
     message.startTime = object.startTime ?? undefined;
     message.endTime = object.endTime ?? undefined;

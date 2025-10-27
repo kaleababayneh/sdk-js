@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
-import { Params, ParamsAmino, ParamsSDKType, Metadata, MetadataAmino, MetadataSDKType, SendEnabled, SendEnabledAmino, SendEnabledSDKType } from "./bank";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
+import { Params, ParamsAmino, Metadata, MetadataAmino, SendEnabled, SendEnabledAmino } from "./bank";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryBalanceRequest is the request type for the Query/Balance RPC method.
@@ -36,25 +36,15 @@ export interface QueryBalanceRequestAmino {
   /**
    * address is the address to query balances for.
    */
-  address?: string;
+  address: string;
   /**
    * denom is the coin denom to query balances for.
    */
-  denom?: string;
+  denom: string;
 }
 export interface QueryBalanceRequestAminoMsg {
   type: "cosmos-sdk/QueryBalanceRequest";
   value: QueryBalanceRequestAmino;
-}
-/**
- * QueryBalanceRequest is the request type for the Query/Balance RPC method.
- * @name QueryBalanceRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryBalanceRequest
- */
-export interface QueryBalanceRequestSDKType {
-  address: string;
-  denom: string;
 }
 /**
  * QueryBalanceResponse is the response type for the Query/Balance RPC method.
@@ -87,15 +77,6 @@ export interface QueryBalanceResponseAmino {
 export interface QueryBalanceResponseAminoMsg {
   type: "cosmos-sdk/QueryBalanceResponse";
   value: QueryBalanceResponseAmino;
-}
-/**
- * QueryBalanceResponse is the response type for the Query/Balance RPC method.
- * @name QueryBalanceResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryBalanceResponse
- */
-export interface QueryBalanceResponseSDKType {
-  balance?: CoinSDKType;
 }
 /**
  * QueryBalanceRequest is the request type for the Query/AllBalances RPC method.
@@ -133,7 +114,7 @@ export interface QueryAllBalancesRequestAmino {
   /**
    * address is the address to query balances for.
    */
-  address?: string;
+  address: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -143,22 +124,11 @@ export interface QueryAllBalancesRequestAmino {
    * 
    * Since: cosmos-sdk 0.50
    */
-  resolve_denom?: boolean;
+  resolve_denom: boolean;
 }
 export interface QueryAllBalancesRequestAminoMsg {
   type: "cosmos-sdk/QueryAllBalancesRequest";
   value: QueryAllBalancesRequestAmino;
-}
-/**
- * QueryBalanceRequest is the request type for the Query/AllBalances RPC method.
- * @name QueryAllBalancesRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryAllBalancesRequest
- */
-export interface QueryAllBalancesRequestSDKType {
-  address: string;
-  pagination?: PageRequestSDKType;
-  resolve_denom: boolean;
 }
 /**
  * QueryAllBalancesResponse is the response type for the Query/AllBalances RPC
@@ -203,17 +173,6 @@ export interface QueryAllBalancesResponseAminoMsg {
   value: QueryAllBalancesResponseAmino;
 }
 /**
- * QueryAllBalancesResponse is the response type for the Query/AllBalances RPC
- * method.
- * @name QueryAllBalancesResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryAllBalancesResponse
- */
-export interface QueryAllBalancesResponseSDKType {
-  balances: CoinSDKType[];
-  pagination?: PageResponseSDKType;
-}
-/**
  * QuerySpendableBalancesRequest defines the gRPC request structure for querying
  * an account's spendable balances.
  * 
@@ -249,7 +208,7 @@ export interface QuerySpendableBalancesRequestAmino {
   /**
    * address is the address to query spendable balances for.
    */
-  address?: string;
+  address: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -258,19 +217,6 @@ export interface QuerySpendableBalancesRequestAmino {
 export interface QuerySpendableBalancesRequestAminoMsg {
   type: "cosmos-sdk/QuerySpendableBalancesRequest";
   value: QuerySpendableBalancesRequestAmino;
-}
-/**
- * QuerySpendableBalancesRequest defines the gRPC request structure for querying
- * an account's spendable balances.
- * 
- * Since: cosmos-sdk 0.46
- * @name QuerySpendableBalancesRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QuerySpendableBalancesRequest
- */
-export interface QuerySpendableBalancesRequestSDKType {
-  address: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QuerySpendableBalancesResponse defines the gRPC response structure for querying
@@ -319,19 +265,6 @@ export interface QuerySpendableBalancesResponseAminoMsg {
   value: QuerySpendableBalancesResponseAmino;
 }
 /**
- * QuerySpendableBalancesResponse defines the gRPC response structure for querying
- * an account's spendable balances.
- * 
- * Since: cosmos-sdk 0.46
- * @name QuerySpendableBalancesResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QuerySpendableBalancesResponse
- */
-export interface QuerySpendableBalancesResponseSDKType {
-  balances: CoinSDKType[];
-  pagination?: PageResponseSDKType;
-}
-/**
  * QuerySpendableBalanceByDenomRequest defines the gRPC request structure for
  * querying an account's spendable balance for a specific denom.
  * 
@@ -367,28 +300,15 @@ export interface QuerySpendableBalanceByDenomRequestAmino {
   /**
    * address is the address to query balances for.
    */
-  address?: string;
+  address: string;
   /**
    * denom is the coin denom to query balances for.
    */
-  denom?: string;
+  denom: string;
 }
 export interface QuerySpendableBalanceByDenomRequestAminoMsg {
   type: "cosmos-sdk/QuerySpendableBalanceByDenomRequest";
   value: QuerySpendableBalanceByDenomRequestAmino;
-}
-/**
- * QuerySpendableBalanceByDenomRequest defines the gRPC request structure for
- * querying an account's spendable balance for a specific denom.
- * 
- * Since: cosmos-sdk 0.47
- * @name QuerySpendableBalanceByDenomRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QuerySpendableBalanceByDenomRequest
- */
-export interface QuerySpendableBalanceByDenomRequestSDKType {
-  address: string;
-  denom: string;
 }
 /**
  * QuerySpendableBalanceByDenomResponse defines the gRPC response structure for
@@ -429,18 +349,6 @@ export interface QuerySpendableBalanceByDenomResponseAminoMsg {
   value: QuerySpendableBalanceByDenomResponseAmino;
 }
 /**
- * QuerySpendableBalanceByDenomResponse defines the gRPC response structure for
- * querying an account's spendable balance for a specific denom.
- * 
- * Since: cosmos-sdk 0.47
- * @name QuerySpendableBalanceByDenomResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QuerySpendableBalanceByDenomResponse
- */
-export interface QuerySpendableBalanceByDenomResponseSDKType {
-  balance?: CoinSDKType;
-}
-/**
  * QueryTotalSupplyRequest is the request type for the Query/TotalSupply RPC
  * method.
  * @name QueryTotalSupplyRequest
@@ -477,16 +385,6 @@ export interface QueryTotalSupplyRequestAmino {
 export interface QueryTotalSupplyRequestAminoMsg {
   type: "cosmos-sdk/QueryTotalSupplyRequest";
   value: QueryTotalSupplyRequestAmino;
-}
-/**
- * QueryTotalSupplyRequest is the request type for the Query/TotalSupply RPC
- * method.
- * @name QueryTotalSupplyRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryTotalSupplyRequest
- */
-export interface QueryTotalSupplyRequestSDKType {
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryTotalSupplyResponse is the response type for the Query/TotalSupply RPC
@@ -535,17 +433,6 @@ export interface QueryTotalSupplyResponseAminoMsg {
   value: QueryTotalSupplyResponseAmino;
 }
 /**
- * QueryTotalSupplyResponse is the response type for the Query/TotalSupply RPC
- * method
- * @name QueryTotalSupplyResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryTotalSupplyResponse
- */
-export interface QueryTotalSupplyResponseSDKType {
-  supply: CoinSDKType[];
-  pagination?: PageResponseSDKType;
-}
-/**
  * QuerySupplyOfRequest is the request type for the Query/SupplyOf RPC method.
  * @name QuerySupplyOfRequest
  * @package cosmos.bank.v1beta1
@@ -571,20 +458,11 @@ export interface QuerySupplyOfRequestAmino {
   /**
    * denom is the coin denom to query balances for.
    */
-  denom?: string;
+  denom: string;
 }
 export interface QuerySupplyOfRequestAminoMsg {
   type: "cosmos-sdk/QuerySupplyOfRequest";
   value: QuerySupplyOfRequestAmino;
-}
-/**
- * QuerySupplyOfRequest is the request type for the Query/SupplyOf RPC method.
- * @name QuerySupplyOfRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QuerySupplyOfRequest
- */
-export interface QuerySupplyOfRequestSDKType {
-  denom: string;
 }
 /**
  * QuerySupplyOfResponse is the response type for the Query/SupplyOf RPC method.
@@ -619,15 +497,6 @@ export interface QuerySupplyOfResponseAminoMsg {
   value: QuerySupplyOfResponseAmino;
 }
 /**
- * QuerySupplyOfResponse is the response type for the Query/SupplyOf RPC method.
- * @name QuerySupplyOfResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QuerySupplyOfResponse
- */
-export interface QuerySupplyOfResponseSDKType {
-  amount: CoinSDKType;
-}
-/**
  * QueryParamsRequest defines the request type for querying x/bank parameters.
  * @name QueryParamsRequest
  * @package cosmos.bank.v1beta1
@@ -649,13 +518,6 @@ export interface QueryParamsRequestAminoMsg {
   type: "cosmos-sdk/QueryParamsRequest";
   value: QueryParamsRequestAmino;
 }
-/**
- * QueryParamsRequest defines the request type for querying x/bank parameters.
- * @name QueryParamsRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {}
 /**
  * QueryParamsResponse defines the response type for querying x/bank parameters.
  * @name QueryParamsResponse
@@ -689,15 +551,6 @@ export interface QueryParamsResponseAminoMsg {
   value: QueryParamsResponseAmino;
 }
 /**
- * QueryParamsResponse defines the response type for querying x/bank parameters.
- * @name QueryParamsResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  params: ParamsSDKType;
-}
-/**
  * QueryDenomsMetadataRequest is the request type for the Query/DenomsMetadata RPC method.
  * @name QueryDenomsMetadataRequest
  * @package cosmos.bank.v1beta1
@@ -728,15 +581,6 @@ export interface QueryDenomsMetadataRequestAmino {
 export interface QueryDenomsMetadataRequestAminoMsg {
   type: "cosmos-sdk/QueryDenomsMetadataRequest";
   value: QueryDenomsMetadataRequestAmino;
-}
-/**
- * QueryDenomsMetadataRequest is the request type for the Query/DenomsMetadata RPC method.
- * @name QueryDenomsMetadataRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryDenomsMetadataRequest
- */
-export interface QueryDenomsMetadataRequestSDKType {
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryDenomsMetadataResponse is the response type for the Query/DenomsMetadata RPC
@@ -781,17 +625,6 @@ export interface QueryDenomsMetadataResponseAminoMsg {
   value: QueryDenomsMetadataResponseAmino;
 }
 /**
- * QueryDenomsMetadataResponse is the response type for the Query/DenomsMetadata RPC
- * method.
- * @name QueryDenomsMetadataResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryDenomsMetadataResponse
- */
-export interface QueryDenomsMetadataResponseSDKType {
-  metadatas: MetadataSDKType[];
-  pagination?: PageResponseSDKType;
-}
-/**
  * QueryDenomMetadataRequest is the request type for the Query/DenomMetadata RPC method.
  * @name QueryDenomMetadataRequest
  * @package cosmos.bank.v1beta1
@@ -817,20 +650,11 @@ export interface QueryDenomMetadataRequestAmino {
   /**
    * denom is the coin denom to query the metadata for.
    */
-  denom?: string;
+  denom: string;
 }
 export interface QueryDenomMetadataRequestAminoMsg {
   type: "cosmos-sdk/QueryDenomMetadataRequest";
   value: QueryDenomMetadataRequestAmino;
-}
-/**
- * QueryDenomMetadataRequest is the request type for the Query/DenomMetadata RPC method.
- * @name QueryDenomMetadataRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryDenomMetadataRequest
- */
-export interface QueryDenomMetadataRequestSDKType {
-  denom: string;
 }
 /**
  * QueryDenomMetadataResponse is the response type for the Query/DenomMetadata RPC
@@ -867,16 +691,6 @@ export interface QueryDenomMetadataResponseAminoMsg {
   value: QueryDenomMetadataResponseAmino;
 }
 /**
- * QueryDenomMetadataResponse is the response type for the Query/DenomMetadata RPC
- * method.
- * @name QueryDenomMetadataResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryDenomMetadataResponse
- */
-export interface QueryDenomMetadataResponseSDKType {
-  metadata: MetadataSDKType;
-}
-/**
  * QueryDenomMetadataByQueryStringRequest is the request type for the Query/DenomMetadata RPC method.
  * Identical with QueryDenomMetadataRequest but receives denom as query string.
  * @name QueryDenomMetadataByQueryStringRequest
@@ -904,21 +718,11 @@ export interface QueryDenomMetadataByQueryStringRequestAmino {
   /**
    * denom is the coin denom to query the metadata for.
    */
-  denom?: string;
+  denom: string;
 }
 export interface QueryDenomMetadataByQueryStringRequestAminoMsg {
   type: "cosmos-sdk/QueryDenomMetadataByQueryStringRequest";
   value: QueryDenomMetadataByQueryStringRequestAmino;
-}
-/**
- * QueryDenomMetadataByQueryStringRequest is the request type for the Query/DenomMetadata RPC method.
- * Identical with QueryDenomMetadataRequest but receives denom as query string.
- * @name QueryDenomMetadataByQueryStringRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryDenomMetadataByQueryStringRequest
- */
-export interface QueryDenomMetadataByQueryStringRequestSDKType {
-  denom: string;
 }
 /**
  * QueryDenomMetadataByQueryStringResponse is the response type for the Query/DenomMetadata RPC
@@ -955,16 +759,6 @@ export interface QueryDenomMetadataByQueryStringResponseAminoMsg {
   value: QueryDenomMetadataByQueryStringResponseAmino;
 }
 /**
- * QueryDenomMetadataByQueryStringResponse is the response type for the Query/DenomMetadata RPC
- * method. Identical with QueryDenomMetadataResponse but receives denom as query string in request.
- * @name QueryDenomMetadataByQueryStringResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryDenomMetadataByQueryStringResponse
- */
-export interface QueryDenomMetadataByQueryStringResponseSDKType {
-  metadata: MetadataSDKType;
-}
-/**
  * QueryDenomOwnersRequest defines the request type for the DenomOwners RPC query,
  * which queries for a paginated set of all account holders of a particular
  * denomination.
@@ -998,7 +792,7 @@ export interface QueryDenomOwnersRequestAmino {
   /**
    * denom defines the coin denomination to query all account holders for.
    */
-  denom?: string;
+  denom: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -1007,18 +801,6 @@ export interface QueryDenomOwnersRequestAmino {
 export interface QueryDenomOwnersRequestAminoMsg {
   type: "cosmos-sdk/QueryDenomOwnersRequest";
   value: QueryDenomOwnersRequestAmino;
-}
-/**
- * QueryDenomOwnersRequest defines the request type for the DenomOwners RPC query,
- * which queries for a paginated set of all account holders of a particular
- * denomination.
- * @name QueryDenomOwnersRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryDenomOwnersRequest
- */
-export interface QueryDenomOwnersRequestSDKType {
-  denom: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * DenomOwner defines structure representing an account that owns or holds a
@@ -1058,7 +840,7 @@ export interface DenomOwnerAmino {
   /**
    * address defines the address that owns a particular denomination.
    */
-  address?: string;
+  address: string;
   /**
    * balance is the balance of the denominated coin for an account.
    */
@@ -1067,20 +849,6 @@ export interface DenomOwnerAmino {
 export interface DenomOwnerAminoMsg {
   type: "cosmos-sdk/DenomOwner";
   value: DenomOwnerAmino;
-}
-/**
- * DenomOwner defines structure representing an account that owns or holds a
- * particular denominated token. It contains the account address and account
- * balance of the denominated token.
- * 
- * Since: cosmos-sdk 0.46
- * @name DenomOwnerSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.DenomOwner
- */
-export interface DenomOwnerSDKType {
-  address: string;
-  balance: CoinSDKType;
 }
 /**
  * QueryDenomOwnersResponse defines the RPC response of a DenomOwners RPC query.
@@ -1110,7 +878,7 @@ export interface QueryDenomOwnersResponseProtoMsg {
  * @see proto type: cosmos.bank.v1beta1.QueryDenomOwnersResponse
  */
 export interface QueryDenomOwnersResponseAmino {
-  denom_owners?: DenomOwnerAmino[];
+  denom_owners: DenomOwnerAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -1119,18 +887,6 @@ export interface QueryDenomOwnersResponseAmino {
 export interface QueryDenomOwnersResponseAminoMsg {
   type: "cosmos-sdk/QueryDenomOwnersResponse";
   value: QueryDenomOwnersResponseAmino;
-}
-/**
- * QueryDenomOwnersResponse defines the RPC response of a DenomOwners RPC query.
- * 
- * Since: cosmos-sdk 0.46
- * @name QueryDenomOwnersResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QueryDenomOwnersResponse
- */
-export interface QueryDenomOwnersResponseSDKType {
-  denom_owners: DenomOwnerSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QuerySendEnabledRequest defines the RPC request for looking up SendEnabled entries.
@@ -1167,7 +923,7 @@ export interface QuerySendEnabledRequestAmino {
   /**
    * denoms is the specific denoms you want look up. Leave empty to get all entries.
    */
-  denoms?: string[];
+  denoms: string[];
   /**
    * pagination defines an optional pagination for the request. This field is
    * only read if the denoms field is empty.
@@ -1177,18 +933,6 @@ export interface QuerySendEnabledRequestAmino {
 export interface QuerySendEnabledRequestAminoMsg {
   type: "cosmos-sdk/QuerySendEnabledRequest";
   value: QuerySendEnabledRequestAmino;
-}
-/**
- * QuerySendEnabledRequest defines the RPC request for looking up SendEnabled entries.
- * 
- * Since: cosmos-sdk 0.47
- * @name QuerySendEnabledRequestSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QuerySendEnabledRequest
- */
-export interface QuerySendEnabledRequestSDKType {
-  denoms: string[];
-  pagination?: PageRequestSDKType;
 }
 /**
  * QuerySendEnabledResponse defines the RPC response of a SendEnable query.
@@ -1219,7 +963,7 @@ export interface QuerySendEnabledResponseProtoMsg {
  * @see proto type: cosmos.bank.v1beta1.QuerySendEnabledResponse
  */
 export interface QuerySendEnabledResponseAmino {
-  send_enabled?: SendEnabledAmino[];
+  send_enabled: SendEnabledAmino[];
   /**
    * pagination defines the pagination in the response. This field is only
    * populated if the denoms field in the request is empty.
@@ -1229,18 +973,6 @@ export interface QuerySendEnabledResponseAmino {
 export interface QuerySendEnabledResponseAminoMsg {
   type: "cosmos-sdk/QuerySendEnabledResponse";
   value: QuerySendEnabledResponseAmino;
-}
-/**
- * QuerySendEnabledResponse defines the RPC response of a SendEnable query.
- * 
- * Since: cosmos-sdk 0.47
- * @name QuerySendEnabledResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.QuerySendEnabledResponse
- */
-export interface QuerySendEnabledResponseSDKType {
-  send_enabled: SendEnabledSDKType[];
-  pagination?: PageResponseSDKType;
 }
 function createBaseQueryBalanceRequest(): QueryBalanceRequest {
   return {
@@ -1258,9 +990,6 @@ export const QueryBalanceRequest = {
   typeUrl: "/cosmos.bank.v1beta1.QueryBalanceRequest",
   aminoType: "cosmos-sdk/QueryBalanceRequest",
   is(o: any): o is QueryBalanceRequest {
-    return o && (o.$typeUrl === QueryBalanceRequest.typeUrl || typeof o.address === "string" && typeof o.denom === "string");
-  },
-  isSDK(o: any): o is QueryBalanceRequestSDKType {
     return o && (o.$typeUrl === QueryBalanceRequest.typeUrl || typeof o.address === "string" && typeof o.denom === "string");
   },
   isAmino(o: any): o is QueryBalanceRequestAmino {
@@ -1295,7 +1024,7 @@ export const QueryBalanceRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryBalanceRequest>, I>>(object: I): QueryBalanceRequest {
+  fromPartial(object: DeepPartial<QueryBalanceRequest>): QueryBalanceRequest {
     const message = createBaseQueryBalanceRequest();
     message.address = object.address ?? "";
     message.denom = object.denom ?? "";
@@ -1357,9 +1086,6 @@ export const QueryBalanceResponse = {
   is(o: any): o is QueryBalanceResponse {
     return o && o.$typeUrl === QueryBalanceResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryBalanceResponseSDKType {
-    return o && o.$typeUrl === QueryBalanceResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryBalanceResponseAmino {
     return o && o.$typeUrl === QueryBalanceResponse.typeUrl;
   },
@@ -1386,7 +1112,7 @@ export const QueryBalanceResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryBalanceResponse>, I>>(object: I): QueryBalanceResponse {
+  fromPartial(object: DeepPartial<QueryBalanceResponse>): QueryBalanceResponse {
     const message = createBaseQueryBalanceResponse();
     message.balance = object.balance !== undefined && object.balance !== null ? Coin.fromPartial(object.balance) : undefined;
     return message;
@@ -1450,9 +1176,6 @@ export const QueryAllBalancesRequest = {
   is(o: any): o is QueryAllBalancesRequest {
     return o && (o.$typeUrl === QueryAllBalancesRequest.typeUrl || typeof o.address === "string" && typeof o.resolveDenom === "boolean");
   },
-  isSDK(o: any): o is QueryAllBalancesRequestSDKType {
-    return o && (o.$typeUrl === QueryAllBalancesRequest.typeUrl || typeof o.address === "string" && typeof o.resolve_denom === "boolean");
-  },
   isAmino(o: any): o is QueryAllBalancesRequestAmino {
     return o && (o.$typeUrl === QueryAllBalancesRequest.typeUrl || typeof o.address === "string" && typeof o.resolve_denom === "boolean");
   },
@@ -1491,7 +1214,7 @@ export const QueryAllBalancesRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAllBalancesRequest>, I>>(object: I): QueryAllBalancesRequest {
+  fromPartial(object: DeepPartial<QueryAllBalancesRequest>): QueryAllBalancesRequest {
     const message = createBaseQueryAllBalancesRequest();
     message.address = object.address ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -1565,9 +1288,6 @@ export const QueryAllBalancesResponse = {
   is(o: any): o is QueryAllBalancesResponse {
     return o && (o.$typeUrl === QueryAllBalancesResponse.typeUrl || Array.isArray(o.balances) && (!o.balances.length || Coin.is(o.balances[0])));
   },
-  isSDK(o: any): o is QueryAllBalancesResponseSDKType {
-    return o && (o.$typeUrl === QueryAllBalancesResponse.typeUrl || Array.isArray(o.balances) && (!o.balances.length || Coin.isSDK(o.balances[0])));
-  },
   isAmino(o: any): o is QueryAllBalancesResponseAmino {
     return o && (o.$typeUrl === QueryAllBalancesResponse.typeUrl || Array.isArray(o.balances) && (!o.balances.length || Coin.isAmino(o.balances[0])));
   },
@@ -1600,7 +1320,7 @@ export const QueryAllBalancesResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAllBalancesResponse>, I>>(object: I): QueryAllBalancesResponse {
+  fromPartial(object: DeepPartial<QueryAllBalancesResponse>): QueryAllBalancesResponse {
     const message = createBaseQueryAllBalancesResponse();
     message.balances = object.balances?.map(e => Coin.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -1674,9 +1394,6 @@ export const QuerySpendableBalancesRequest = {
   is(o: any): o is QuerySpendableBalancesRequest {
     return o && (o.$typeUrl === QuerySpendableBalancesRequest.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is QuerySpendableBalancesRequestSDKType {
-    return o && (o.$typeUrl === QuerySpendableBalancesRequest.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is QuerySpendableBalancesRequestAmino {
     return o && (o.$typeUrl === QuerySpendableBalancesRequest.typeUrl || typeof o.address === "string");
   },
@@ -1709,7 +1426,7 @@ export const QuerySpendableBalancesRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySpendableBalancesRequest>, I>>(object: I): QuerySpendableBalancesRequest {
+  fromPartial(object: DeepPartial<QuerySpendableBalancesRequest>): QuerySpendableBalancesRequest {
     const message = createBaseQuerySpendableBalancesRequest();
     message.address = object.address ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -1780,9 +1497,6 @@ export const QuerySpendableBalancesResponse = {
   is(o: any): o is QuerySpendableBalancesResponse {
     return o && (o.$typeUrl === QuerySpendableBalancesResponse.typeUrl || Array.isArray(o.balances) && (!o.balances.length || Coin.is(o.balances[0])));
   },
-  isSDK(o: any): o is QuerySpendableBalancesResponseSDKType {
-    return o && (o.$typeUrl === QuerySpendableBalancesResponse.typeUrl || Array.isArray(o.balances) && (!o.balances.length || Coin.isSDK(o.balances[0])));
-  },
   isAmino(o: any): o is QuerySpendableBalancesResponseAmino {
     return o && (o.$typeUrl === QuerySpendableBalancesResponse.typeUrl || Array.isArray(o.balances) && (!o.balances.length || Coin.isAmino(o.balances[0])));
   },
@@ -1815,7 +1529,7 @@ export const QuerySpendableBalancesResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySpendableBalancesResponse>, I>>(object: I): QuerySpendableBalancesResponse {
+  fromPartial(object: DeepPartial<QuerySpendableBalancesResponse>): QuerySpendableBalancesResponse {
     const message = createBaseQuerySpendableBalancesResponse();
     message.balances = object.balances?.map(e => Coin.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -1889,9 +1603,6 @@ export const QuerySpendableBalanceByDenomRequest = {
   is(o: any): o is QuerySpendableBalanceByDenomRequest {
     return o && (o.$typeUrl === QuerySpendableBalanceByDenomRequest.typeUrl || typeof o.address === "string" && typeof o.denom === "string");
   },
-  isSDK(o: any): o is QuerySpendableBalanceByDenomRequestSDKType {
-    return o && (o.$typeUrl === QuerySpendableBalanceByDenomRequest.typeUrl || typeof o.address === "string" && typeof o.denom === "string");
-  },
   isAmino(o: any): o is QuerySpendableBalanceByDenomRequestAmino {
     return o && (o.$typeUrl === QuerySpendableBalanceByDenomRequest.typeUrl || typeof o.address === "string" && typeof o.denom === "string");
   },
@@ -1924,7 +1635,7 @@ export const QuerySpendableBalanceByDenomRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySpendableBalanceByDenomRequest>, I>>(object: I): QuerySpendableBalanceByDenomRequest {
+  fromPartial(object: DeepPartial<QuerySpendableBalanceByDenomRequest>): QuerySpendableBalanceByDenomRequest {
     const message = createBaseQuerySpendableBalanceByDenomRequest();
     message.address = object.address ?? "";
     message.denom = object.denom ?? "";
@@ -1989,9 +1700,6 @@ export const QuerySpendableBalanceByDenomResponse = {
   is(o: any): o is QuerySpendableBalanceByDenomResponse {
     return o && o.$typeUrl === QuerySpendableBalanceByDenomResponse.typeUrl;
   },
-  isSDK(o: any): o is QuerySpendableBalanceByDenomResponseSDKType {
-    return o && o.$typeUrl === QuerySpendableBalanceByDenomResponse.typeUrl;
-  },
   isAmino(o: any): o is QuerySpendableBalanceByDenomResponseAmino {
     return o && o.$typeUrl === QuerySpendableBalanceByDenomResponse.typeUrl;
   },
@@ -2018,7 +1726,7 @@ export const QuerySpendableBalanceByDenomResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySpendableBalanceByDenomResponse>, I>>(object: I): QuerySpendableBalanceByDenomResponse {
+  fromPartial(object: DeepPartial<QuerySpendableBalanceByDenomResponse>): QuerySpendableBalanceByDenomResponse {
     const message = createBaseQuerySpendableBalanceByDenomResponse();
     message.balance = object.balance !== undefined && object.balance !== null ? Coin.fromPartial(object.balance) : undefined;
     return message;
@@ -2081,9 +1789,6 @@ export const QueryTotalSupplyRequest = {
   is(o: any): o is QueryTotalSupplyRequest {
     return o && o.$typeUrl === QueryTotalSupplyRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryTotalSupplyRequestSDKType {
-    return o && o.$typeUrl === QueryTotalSupplyRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryTotalSupplyRequestAmino {
     return o && o.$typeUrl === QueryTotalSupplyRequest.typeUrl;
   },
@@ -2110,7 +1815,7 @@ export const QueryTotalSupplyRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryTotalSupplyRequest>, I>>(object: I): QueryTotalSupplyRequest {
+  fromPartial(object: DeepPartial<QueryTotalSupplyRequest>): QueryTotalSupplyRequest {
     const message = createBaseQueryTotalSupplyRequest();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -2174,9 +1879,6 @@ export const QueryTotalSupplyResponse = {
   is(o: any): o is QueryTotalSupplyResponse {
     return o && (o.$typeUrl === QueryTotalSupplyResponse.typeUrl || Array.isArray(o.supply) && (!o.supply.length || Coin.is(o.supply[0])));
   },
-  isSDK(o: any): o is QueryTotalSupplyResponseSDKType {
-    return o && (o.$typeUrl === QueryTotalSupplyResponse.typeUrl || Array.isArray(o.supply) && (!o.supply.length || Coin.isSDK(o.supply[0])));
-  },
   isAmino(o: any): o is QueryTotalSupplyResponseAmino {
     return o && (o.$typeUrl === QueryTotalSupplyResponse.typeUrl || Array.isArray(o.supply) && (!o.supply.length || Coin.isAmino(o.supply[0])));
   },
@@ -2209,7 +1911,7 @@ export const QueryTotalSupplyResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryTotalSupplyResponse>, I>>(object: I): QueryTotalSupplyResponse {
+  fromPartial(object: DeepPartial<QueryTotalSupplyResponse>): QueryTotalSupplyResponse {
     const message = createBaseQueryTotalSupplyResponse();
     message.supply = object.supply?.map(e => Coin.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -2279,9 +1981,6 @@ export const QuerySupplyOfRequest = {
   is(o: any): o is QuerySupplyOfRequest {
     return o && (o.$typeUrl === QuerySupplyOfRequest.typeUrl || typeof o.denom === "string");
   },
-  isSDK(o: any): o is QuerySupplyOfRequestSDKType {
-    return o && (o.$typeUrl === QuerySupplyOfRequest.typeUrl || typeof o.denom === "string");
-  },
   isAmino(o: any): o is QuerySupplyOfRequestAmino {
     return o && (o.$typeUrl === QuerySupplyOfRequest.typeUrl || typeof o.denom === "string");
   },
@@ -2308,7 +2007,7 @@ export const QuerySupplyOfRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySupplyOfRequest>, I>>(object: I): QuerySupplyOfRequest {
+  fromPartial(object: DeepPartial<QuerySupplyOfRequest>): QuerySupplyOfRequest {
     const message = createBaseQuerySupplyOfRequest();
     message.denom = object.denom ?? "";
     return message;
@@ -2365,9 +2064,6 @@ export const QuerySupplyOfResponse = {
   is(o: any): o is QuerySupplyOfResponse {
     return o && (o.$typeUrl === QuerySupplyOfResponse.typeUrl || Coin.is(o.amount));
   },
-  isSDK(o: any): o is QuerySupplyOfResponseSDKType {
-    return o && (o.$typeUrl === QuerySupplyOfResponse.typeUrl || Coin.isSDK(o.amount));
-  },
   isAmino(o: any): o is QuerySupplyOfResponseAmino {
     return o && (o.$typeUrl === QuerySupplyOfResponse.typeUrl || Coin.isAmino(o.amount));
   },
@@ -2394,7 +2090,7 @@ export const QuerySupplyOfResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySupplyOfResponse>, I>>(object: I): QuerySupplyOfResponse {
+  fromPartial(object: DeepPartial<QuerySupplyOfResponse>): QuerySupplyOfResponse {
     const message = createBaseQuerySupplyOfResponse();
     message.amount = object.amount !== undefined && object.amount !== null ? Coin.fromPartial(object.amount) : undefined;
     return message;
@@ -2454,9 +2150,6 @@ export const QueryParamsRequest = {
   is(o: any): o is QueryParamsRequest {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
-    return o && o.$typeUrl === QueryParamsRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryParamsRequestAmino {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
@@ -2477,7 +2170,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(_: I): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -2529,9 +2222,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.is(o.params));
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isSDK(o.params));
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isAmino(o.params));
   },
@@ -2558,7 +2248,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;
@@ -2620,9 +2310,6 @@ export const QueryDenomsMetadataRequest = {
   is(o: any): o is QueryDenomsMetadataRequest {
     return o && o.$typeUrl === QueryDenomsMetadataRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryDenomsMetadataRequestSDKType {
-    return o && o.$typeUrl === QueryDenomsMetadataRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryDenomsMetadataRequestAmino {
     return o && o.$typeUrl === QueryDenomsMetadataRequest.typeUrl;
   },
@@ -2649,7 +2336,7 @@ export const QueryDenomsMetadataRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDenomsMetadataRequest>, I>>(object: I): QueryDenomsMetadataRequest {
+  fromPartial(object: DeepPartial<QueryDenomsMetadataRequest>): QueryDenomsMetadataRequest {
     const message = createBaseQueryDenomsMetadataRequest();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -2713,9 +2400,6 @@ export const QueryDenomsMetadataResponse = {
   is(o: any): o is QueryDenomsMetadataResponse {
     return o && (o.$typeUrl === QueryDenomsMetadataResponse.typeUrl || Array.isArray(o.metadatas) && (!o.metadatas.length || Metadata.is(o.metadatas[0])));
   },
-  isSDK(o: any): o is QueryDenomsMetadataResponseSDKType {
-    return o && (o.$typeUrl === QueryDenomsMetadataResponse.typeUrl || Array.isArray(o.metadatas) && (!o.metadatas.length || Metadata.isSDK(o.metadatas[0])));
-  },
   isAmino(o: any): o is QueryDenomsMetadataResponseAmino {
     return o && (o.$typeUrl === QueryDenomsMetadataResponse.typeUrl || Array.isArray(o.metadatas) && (!o.metadatas.length || Metadata.isAmino(o.metadatas[0])));
   },
@@ -2748,7 +2432,7 @@ export const QueryDenomsMetadataResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDenomsMetadataResponse>, I>>(object: I): QueryDenomsMetadataResponse {
+  fromPartial(object: DeepPartial<QueryDenomsMetadataResponse>): QueryDenomsMetadataResponse {
     const message = createBaseQueryDenomsMetadataResponse();
     message.metadatas = object.metadatas?.map(e => Metadata.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -2818,9 +2502,6 @@ export const QueryDenomMetadataRequest = {
   is(o: any): o is QueryDenomMetadataRequest {
     return o && (o.$typeUrl === QueryDenomMetadataRequest.typeUrl || typeof o.denom === "string");
   },
-  isSDK(o: any): o is QueryDenomMetadataRequestSDKType {
-    return o && (o.$typeUrl === QueryDenomMetadataRequest.typeUrl || typeof o.denom === "string");
-  },
   isAmino(o: any): o is QueryDenomMetadataRequestAmino {
     return o && (o.$typeUrl === QueryDenomMetadataRequest.typeUrl || typeof o.denom === "string");
   },
@@ -2847,7 +2528,7 @@ export const QueryDenomMetadataRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDenomMetadataRequest>, I>>(object: I): QueryDenomMetadataRequest {
+  fromPartial(object: DeepPartial<QueryDenomMetadataRequest>): QueryDenomMetadataRequest {
     const message = createBaseQueryDenomMetadataRequest();
     message.denom = object.denom ?? "";
     return message;
@@ -2905,9 +2586,6 @@ export const QueryDenomMetadataResponse = {
   is(o: any): o is QueryDenomMetadataResponse {
     return o && (o.$typeUrl === QueryDenomMetadataResponse.typeUrl || Metadata.is(o.metadata));
   },
-  isSDK(o: any): o is QueryDenomMetadataResponseSDKType {
-    return o && (o.$typeUrl === QueryDenomMetadataResponse.typeUrl || Metadata.isSDK(o.metadata));
-  },
   isAmino(o: any): o is QueryDenomMetadataResponseAmino {
     return o && (o.$typeUrl === QueryDenomMetadataResponse.typeUrl || Metadata.isAmino(o.metadata));
   },
@@ -2934,7 +2612,7 @@ export const QueryDenomMetadataResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDenomMetadataResponse>, I>>(object: I): QueryDenomMetadataResponse {
+  fromPartial(object: DeepPartial<QueryDenomMetadataResponse>): QueryDenomMetadataResponse {
     const message = createBaseQueryDenomMetadataResponse();
     message.metadata = object.metadata !== undefined && object.metadata !== null ? Metadata.fromPartial(object.metadata) : undefined;
     return message;
@@ -2997,9 +2675,6 @@ export const QueryDenomMetadataByQueryStringRequest = {
   is(o: any): o is QueryDenomMetadataByQueryStringRequest {
     return o && (o.$typeUrl === QueryDenomMetadataByQueryStringRequest.typeUrl || typeof o.denom === "string");
   },
-  isSDK(o: any): o is QueryDenomMetadataByQueryStringRequestSDKType {
-    return o && (o.$typeUrl === QueryDenomMetadataByQueryStringRequest.typeUrl || typeof o.denom === "string");
-  },
   isAmino(o: any): o is QueryDenomMetadataByQueryStringRequestAmino {
     return o && (o.$typeUrl === QueryDenomMetadataByQueryStringRequest.typeUrl || typeof o.denom === "string");
   },
@@ -3026,7 +2701,7 @@ export const QueryDenomMetadataByQueryStringRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDenomMetadataByQueryStringRequest>, I>>(object: I): QueryDenomMetadataByQueryStringRequest {
+  fromPartial(object: DeepPartial<QueryDenomMetadataByQueryStringRequest>): QueryDenomMetadataByQueryStringRequest {
     const message = createBaseQueryDenomMetadataByQueryStringRequest();
     message.denom = object.denom ?? "";
     return message;
@@ -3084,9 +2759,6 @@ export const QueryDenomMetadataByQueryStringResponse = {
   is(o: any): o is QueryDenomMetadataByQueryStringResponse {
     return o && (o.$typeUrl === QueryDenomMetadataByQueryStringResponse.typeUrl || Metadata.is(o.metadata));
   },
-  isSDK(o: any): o is QueryDenomMetadataByQueryStringResponseSDKType {
-    return o && (o.$typeUrl === QueryDenomMetadataByQueryStringResponse.typeUrl || Metadata.isSDK(o.metadata));
-  },
   isAmino(o: any): o is QueryDenomMetadataByQueryStringResponseAmino {
     return o && (o.$typeUrl === QueryDenomMetadataByQueryStringResponse.typeUrl || Metadata.isAmino(o.metadata));
   },
@@ -3113,7 +2785,7 @@ export const QueryDenomMetadataByQueryStringResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDenomMetadataByQueryStringResponse>, I>>(object: I): QueryDenomMetadataByQueryStringResponse {
+  fromPartial(object: DeepPartial<QueryDenomMetadataByQueryStringResponse>): QueryDenomMetadataByQueryStringResponse {
     const message = createBaseQueryDenomMetadataByQueryStringResponse();
     message.metadata = object.metadata !== undefined && object.metadata !== null ? Metadata.fromPartial(object.metadata) : undefined;
     return message;
@@ -3178,9 +2850,6 @@ export const QueryDenomOwnersRequest = {
   is(o: any): o is QueryDenomOwnersRequest {
     return o && (o.$typeUrl === QueryDenomOwnersRequest.typeUrl || typeof o.denom === "string");
   },
-  isSDK(o: any): o is QueryDenomOwnersRequestSDKType {
-    return o && (o.$typeUrl === QueryDenomOwnersRequest.typeUrl || typeof o.denom === "string");
-  },
   isAmino(o: any): o is QueryDenomOwnersRequestAmino {
     return o && (o.$typeUrl === QueryDenomOwnersRequest.typeUrl || typeof o.denom === "string");
   },
@@ -3213,7 +2882,7 @@ export const QueryDenomOwnersRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDenomOwnersRequest>, I>>(object: I): QueryDenomOwnersRequest {
+  fromPartial(object: DeepPartial<QueryDenomOwnersRequest>): QueryDenomOwnersRequest {
     const message = createBaseQueryDenomOwnersRequest();
     message.denom = object.denom ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -3285,9 +2954,6 @@ export const DenomOwner = {
   is(o: any): o is DenomOwner {
     return o && (o.$typeUrl === DenomOwner.typeUrl || typeof o.address === "string" && Coin.is(o.balance));
   },
-  isSDK(o: any): o is DenomOwnerSDKType {
-    return o && (o.$typeUrl === DenomOwner.typeUrl || typeof o.address === "string" && Coin.isSDK(o.balance));
-  },
   isAmino(o: any): o is DenomOwnerAmino {
     return o && (o.$typeUrl === DenomOwner.typeUrl || typeof o.address === "string" && Coin.isAmino(o.balance));
   },
@@ -3320,7 +2986,7 @@ export const DenomOwner = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DenomOwner>, I>>(object: I): DenomOwner {
+  fromPartial(object: DeepPartial<DenomOwner>): DenomOwner {
     const message = createBaseDenomOwner();
     message.address = object.address ?? "";
     message.balance = object.balance !== undefined && object.balance !== null ? Coin.fromPartial(object.balance) : undefined;
@@ -3390,9 +3056,6 @@ export const QueryDenomOwnersResponse = {
   is(o: any): o is QueryDenomOwnersResponse {
     return o && (o.$typeUrl === QueryDenomOwnersResponse.typeUrl || Array.isArray(o.denomOwners) && (!o.denomOwners.length || DenomOwner.is(o.denomOwners[0])));
   },
-  isSDK(o: any): o is QueryDenomOwnersResponseSDKType {
-    return o && (o.$typeUrl === QueryDenomOwnersResponse.typeUrl || Array.isArray(o.denom_owners) && (!o.denom_owners.length || DenomOwner.isSDK(o.denom_owners[0])));
-  },
   isAmino(o: any): o is QueryDenomOwnersResponseAmino {
     return o && (o.$typeUrl === QueryDenomOwnersResponse.typeUrl || Array.isArray(o.denom_owners) && (!o.denom_owners.length || DenomOwner.isAmino(o.denom_owners[0])));
   },
@@ -3425,7 +3088,7 @@ export const QueryDenomOwnersResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDenomOwnersResponse>, I>>(object: I): QueryDenomOwnersResponse {
+  fromPartial(object: DeepPartial<QueryDenomOwnersResponse>): QueryDenomOwnersResponse {
     const message = createBaseQueryDenomOwnersResponse();
     message.denomOwners = object.denomOwners?.map(e => DenomOwner.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -3498,9 +3161,6 @@ export const QuerySendEnabledRequest = {
   is(o: any): o is QuerySendEnabledRequest {
     return o && (o.$typeUrl === QuerySendEnabledRequest.typeUrl || Array.isArray(o.denoms) && (!o.denoms.length || typeof o.denoms[0] === "string"));
   },
-  isSDK(o: any): o is QuerySendEnabledRequestSDKType {
-    return o && (o.$typeUrl === QuerySendEnabledRequest.typeUrl || Array.isArray(o.denoms) && (!o.denoms.length || typeof o.denoms[0] === "string"));
-  },
   isAmino(o: any): o is QuerySendEnabledRequestAmino {
     return o && (o.$typeUrl === QuerySendEnabledRequest.typeUrl || Array.isArray(o.denoms) && (!o.denoms.length || typeof o.denoms[0] === "string"));
   },
@@ -3533,7 +3193,7 @@ export const QuerySendEnabledRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySendEnabledRequest>, I>>(object: I): QuerySendEnabledRequest {
+  fromPartial(object: DeepPartial<QuerySendEnabledRequest>): QuerySendEnabledRequest {
     const message = createBaseQuerySendEnabledRequest();
     message.denoms = object.denoms?.map(e => e) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -3605,9 +3265,6 @@ export const QuerySendEnabledResponse = {
   is(o: any): o is QuerySendEnabledResponse {
     return o && (o.$typeUrl === QuerySendEnabledResponse.typeUrl || Array.isArray(o.sendEnabled) && (!o.sendEnabled.length || SendEnabled.is(o.sendEnabled[0])));
   },
-  isSDK(o: any): o is QuerySendEnabledResponseSDKType {
-    return o && (o.$typeUrl === QuerySendEnabledResponse.typeUrl || Array.isArray(o.send_enabled) && (!o.send_enabled.length || SendEnabled.isSDK(o.send_enabled[0])));
-  },
   isAmino(o: any): o is QuerySendEnabledResponseAmino {
     return o && (o.$typeUrl === QuerySendEnabledResponse.typeUrl || Array.isArray(o.send_enabled) && (!o.send_enabled.length || SendEnabled.isAmino(o.send_enabled[0])));
   },
@@ -3640,7 +3297,7 @@ export const QuerySendEnabledResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySendEnabledResponse>, I>>(object: I): QuerySendEnabledResponse {
+  fromPartial(object: DeepPartial<QuerySendEnabledResponse>): QuerySendEnabledResponse {
     const message = createBaseQuerySendEnabledResponse();
     message.sendEnabled = object.sendEnabled?.map(e => SendEnabled.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;

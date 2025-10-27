@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
-import { Params, ParamsAmino, ParamsSDKType, ValidatorSigningInfo, ValidatorSigningInfoAmino, ValidatorSigningInfoSDKType } from "./slashing";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
+import { Params, ParamsAmino, ValidatorSigningInfo, ValidatorSigningInfoAmino } from "./slashing";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryParamsRequest is the request type for the Query/Params RPC method
@@ -27,13 +27,6 @@ export interface QueryParamsRequestAminoMsg {
   type: "cosmos-sdk/QueryParamsRequest";
   value: QueryParamsRequestAmino;
 }
-/**
- * QueryParamsRequest is the request type for the Query/Params RPC method
- * @name QueryParamsRequestSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {}
 /**
  * QueryParamsResponse is the response type for the Query/Params RPC method
  * @name QueryParamsResponse
@@ -59,15 +52,6 @@ export interface QueryParamsResponseAmino {
 export interface QueryParamsResponseAminoMsg {
   type: "cosmos-sdk/QueryParamsResponse";
   value: QueryParamsResponseAmino;
-}
-/**
- * QueryParamsResponse is the response type for the Query/Params RPC method
- * @name QueryParamsResponseSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  params: ParamsSDKType;
 }
 /**
  * QuerySigningInfoRequest is the request type for the Query/SigningInfo RPC
@@ -97,21 +81,11 @@ export interface QuerySigningInfoRequestAmino {
   /**
    * cons_address is the address to query signing info of
    */
-  cons_address?: string;
+  cons_address: string;
 }
 export interface QuerySigningInfoRequestAminoMsg {
   type: "cosmos-sdk/QuerySigningInfoRequest";
   value: QuerySigningInfoRequestAmino;
-}
-/**
- * QuerySigningInfoRequest is the request type for the Query/SigningInfo RPC
- * method
- * @name QuerySigningInfoRequestSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.QuerySigningInfoRequest
- */
-export interface QuerySigningInfoRequestSDKType {
-  cons_address: string;
 }
 /**
  * QuerySigningInfoResponse is the response type for the Query/SigningInfo RPC
@@ -148,16 +122,6 @@ export interface QuerySigningInfoResponseAminoMsg {
   value: QuerySigningInfoResponseAmino;
 }
 /**
- * QuerySigningInfoResponse is the response type for the Query/SigningInfo RPC
- * method
- * @name QuerySigningInfoResponseSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.QuerySigningInfoResponse
- */
-export interface QuerySigningInfoResponseSDKType {
-  val_signing_info: ValidatorSigningInfoSDKType;
-}
-/**
  * QuerySigningInfosRequest is the request type for the Query/SigningInfos RPC
  * method
  * @name QuerySigningInfosRequest
@@ -184,16 +148,6 @@ export interface QuerySigningInfosRequestAmino {
 export interface QuerySigningInfosRequestAminoMsg {
   type: "cosmos-sdk/QuerySigningInfosRequest";
   value: QuerySigningInfosRequestAmino;
-}
-/**
- * QuerySigningInfosRequest is the request type for the Query/SigningInfos RPC
- * method
- * @name QuerySigningInfosRequestSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.QuerySigningInfosRequest
- */
-export interface QuerySigningInfosRequestSDKType {
-  pagination?: PageRequestSDKType;
 }
 /**
  * QuerySigningInfosResponse is the response type for the Query/SigningInfos RPC
@@ -231,17 +185,6 @@ export interface QuerySigningInfosResponseAminoMsg {
   type: "cosmos-sdk/QuerySigningInfosResponse";
   value: QuerySigningInfosResponseAmino;
 }
-/**
- * QuerySigningInfosResponse is the response type for the Query/SigningInfos RPC
- * method
- * @name QuerySigningInfosResponseSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.QuerySigningInfosResponse
- */
-export interface QuerySigningInfosResponseSDKType {
-  info: ValidatorSigningInfoSDKType[];
-  pagination?: PageResponseSDKType;
-}
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
 }
@@ -255,9 +198,6 @@ export const QueryParamsRequest = {
   typeUrl: "/cosmos.slashing.v1beta1.QueryParamsRequest",
   aminoType: "cosmos-sdk/QueryParamsRequest",
   is(o: any): o is QueryParamsRequest {
-    return o && o.$typeUrl === QueryParamsRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
   isAmino(o: any): o is QueryParamsRequestAmino {
@@ -280,7 +220,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(_: I): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -332,9 +272,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.is(o.params));
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isSDK(o.params));
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isAmino(o.params));
   },
@@ -361,7 +298,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;
@@ -424,9 +361,6 @@ export const QuerySigningInfoRequest = {
   is(o: any): o is QuerySigningInfoRequest {
     return o && (o.$typeUrl === QuerySigningInfoRequest.typeUrl || typeof o.consAddress === "string");
   },
-  isSDK(o: any): o is QuerySigningInfoRequestSDKType {
-    return o && (o.$typeUrl === QuerySigningInfoRequest.typeUrl || typeof o.cons_address === "string");
-  },
   isAmino(o: any): o is QuerySigningInfoRequestAmino {
     return o && (o.$typeUrl === QuerySigningInfoRequest.typeUrl || typeof o.cons_address === "string");
   },
@@ -453,7 +387,7 @@ export const QuerySigningInfoRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySigningInfoRequest>, I>>(object: I): QuerySigningInfoRequest {
+  fromPartial(object: DeepPartial<QuerySigningInfoRequest>): QuerySigningInfoRequest {
     const message = createBaseQuerySigningInfoRequest();
     message.consAddress = object.consAddress ?? "";
     return message;
@@ -511,9 +445,6 @@ export const QuerySigningInfoResponse = {
   is(o: any): o is QuerySigningInfoResponse {
     return o && (o.$typeUrl === QuerySigningInfoResponse.typeUrl || ValidatorSigningInfo.is(o.valSigningInfo));
   },
-  isSDK(o: any): o is QuerySigningInfoResponseSDKType {
-    return o && (o.$typeUrl === QuerySigningInfoResponse.typeUrl || ValidatorSigningInfo.isSDK(o.val_signing_info));
-  },
   isAmino(o: any): o is QuerySigningInfoResponseAmino {
     return o && (o.$typeUrl === QuerySigningInfoResponse.typeUrl || ValidatorSigningInfo.isAmino(o.val_signing_info));
   },
@@ -540,7 +471,7 @@ export const QuerySigningInfoResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySigningInfoResponse>, I>>(object: I): QuerySigningInfoResponse {
+  fromPartial(object: DeepPartial<QuerySigningInfoResponse>): QuerySigningInfoResponse {
     const message = createBaseQuerySigningInfoResponse();
     message.valSigningInfo = object.valSigningInfo !== undefined && object.valSigningInfo !== null ? ValidatorSigningInfo.fromPartial(object.valSigningInfo) : undefined;
     return message;
@@ -603,9 +534,6 @@ export const QuerySigningInfosRequest = {
   is(o: any): o is QuerySigningInfosRequest {
     return o && o.$typeUrl === QuerySigningInfosRequest.typeUrl;
   },
-  isSDK(o: any): o is QuerySigningInfosRequestSDKType {
-    return o && o.$typeUrl === QuerySigningInfosRequest.typeUrl;
-  },
   isAmino(o: any): o is QuerySigningInfosRequestAmino {
     return o && o.$typeUrl === QuerySigningInfosRequest.typeUrl;
   },
@@ -632,7 +560,7 @@ export const QuerySigningInfosRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySigningInfosRequest>, I>>(object: I): QuerySigningInfosRequest {
+  fromPartial(object: DeepPartial<QuerySigningInfosRequest>): QuerySigningInfosRequest {
     const message = createBaseQuerySigningInfosRequest();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -696,9 +624,6 @@ export const QuerySigningInfosResponse = {
   is(o: any): o is QuerySigningInfosResponse {
     return o && (o.$typeUrl === QuerySigningInfosResponse.typeUrl || Array.isArray(o.info) && (!o.info.length || ValidatorSigningInfo.is(o.info[0])));
   },
-  isSDK(o: any): o is QuerySigningInfosResponseSDKType {
-    return o && (o.$typeUrl === QuerySigningInfosResponse.typeUrl || Array.isArray(o.info) && (!o.info.length || ValidatorSigningInfo.isSDK(o.info[0])));
-  },
   isAmino(o: any): o is QuerySigningInfosResponseAmino {
     return o && (o.$typeUrl === QuerySigningInfosResponse.typeUrl || Array.isArray(o.info) && (!o.info.length || ValidatorSigningInfo.isAmino(o.info[0])));
   },
@@ -731,7 +656,7 @@ export const QuerySigningInfosResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySigningInfosResponse>, I>>(object: I): QuerySigningInfosResponse {
+  fromPartial(object: DeepPartial<QuerySigningInfosResponse>): QuerySigningInfosResponse {
     const message = createBaseQuerySigningInfosResponse();
     message.info = object.info?.map(e => ValidatorSigningInfo.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;

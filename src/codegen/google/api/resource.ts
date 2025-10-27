@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import { isSet, Exact } from "../../helpers";
+import { isSet, DeepPartial } from "../../helpers";
 import { BinaryReader, BinaryWriter } from "../../binary";
 /**
  * A description of the historical or future-looking state of the
@@ -22,7 +22,6 @@ export enum ResourceDescriptor_History {
   FUTURE_MULTI_PATTERN = 2,
   UNRECOGNIZED = -1,
 }
-export const ResourceDescriptor_HistorySDKType = ResourceDescriptor_History;
 export const ResourceDescriptor_HistoryAmino = ResourceDescriptor_History;
 export function resourceDescriptor_HistoryFromJSON(object: any): ResourceDescriptor_History {
   switch (object) {
@@ -71,7 +70,6 @@ export enum ResourceDescriptor_Style {
   DECLARATIVE_FRIENDLY = 1,
   UNRECOGNIZED = -1,
 }
-export const ResourceDescriptor_StyleSDKType = ResourceDescriptor_Style;
 export const ResourceDescriptor_StyleAmino = ResourceDescriptor_Style;
 export function resourceDescriptor_StyleFromJSON(object: any): ResourceDescriptor_Style {
   switch (object) {
@@ -307,7 +305,7 @@ export interface ResourceDescriptorAmino {
    * should use PascalCase (UpperCamelCase). The maximum number of
    * characters allowed for the `resource_type_kind` is 100.
    */
-  type?: string;
+  type: string;
   /**
    * Optional. The relative resource name pattern associated with this resource
    * type. The DNS prefix of the full resource name shouldn't be specified here.
@@ -329,12 +327,12 @@ export interface ResourceDescriptorAmino {
    * the same component name (e.g. "project") refers to IDs of the same
    * type of resource.
    */
-  pattern?: string[];
+  pattern: string[];
   /**
    * Optional. The field on the resource that designates the resource name
    * field. If omitted, this is assumed to be "name".
    */
-  name_field?: string;
+  name_field: string;
   /**
    * Optional. The historical or future-looking state of the resource pattern.
    * 
@@ -352,7 +350,7 @@ export interface ResourceDescriptorAmino {
    *       };
    *     }
    */
-  history?: ResourceDescriptor_History;
+  history: ResourceDescriptor_History;
   /**
    * The plural name used in the resource name and permission names, such as
    * 'projects' for the resource name of 'projects/{project}' and the permission
@@ -368,84 +366,23 @@ export interface ResourceDescriptorAmino {
    * Note: The plural form is required even for singleton resources. See
    * https://aip.dev/156
    */
-  plural?: string;
+  plural: string;
   /**
    * The same concept of the `singular` field in k8s CRD spec
    * https://kubernetes.io/docs/tasks/access-kubernetes-api/custom-resources/custom-resource-definitions/
    * Such as "project" for the `resourcemanager.googleapis.com/Project` type.
    */
-  singular?: string;
+  singular: string;
   /**
    * Style flag(s) for this resource.
    * These indicate that a resource is expected to conform to a given
    * style. See the specific style flags for additional information.
    */
-  style?: ResourceDescriptor_Style[];
+  style: ResourceDescriptor_Style[];
 }
 export interface ResourceDescriptorAminoMsg {
   type: "/google.api.ResourceDescriptor";
   value: ResourceDescriptorAmino;
-}
-/**
- * A simple descriptor of a resource type.
- * 
- * ResourceDescriptor annotates a resource message (either by means of a
- * protobuf annotation or use in the service config), and associates the
- * resource's schema, the resource type, and the pattern of the resource name.
- * 
- * Example:
- * 
- *     message Topic {
- *       // Indicates this message defines a resource schema.
- *       // Declares the resource type in the format of {service}/{kind}.
- *       // For Kubernetes resources, the format is {api group}/{kind}.
- *       option (google.api.resource) = {
- *         type: "pubsub.googleapis.com/Topic"
- *         pattern: "projects/{project}/topics/{topic}"
- *       };
- *     }
- * 
- * The ResourceDescriptor Yaml config will look like:
- * 
- *     resources:
- *     - type: "pubsub.googleapis.com/Topic"
- *       pattern: "projects/{project}/topics/{topic}"
- * 
- * Sometimes, resources have multiple patterns, typically because they can
- * live under multiple parents.
- * 
- * Example:
- * 
- *     message LogEntry {
- *       option (google.api.resource) = {
- *         type: "logging.googleapis.com/LogEntry"
- *         pattern: "projects/{project}/logs/{log}"
- *         pattern: "folders/{folder}/logs/{log}"
- *         pattern: "organizations/{organization}/logs/{log}"
- *         pattern: "billingAccounts/{billing_account}/logs/{log}"
- *       };
- *     }
- * 
- * The ResourceDescriptor Yaml config will look like:
- * 
- *     resources:
- *     - type: 'logging.googleapis.com/LogEntry'
- *       pattern: "projects/{project}/logs/{log}"
- *       pattern: "folders/{folder}/logs/{log}"
- *       pattern: "organizations/{organization}/logs/{log}"
- *       pattern: "billingAccounts/{billing_account}/logs/{log}"
- * @name ResourceDescriptorSDKType
- * @package google.api
- * @see proto type: google.api.ResourceDescriptor
- */
-export interface ResourceDescriptorSDKType {
-  type: string;
-  pattern: string[];
-  name_field: string;
-  history: ResourceDescriptor_History;
-  plural: string;
-  singular: string;
-  style: ResourceDescriptor_Style[];
 }
 /**
  * Defines a proto annotation that describes a string field that refers to
@@ -527,7 +464,7 @@ export interface ResourceReferenceAmino {
    *       }];
    *     }
    */
-  type?: string;
+  type: string;
   /**
    * The resource type of a child collection that the annotated field
    * references. This is useful for annotating the `parent` field that
@@ -541,22 +478,11 @@ export interface ResourceReferenceAmino {
    *       };
    *     }
    */
-  child_type?: string;
+  child_type: string;
 }
 export interface ResourceReferenceAminoMsg {
   type: "/google.api.ResourceReference";
   value: ResourceReferenceAmino;
-}
-/**
- * Defines a proto annotation that describes a string field that refers to
- * an API resource.
- * @name ResourceReferenceSDKType
- * @package google.api
- * @see proto type: google.api.ResourceReference
- */
-export interface ResourceReferenceSDKType {
-  type: string;
-  child_type: string;
 }
 function createBaseResourceDescriptor(): ResourceDescriptor {
   return {
@@ -625,9 +551,6 @@ export const ResourceDescriptor = {
   typeUrl: "/google.api.ResourceDescriptor",
   is(o: any): o is ResourceDescriptor {
     return o && (o.$typeUrl === ResourceDescriptor.typeUrl || typeof o.type === "string" && Array.isArray(o.pattern) && (!o.pattern.length || typeof o.pattern[0] === "string") && typeof o.nameField === "string" && isSet(o.history) && typeof o.plural === "string" && typeof o.singular === "string" && Array.isArray(o.style));
-  },
-  isSDK(o: any): o is ResourceDescriptorSDKType {
-    return o && (o.$typeUrl === ResourceDescriptor.typeUrl || typeof o.type === "string" && Array.isArray(o.pattern) && (!o.pattern.length || typeof o.pattern[0] === "string") && typeof o.name_field === "string" && isSet(o.history) && typeof o.plural === "string" && typeof o.singular === "string" && Array.isArray(o.style));
   },
   isAmino(o: any): o is ResourceDescriptorAmino {
     return o && (o.$typeUrl === ResourceDescriptor.typeUrl || typeof o.type === "string" && Array.isArray(o.pattern) && (!o.pattern.length || typeof o.pattern[0] === "string") && typeof o.name_field === "string" && isSet(o.history) && typeof o.plural === "string" && typeof o.singular === "string" && Array.isArray(o.style));
@@ -700,7 +623,7 @@ export const ResourceDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResourceDescriptor>, I>>(object: I): ResourceDescriptor {
+  fromPartial(object: DeepPartial<ResourceDescriptor>): ResourceDescriptor {
     const message = createBaseResourceDescriptor();
     message.type = object.type ?? "";
     message.pattern = object.pattern?.map(e => e) || [];
@@ -786,9 +709,6 @@ export const ResourceReference = {
   is(o: any): o is ResourceReference {
     return o && (o.$typeUrl === ResourceReference.typeUrl || typeof o.type === "string" && typeof o.childType === "string");
   },
-  isSDK(o: any): o is ResourceReferenceSDKType {
-    return o && (o.$typeUrl === ResourceReference.typeUrl || typeof o.type === "string" && typeof o.child_type === "string");
-  },
   isAmino(o: any): o is ResourceReferenceAmino {
     return o && (o.$typeUrl === ResourceReference.typeUrl || typeof o.type === "string" && typeof o.child_type === "string");
   },
@@ -821,7 +741,7 @@ export const ResourceReference = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResourceReference>, I>>(object: I): ResourceReference {
+  fromPartial(object: DeepPartial<ResourceReference>): ResourceReference {
     const message = createBaseResourceReference();
     message.type = object.type ?? "";
     message.childType = object.childType ?? "";

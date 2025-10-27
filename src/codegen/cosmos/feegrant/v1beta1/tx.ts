@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
-import { BasicAllowance, BasicAllowanceProtoMsg, BasicAllowanceSDKType, PeriodicAllowance, PeriodicAllowanceProtoMsg, PeriodicAllowanceSDKType, AllowedMsgAllowance, AllowedMsgAllowanceProtoMsg, AllowedMsgAllowanceSDKType } from "./feegrant";
+import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
+import { BasicAllowance, BasicAllowanceProtoMsg, PeriodicAllowance, PeriodicAllowanceProtoMsg, AllowedMsgAllowance, AllowedMsgAllowanceProtoMsg } from "./feegrant";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * MsgGrantAllowance adds permission for Grantee to spend up to Allowance
  * of fees from the account of Granter.
@@ -47,11 +47,11 @@ export interface MsgGrantAllowanceAmino {
   /**
    * granter is the address of the user granting an allowance of their funds.
    */
-  granter?: string;
+  granter: string;
   /**
    * grantee is the address of the user being granted an allowance of another user's funds.
    */
-  grantee?: string;
+  grantee: string;
   /**
    * allowance can be any of basic, periodic, allowed fee allowance.
    */
@@ -60,18 +60,6 @@ export interface MsgGrantAllowanceAmino {
 export interface MsgGrantAllowanceAminoMsg {
   type: "cosmos-sdk/MsgGrantAllowance";
   value: MsgGrantAllowanceAmino;
-}
-/**
- * MsgGrantAllowance adds permission for Grantee to spend up to Allowance
- * of fees from the account of Granter.
- * @name MsgGrantAllowanceSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.MsgGrantAllowance
- */
-export interface MsgGrantAllowanceSDKType {
-  granter: string;
-  grantee: string;
-  allowance?: BasicAllowanceSDKType | PeriodicAllowanceSDKType | AllowedMsgAllowanceSDKType | AnySDKType | undefined;
 }
 /**
  * MsgGrantAllowanceResponse defines the Msg/GrantAllowanceResponse response type.
@@ -95,13 +83,6 @@ export interface MsgGrantAllowanceResponseAminoMsg {
   type: "cosmos-sdk/MsgGrantAllowanceResponse";
   value: MsgGrantAllowanceResponseAmino;
 }
-/**
- * MsgGrantAllowanceResponse defines the Msg/GrantAllowanceResponse response type.
- * @name MsgGrantAllowanceResponseSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.MsgGrantAllowanceResponse
- */
-export interface MsgGrantAllowanceResponseSDKType {}
 /**
  * MsgRevokeAllowance removes any existing Allowance from Granter to Grantee.
  * @name MsgRevokeAllowance
@@ -132,25 +113,15 @@ export interface MsgRevokeAllowanceAmino {
   /**
    * granter is the address of the user granting an allowance of their funds.
    */
-  granter?: string;
+  granter: string;
   /**
    * grantee is the address of the user being granted an allowance of another user's funds.
    */
-  grantee?: string;
+  grantee: string;
 }
 export interface MsgRevokeAllowanceAminoMsg {
   type: "cosmos-sdk/MsgRevokeAllowance";
   value: MsgRevokeAllowanceAmino;
-}
-/**
- * MsgRevokeAllowance removes any existing Allowance from Granter to Grantee.
- * @name MsgRevokeAllowanceSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.MsgRevokeAllowance
- */
-export interface MsgRevokeAllowanceSDKType {
-  granter: string;
-  grantee: string;
 }
 /**
  * MsgRevokeAllowanceResponse defines the Msg/RevokeAllowanceResponse response type.
@@ -174,13 +145,6 @@ export interface MsgRevokeAllowanceResponseAminoMsg {
   type: "cosmos-sdk/MsgRevokeAllowanceResponse";
   value: MsgRevokeAllowanceResponseAmino;
 }
-/**
- * MsgRevokeAllowanceResponse defines the Msg/RevokeAllowanceResponse response type.
- * @name MsgRevokeAllowanceResponseSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.MsgRevokeAllowanceResponse
- */
-export interface MsgRevokeAllowanceResponseSDKType {}
 /**
  * MsgPruneAllowances prunes expired fee allowances.
  * 
@@ -211,22 +175,11 @@ export interface MsgPruneAllowancesAmino {
   /**
    * pruner is the address of the user pruning expired allowances.
    */
-  pruner?: string;
+  pruner: string;
 }
 export interface MsgPruneAllowancesAminoMsg {
   type: "cosmos-sdk/MsgPruneAllowances";
   value: MsgPruneAllowancesAmino;
-}
-/**
- * MsgPruneAllowances prunes expired fee allowances.
- * 
- * Since cosmos-sdk 0.50
- * @name MsgPruneAllowancesSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.MsgPruneAllowances
- */
-export interface MsgPruneAllowancesSDKType {
-  pruner: string;
 }
 /**
  * MsgPruneAllowancesResponse defines the Msg/PruneAllowancesResponse response type.
@@ -254,15 +207,6 @@ export interface MsgPruneAllowancesResponseAminoMsg {
   type: "cosmos-sdk/MsgPruneAllowancesResponse";
   value: MsgPruneAllowancesResponseAmino;
 }
-/**
- * MsgPruneAllowancesResponse defines the Msg/PruneAllowancesResponse response type.
- * 
- * Since cosmos-sdk 0.50
- * @name MsgPruneAllowancesResponseSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.MsgPruneAllowancesResponse
- */
-export interface MsgPruneAllowancesResponseSDKType {}
 function createBaseMsgGrantAllowance(): MsgGrantAllowance {
   return {
     granter: "",
@@ -281,9 +225,6 @@ export const MsgGrantAllowance = {
   typeUrl: "/cosmos.feegrant.v1beta1.MsgGrantAllowance",
   aminoType: "cosmos-sdk/MsgGrantAllowance",
   is(o: any): o is MsgGrantAllowance {
-    return o && (o.$typeUrl === MsgGrantAllowance.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
-  },
-  isSDK(o: any): o is MsgGrantAllowanceSDKType {
     return o && (o.$typeUrl === MsgGrantAllowance.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
   },
   isAmino(o: any): o is MsgGrantAllowanceAmino {
@@ -324,7 +265,7 @@ export const MsgGrantAllowance = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgGrantAllowance>, I>>(object: I): MsgGrantAllowance {
+  fromPartial(object: DeepPartial<MsgGrantAllowance>): MsgGrantAllowance {
     const message = createBaseMsgGrantAllowance();
     message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
@@ -396,9 +337,6 @@ export const MsgGrantAllowanceResponse = {
   is(o: any): o is MsgGrantAllowanceResponse {
     return o && o.$typeUrl === MsgGrantAllowanceResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgGrantAllowanceResponseSDKType {
-    return o && o.$typeUrl === MsgGrantAllowanceResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgGrantAllowanceResponseAmino {
     return o && o.$typeUrl === MsgGrantAllowanceResponse.typeUrl;
   },
@@ -419,7 +357,7 @@ export const MsgGrantAllowanceResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgGrantAllowanceResponse>, I>>(_: I): MsgGrantAllowanceResponse {
+  fromPartial(_: DeepPartial<MsgGrantAllowanceResponse>): MsgGrantAllowanceResponse {
     const message = createBaseMsgGrantAllowanceResponse();
     return message;
   },
@@ -472,9 +410,6 @@ export const MsgRevokeAllowance = {
   is(o: any): o is MsgRevokeAllowance {
     return o && (o.$typeUrl === MsgRevokeAllowance.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
   },
-  isSDK(o: any): o is MsgRevokeAllowanceSDKType {
-    return o && (o.$typeUrl === MsgRevokeAllowance.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
-  },
   isAmino(o: any): o is MsgRevokeAllowanceAmino {
     return o && (o.$typeUrl === MsgRevokeAllowance.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
   },
@@ -507,7 +442,7 @@ export const MsgRevokeAllowance = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgRevokeAllowance>, I>>(object: I): MsgRevokeAllowance {
+  fromPartial(object: DeepPartial<MsgRevokeAllowance>): MsgRevokeAllowance {
     const message = createBaseMsgRevokeAllowance();
     message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
@@ -567,9 +502,6 @@ export const MsgRevokeAllowanceResponse = {
   is(o: any): o is MsgRevokeAllowanceResponse {
     return o && o.$typeUrl === MsgRevokeAllowanceResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgRevokeAllowanceResponseSDKType {
-    return o && o.$typeUrl === MsgRevokeAllowanceResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgRevokeAllowanceResponseAmino {
     return o && o.$typeUrl === MsgRevokeAllowanceResponse.typeUrl;
   },
@@ -590,7 +522,7 @@ export const MsgRevokeAllowanceResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgRevokeAllowanceResponse>, I>>(_: I): MsgRevokeAllowanceResponse {
+  fromPartial(_: DeepPartial<MsgRevokeAllowanceResponse>): MsgRevokeAllowanceResponse {
     const message = createBaseMsgRevokeAllowanceResponse();
     return message;
   },
@@ -644,9 +576,6 @@ export const MsgPruneAllowances = {
   is(o: any): o is MsgPruneAllowances {
     return o && (o.$typeUrl === MsgPruneAllowances.typeUrl || typeof o.pruner === "string");
   },
-  isSDK(o: any): o is MsgPruneAllowancesSDKType {
-    return o && (o.$typeUrl === MsgPruneAllowances.typeUrl || typeof o.pruner === "string");
-  },
   isAmino(o: any): o is MsgPruneAllowancesAmino {
     return o && (o.$typeUrl === MsgPruneAllowances.typeUrl || typeof o.pruner === "string");
   },
@@ -673,7 +602,7 @@ export const MsgPruneAllowances = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgPruneAllowances>, I>>(object: I): MsgPruneAllowances {
+  fromPartial(object: DeepPartial<MsgPruneAllowances>): MsgPruneAllowances {
     const message = createBaseMsgPruneAllowances();
     message.pruner = object.pruner ?? "";
     return message;
@@ -730,9 +659,6 @@ export const MsgPruneAllowancesResponse = {
   is(o: any): o is MsgPruneAllowancesResponse {
     return o && o.$typeUrl === MsgPruneAllowancesResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgPruneAllowancesResponseSDKType {
-    return o && o.$typeUrl === MsgPruneAllowancesResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgPruneAllowancesResponseAmino {
     return o && o.$typeUrl === MsgPruneAllowancesResponse.typeUrl;
   },
@@ -753,7 +679,7 @@ export const MsgPruneAllowancesResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgPruneAllowancesResponse>, I>>(_: I): MsgPruneAllowancesResponse {
+  fromPartial(_: DeepPartial<MsgPruneAllowancesResponse>): MsgPruneAllowancesResponse {
     const message = createBaseMsgPruneAllowancesResponse();
     return message;
   },

@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * BIP44Params is used as path field in ledger item in Record.
  * @name BIP44Params
@@ -45,41 +45,28 @@ export interface BIP44ParamsAmino {
   /**
    * purpose is a constant set to 44' (or 0x8000002C) following the BIP43 recommendation
    */
-  purpose?: number;
+  purpose: number;
   /**
    * coin_type is a constant that improves privacy
    */
-  coin_type?: number;
+  coin_type: number;
   /**
    * account splits the key space into independent user identities
    */
-  account?: number;
+  account: number;
   /**
    * change is a constant used for public derivation. Constant 0 is used for external chain and constant 1 for internal
    * chain.
    */
-  change?: boolean;
+  change: boolean;
   /**
    * address_index is used as child index in BIP32 derivation
    */
-  address_index?: number;
+  address_index: number;
 }
 export interface BIP44ParamsAminoMsg {
   type: "crypto/keys/hd/BIP44Params";
   value: BIP44ParamsAmino;
-}
-/**
- * BIP44Params is used as path field in ledger item in Record.
- * @name BIP44ParamsSDKType
- * @package cosmos.crypto.hd.v1
- * @see proto type: cosmos.crypto.hd.v1.BIP44Params
- */
-export interface BIP44ParamsSDKType {
-  purpose: number;
-  coin_type: number;
-  account: number;
-  change: boolean;
-  address_index: number;
 }
 function createBaseBIP44Params(): BIP44Params {
   return {
@@ -101,9 +88,6 @@ export const BIP44Params = {
   aminoType: "crypto/keys/hd/BIP44Params",
   is(o: any): o is BIP44Params {
     return o && (o.$typeUrl === BIP44Params.typeUrl || typeof o.purpose === "number" && typeof o.coinType === "number" && typeof o.account === "number" && typeof o.change === "boolean" && typeof o.addressIndex === "number");
-  },
-  isSDK(o: any): o is BIP44ParamsSDKType {
-    return o && (o.$typeUrl === BIP44Params.typeUrl || typeof o.purpose === "number" && typeof o.coin_type === "number" && typeof o.account === "number" && typeof o.change === "boolean" && typeof o.address_index === "number");
   },
   isAmino(o: any): o is BIP44ParamsAmino {
     return o && (o.$typeUrl === BIP44Params.typeUrl || typeof o.purpose === "number" && typeof o.coin_type === "number" && typeof o.account === "number" && typeof o.change === "boolean" && typeof o.address_index === "number");
@@ -155,7 +139,7 @@ export const BIP44Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BIP44Params>, I>>(object: I): BIP44Params {
+  fromPartial(object: DeepPartial<BIP44Params>): BIP44Params {
     const message = createBaseBIP44Params();
     message.purpose = object.purpose ?? 0;
     message.coinType = object.coinType ?? 0;

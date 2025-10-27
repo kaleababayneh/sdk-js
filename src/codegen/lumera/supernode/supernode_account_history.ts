@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * @name SupernodeAccountHistory
  * @package lumera.supernode
@@ -21,21 +21,12 @@ export interface SupernodeAccountHistoryProtoMsg {
  * @see proto type: lumera.supernode.SupernodeAccountHistory
  */
 export interface SupernodeAccountHistoryAmino {
-  account?: string;
-  height?: string;
+  account: string;
+  height: string;
 }
 export interface SupernodeAccountHistoryAminoMsg {
   type: "/lumera.supernode.SupernodeAccountHistory";
   value: SupernodeAccountHistoryAmino;
-}
-/**
- * @name SupernodeAccountHistorySDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.SupernodeAccountHistory
- */
-export interface SupernodeAccountHistorySDKType {
-  account: string;
-  height: bigint;
 }
 function createBaseSupernodeAccountHistory(): SupernodeAccountHistory {
   return {
@@ -51,9 +42,6 @@ function createBaseSupernodeAccountHistory(): SupernodeAccountHistory {
 export const SupernodeAccountHistory = {
   typeUrl: "/lumera.supernode.SupernodeAccountHistory",
   is(o: any): o is SupernodeAccountHistory {
-    return o && (o.$typeUrl === SupernodeAccountHistory.typeUrl || typeof o.account === "string" && typeof o.height === "bigint");
-  },
-  isSDK(o: any): o is SupernodeAccountHistorySDKType {
     return o && (o.$typeUrl === SupernodeAccountHistory.typeUrl || typeof o.account === "string" && typeof o.height === "bigint");
   },
   isAmino(o: any): o is SupernodeAccountHistoryAmino {
@@ -88,7 +76,7 @@ export const SupernodeAccountHistory = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SupernodeAccountHistory>, I>>(object: I): SupernodeAccountHistory {
+  fromPartial(object: DeepPartial<SupernodeAccountHistory>): SupernodeAccountHistory {
     const message = createBaseSupernodeAccountHistory();
     message.account = object.account ?? "";
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);

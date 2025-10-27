@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Params defines the parameters for the module.
  * @name Params
@@ -24,13 +24,6 @@ export interface ParamsAminoMsg {
   type: "lumera/x/lumeraid/Params";
   value: ParamsAmino;
 }
-/**
- * Params defines the parameters for the module.
- * @name ParamsSDKType
- * @package lumera.lumeraid
- * @see proto type: lumera.lumeraid.Params
- */
-export interface ParamsSDKType {}
 function createBaseParams(): Params {
   return {};
 }
@@ -44,9 +37,6 @@ export const Params = {
   typeUrl: "/lumera.lumeraid.Params",
   aminoType: "lumera/x/lumeraid/Params",
   is(o: any): o is Params {
-    return o && o.$typeUrl === Params.typeUrl;
-  },
-  isSDK(o: any): o is ParamsSDKType {
     return o && o.$typeUrl === Params.typeUrl;
   },
   isAmino(o: any): o is ParamsAmino {
@@ -69,7 +59,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(_: I): Params {
+  fromPartial(_: DeepPartial<Params>): Params {
     const message = createBaseParams();
     return message;
   },

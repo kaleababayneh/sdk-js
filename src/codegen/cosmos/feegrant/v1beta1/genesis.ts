@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Grant, GrantAmino, GrantSDKType } from "./feegrant";
+import { Grant, GrantAmino } from "./feegrant";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * GenesisState contains a set of fee allowances, persisted from the store
@@ -30,15 +30,6 @@ export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
 }
-/**
- * GenesisState contains a set of fee allowances, persisted from the store
- * @name GenesisStateSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  allowances: GrantSDKType[];
-}
 function createBaseGenesisState(): GenesisState {
   return {
     allowances: []
@@ -55,9 +46,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.allowances) && (!o.allowances.length || Grant.is(o.allowances[0])));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.allowances) && (!o.allowances.length || Grant.isSDK(o.allowances[0])));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.allowances) && (!o.allowances.length || Grant.isAmino(o.allowances[0])));
@@ -85,7 +73,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.allowances = object.allowances?.map(e => Grant.fromPartial(e)) || [];
     return message;

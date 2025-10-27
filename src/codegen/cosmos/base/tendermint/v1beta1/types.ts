@@ -1,12 +1,12 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Data, DataAmino, DataSDKType, Commit, CommitAmino, CommitSDKType, BlockID, BlockIDAmino, BlockIDSDKType } from "../../../../tendermint/types/types";
-import { EvidenceList, EvidenceListAmino, EvidenceListSDKType } from "../../../../tendermint/types/evidence";
-import { Consensus, ConsensusAmino, ConsensusSDKType } from "../../../../tendermint/version/types";
+import { Data, DataAmino, Commit, CommitAmino, BlockID, BlockIDAmino } from "../../../../tendermint/types/types";
+import { EvidenceList, EvidenceListAmino } from "../../../../tendermint/types/evidence";
+import { Consensus, ConsensusAmino } from "../../../../tendermint/version/types";
 import { Timestamp } from "../../../../google/protobuf/timestamp";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes } from "../../../../helpers";
+import { DeepPartial, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 /**
  * Block is tendermint type Block, with the Header proposer address
  * field converted to bech32 string.
@@ -40,19 +40,6 @@ export interface BlockAmino {
 export interface BlockAminoMsg {
   type: "cosmos-sdk/Block";
   value: BlockAmino;
-}
-/**
- * Block is tendermint type Block, with the Header proposer address
- * field converted to bech32 string.
- * @name BlockSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.Block
- */
-export interface BlockSDKType {
-  header: HeaderSDKType;
-  data: DataSDKType;
-  evidence: EvidenceListSDKType;
-  last_commit?: CommitSDKType;
 }
 /**
  * Header defines the structure of a Tendermint block header.
@@ -126,8 +113,8 @@ export interface HeaderAmino {
    * basic block info
    */
   version: ConsensusAmino;
-  chain_id?: string;
-  height?: string;
+  chain_id: string;
+  height: string;
   time: string;
   /**
    * prev block info
@@ -136,67 +123,45 @@ export interface HeaderAmino {
   /**
    * hashes of block data
    */
-  last_commit_hash?: string;
+  last_commit_hash: string;
   /**
    * transactions
    */
-  data_hash?: string;
+  data_hash: string;
   /**
    * hashes from the app output from the prev block
    */
-  validators_hash?: string;
+  validators_hash: string;
   /**
    * validators for the next block
    */
-  next_validators_hash?: string;
+  next_validators_hash: string;
   /**
    * consensus params for current block
    */
-  consensus_hash?: string;
+  consensus_hash: string;
   /**
    * state after txs from the previous block
    */
-  app_hash?: string;
+  app_hash: string;
   /**
    * root hash of all results from the txs from the previous block
    */
-  last_results_hash?: string;
+  last_results_hash: string;
   /**
    * consensus info
    */
-  evidence_hash?: string;
+  evidence_hash: string;
   /**
    * proposer_address is the original block proposer address, formatted as a Bech32 string.
    * In Tendermint, this type is `bytes`, but in the SDK, we convert it to a Bech32 string
    * for better UX.
    */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface HeaderAminoMsg {
   type: "cosmos-sdk/Header";
   value: HeaderAmino;
-}
-/**
- * Header defines the structure of a Tendermint block header.
- * @name HeaderSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.Header
- */
-export interface HeaderSDKType {
-  version: ConsensusSDKType;
-  chain_id: string;
-  height: bigint;
-  time: Date;
-  last_block_id: BlockIDSDKType;
-  last_commit_hash: Uint8Array;
-  data_hash: Uint8Array;
-  validators_hash: Uint8Array;
-  next_validators_hash: Uint8Array;
-  consensus_hash: Uint8Array;
-  app_hash: Uint8Array;
-  last_results_hash: Uint8Array;
-  evidence_hash: Uint8Array;
-  proposer_address: string;
 }
 function createBaseBlock(): Block {
   return {
@@ -218,9 +183,6 @@ export const Block = {
   aminoType: "cosmos-sdk/Block",
   is(o: any): o is Block {
     return o && (o.$typeUrl === Block.typeUrl || Header.is(o.header) && Data.is(o.data) && EvidenceList.is(o.evidence));
-  },
-  isSDK(o: any): o is BlockSDKType {
-    return o && (o.$typeUrl === Block.typeUrl || Header.isSDK(o.header) && Data.isSDK(o.data) && EvidenceList.isSDK(o.evidence));
   },
   isAmino(o: any): o is BlockAmino {
     return o && (o.$typeUrl === Block.typeUrl || Header.isAmino(o.header) && Data.isAmino(o.data) && EvidenceList.isAmino(o.evidence));
@@ -266,7 +228,7 @@ export const Block = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Block>, I>>(object: I): Block {
+  fromPartial(object: DeepPartial<Block>): Block {
     const message = createBaseBlock();
     message.header = object.header !== undefined && object.header !== null ? Header.fromPartial(object.header) : undefined;
     message.data = object.data !== undefined && object.data !== null ? Data.fromPartial(object.data) : undefined;
@@ -358,9 +320,6 @@ export const Header = {
   aminoType: "cosmos-sdk/Header",
   is(o: any): o is Header {
     return o && (o.$typeUrl === Header.typeUrl || Consensus.is(o.version) && typeof o.chainId === "string" && typeof o.height === "bigint" && Timestamp.is(o.time) && BlockID.is(o.lastBlockId) && (o.lastCommitHash instanceof Uint8Array || typeof o.lastCommitHash === "string") && (o.dataHash instanceof Uint8Array || typeof o.dataHash === "string") && (o.validatorsHash instanceof Uint8Array || typeof o.validatorsHash === "string") && (o.nextValidatorsHash instanceof Uint8Array || typeof o.nextValidatorsHash === "string") && (o.consensusHash instanceof Uint8Array || typeof o.consensusHash === "string") && (o.appHash instanceof Uint8Array || typeof o.appHash === "string") && (o.lastResultsHash instanceof Uint8Array || typeof o.lastResultsHash === "string") && (o.evidenceHash instanceof Uint8Array || typeof o.evidenceHash === "string") && typeof o.proposerAddress === "string");
-  },
-  isSDK(o: any): o is HeaderSDKType {
-    return o && (o.$typeUrl === Header.typeUrl || Consensus.isSDK(o.version) && typeof o.chain_id === "string" && typeof o.height === "bigint" && Timestamp.isSDK(o.time) && BlockID.isSDK(o.last_block_id) && (o.last_commit_hash instanceof Uint8Array || typeof o.last_commit_hash === "string") && (o.data_hash instanceof Uint8Array || typeof o.data_hash === "string") && (o.validators_hash instanceof Uint8Array || typeof o.validators_hash === "string") && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.consensus_hash instanceof Uint8Array || typeof o.consensus_hash === "string") && (o.app_hash instanceof Uint8Array || typeof o.app_hash === "string") && (o.last_results_hash instanceof Uint8Array || typeof o.last_results_hash === "string") && (o.evidence_hash instanceof Uint8Array || typeof o.evidence_hash === "string") && typeof o.proposer_address === "string");
   },
   isAmino(o: any): o is HeaderAmino {
     return o && (o.$typeUrl === Header.typeUrl || Consensus.isAmino(o.version) && typeof o.chain_id === "string" && typeof o.height === "bigint" && Timestamp.isAmino(o.time) && BlockID.isAmino(o.last_block_id) && (o.last_commit_hash instanceof Uint8Array || typeof o.last_commit_hash === "string") && (o.data_hash instanceof Uint8Array || typeof o.data_hash === "string") && (o.validators_hash instanceof Uint8Array || typeof o.validators_hash === "string") && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.consensus_hash instanceof Uint8Array || typeof o.consensus_hash === "string") && (o.app_hash instanceof Uint8Array || typeof o.app_hash === "string") && (o.last_results_hash instanceof Uint8Array || typeof o.last_results_hash === "string") && (o.evidence_hash instanceof Uint8Array || typeof o.evidence_hash === "string") && typeof o.proposer_address === "string");
@@ -466,7 +425,7 @@ export const Header = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Header>, I>>(object: I): Header {
+  fromPartial(object: DeepPartial<Header>): Header {
     const message = createBaseHeader();
     message.version = object.version !== undefined && object.version !== null ? Consensus.fromPartial(object.version) : undefined;
     message.chainId = object.chainId ?? "";

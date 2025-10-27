@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { FileDescriptorProto, FileDescriptorProtoAmino, FileDescriptorProtoSDKType } from "../../../google/protobuf/descriptor";
+import { FileDescriptorProto, FileDescriptorProtoAmino } from "../../../google/protobuf/descriptor";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * FileDescriptorsRequest is the Query/FileDescriptors request type.
@@ -26,13 +26,6 @@ export interface FileDescriptorsRequestAminoMsg {
   type: "cosmos-sdk/FileDescriptorsRequest";
   value: FileDescriptorsRequestAmino;
 }
-/**
- * FileDescriptorsRequest is the Query/FileDescriptors request type.
- * @name FileDescriptorsRequestSDKType
- * @package cosmos.reflection.v1
- * @see proto type: cosmos.reflection.v1.FileDescriptorsRequest
- */
-export interface FileDescriptorsRequestSDKType {}
 /**
  * FileDescriptorsResponse is the Query/FileDescriptors response type.
  * @name FileDescriptorsResponse
@@ -59,20 +52,11 @@ export interface FileDescriptorsResponseAmino {
   /**
    * files is the file descriptors.
    */
-  files?: FileDescriptorProtoAmino[];
+  files: FileDescriptorProtoAmino[];
 }
 export interface FileDescriptorsResponseAminoMsg {
   type: "cosmos-sdk/FileDescriptorsResponse";
   value: FileDescriptorsResponseAmino;
-}
-/**
- * FileDescriptorsResponse is the Query/FileDescriptors response type.
- * @name FileDescriptorsResponseSDKType
- * @package cosmos.reflection.v1
- * @see proto type: cosmos.reflection.v1.FileDescriptorsResponse
- */
-export interface FileDescriptorsResponseSDKType {
-  files: FileDescriptorProtoSDKType[];
 }
 function createBaseFileDescriptorsRequest(): FileDescriptorsRequest {
   return {};
@@ -87,9 +71,6 @@ export const FileDescriptorsRequest = {
   typeUrl: "/cosmos.reflection.v1.FileDescriptorsRequest",
   aminoType: "cosmos-sdk/FileDescriptorsRequest",
   is(o: any): o is FileDescriptorsRequest {
-    return o && o.$typeUrl === FileDescriptorsRequest.typeUrl;
-  },
-  isSDK(o: any): o is FileDescriptorsRequestSDKType {
     return o && o.$typeUrl === FileDescriptorsRequest.typeUrl;
   },
   isAmino(o: any): o is FileDescriptorsRequestAmino {
@@ -112,7 +93,7 @@ export const FileDescriptorsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FileDescriptorsRequest>, I>>(_: I): FileDescriptorsRequest {
+  fromPartial(_: DeepPartial<FileDescriptorsRequest>): FileDescriptorsRequest {
     const message = createBaseFileDescriptorsRequest();
     return message;
   },
@@ -164,9 +145,6 @@ export const FileDescriptorsResponse = {
   is(o: any): o is FileDescriptorsResponse {
     return o && (o.$typeUrl === FileDescriptorsResponse.typeUrl || Array.isArray(o.files) && (!o.files.length || FileDescriptorProto.is(o.files[0])));
   },
-  isSDK(o: any): o is FileDescriptorsResponseSDKType {
-    return o && (o.$typeUrl === FileDescriptorsResponse.typeUrl || Array.isArray(o.files) && (!o.files.length || FileDescriptorProto.isSDK(o.files[0])));
-  },
   isAmino(o: any): o is FileDescriptorsResponseAmino {
     return o && (o.$typeUrl === FileDescriptorsResponse.typeUrl || Array.isArray(o.files) && (!o.files.length || FileDescriptorProto.isAmino(o.files[0])));
   },
@@ -193,7 +171,7 @@ export const FileDescriptorsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FileDescriptorsResponse>, I>>(object: I): FileDescriptorsResponse {
+  fromPartial(object: DeepPartial<FileDescriptorsResponse>): FileDescriptorsResponse {
     const message = createBaseFileDescriptorsResponse();
     message.files = object.files?.map(e => FileDescriptorProto.fromPartial(e)) || [];
     return message;

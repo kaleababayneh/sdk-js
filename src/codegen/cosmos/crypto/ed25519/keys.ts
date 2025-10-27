@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 /**
  * PubKey is an ed25519 public key for handling Tendermint keys in SDK.
  * It's needed for Any serialization and SDK compatibility.
@@ -30,24 +30,11 @@ export interface PubKeyProtoMsg {
  * @see proto type: cosmos.crypto.ed25519.PubKey
  */
 export interface PubKeyAmino {
-  key?: string;
+  key: string;
 }
 export interface PubKeyAminoMsg {
   type: "tendermint/PubKeyEd25519";
   value: PubKeyAmino;
-}
-/**
- * PubKey is an ed25519 public key for handling Tendermint keys in SDK.
- * It's needed for Any serialization and SDK compatibility.
- * It must not be used in a non Tendermint key context because it doesn't implement
- * ADR-28. Nevertheless, you will like to use ed25519 in app user level
- * then you must create a new proto message and follow ADR-28 for Address construction.
- * @name PubKeySDKType
- * @package cosmos.crypto.ed25519
- * @see proto type: cosmos.crypto.ed25519.PubKey
- */
-export interface PubKeySDKType {
-  key: Uint8Array;
 }
 /**
  * PrivKey defines a ed25519 private key.
@@ -71,21 +58,11 @@ export interface PrivKeyProtoMsg {
  * @see proto type: cosmos.crypto.ed25519.PrivKey
  */
 export interface PrivKeyAmino {
-  key?: string;
+  key: string;
 }
 export interface PrivKeyAminoMsg {
   type: "tendermint/PrivKeyEd25519";
   value: PrivKeyAmino;
-}
-/**
- * PrivKey defines a ed25519 private key.
- * NOTE: ed25519 keys must not be used in SDK apps except in a tendermint validator context.
- * @name PrivKeySDKType
- * @package cosmos.crypto.ed25519
- * @see proto type: cosmos.crypto.ed25519.PrivKey
- */
-export interface PrivKeySDKType {
-  key: Uint8Array;
 }
 function createBasePubKey(): PubKey {
   return {
@@ -106,9 +83,6 @@ export const PubKey = {
   typeUrl: "/cosmos.crypto.ed25519.PubKey",
   aminoType: "tendermint/PubKeyEd25519",
   is(o: any): o is PubKey {
-    return o && (o.$typeUrl === PubKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
-  },
-  isSDK(o: any): o is PubKeySDKType {
     return o && (o.$typeUrl === PubKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
   },
   isAmino(o: any): o is PubKeyAmino {
@@ -137,7 +111,7 @@ export const PubKey = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PubKey>, I>>(object: I): PubKey {
+  fromPartial(object: DeepPartial<PubKey>): PubKey {
     const message = createBasePubKey();
     message.key = object.key ?? new Uint8Array();
     return message;
@@ -195,9 +169,6 @@ export const PrivKey = {
   is(o: any): o is PrivKey {
     return o && (o.$typeUrl === PrivKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
   },
-  isSDK(o: any): o is PrivKeySDKType {
-    return o && (o.$typeUrl === PrivKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
-  },
   isAmino(o: any): o is PrivKeyAmino {
     return o && (o.$typeUrl === PrivKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
   },
@@ -224,7 +195,7 @@ export const PrivKey = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PrivKey>, I>>(object: I): PrivKey {
+  fromPartial(object: DeepPartial<PrivKey>): PrivKey {
     const message = createBasePrivKey();
     message.key = object.key ?? new Uint8Array();
     return message;

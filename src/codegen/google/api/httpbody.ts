@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyAmino, AnySDKType } from "../protobuf/any";
+import { Any, AnyAmino } from "../protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../helpers";
 /**
  * Message that represents an arbitrary HTTP body. It should only be used for
  * payload formats that can't be represented as JSON, such as raw binary or
@@ -122,73 +122,20 @@ export interface HttpBodyAmino {
   /**
    * The HTTP Content-Type header value specifying the content type of the body.
    */
-  content_type?: string;
+  content_type: string;
   /**
    * The HTTP request/response body as raw binary.
    */
-  data?: string;
+  data: string;
   /**
    * Application specific response metadata. Must be set in the first response
    * for streaming APIs.
    */
-  extensions?: AnyAmino[];
+  extensions: AnyAmino[];
 }
 export interface HttpBodyAminoMsg {
   type: "/google.api.HttpBody";
   value: HttpBodyAmino;
-}
-/**
- * Message that represents an arbitrary HTTP body. It should only be used for
- * payload formats that can't be represented as JSON, such as raw binary or
- * an HTML page.
- * 
- * 
- * This message can be used both in streaming and non-streaming API methods in
- * the request as well as the response.
- * 
- * It can be used as a top-level request field, which is convenient if one
- * wants to extract parameters from either the URL or HTTP template into the
- * request fields and also want access to the raw HTTP body.
- * 
- * Example:
- * 
- *     message GetResourceRequest {
- *       // A unique request id.
- *       string request_id = 1;
- * 
- *       // The raw HTTP body is bound to this field.
- *       google.api.HttpBody http_body = 2;
- * 
- *     }
- * 
- *     service ResourceService {
- *       rpc GetResource(GetResourceRequest)
- *         returns (google.api.HttpBody);
- *       rpc UpdateResource(google.api.HttpBody)
- *         returns (google.protobuf.Empty);
- * 
- *     }
- * 
- * Example with streaming methods:
- * 
- *     service CaldavService {
- *       rpc GetCalendar(stream google.api.HttpBody)
- *         returns (stream google.api.HttpBody);
- *       rpc UpdateCalendar(stream google.api.HttpBody)
- *         returns (stream google.api.HttpBody);
- * 
- *     }
- * 
- * Use of this type only changes how the request and response bodies are
- * handled, all other features will continue to work unchanged.
- * @name HttpBodySDKType
- * @package google.api
- * @see proto type: google.api.HttpBody
- */
-export interface HttpBodySDKType {
-  content_type: string;
-  data: Uint8Array;
-  extensions: AnySDKType[];
 }
 function createBaseHttpBody(): HttpBody {
   return {
@@ -250,9 +197,6 @@ export const HttpBody = {
   is(o: any): o is HttpBody {
     return o && (o.$typeUrl === HttpBody.typeUrl || typeof o.contentType === "string" && (o.data instanceof Uint8Array || typeof o.data === "string") && Array.isArray(o.extensions) && (!o.extensions.length || Any.is(o.extensions[0])));
   },
-  isSDK(o: any): o is HttpBodySDKType {
-    return o && (o.$typeUrl === HttpBody.typeUrl || typeof o.content_type === "string" && (o.data instanceof Uint8Array || typeof o.data === "string") && Array.isArray(o.extensions) && (!o.extensions.length || Any.isSDK(o.extensions[0])));
-  },
   isAmino(o: any): o is HttpBodyAmino {
     return o && (o.$typeUrl === HttpBody.typeUrl || typeof o.content_type === "string" && (o.data instanceof Uint8Array || typeof o.data === "string") && Array.isArray(o.extensions) && (!o.extensions.length || Any.isAmino(o.extensions[0])));
   },
@@ -291,7 +235,7 @@ export const HttpBody = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<HttpBody>, I>>(object: I): HttpBody {
+  fromPartial(object: DeepPartial<HttpBody>): HttpBody {
     const message = createBaseHttpBody();
     message.contentType = object.contentType ?? "";
     message.data = object.data ?? new Uint8Array();

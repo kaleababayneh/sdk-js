@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact, isSet } from "../../../../helpers";
+import { DeepPartial, isSet } from "../../../../helpers";
 /**
  * @name SourceInfo_PositionsEntry
  * @package google.api.expr.v1beta1
@@ -21,21 +21,12 @@ export interface SourceInfo_PositionsEntryProtoMsg {
  * @see proto type: google.api.expr.v1beta1.SourceInfo_PositionsEntry
  */
 export interface SourceInfo_PositionsEntryAmino {
-  key?: number;
-  value?: number;
+  key: number;
+  value: number;
 }
 export interface SourceInfo_PositionsEntryAminoMsg {
   type: string;
   value: SourceInfo_PositionsEntryAmino;
-}
-/**
- * @name SourceInfo_PositionsEntrySDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.undefined
- */
-export interface SourceInfo_PositionsEntrySDKType {
-  key: number;
-  value: number;
 }
 /**
  * Source information collected at parse time.
@@ -86,7 +77,7 @@ export interface SourceInfoAmino {
    * The location could be a file, UI element, or similar. For example,
    * `acme/app/AnvilPolicy.cel`.
    */
-  location?: string;
+  location: string;
   /**
    * Monotonically increasing list of character offsets where newlines appear.
    * 
@@ -94,31 +85,18 @@ export interface SourceInfoAmino {
    * `id` the `line_offsets[i] < id_positions[id] < line_offsets[i+1]`. The
    * column may be derivd from `id_positions[id] - line_offsets[i]`.
    */
-  line_offsets?: number[];
+  line_offsets: number[];
   /**
    * A map from the parse node id (e.g. `Expr.id`) to the character offset
    * within source.
    */
-  positions?: {
+  positions: {
     [key: number]: number;
   };
 }
 export interface SourceInfoAminoMsg {
   type: "/google.api.expr.v1beta1.SourceInfo";
   value: SourceInfoAmino;
-}
-/**
- * Source information collected at parse time.
- * @name SourceInfoSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.SourceInfo
- */
-export interface SourceInfoSDKType {
-  location: string;
-  line_offsets: number[];
-  positions: {
-    [key: number]: number;
-  };
 }
 /**
  * A specific position in source.
@@ -160,37 +138,25 @@ export interface SourcePositionAmino {
   /**
    * The soucre location name (e.g. file name).
    */
-  location?: string;
+  location: string;
   /**
    * The character offset.
    */
-  offset?: number;
+  offset: number;
   /**
    * The 1-based index of the starting line in the source text
    * where the issue occurs, or 0 if unknown.
    */
-  line?: number;
+  line: number;
   /**
    * The 0-based index of the starting position within the line of source text
    * where the issue occurs.  Only meaningful if line is nonzer..
    */
-  column?: number;
+  column: number;
 }
 export interface SourcePositionAminoMsg {
   type: "/google.api.expr.v1beta1.SourcePosition";
   value: SourcePositionAmino;
-}
-/**
- * A specific position in source.
- * @name SourcePositionSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.SourcePosition
- */
-export interface SourcePositionSDKType {
-  location: string;
-  offset: number;
-  line: number;
-  column: number;
 }
 function createBaseSourceInfo_PositionsEntry(): SourceInfo_PositionsEntry {
   return {
@@ -233,7 +199,7 @@ export const SourceInfo_PositionsEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SourceInfo_PositionsEntry>, I>>(object: I): SourceInfo_PositionsEntry {
+  fromPartial(object: DeepPartial<SourceInfo_PositionsEntry>): SourceInfo_PositionsEntry {
     const message = createBaseSourceInfo_PositionsEntry();
     message.key = object.key ?? 0;
     message.value = object.value ?? 0;
@@ -283,9 +249,6 @@ export const SourceInfo = {
   typeUrl: "/google.api.expr.v1beta1.SourceInfo",
   is(o: any): o is SourceInfo {
     return o && (o.$typeUrl === SourceInfo.typeUrl || typeof o.location === "string" && Array.isArray(o.lineOffsets) && (!o.lineOffsets.length || typeof o.lineOffsets[0] === "number") && isSet(o.positions));
-  },
-  isSDK(o: any): o is SourceInfoSDKType {
-    return o && (o.$typeUrl === SourceInfo.typeUrl || typeof o.location === "string" && Array.isArray(o.line_offsets) && (!o.line_offsets.length || typeof o.line_offsets[0] === "number") && isSet(o.positions));
   },
   isAmino(o: any): o is SourceInfoAmino {
     return o && (o.$typeUrl === SourceInfo.typeUrl || typeof o.location === "string" && Array.isArray(o.line_offsets) && (!o.line_offsets.length || typeof o.line_offsets[0] === "number") && isSet(o.positions));
@@ -340,7 +303,7 @@ export const SourceInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SourceInfo>, I>>(object: I): SourceInfo {
+  fromPartial(object: DeepPartial<SourceInfo>): SourceInfo {
     const message = createBaseSourceInfo();
     message.location = object.location ?? "";
     message.lineOffsets = object.lineOffsets?.map(e => e) || [];
@@ -422,9 +385,6 @@ export const SourcePosition = {
   is(o: any): o is SourcePosition {
     return o && (o.$typeUrl === SourcePosition.typeUrl || typeof o.location === "string" && typeof o.offset === "number" && typeof o.line === "number" && typeof o.column === "number");
   },
-  isSDK(o: any): o is SourcePositionSDKType {
-    return o && (o.$typeUrl === SourcePosition.typeUrl || typeof o.location === "string" && typeof o.offset === "number" && typeof o.line === "number" && typeof o.column === "number");
-  },
   isAmino(o: any): o is SourcePositionAmino {
     return o && (o.$typeUrl === SourcePosition.typeUrl || typeof o.location === "string" && typeof o.offset === "number" && typeof o.line === "number" && typeof o.column === "number");
   },
@@ -469,7 +429,7 @@ export const SourcePosition = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SourcePosition>, I>>(object: I): SourcePosition {
+  fromPartial(object: DeepPartial<SourcePosition>): SourcePosition {
     const message = createBaseSourcePosition();
     message.location = object.location ?? "";
     message.offset = object.offset ?? 0;

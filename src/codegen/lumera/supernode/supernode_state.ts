@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import { isSet, Exact } from "../../helpers";
+import { isSet, DeepPartial } from "../../helpers";
 import { BinaryReader, BinaryWriter } from "../../binary";
 export enum SuperNodeState {
   SUPERNODE_STATE_UNSPECIFIED = 0,
@@ -10,7 +10,6 @@ export enum SuperNodeState {
   SUPERNODE_STATE_PENALIZED = 4,
   UNRECOGNIZED = -1,
 }
-export const SuperNodeStateSDKType = SuperNodeState;
 export const SuperNodeStateAmino = SuperNodeState;
 export function superNodeStateFromJSON(object: any): SuperNodeState {
   switch (object) {
@@ -71,21 +70,12 @@ export interface SuperNodeStateRecordProtoMsg {
  * @see proto type: lumera.supernode.SuperNodeStateRecord
  */
 export interface SuperNodeStateRecordAmino {
-  state?: SuperNodeState;
-  height?: string;
+  state: SuperNodeState;
+  height: string;
 }
 export interface SuperNodeStateRecordAminoMsg {
   type: "/lumera.supernode.SuperNodeStateRecord";
   value: SuperNodeStateRecordAmino;
-}
-/**
- * @name SuperNodeStateRecordSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.SuperNodeStateRecord
- */
-export interface SuperNodeStateRecordSDKType {
-  state: SuperNodeState;
-  height: bigint;
 }
 function createBaseSuperNodeStateRecord(): SuperNodeStateRecord {
   return {
@@ -101,9 +91,6 @@ function createBaseSuperNodeStateRecord(): SuperNodeStateRecord {
 export const SuperNodeStateRecord = {
   typeUrl: "/lumera.supernode.SuperNodeStateRecord",
   is(o: any): o is SuperNodeStateRecord {
-    return o && (o.$typeUrl === SuperNodeStateRecord.typeUrl || isSet(o.state) && typeof o.height === "bigint");
-  },
-  isSDK(o: any): o is SuperNodeStateRecordSDKType {
     return o && (o.$typeUrl === SuperNodeStateRecord.typeUrl || isSet(o.state) && typeof o.height === "bigint");
   },
   isAmino(o: any): o is SuperNodeStateRecordAmino {
@@ -138,7 +125,7 @@ export const SuperNodeStateRecord = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SuperNodeStateRecord>, I>>(object: I): SuperNodeStateRecord {
+  fromPartial(object: DeepPartial<SuperNodeStateRecord>): SuperNodeStateRecord {
     const message = createBaseSuperNodeStateRecord();
     message.state = object.state ?? 0;
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);

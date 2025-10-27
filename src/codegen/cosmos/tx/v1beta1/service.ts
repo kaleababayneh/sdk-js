@@ -1,11 +1,11 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Tx, TxAmino, TxSDKType } from "./tx";
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
-import { TxResponse, TxResponseAmino, TxResponseSDKType, GasInfo, GasInfoAmino, GasInfoSDKType, Result, ResultAmino, ResultSDKType } from "../../base/abci/v1beta1/abci";
-import { BlockID, BlockIDAmino, BlockIDSDKType } from "../../../tendermint/types/types";
-import { Block, BlockAmino, BlockSDKType } from "../../../tendermint/types/block";
-import { isSet, Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { Tx, TxAmino } from "./tx";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
+import { TxResponse, TxResponseAmino, GasInfo, GasInfoAmino, Result, ResultAmino } from "../../base/abci/v1beta1/abci";
+import { BlockID, BlockIDAmino } from "../../../tendermint/types/types";
+import { Block, BlockAmino } from "../../../tendermint/types/block";
+import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
 /** OrderBy defines the sorting order */
@@ -21,7 +21,6 @@ export enum OrderBy {
   ORDER_BY_DESC = 2,
   UNRECOGNIZED = -1,
 }
-export const OrderBySDKType = OrderBy;
 export const OrderByAmino = OrderBy;
 export function orderByFromJSON(object: any): OrderBy {
   switch (object) {
@@ -77,7 +76,6 @@ export enum BroadcastMode {
   BROADCAST_MODE_ASYNC = 3,
   UNRECOGNIZED = -1,
 }
-export const BroadcastModeSDKType = BroadcastMode;
 export const BroadcastModeAmino = BroadcastMode;
 export function broadcastModeFromJSON(object: any): BroadcastMode {
   switch (object) {
@@ -172,56 +170,35 @@ export interface GetTxsEventRequestAmino {
    * events query.
    * @deprecated
    */
-  events?: string[];
+  events: string[];
   /**
    * pagination defines a pagination for the request.
    * Deprecated post v0.46.x: use page and limit instead.
    * @deprecated
    */
   pagination?: PageRequestAmino;
-  order_by?: OrderBy;
+  order_by: OrderBy;
   /**
    * page is the page number to query, starts at 1. If not provided, will
    * default to first page.
    */
-  page?: string;
+  page: string;
   /**
    * limit is the total number of results to be returned in the result page.
    * If left empty it will default to a value to be set by each app.
    */
-  limit?: string;
+  limit: string;
   /**
    * query defines the transaction event query that is proxied to Tendermint's
    * TxSearch RPC method. The query must be valid.
    * 
    * Since cosmos-sdk 0.50
    */
-  query?: string;
+  query: string;
 }
 export interface GetTxsEventRequestAminoMsg {
   type: "cosmos-sdk/GetTxsEventRequest";
   value: GetTxsEventRequestAmino;
-}
-/**
- * GetTxsEventRequest is the request type for the Service.TxsByEvents
- * RPC method.
- * @name GetTxsEventRequestSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.GetTxsEventRequest
- */
-export interface GetTxsEventRequestSDKType {
-  /**
-   * @deprecated
-   */
-  events: string[];
-  /**
-   * @deprecated
-   */
-  pagination?: PageRequestSDKType;
-  order_by: OrderBy;
-  page: bigint;
-  limit: bigint;
-  query: string;
 }
 /**
  * GetTxsEventResponse is the response type for the Service.TxsByEvents
@@ -265,11 +242,11 @@ export interface GetTxsEventResponseAmino {
   /**
    * txs is the list of queried transactions.
    */
-  txs?: TxAmino[];
+  txs: TxAmino[];
   /**
    * tx_responses is the list of queried TxResponses.
    */
-  tx_responses?: TxResponseAmino[];
+  tx_responses: TxResponseAmino[];
   /**
    * pagination defines a pagination for the response.
    * Deprecated post v0.46.x: use total instead.
@@ -279,27 +256,11 @@ export interface GetTxsEventResponseAmino {
   /**
    * total is total number of results available
    */
-  total?: string;
+  total: string;
 }
 export interface GetTxsEventResponseAminoMsg {
   type: "cosmos-sdk/GetTxsEventResponse";
   value: GetTxsEventResponseAmino;
-}
-/**
- * GetTxsEventResponse is the response type for the Service.TxsByEvents
- * RPC method.
- * @name GetTxsEventResponseSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.GetTxsEventResponse
- */
-export interface GetTxsEventResponseSDKType {
-  txs: TxSDKType[];
-  tx_responses: TxResponseSDKType[];
-  /**
-   * @deprecated
-   */
-  pagination?: PageResponseSDKType;
-  total: bigint;
 }
 /**
  * BroadcastTxRequest is the request type for the Service.BroadcastTxRequest
@@ -330,23 +291,12 @@ export interface BroadcastTxRequestAmino {
   /**
    * tx_bytes is the raw transaction.
    */
-  tx_bytes?: string;
-  mode?: BroadcastMode;
+  tx_bytes: string;
+  mode: BroadcastMode;
 }
 export interface BroadcastTxRequestAminoMsg {
   type: "cosmos-sdk/BroadcastTxRequest";
   value: BroadcastTxRequestAmino;
-}
-/**
- * BroadcastTxRequest is the request type for the Service.BroadcastTxRequest
- * RPC method.
- * @name BroadcastTxRequestSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.BroadcastTxRequest
- */
-export interface BroadcastTxRequestSDKType {
-  tx_bytes: Uint8Array;
-  mode: BroadcastMode;
 }
 /**
  * BroadcastTxResponse is the response type for the
@@ -381,16 +331,6 @@ export interface BroadcastTxResponseAmino {
 export interface BroadcastTxResponseAminoMsg {
   type: "cosmos-sdk/BroadcastTxResponse";
   value: BroadcastTxResponseAmino;
-}
-/**
- * BroadcastTxResponse is the response type for the
- * Service.BroadcastTx method.
- * @name BroadcastTxResponseSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.BroadcastTxResponse
- */
-export interface BroadcastTxResponseSDKType {
-  tx_response?: TxResponseSDKType;
 }
 /**
  * SimulateRequest is the request type for the Service.Simulate
@@ -436,25 +376,11 @@ export interface SimulateRequestAmino {
    * 
    * Since: cosmos-sdk 0.43
    */
-  tx_bytes?: string;
+  tx_bytes: string;
 }
 export interface SimulateRequestAminoMsg {
   type: "cosmos-sdk/SimulateRequest";
   value: SimulateRequestAmino;
-}
-/**
- * SimulateRequest is the request type for the Service.Simulate
- * RPC method.
- * @name SimulateRequestSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.SimulateRequest
- */
-export interface SimulateRequestSDKType {
-  /**
-   * @deprecated
-   */
-  tx?: TxSDKType;
-  tx_bytes: Uint8Array;
 }
 /**
  * SimulateResponse is the response type for the
@@ -499,17 +425,6 @@ export interface SimulateResponseAminoMsg {
   value: SimulateResponseAmino;
 }
 /**
- * SimulateResponse is the response type for the
- * Service.SimulateRPC method.
- * @name SimulateResponseSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.SimulateResponse
- */
-export interface SimulateResponseSDKType {
-  gas_info?: GasInfoSDKType;
-  result?: ResultSDKType;
-}
-/**
  * GetTxRequest is the request type for the Service.GetTx
  * RPC method.
  * @name GetTxRequest
@@ -537,21 +452,11 @@ export interface GetTxRequestAmino {
   /**
    * hash is the tx hash to query, encoded as a hex string.
    */
-  hash?: string;
+  hash: string;
 }
 export interface GetTxRequestAminoMsg {
   type: "cosmos-sdk/GetTxRequest";
   value: GetTxRequestAmino;
-}
-/**
- * GetTxRequest is the request type for the Service.GetTx
- * RPC method.
- * @name GetTxRequestSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.GetTxRequest
- */
-export interface GetTxRequestSDKType {
-  hash: string;
 }
 /**
  * GetTxResponse is the response type for the Service.GetTx method.
@@ -594,16 +499,6 @@ export interface GetTxResponseAminoMsg {
   value: GetTxResponseAmino;
 }
 /**
- * GetTxResponse is the response type for the Service.GetTx method.
- * @name GetTxResponseSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.GetTxResponse
- */
-export interface GetTxResponseSDKType {
-  tx?: TxSDKType;
-  tx_response?: TxResponseSDKType;
-}
-/**
  * GetBlockWithTxsRequest is the request type for the Service.GetBlockWithTxs
  * RPC method.
  * 
@@ -639,7 +534,7 @@ export interface GetBlockWithTxsRequestAmino {
   /**
    * height is the height of the block to query.
    */
-  height?: string;
+  height: string;
   /**
    * pagination defines a pagination for the request.
    */
@@ -648,19 +543,6 @@ export interface GetBlockWithTxsRequestAmino {
 export interface GetBlockWithTxsRequestAminoMsg {
   type: "cosmos-sdk/GetBlockWithTxsRequest";
   value: GetBlockWithTxsRequestAmino;
-}
-/**
- * GetBlockWithTxsRequest is the request type for the Service.GetBlockWithTxs
- * RPC method.
- * 
- * Since: cosmos-sdk 0.45.2
- * @name GetBlockWithTxsRequestSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.GetBlockWithTxsRequest
- */
-export interface GetBlockWithTxsRequestSDKType {
-  height: bigint;
-  pagination?: PageRequestSDKType;
 }
 /**
  * GetBlockWithTxsResponse is the response type for the Service.GetBlockWithTxs
@@ -700,7 +582,7 @@ export interface GetBlockWithTxsResponseAmino {
   /**
    * txs are the transactions in the block.
    */
-  txs?: TxAmino[];
+  txs: TxAmino[];
   block_id?: BlockIDAmino;
   block?: BlockAmino;
   /**
@@ -711,21 +593,6 @@ export interface GetBlockWithTxsResponseAmino {
 export interface GetBlockWithTxsResponseAminoMsg {
   type: "cosmos-sdk/GetBlockWithTxsResponse";
   value: GetBlockWithTxsResponseAmino;
-}
-/**
- * GetBlockWithTxsResponse is the response type for the Service.GetBlockWithTxs
- * method.
- * 
- * Since: cosmos-sdk 0.45.2
- * @name GetBlockWithTxsResponseSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.GetBlockWithTxsResponse
- */
-export interface GetBlockWithTxsResponseSDKType {
-  txs: TxSDKType[];
-  block_id?: BlockIDSDKType;
-  block?: BlockSDKType;
-  pagination?: PageResponseSDKType;
 }
 /**
  * TxDecodeRequest is the request type for the Service.TxDecode
@@ -759,23 +626,11 @@ export interface TxDecodeRequestAmino {
   /**
    * tx_bytes is the raw transaction.
    */
-  tx_bytes?: string;
+  tx_bytes: string;
 }
 export interface TxDecodeRequestAminoMsg {
   type: "cosmos-sdk/TxDecodeRequest";
   value: TxDecodeRequestAmino;
-}
-/**
- * TxDecodeRequest is the request type for the Service.TxDecode
- * RPC method.
- * 
- * Since: cosmos-sdk 0.47
- * @name TxDecodeRequestSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.TxDecodeRequest
- */
-export interface TxDecodeRequestSDKType {
-  tx_bytes: Uint8Array;
 }
 /**
  * TxDecodeResponse is the response type for the
@@ -816,18 +671,6 @@ export interface TxDecodeResponseAminoMsg {
   value: TxDecodeResponseAmino;
 }
 /**
- * TxDecodeResponse is the response type for the
- * Service.TxDecode method.
- * 
- * Since: cosmos-sdk 0.47
- * @name TxDecodeResponseSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.TxDecodeResponse
- */
-export interface TxDecodeResponseSDKType {
-  tx?: TxSDKType;
-}
-/**
  * TxEncodeRequest is the request type for the Service.TxEncode
  * RPC method.
  * 
@@ -866,18 +709,6 @@ export interface TxEncodeRequestAminoMsg {
   value: TxEncodeRequestAmino;
 }
 /**
- * TxEncodeRequest is the request type for the Service.TxEncode
- * RPC method.
- * 
- * Since: cosmos-sdk 0.47
- * @name TxEncodeRequestSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.TxEncodeRequest
- */
-export interface TxEncodeRequestSDKType {
-  tx?: TxSDKType;
-}
-/**
  * TxEncodeResponse is the response type for the
  * Service.TxEncode method.
  * 
@@ -909,23 +740,11 @@ export interface TxEncodeResponseAmino {
   /**
    * tx_bytes is the encoded transaction bytes.
    */
-  tx_bytes?: string;
+  tx_bytes: string;
 }
 export interface TxEncodeResponseAminoMsg {
   type: "cosmos-sdk/TxEncodeResponse";
   value: TxEncodeResponseAmino;
-}
-/**
- * TxEncodeResponse is the response type for the
- * Service.TxEncode method.
- * 
- * Since: cosmos-sdk 0.47
- * @name TxEncodeResponseSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.TxEncodeResponse
- */
-export interface TxEncodeResponseSDKType {
-  tx_bytes: Uint8Array;
 }
 /**
  * TxEncodeAminoRequest is the request type for the Service.TxEncodeAmino
@@ -953,23 +772,11 @@ export interface TxEncodeAminoRequestProtoMsg {
  * @see proto type: cosmos.tx.v1beta1.TxEncodeAminoRequest
  */
 export interface TxEncodeAminoRequestAmino {
-  amino_json?: string;
+  amino_json: string;
 }
 export interface TxEncodeAminoRequestAminoMsg {
   type: "cosmos-sdk/TxEncodeAminoRequest";
   value: TxEncodeAminoRequestAmino;
-}
-/**
- * TxEncodeAminoRequest is the request type for the Service.TxEncodeAmino
- * RPC method.
- * 
- * Since: cosmos-sdk 0.47
- * @name TxEncodeAminoRequestSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.TxEncodeAminoRequest
- */
-export interface TxEncodeAminoRequestSDKType {
-  amino_json: string;
 }
 /**
  * TxEncodeAminoResponse is the response type for the Service.TxEncodeAmino
@@ -997,23 +804,11 @@ export interface TxEncodeAminoResponseProtoMsg {
  * @see proto type: cosmos.tx.v1beta1.TxEncodeAminoResponse
  */
 export interface TxEncodeAminoResponseAmino {
-  amino_binary?: string;
+  amino_binary: string;
 }
 export interface TxEncodeAminoResponseAminoMsg {
   type: "cosmos-sdk/TxEncodeAminoResponse";
   value: TxEncodeAminoResponseAmino;
-}
-/**
- * TxEncodeAminoResponse is the response type for the Service.TxEncodeAmino
- * RPC method.
- * 
- * Since: cosmos-sdk 0.47
- * @name TxEncodeAminoResponseSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.TxEncodeAminoResponse
- */
-export interface TxEncodeAminoResponseSDKType {
-  amino_binary: Uint8Array;
 }
 /**
  * TxDecodeAminoRequest is the request type for the Service.TxDecodeAmino
@@ -1041,23 +836,11 @@ export interface TxDecodeAminoRequestProtoMsg {
  * @see proto type: cosmos.tx.v1beta1.TxDecodeAminoRequest
  */
 export interface TxDecodeAminoRequestAmino {
-  amino_binary?: string;
+  amino_binary: string;
 }
 export interface TxDecodeAminoRequestAminoMsg {
   type: "cosmos-sdk/TxDecodeAminoRequest";
   value: TxDecodeAminoRequestAmino;
-}
-/**
- * TxDecodeAminoRequest is the request type for the Service.TxDecodeAmino
- * RPC method.
- * 
- * Since: cosmos-sdk 0.47
- * @name TxDecodeAminoRequestSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.TxDecodeAminoRequest
- */
-export interface TxDecodeAminoRequestSDKType {
-  amino_binary: Uint8Array;
 }
 /**
  * TxDecodeAminoResponse is the response type for the Service.TxDecodeAmino
@@ -1085,23 +868,11 @@ export interface TxDecodeAminoResponseProtoMsg {
  * @see proto type: cosmos.tx.v1beta1.TxDecodeAminoResponse
  */
 export interface TxDecodeAminoResponseAmino {
-  amino_json?: string;
+  amino_json: string;
 }
 export interface TxDecodeAminoResponseAminoMsg {
   type: "cosmos-sdk/TxDecodeAminoResponse";
   value: TxDecodeAminoResponseAmino;
-}
-/**
- * TxDecodeAminoResponse is the response type for the Service.TxDecodeAmino
- * RPC method.
- * 
- * Since: cosmos-sdk 0.47
- * @name TxDecodeAminoResponseSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.TxDecodeAminoResponse
- */
-export interface TxDecodeAminoResponseSDKType {
-  amino_json: string;
 }
 function createBaseGetTxsEventRequest(): GetTxsEventRequest {
   return {
@@ -1125,9 +896,6 @@ export const GetTxsEventRequest = {
   aminoType: "cosmos-sdk/GetTxsEventRequest",
   is(o: any): o is GetTxsEventRequest {
     return o && (o.$typeUrl === GetTxsEventRequest.typeUrl || Array.isArray(o.events) && (!o.events.length || typeof o.events[0] === "string") && isSet(o.orderBy) && typeof o.page === "bigint" && typeof o.limit === "bigint" && typeof o.query === "string");
-  },
-  isSDK(o: any): o is GetTxsEventRequestSDKType {
-    return o && (o.$typeUrl === GetTxsEventRequest.typeUrl || Array.isArray(o.events) && (!o.events.length || typeof o.events[0] === "string") && isSet(o.order_by) && typeof o.page === "bigint" && typeof o.limit === "bigint" && typeof o.query === "string");
   },
   isAmino(o: any): o is GetTxsEventRequestAmino {
     return o && (o.$typeUrl === GetTxsEventRequest.typeUrl || Array.isArray(o.events) && (!o.events.length || typeof o.events[0] === "string") && isSet(o.order_by) && typeof o.page === "bigint" && typeof o.limit === "bigint" && typeof o.query === "string");
@@ -1185,7 +953,7 @@ export const GetTxsEventRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetTxsEventRequest>, I>>(object: I): GetTxsEventRequest {
+  fromPartial(object: DeepPartial<GetTxsEventRequest>): GetTxsEventRequest {
     const message = createBaseGetTxsEventRequest();
     message.events = object.events?.map(e => e) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -1278,9 +1046,6 @@ export const GetTxsEventResponse = {
   is(o: any): o is GetTxsEventResponse {
     return o && (o.$typeUrl === GetTxsEventResponse.typeUrl || Array.isArray(o.txs) && (!o.txs.length || Tx.is(o.txs[0])) && Array.isArray(o.txResponses) && (!o.txResponses.length || TxResponse.is(o.txResponses[0])) && typeof o.total === "bigint");
   },
-  isSDK(o: any): o is GetTxsEventResponseSDKType {
-    return o && (o.$typeUrl === GetTxsEventResponse.typeUrl || Array.isArray(o.txs) && (!o.txs.length || Tx.isSDK(o.txs[0])) && Array.isArray(o.tx_responses) && (!o.tx_responses.length || TxResponse.isSDK(o.tx_responses[0])) && typeof o.total === "bigint");
-  },
   isAmino(o: any): o is GetTxsEventResponseAmino {
     return o && (o.$typeUrl === GetTxsEventResponse.typeUrl || Array.isArray(o.txs) && (!o.txs.length || Tx.isAmino(o.txs[0])) && Array.isArray(o.tx_responses) && (!o.tx_responses.length || TxResponse.isAmino(o.tx_responses[0])) && typeof o.total === "bigint");
   },
@@ -1325,7 +1090,7 @@ export const GetTxsEventResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetTxsEventResponse>, I>>(object: I): GetTxsEventResponse {
+  fromPartial(object: DeepPartial<GetTxsEventResponse>): GetTxsEventResponse {
     const message = createBaseGetTxsEventResponse();
     message.txs = object.txs?.map(e => Tx.fromPartial(e)) || [];
     message.txResponses = object.txResponses?.map(e => TxResponse.fromPartial(e)) || [];
@@ -1410,9 +1175,6 @@ export const BroadcastTxRequest = {
   is(o: any): o is BroadcastTxRequest {
     return o && (o.$typeUrl === BroadcastTxRequest.typeUrl || (o.txBytes instanceof Uint8Array || typeof o.txBytes === "string") && isSet(o.mode));
   },
-  isSDK(o: any): o is BroadcastTxRequestSDKType {
-    return o && (o.$typeUrl === BroadcastTxRequest.typeUrl || (o.tx_bytes instanceof Uint8Array || typeof o.tx_bytes === "string") && isSet(o.mode));
-  },
   isAmino(o: any): o is BroadcastTxRequestAmino {
     return o && (o.$typeUrl === BroadcastTxRequest.typeUrl || (o.tx_bytes instanceof Uint8Array || typeof o.tx_bytes === "string") && isSet(o.mode));
   },
@@ -1445,7 +1207,7 @@ export const BroadcastTxRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BroadcastTxRequest>, I>>(object: I): BroadcastTxRequest {
+  fromPartial(object: DeepPartial<BroadcastTxRequest>): BroadcastTxRequest {
     const message = createBaseBroadcastTxRequest();
     message.txBytes = object.txBytes ?? new Uint8Array();
     message.mode = object.mode ?? 0;
@@ -1508,9 +1270,6 @@ export const BroadcastTxResponse = {
   is(o: any): o is BroadcastTxResponse {
     return o && o.$typeUrl === BroadcastTxResponse.typeUrl;
   },
-  isSDK(o: any): o is BroadcastTxResponseSDKType {
-    return o && o.$typeUrl === BroadcastTxResponse.typeUrl;
-  },
   isAmino(o: any): o is BroadcastTxResponseAmino {
     return o && o.$typeUrl === BroadcastTxResponse.typeUrl;
   },
@@ -1537,7 +1296,7 @@ export const BroadcastTxResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BroadcastTxResponse>, I>>(object: I): BroadcastTxResponse {
+  fromPartial(object: DeepPartial<BroadcastTxResponse>): BroadcastTxResponse {
     const message = createBaseBroadcastTxResponse();
     message.txResponse = object.txResponse !== undefined && object.txResponse !== null ? TxResponse.fromPartial(object.txResponse) : undefined;
     return message;
@@ -1601,9 +1360,6 @@ export const SimulateRequest = {
   is(o: any): o is SimulateRequest {
     return o && (o.$typeUrl === SimulateRequest.typeUrl || o.txBytes instanceof Uint8Array || typeof o.txBytes === "string");
   },
-  isSDK(o: any): o is SimulateRequestSDKType {
-    return o && (o.$typeUrl === SimulateRequest.typeUrl || o.tx_bytes instanceof Uint8Array || typeof o.tx_bytes === "string");
-  },
   isAmino(o: any): o is SimulateRequestAmino {
     return o && (o.$typeUrl === SimulateRequest.typeUrl || o.tx_bytes instanceof Uint8Array || typeof o.tx_bytes === "string");
   },
@@ -1636,7 +1392,7 @@ export const SimulateRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SimulateRequest>, I>>(object: I): SimulateRequest {
+  fromPartial(object: DeepPartial<SimulateRequest>): SimulateRequest {
     const message = createBaseSimulateRequest();
     message.tx = object.tx !== undefined && object.tx !== null ? Tx.fromPartial(object.tx) : undefined;
     message.txBytes = object.txBytes ?? new Uint8Array();
@@ -1705,9 +1461,6 @@ export const SimulateResponse = {
   is(o: any): o is SimulateResponse {
     return o && o.$typeUrl === SimulateResponse.typeUrl;
   },
-  isSDK(o: any): o is SimulateResponseSDKType {
-    return o && o.$typeUrl === SimulateResponse.typeUrl;
-  },
   isAmino(o: any): o is SimulateResponseAmino {
     return o && o.$typeUrl === SimulateResponse.typeUrl;
   },
@@ -1740,7 +1493,7 @@ export const SimulateResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SimulateResponse>, I>>(object: I): SimulateResponse {
+  fromPartial(object: DeepPartial<SimulateResponse>): SimulateResponse {
     const message = createBaseSimulateResponse();
     message.gasInfo = object.gasInfo !== undefined && object.gasInfo !== null ? GasInfo.fromPartial(object.gasInfo) : undefined;
     message.result = object.result !== undefined && object.result !== null ? Result.fromPartial(object.result) : undefined;
@@ -1809,9 +1562,6 @@ export const GetTxRequest = {
   is(o: any): o is GetTxRequest {
     return o && (o.$typeUrl === GetTxRequest.typeUrl || typeof o.hash === "string");
   },
-  isSDK(o: any): o is GetTxRequestSDKType {
-    return o && (o.$typeUrl === GetTxRequest.typeUrl || typeof o.hash === "string");
-  },
   isAmino(o: any): o is GetTxRequestAmino {
     return o && (o.$typeUrl === GetTxRequest.typeUrl || typeof o.hash === "string");
   },
@@ -1838,7 +1588,7 @@ export const GetTxRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetTxRequest>, I>>(object: I): GetTxRequest {
+  fromPartial(object: DeepPartial<GetTxRequest>): GetTxRequest {
     const message = createBaseGetTxRequest();
     message.hash = object.hash ?? "";
     return message;
@@ -1896,9 +1646,6 @@ export const GetTxResponse = {
   is(o: any): o is GetTxResponse {
     return o && o.$typeUrl === GetTxResponse.typeUrl;
   },
-  isSDK(o: any): o is GetTxResponseSDKType {
-    return o && o.$typeUrl === GetTxResponse.typeUrl;
-  },
   isAmino(o: any): o is GetTxResponseAmino {
     return o && o.$typeUrl === GetTxResponse.typeUrl;
   },
@@ -1931,7 +1678,7 @@ export const GetTxResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetTxResponse>, I>>(object: I): GetTxResponse {
+  fromPartial(object: DeepPartial<GetTxResponse>): GetTxResponse {
     const message = createBaseGetTxResponse();
     message.tx = object.tx !== undefined && object.tx !== null ? Tx.fromPartial(object.tx) : undefined;
     message.txResponse = object.txResponse !== undefined && object.txResponse !== null ? TxResponse.fromPartial(object.txResponse) : undefined;
@@ -2003,9 +1750,6 @@ export const GetBlockWithTxsRequest = {
   is(o: any): o is GetBlockWithTxsRequest {
     return o && (o.$typeUrl === GetBlockWithTxsRequest.typeUrl || typeof o.height === "bigint");
   },
-  isSDK(o: any): o is GetBlockWithTxsRequestSDKType {
-    return o && (o.$typeUrl === GetBlockWithTxsRequest.typeUrl || typeof o.height === "bigint");
-  },
   isAmino(o: any): o is GetBlockWithTxsRequestAmino {
     return o && (o.$typeUrl === GetBlockWithTxsRequest.typeUrl || typeof o.height === "bigint");
   },
@@ -2038,7 +1782,7 @@ export const GetBlockWithTxsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetBlockWithTxsRequest>, I>>(object: I): GetBlockWithTxsRequest {
+  fromPartial(object: DeepPartial<GetBlockWithTxsRequest>): GetBlockWithTxsRequest {
     const message = createBaseGetBlockWithTxsRequest();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -2111,9 +1855,6 @@ export const GetBlockWithTxsResponse = {
   is(o: any): o is GetBlockWithTxsResponse {
     return o && (o.$typeUrl === GetBlockWithTxsResponse.typeUrl || Array.isArray(o.txs) && (!o.txs.length || Tx.is(o.txs[0])));
   },
-  isSDK(o: any): o is GetBlockWithTxsResponseSDKType {
-    return o && (o.$typeUrl === GetBlockWithTxsResponse.typeUrl || Array.isArray(o.txs) && (!o.txs.length || Tx.isSDK(o.txs[0])));
-  },
   isAmino(o: any): o is GetBlockWithTxsResponseAmino {
     return o && (o.$typeUrl === GetBlockWithTxsResponse.typeUrl || Array.isArray(o.txs) && (!o.txs.length || Tx.isAmino(o.txs[0])));
   },
@@ -2158,7 +1899,7 @@ export const GetBlockWithTxsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetBlockWithTxsResponse>, I>>(object: I): GetBlockWithTxsResponse {
+  fromPartial(object: DeepPartial<GetBlockWithTxsResponse>): GetBlockWithTxsResponse {
     const message = createBaseGetBlockWithTxsResponse();
     message.txs = object.txs?.map(e => Tx.fromPartial(e)) || [];
     message.blockId = object.blockId !== undefined && object.blockId !== null ? BlockID.fromPartial(object.blockId) : undefined;
@@ -2243,9 +1984,6 @@ export const TxDecodeRequest = {
   is(o: any): o is TxDecodeRequest {
     return o && (o.$typeUrl === TxDecodeRequest.typeUrl || o.txBytes instanceof Uint8Array || typeof o.txBytes === "string");
   },
-  isSDK(o: any): o is TxDecodeRequestSDKType {
-    return o && (o.$typeUrl === TxDecodeRequest.typeUrl || o.tx_bytes instanceof Uint8Array || typeof o.tx_bytes === "string");
-  },
   isAmino(o: any): o is TxDecodeRequestAmino {
     return o && (o.$typeUrl === TxDecodeRequest.typeUrl || o.tx_bytes instanceof Uint8Array || typeof o.tx_bytes === "string");
   },
@@ -2272,7 +2010,7 @@ export const TxDecodeRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxDecodeRequest>, I>>(object: I): TxDecodeRequest {
+  fromPartial(object: DeepPartial<TxDecodeRequest>): TxDecodeRequest {
     const message = createBaseTxDecodeRequest();
     message.txBytes = object.txBytes ?? new Uint8Array();
     return message;
@@ -2332,9 +2070,6 @@ export const TxDecodeResponse = {
   is(o: any): o is TxDecodeResponse {
     return o && o.$typeUrl === TxDecodeResponse.typeUrl;
   },
-  isSDK(o: any): o is TxDecodeResponseSDKType {
-    return o && o.$typeUrl === TxDecodeResponse.typeUrl;
-  },
   isAmino(o: any): o is TxDecodeResponseAmino {
     return o && o.$typeUrl === TxDecodeResponse.typeUrl;
   },
@@ -2361,7 +2096,7 @@ export const TxDecodeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxDecodeResponse>, I>>(object: I): TxDecodeResponse {
+  fromPartial(object: DeepPartial<TxDecodeResponse>): TxDecodeResponse {
     const message = createBaseTxDecodeResponse();
     message.tx = object.tx !== undefined && object.tx !== null ? Tx.fromPartial(object.tx) : undefined;
     return message;
@@ -2426,9 +2161,6 @@ export const TxEncodeRequest = {
   is(o: any): o is TxEncodeRequest {
     return o && o.$typeUrl === TxEncodeRequest.typeUrl;
   },
-  isSDK(o: any): o is TxEncodeRequestSDKType {
-    return o && o.$typeUrl === TxEncodeRequest.typeUrl;
-  },
   isAmino(o: any): o is TxEncodeRequestAmino {
     return o && o.$typeUrl === TxEncodeRequest.typeUrl;
   },
@@ -2455,7 +2187,7 @@ export const TxEncodeRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxEncodeRequest>, I>>(object: I): TxEncodeRequest {
+  fromPartial(object: DeepPartial<TxEncodeRequest>): TxEncodeRequest {
     const message = createBaseTxEncodeRequest();
     message.tx = object.tx !== undefined && object.tx !== null ? Tx.fromPartial(object.tx) : undefined;
     return message;
@@ -2520,9 +2252,6 @@ export const TxEncodeResponse = {
   is(o: any): o is TxEncodeResponse {
     return o && (o.$typeUrl === TxEncodeResponse.typeUrl || o.txBytes instanceof Uint8Array || typeof o.txBytes === "string");
   },
-  isSDK(o: any): o is TxEncodeResponseSDKType {
-    return o && (o.$typeUrl === TxEncodeResponse.typeUrl || o.tx_bytes instanceof Uint8Array || typeof o.tx_bytes === "string");
-  },
   isAmino(o: any): o is TxEncodeResponseAmino {
     return o && (o.$typeUrl === TxEncodeResponse.typeUrl || o.tx_bytes instanceof Uint8Array || typeof o.tx_bytes === "string");
   },
@@ -2549,7 +2278,7 @@ export const TxEncodeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxEncodeResponse>, I>>(object: I): TxEncodeResponse {
+  fromPartial(object: DeepPartial<TxEncodeResponse>): TxEncodeResponse {
     const message = createBaseTxEncodeResponse();
     message.txBytes = object.txBytes ?? new Uint8Array();
     return message;
@@ -2609,9 +2338,6 @@ export const TxEncodeAminoRequest = {
   is(o: any): o is TxEncodeAminoRequest {
     return o && (o.$typeUrl === TxEncodeAminoRequest.typeUrl || typeof o.aminoJson === "string");
   },
-  isSDK(o: any): o is TxEncodeAminoRequestSDKType {
-    return o && (o.$typeUrl === TxEncodeAminoRequest.typeUrl || typeof o.amino_json === "string");
-  },
   isAmino(o: any): o is TxEncodeAminoRequestAmino {
     return o && (o.$typeUrl === TxEncodeAminoRequest.typeUrl || typeof o.amino_json === "string");
   },
@@ -2638,7 +2364,7 @@ export const TxEncodeAminoRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxEncodeAminoRequest>, I>>(object: I): TxEncodeAminoRequest {
+  fromPartial(object: DeepPartial<TxEncodeAminoRequest>): TxEncodeAminoRequest {
     const message = createBaseTxEncodeAminoRequest();
     message.aminoJson = object.aminoJson ?? "";
     return message;
@@ -2698,9 +2424,6 @@ export const TxEncodeAminoResponse = {
   is(o: any): o is TxEncodeAminoResponse {
     return o && (o.$typeUrl === TxEncodeAminoResponse.typeUrl || o.aminoBinary instanceof Uint8Array || typeof o.aminoBinary === "string");
   },
-  isSDK(o: any): o is TxEncodeAminoResponseSDKType {
-    return o && (o.$typeUrl === TxEncodeAminoResponse.typeUrl || o.amino_binary instanceof Uint8Array || typeof o.amino_binary === "string");
-  },
   isAmino(o: any): o is TxEncodeAminoResponseAmino {
     return o && (o.$typeUrl === TxEncodeAminoResponse.typeUrl || o.amino_binary instanceof Uint8Array || typeof o.amino_binary === "string");
   },
@@ -2727,7 +2450,7 @@ export const TxEncodeAminoResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxEncodeAminoResponse>, I>>(object: I): TxEncodeAminoResponse {
+  fromPartial(object: DeepPartial<TxEncodeAminoResponse>): TxEncodeAminoResponse {
     const message = createBaseTxEncodeAminoResponse();
     message.aminoBinary = object.aminoBinary ?? new Uint8Array();
     return message;
@@ -2787,9 +2510,6 @@ export const TxDecodeAminoRequest = {
   is(o: any): o is TxDecodeAminoRequest {
     return o && (o.$typeUrl === TxDecodeAminoRequest.typeUrl || o.aminoBinary instanceof Uint8Array || typeof o.aminoBinary === "string");
   },
-  isSDK(o: any): o is TxDecodeAminoRequestSDKType {
-    return o && (o.$typeUrl === TxDecodeAminoRequest.typeUrl || o.amino_binary instanceof Uint8Array || typeof o.amino_binary === "string");
-  },
   isAmino(o: any): o is TxDecodeAminoRequestAmino {
     return o && (o.$typeUrl === TxDecodeAminoRequest.typeUrl || o.amino_binary instanceof Uint8Array || typeof o.amino_binary === "string");
   },
@@ -2816,7 +2536,7 @@ export const TxDecodeAminoRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxDecodeAminoRequest>, I>>(object: I): TxDecodeAminoRequest {
+  fromPartial(object: DeepPartial<TxDecodeAminoRequest>): TxDecodeAminoRequest {
     const message = createBaseTxDecodeAminoRequest();
     message.aminoBinary = object.aminoBinary ?? new Uint8Array();
     return message;
@@ -2876,9 +2596,6 @@ export const TxDecodeAminoResponse = {
   is(o: any): o is TxDecodeAminoResponse {
     return o && (o.$typeUrl === TxDecodeAminoResponse.typeUrl || typeof o.aminoJson === "string");
   },
-  isSDK(o: any): o is TxDecodeAminoResponseSDKType {
-    return o && (o.$typeUrl === TxDecodeAminoResponse.typeUrl || typeof o.amino_json === "string");
-  },
   isAmino(o: any): o is TxDecodeAminoResponseAmino {
     return o && (o.$typeUrl === TxDecodeAminoResponse.typeUrl || typeof o.amino_json === "string");
   },
@@ -2905,7 +2622,7 @@ export const TxDecodeAminoResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxDecodeAminoResponse>, I>>(object: I): TxDecodeAminoResponse {
+  fromPartial(object: DeepPartial<TxDecodeAminoResponse>): TxDecodeAminoResponse {
     const message = createBaseTxDecodeAminoResponse();
     message.aminoJson = object.aminoJson ?? "";
     return message;

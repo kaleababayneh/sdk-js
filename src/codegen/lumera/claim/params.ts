@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Params defines the parameters for the module.
  * @name Params
@@ -25,23 +25,12 @@ export interface ParamsProtoMsg {
  */
 export interface ParamsAmino {
   enable_claims: boolean;
-  claim_end_time?: string;
+  claim_end_time: string;
   max_claims_per_block: string;
 }
 export interface ParamsAminoMsg {
   type: "/lumera.claim.Params";
   value: ParamsAmino;
-}
-/**
- * Params defines the parameters for the module.
- * @name ParamsSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.Params
- */
-export interface ParamsSDKType {
-  enable_claims: boolean;
-  claim_end_time: bigint;
-  max_claims_per_block: bigint;
 }
 function createBaseParams(): Params {
   return {
@@ -60,9 +49,6 @@ export const Params = {
   typeUrl: "/lumera.claim.Params",
   is(o: any): o is Params {
     return o && (o.$typeUrl === Params.typeUrl || typeof o.enableClaims === "boolean" && typeof o.claimEndTime === "bigint" && typeof o.maxClaimsPerBlock === "bigint");
-  },
-  isSDK(o: any): o is ParamsSDKType {
-    return o && (o.$typeUrl === Params.typeUrl || typeof o.enable_claims === "boolean" && typeof o.claim_end_time === "bigint" && typeof o.max_claims_per_block === "bigint");
   },
   isAmino(o: any): o is ParamsAmino {
     return o && (o.$typeUrl === Params.typeUrl || typeof o.enable_claims === "boolean" && typeof o.claim_end_time === "bigint" && typeof o.max_claims_per_block === "bigint");
@@ -102,7 +88,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(object: I): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.enableClaims = object.enableClaims ?? false;
     message.claimEndTime = object.claimEndTime !== undefined && object.claimEndTime !== null ? BigInt(object.claimEndTime.toString()) : BigInt(0);

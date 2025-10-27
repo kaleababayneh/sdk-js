@@ -2,11 +2,10 @@
 /**
  * Post-generation script to fix systemic TypeScript errors in Telescope-generated code
  *
- * This script fixes four main categories of issues:
+ * This script fixes three main categories of issues:
  * 1. TypeScript Checking: Adds @ts-nocheck to suppress upstream generator errors
  * 2. Scalar Type Mapping: Changes invalid 'double' type to 'number'
- * 3. RPC Client Type Mismatch: Changes Tendermint34Client to CometClient
- * 4. Nested Message Defaults: Fixes fromPartial methods to properly handle nested messages
+ * 3. Nested Message Defaults: Fixes fromPartial methods to properly handle nested messages
  */
 
 import * as fs from 'fs';
@@ -72,32 +71,7 @@ function fixScalarTypes(filePath: string, content: string): { fixed: string; cha
 }
 
 /**
- * Fix 2: Replace Tendermint34Client with CometClient
- */
-function fixRpcClientType(filePath: string, content: string): { fixed: string; changes: string[] } {
-  const changes: string[] = [];
-  let fixed = content;
-
-  // Replace import statement - import both as type and value
-  if (content.includes('import { Tendermint34Client')) {
-    fixed = fixed.replace(
-      /import \{ Tendermint34Client, HttpEndpoint \} from "@cosmjs\/tendermint-rpc";/g,
-      'import { CometClient, HttpEndpoint } from "@cosmjs/tendermint-rpc";'
-    );
-    changes.push('Updated import: Tendermint34Client -> CometClient');
-  }
-
-  // Replace usage
-  if (content.includes('Tendermint34Client.connect')) {
-    fixed = fixed.replace(/Tendermint34Client\.connect/g, 'CometClient.connect');
-    changes.push('Updated client instantiation: Tendermint34Client.connect -> CometClient.connect');
-  }
-
-  return { fixed, changes };
-}
-
-/**
- * Fix 3: Fix nested message defaults in fromPartial methods
+ * Fix 2: Fix nested message defaults in fromPartial methods
  *
  * This fix is intentionally conservative - we don't modify the nested message assignments
  * because the TypeScript errors are due to interface definitions in the generated code
@@ -134,10 +108,6 @@ function processFile(filePath: string): void {
     const scalarFix = fixScalarTypes(filePath, content);
     content = scalarFix.fixed;
     fileChanges.push(...scalarFix.changes);
-
-    const rpcFix = fixRpcClientType(filePath, content);
-    content = rpcFix.fixed;
-    fileChanges.push(...rpcFix.changes);
 
     const nestedFix = fixNestedMessageDefaults(filePath, content);
     content = nestedFix.fixed;

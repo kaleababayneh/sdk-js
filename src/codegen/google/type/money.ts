@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Represents an amount of money with its currency type.
  * @name Money
@@ -42,12 +42,12 @@ export interface MoneyAmino {
   /**
    * The three-letter currency code defined in ISO 4217.
    */
-  currency_code?: string;
+  currency_code: string;
   /**
    * The whole units of the amount.
    * For example if `currencyCode` is `"USD"`, then 1 unit is one US dollar.
    */
-  units?: string;
+  units: string;
   /**
    * Number of nano (10^-9) units of the amount.
    * The value must be between -999,999,999 and +999,999,999 inclusive.
@@ -56,22 +56,11 @@ export interface MoneyAmino {
    * If `units` is negative, `nanos` must be negative or zero.
    * For example $-1.75 is represented as `units`=-1 and `nanos`=-750,000,000.
    */
-  nanos?: number;
+  nanos: number;
 }
 export interface MoneyAminoMsg {
   type: "/google.type.Money";
   value: MoneyAmino;
-}
-/**
- * Represents an amount of money with its currency type.
- * @name MoneySDKType
- * @package google.type
- * @see proto type: google.type.Money
- */
-export interface MoneySDKType {
-  currency_code: string;
-  units: bigint;
-  nanos: number;
 }
 function createBaseMoney(): Money {
   return {
@@ -90,9 +79,6 @@ export const Money = {
   typeUrl: "/google.type.Money",
   is(o: any): o is Money {
     return o && (o.$typeUrl === Money.typeUrl || typeof o.currencyCode === "string" && typeof o.units === "bigint" && typeof o.nanos === "number");
-  },
-  isSDK(o: any): o is MoneySDKType {
-    return o && (o.$typeUrl === Money.typeUrl || typeof o.currency_code === "string" && typeof o.units === "bigint" && typeof o.nanos === "number");
   },
   isAmino(o: any): o is MoneyAmino {
     return o && (o.$typeUrl === Money.typeUrl || typeof o.currency_code === "string" && typeof o.units === "bigint" && typeof o.nanos === "number");
@@ -132,7 +118,7 @@ export const Money = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Money>, I>>(object: I): Money {
+  fromPartial(object: DeepPartial<Money>): Money {
     const message = createBaseMoney();
     message.currencyCode = object.currencyCode ?? "";
     message.units = object.units !== undefined && object.units !== null ? BigInt(object.units.toString()) : BigInt(0);

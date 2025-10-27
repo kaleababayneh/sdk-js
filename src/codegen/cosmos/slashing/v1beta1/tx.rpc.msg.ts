@@ -23,19 +23,24 @@ export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.unjail = this.unjail.bind(this);
-    this.updateParams = this.updateParams.bind(this);
   }
-  unjail(request: MsgUnjail): Promise<MsgUnjailResponse> {
+  /* Unjail defines a method for unjailing a jailed validator, thus returning
+   them into the bonded validator set, so they can begin receiving provisions
+   and rewards again. */
+  unjail = async (request: MsgUnjail): Promise<MsgUnjailResponse> => {
     const data = MsgUnjail.encode(request).finish();
     const promise = this.rpc.request("cosmos.slashing.v1beta1.Msg", "Unjail", data);
     return promise.then(data => MsgUnjailResponse.decode(new BinaryReader(data)));
-  }
-  updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> {
+  };
+  /* UpdateParams defines a governance operation for updating the x/slashing module
+   parameters. The authority defaults to the x/gov module account.
+  
+   Since: cosmos-sdk 0.47 */
+  updateParams = async (request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> => {
     const data = MsgUpdateParams.encode(request).finish();
     const promise = this.rpc.request("cosmos.slashing.v1beta1.Msg", "UpdateParams", data);
     return promise.then(data => MsgUpdateParamsResponse.decode(new BinaryReader(data)));
-  }
+  };
 }
 export const createClientImpl = (rpc: TxRpc) => {
   return new MsgClientImpl(rpc);

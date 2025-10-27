@@ -19,31 +19,31 @@ export class QueryClientImpl implements Query {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.communityPool = this.communityPool.bind(this);
-    this.continuousFund = this.continuousFund.bind(this);
-    this.continuousFunds = this.continuousFunds.bind(this);
-    this.params = this.params.bind(this);
   }
-  communityPool(request: QueryCommunityPoolRequest = {}): Promise<QueryCommunityPoolResponse> {
+  /* CommunityPool queries the community pool coins. */
+  communityPool = async (request: QueryCommunityPoolRequest = {}): Promise<QueryCommunityPoolResponse> => {
     const data = QueryCommunityPoolRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.protocolpool.v1.Query", "CommunityPool", data);
     return promise.then(data => QueryCommunityPoolResponse.decode(new BinaryReader(data)));
-  }
-  continuousFund(request: QueryContinuousFundRequest): Promise<QueryContinuousFundResponse> {
+  };
+  /* ContinuousFund queries a continuous fund by the recipient is is associated with. */
+  continuousFund = async (request: QueryContinuousFundRequest): Promise<QueryContinuousFundResponse> => {
     const data = QueryContinuousFundRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.protocolpool.v1.Query", "ContinuousFund", data);
     return promise.then(data => QueryContinuousFundResponse.decode(new BinaryReader(data)));
-  }
-  continuousFunds(request: QueryContinuousFundsRequest = {}): Promise<QueryContinuousFundsResponse> {
+  };
+  /* ContinuousFunds queries all continuous funds in the store. */
+  continuousFunds = async (request: QueryContinuousFundsRequest = {}): Promise<QueryContinuousFundsResponse> => {
     const data = QueryContinuousFundsRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.protocolpool.v1.Query", "ContinuousFunds", data);
     return promise.then(data => QueryContinuousFundsResponse.decode(new BinaryReader(data)));
-  }
-  params(request: QueryParamsRequest = {}): Promise<QueryParamsResponse> {
+  };
+  /* Params returns the total set of x/protocolpool parameters. */
+  params = async (request: QueryParamsRequest = {}): Promise<QueryParamsResponse> => {
     const data = QueryParamsRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.protocolpool.v1.Query", "Params", data);
     return promise.then(data => QueryParamsResponse.decode(new BinaryReader(data)));
-  }
+  };
 }
 export const createRpcQueryExtension = (base: QueryClient) => {
   const rpc = createProtobufRpcClient(base);

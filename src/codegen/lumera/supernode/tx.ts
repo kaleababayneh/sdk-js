@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType } from "./params";
+import { Params, ParamsAmino } from "./params";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * @name MsgUpdateParams
@@ -34,7 +34,7 @@ export interface MsgUpdateParamsAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * NOTE: All parameters must be supplied.
    */
@@ -43,16 +43,6 @@ export interface MsgUpdateParamsAmino {
 export interface MsgUpdateParamsAminoMsg {
   type: "lumera/x/supernode/v1/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
-}
-/**
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * @name MsgUpdateParamsSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgUpdateParams
- */
-export interface MsgUpdateParamsSDKType {
-  authority: string;
-  params: ParamsSDKType;
 }
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
@@ -79,14 +69,6 @@ export interface MsgUpdateParamsResponseAminoMsg {
   value: MsgUpdateParamsResponseAmino;
 }
 /**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- * @name MsgUpdateParamsResponseSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgUpdateParamsResponse
- */
-export interface MsgUpdateParamsResponseSDKType {}
-/**
  * @name MsgRegisterSupernode
  * @package lumera.supernode
  * @see proto type: lumera.supernode.MsgRegisterSupernode
@@ -108,27 +90,15 @@ export interface MsgRegisterSupernodeProtoMsg {
  * @see proto type: lumera.supernode.MsgRegisterSupernode
  */
 export interface MsgRegisterSupernodeAmino {
-  creator?: string;
-  validatorAddress?: string;
-  ipAddress?: string;
-  supernodeAccount?: string;
-  p2p_port?: string;
-}
-export interface MsgRegisterSupernodeAminoMsg {
-  type: "/lumera.supernode.MsgRegisterSupernode";
-  value: MsgRegisterSupernodeAmino;
-}
-/**
- * @name MsgRegisterSupernodeSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgRegisterSupernode
- */
-export interface MsgRegisterSupernodeSDKType {
   creator: string;
   validatorAddress: string;
   ipAddress: string;
   supernodeAccount: string;
   p2p_port: string;
+}
+export interface MsgRegisterSupernodeAminoMsg {
+  type: "/lumera.supernode.MsgRegisterSupernode";
+  value: MsgRegisterSupernodeAmino;
 }
 /**
  * @name MsgRegisterSupernodeResponse
@@ -151,12 +121,6 @@ export interface MsgRegisterSupernodeResponseAminoMsg {
   value: MsgRegisterSupernodeResponseAmino;
 }
 /**
- * @name MsgRegisterSupernodeResponseSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgRegisterSupernodeResponse
- */
-export interface MsgRegisterSupernodeResponseSDKType {}
-/**
  * @name MsgDeregisterSupernode
  * @package lumera.supernode
  * @see proto type: lumera.supernode.MsgDeregisterSupernode
@@ -175,21 +139,12 @@ export interface MsgDeregisterSupernodeProtoMsg {
  * @see proto type: lumera.supernode.MsgDeregisterSupernode
  */
 export interface MsgDeregisterSupernodeAmino {
-  creator?: string;
-  validatorAddress?: string;
+  creator: string;
+  validatorAddress: string;
 }
 export interface MsgDeregisterSupernodeAminoMsg {
   type: "/lumera.supernode.MsgDeregisterSupernode";
   value: MsgDeregisterSupernodeAmino;
-}
-/**
- * @name MsgDeregisterSupernodeSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgDeregisterSupernode
- */
-export interface MsgDeregisterSupernodeSDKType {
-  creator: string;
-  validatorAddress: string;
 }
 /**
  * @name MsgDeregisterSupernodeResponse
@@ -212,12 +167,6 @@ export interface MsgDeregisterSupernodeResponseAminoMsg {
   value: MsgDeregisterSupernodeResponseAmino;
 }
 /**
- * @name MsgDeregisterSupernodeResponseSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgDeregisterSupernodeResponse
- */
-export interface MsgDeregisterSupernodeResponseSDKType {}
-/**
  * @name MsgStartSupernode
  * @package lumera.supernode
  * @see proto type: lumera.supernode.MsgStartSupernode
@@ -236,21 +185,12 @@ export interface MsgStartSupernodeProtoMsg {
  * @see proto type: lumera.supernode.MsgStartSupernode
  */
 export interface MsgStartSupernodeAmino {
-  creator?: string;
-  validatorAddress?: string;
+  creator: string;
+  validatorAddress: string;
 }
 export interface MsgStartSupernodeAminoMsg {
   type: "/lumera.supernode.MsgStartSupernode";
   value: MsgStartSupernodeAmino;
-}
-/**
- * @name MsgStartSupernodeSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgStartSupernode
- */
-export interface MsgStartSupernodeSDKType {
-  creator: string;
-  validatorAddress: string;
 }
 /**
  * @name MsgStartSupernodeResponse
@@ -273,12 +213,6 @@ export interface MsgStartSupernodeResponseAminoMsg {
   value: MsgStartSupernodeResponseAmino;
 }
 /**
- * @name MsgStartSupernodeResponseSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgStartSupernodeResponse
- */
-export interface MsgStartSupernodeResponseSDKType {}
-/**
  * @name MsgStopSupernode
  * @package lumera.supernode
  * @see proto type: lumera.supernode.MsgStopSupernode
@@ -298,23 +232,13 @@ export interface MsgStopSupernodeProtoMsg {
  * @see proto type: lumera.supernode.MsgStopSupernode
  */
 export interface MsgStopSupernodeAmino {
-  creator?: string;
-  validatorAddress?: string;
-  reason?: string;
+  creator: string;
+  validatorAddress: string;
+  reason: string;
 }
 export interface MsgStopSupernodeAminoMsg {
   type: "/lumera.supernode.MsgStopSupernode";
   value: MsgStopSupernodeAmino;
-}
-/**
- * @name MsgStopSupernodeSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgStopSupernode
- */
-export interface MsgStopSupernodeSDKType {
-  creator: string;
-  validatorAddress: string;
-  reason: string;
 }
 /**
  * @name MsgStopSupernodeResponse
@@ -336,12 +260,6 @@ export interface MsgStopSupernodeResponseAminoMsg {
   type: "/lumera.supernode.MsgStopSupernodeResponse";
   value: MsgStopSupernodeResponseAmino;
 }
-/**
- * @name MsgStopSupernodeResponseSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgStopSupernodeResponse
- */
-export interface MsgStopSupernodeResponseSDKType {}
 /**
  * @name MsgUpdateSupernode
  * @package lumera.supernode
@@ -365,29 +283,16 @@ export interface MsgUpdateSupernodeProtoMsg {
  * @see proto type: lumera.supernode.MsgUpdateSupernode
  */
 export interface MsgUpdateSupernodeAmino {
-  creator?: string;
-  validatorAddress?: string;
-  ipAddress?: string;
-  note?: string;
-  supernodeAccount?: string;
-  p2p_port?: string;
-}
-export interface MsgUpdateSupernodeAminoMsg {
-  type: "/lumera.supernode.MsgUpdateSupernode";
-  value: MsgUpdateSupernodeAmino;
-}
-/**
- * @name MsgUpdateSupernodeSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgUpdateSupernode
- */
-export interface MsgUpdateSupernodeSDKType {
   creator: string;
   validatorAddress: string;
   ipAddress: string;
   note: string;
   supernodeAccount: string;
   p2p_port: string;
+}
+export interface MsgUpdateSupernodeAminoMsg {
+  type: "/lumera.supernode.MsgUpdateSupernode";
+  value: MsgUpdateSupernodeAmino;
 }
 /**
  * @name MsgUpdateSupernodeResponse
@@ -409,12 +314,6 @@ export interface MsgUpdateSupernodeResponseAminoMsg {
   type: "/lumera.supernode.MsgUpdateSupernodeResponse";
   value: MsgUpdateSupernodeResponseAmino;
 }
-/**
- * @name MsgUpdateSupernodeResponseSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MsgUpdateSupernodeResponse
- */
-export interface MsgUpdateSupernodeResponseSDKType {}
 function createBaseMsgUpdateParams(): MsgUpdateParams {
   return {
     authority: "",
@@ -432,9 +331,6 @@ export const MsgUpdateParams = {
   aminoType: "lumera/x/supernode/v1/MsgUpdateParams",
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.is(o.params));
-  },
-  isSDK(o: any): o is MsgUpdateParamsSDKType {
-    return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isSDK(o.params));
   },
   isAmino(o: any): o is MsgUpdateParamsAmino {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isAmino(o.params));
@@ -468,7 +364,7 @@ export const MsgUpdateParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParams>, I>>(object: I): MsgUpdateParams {
+  fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
@@ -533,9 +429,6 @@ export const MsgUpdateParamsResponse = {
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateParamsResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateParamsResponseAmino {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -556,7 +449,7 @@ export const MsgUpdateParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParamsResponse>, I>>(_: I): MsgUpdateParamsResponse {
+  fromPartial(_: DeepPartial<MsgUpdateParamsResponse>): MsgUpdateParamsResponse {
     const message = createBaseMsgUpdateParamsResponse();
     return message;
   },
@@ -603,9 +496,6 @@ export const MsgRegisterSupernode = {
   typeUrl: "/lumera.supernode.MsgRegisterSupernode",
   is(o: any): o is MsgRegisterSupernode {
     return o && (o.$typeUrl === MsgRegisterSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string" && typeof o.ipAddress === "string" && typeof o.supernodeAccount === "string" && typeof o.p2pPort === "string");
-  },
-  isSDK(o: any): o is MsgRegisterSupernodeSDKType {
-    return o && (o.$typeUrl === MsgRegisterSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string" && typeof o.ipAddress === "string" && typeof o.supernodeAccount === "string" && typeof o.p2p_port === "string");
   },
   isAmino(o: any): o is MsgRegisterSupernodeAmino {
     return o && (o.$typeUrl === MsgRegisterSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string" && typeof o.ipAddress === "string" && typeof o.supernodeAccount === "string" && typeof o.p2p_port === "string");
@@ -657,7 +547,7 @@ export const MsgRegisterSupernode = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgRegisterSupernode>, I>>(object: I): MsgRegisterSupernode {
+  fromPartial(object: DeepPartial<MsgRegisterSupernode>): MsgRegisterSupernode {
     const message = createBaseMsgRegisterSupernode();
     message.creator = object.creator ?? "";
     message.validatorAddress = object.validatorAddress ?? "";
@@ -724,9 +614,6 @@ export const MsgRegisterSupernodeResponse = {
   is(o: any): o is MsgRegisterSupernodeResponse {
     return o && o.$typeUrl === MsgRegisterSupernodeResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgRegisterSupernodeResponseSDKType {
-    return o && o.$typeUrl === MsgRegisterSupernodeResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgRegisterSupernodeResponseAmino {
     return o && o.$typeUrl === MsgRegisterSupernodeResponse.typeUrl;
   },
@@ -747,7 +634,7 @@ export const MsgRegisterSupernodeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgRegisterSupernodeResponse>, I>>(_: I): MsgRegisterSupernodeResponse {
+  fromPartial(_: DeepPartial<MsgRegisterSupernodeResponse>): MsgRegisterSupernodeResponse {
     const message = createBaseMsgRegisterSupernodeResponse();
     return message;
   },
@@ -792,9 +679,6 @@ export const MsgDeregisterSupernode = {
   is(o: any): o is MsgDeregisterSupernode {
     return o && (o.$typeUrl === MsgDeregisterSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string");
   },
-  isSDK(o: any): o is MsgDeregisterSupernodeSDKType {
-    return o && (o.$typeUrl === MsgDeregisterSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string");
-  },
   isAmino(o: any): o is MsgDeregisterSupernodeAmino {
     return o && (o.$typeUrl === MsgDeregisterSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string");
   },
@@ -827,7 +711,7 @@ export const MsgDeregisterSupernode = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgDeregisterSupernode>, I>>(object: I): MsgDeregisterSupernode {
+  fromPartial(object: DeepPartial<MsgDeregisterSupernode>): MsgDeregisterSupernode {
     const message = createBaseMsgDeregisterSupernode();
     message.creator = object.creator ?? "";
     message.validatorAddress = object.validatorAddress ?? "";
@@ -879,9 +763,6 @@ export const MsgDeregisterSupernodeResponse = {
   is(o: any): o is MsgDeregisterSupernodeResponse {
     return o && o.$typeUrl === MsgDeregisterSupernodeResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgDeregisterSupernodeResponseSDKType {
-    return o && o.$typeUrl === MsgDeregisterSupernodeResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgDeregisterSupernodeResponseAmino {
     return o && o.$typeUrl === MsgDeregisterSupernodeResponse.typeUrl;
   },
@@ -902,7 +783,7 @@ export const MsgDeregisterSupernodeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgDeregisterSupernodeResponse>, I>>(_: I): MsgDeregisterSupernodeResponse {
+  fromPartial(_: DeepPartial<MsgDeregisterSupernodeResponse>): MsgDeregisterSupernodeResponse {
     const message = createBaseMsgDeregisterSupernodeResponse();
     return message;
   },
@@ -947,9 +828,6 @@ export const MsgStartSupernode = {
   is(o: any): o is MsgStartSupernode {
     return o && (o.$typeUrl === MsgStartSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string");
   },
-  isSDK(o: any): o is MsgStartSupernodeSDKType {
-    return o && (o.$typeUrl === MsgStartSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string");
-  },
   isAmino(o: any): o is MsgStartSupernodeAmino {
     return o && (o.$typeUrl === MsgStartSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string");
   },
@@ -982,7 +860,7 @@ export const MsgStartSupernode = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgStartSupernode>, I>>(object: I): MsgStartSupernode {
+  fromPartial(object: DeepPartial<MsgStartSupernode>): MsgStartSupernode {
     const message = createBaseMsgStartSupernode();
     message.creator = object.creator ?? "";
     message.validatorAddress = object.validatorAddress ?? "";
@@ -1034,9 +912,6 @@ export const MsgStartSupernodeResponse = {
   is(o: any): o is MsgStartSupernodeResponse {
     return o && o.$typeUrl === MsgStartSupernodeResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgStartSupernodeResponseSDKType {
-    return o && o.$typeUrl === MsgStartSupernodeResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgStartSupernodeResponseAmino {
     return o && o.$typeUrl === MsgStartSupernodeResponse.typeUrl;
   },
@@ -1057,7 +932,7 @@ export const MsgStartSupernodeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgStartSupernodeResponse>, I>>(_: I): MsgStartSupernodeResponse {
+  fromPartial(_: DeepPartial<MsgStartSupernodeResponse>): MsgStartSupernodeResponse {
     const message = createBaseMsgStartSupernodeResponse();
     return message;
   },
@@ -1103,9 +978,6 @@ export const MsgStopSupernode = {
   is(o: any): o is MsgStopSupernode {
     return o && (o.$typeUrl === MsgStopSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string" && typeof o.reason === "string");
   },
-  isSDK(o: any): o is MsgStopSupernodeSDKType {
-    return o && (o.$typeUrl === MsgStopSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string" && typeof o.reason === "string");
-  },
   isAmino(o: any): o is MsgStopSupernodeAmino {
     return o && (o.$typeUrl === MsgStopSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string" && typeof o.reason === "string");
   },
@@ -1144,7 +1016,7 @@ export const MsgStopSupernode = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgStopSupernode>, I>>(object: I): MsgStopSupernode {
+  fromPartial(object: DeepPartial<MsgStopSupernode>): MsgStopSupernode {
     const message = createBaseMsgStopSupernode();
     message.creator = object.creator ?? "";
     message.validatorAddress = object.validatorAddress ?? "";
@@ -1201,9 +1073,6 @@ export const MsgStopSupernodeResponse = {
   is(o: any): o is MsgStopSupernodeResponse {
     return o && o.$typeUrl === MsgStopSupernodeResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgStopSupernodeResponseSDKType {
-    return o && o.$typeUrl === MsgStopSupernodeResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgStopSupernodeResponseAmino {
     return o && o.$typeUrl === MsgStopSupernodeResponse.typeUrl;
   },
@@ -1224,7 +1093,7 @@ export const MsgStopSupernodeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgStopSupernodeResponse>, I>>(_: I): MsgStopSupernodeResponse {
+  fromPartial(_: DeepPartial<MsgStopSupernodeResponse>): MsgStopSupernodeResponse {
     const message = createBaseMsgStopSupernodeResponse();
     return message;
   },
@@ -1272,9 +1141,6 @@ export const MsgUpdateSupernode = {
   typeUrl: "/lumera.supernode.MsgUpdateSupernode",
   is(o: any): o is MsgUpdateSupernode {
     return o && (o.$typeUrl === MsgUpdateSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string" && typeof o.ipAddress === "string" && typeof o.note === "string" && typeof o.supernodeAccount === "string" && typeof o.p2pPort === "string");
-  },
-  isSDK(o: any): o is MsgUpdateSupernodeSDKType {
-    return o && (o.$typeUrl === MsgUpdateSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string" && typeof o.ipAddress === "string" && typeof o.note === "string" && typeof o.supernodeAccount === "string" && typeof o.p2p_port === "string");
   },
   isAmino(o: any): o is MsgUpdateSupernodeAmino {
     return o && (o.$typeUrl === MsgUpdateSupernode.typeUrl || typeof o.creator === "string" && typeof o.validatorAddress === "string" && typeof o.ipAddress === "string" && typeof o.note === "string" && typeof o.supernodeAccount === "string" && typeof o.p2p_port === "string");
@@ -1332,7 +1198,7 @@ export const MsgUpdateSupernode = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateSupernode>, I>>(object: I): MsgUpdateSupernode {
+  fromPartial(object: DeepPartial<MsgUpdateSupernode>): MsgUpdateSupernode {
     const message = createBaseMsgUpdateSupernode();
     message.creator = object.creator ?? "";
     message.validatorAddress = object.validatorAddress ?? "";
@@ -1404,9 +1270,6 @@ export const MsgUpdateSupernodeResponse = {
   is(o: any): o is MsgUpdateSupernodeResponse {
     return o && o.$typeUrl === MsgUpdateSupernodeResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateSupernodeResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateSupernodeResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateSupernodeResponseAmino {
     return o && o.$typeUrl === MsgUpdateSupernodeResponse.typeUrl;
   },
@@ -1427,7 +1290,7 @@ export const MsgUpdateSupernodeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateSupernodeResponse>, I>>(_: I): MsgUpdateSupernodeResponse {
+  fromPartial(_: DeepPartial<MsgUpdateSupernodeResponse>): MsgUpdateSupernodeResponse {
     const message = createBaseMsgUpdateSupernodeResponse();
     return message;
   },

@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
  * `Visibility` restricts service consumer's access to service elements,
@@ -77,42 +77,11 @@ export interface VisibilityAmino {
    * 
    * **NOTE:** All service configuration rules follow "last one wins" order.
    */
-  rules?: VisibilityRuleAmino[];
+  rules: VisibilityRuleAmino[];
 }
 export interface VisibilityAminoMsg {
   type: "/google.api.Visibility";
   value: VisibilityAmino;
-}
-/**
- * `Visibility` restricts service consumer's access to service elements,
- * such as whether an application can call a visibility-restricted method.
- * The restriction is expressed by applying visibility labels on service
- * elements. The visibility labels are elsewhere linked to service consumers.
- * 
- * A service can define multiple visibility labels, but a service consumer
- * should be granted at most one visibility label. Multiple visibility
- * labels for a single service consumer are not supported.
- * 
- * If an element and all its parents have no visibility label, its visibility
- * is unconditionally granted.
- * 
- * Example:
- * 
- *     visibility:
- *       rules:
- *       - selector: google.calendar.Calendar.EnhancedSearch
- *         restriction: PREVIEW
- *       - selector: google.calendar.Calendar.Delegate
- *         restriction: INTERNAL
- * 
- * Here, all methods are publicly visible except for the restricted methods
- * EnhancedSearch and Delegate.
- * @name VisibilitySDKType
- * @package google.api
- * @see proto type: google.api.Visibility
- */
-export interface VisibilitySDKType {
-  rules: VisibilityRuleSDKType[];
 }
 /**
  * A visibility rule provides visibility configuration for an individual API
@@ -166,7 +135,7 @@ export interface VisibilityRuleAmino {
    * Refer to [selector][google.api.DocumentationRule.selector] for syntax
    * details.
    */
-  selector?: string;
+  selector: string;
   /**
    * A comma-separated list of visibility labels that apply to the `selector`.
    * Any of the listed labels can be used to grant the visibility.
@@ -184,22 +153,11 @@ export interface VisibilityRuleAmino {
    * Removing INTERNAL from this restriction will break clients that rely on
    * this method and only had access to it through INTERNAL.
    */
-  restriction?: string;
+  restriction: string;
 }
 export interface VisibilityRuleAminoMsg {
   type: "/google.api.VisibilityRule";
   value: VisibilityRuleAmino;
-}
-/**
- * A visibility rule provides visibility configuration for an individual API
- * element.
- * @name VisibilityRuleSDKType
- * @package google.api
- * @see proto type: google.api.VisibilityRule
- */
-export interface VisibilityRuleSDKType {
-  selector: string;
-  restriction: string;
 }
 function createBaseVisibility(): Visibility {
   return {
@@ -239,9 +197,6 @@ export const Visibility = {
   is(o: any): o is Visibility {
     return o && (o.$typeUrl === Visibility.typeUrl || Array.isArray(o.rules) && (!o.rules.length || VisibilityRule.is(o.rules[0])));
   },
-  isSDK(o: any): o is VisibilitySDKType {
-    return o && (o.$typeUrl === Visibility.typeUrl || Array.isArray(o.rules) && (!o.rules.length || VisibilityRule.isSDK(o.rules[0])));
-  },
   isAmino(o: any): o is VisibilityAmino {
     return o && (o.$typeUrl === Visibility.typeUrl || Array.isArray(o.rules) && (!o.rules.length || VisibilityRule.isAmino(o.rules[0])));
   },
@@ -268,7 +223,7 @@ export const Visibility = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Visibility>, I>>(object: I): Visibility {
+  fromPartial(object: DeepPartial<Visibility>): Visibility {
     const message = createBaseVisibility();
     message.rules = object.rules?.map(e => VisibilityRule.fromPartial(e)) || [];
     return message;
@@ -327,9 +282,6 @@ export const VisibilityRule = {
   is(o: any): o is VisibilityRule {
     return o && (o.$typeUrl === VisibilityRule.typeUrl || typeof o.selector === "string" && typeof o.restriction === "string");
   },
-  isSDK(o: any): o is VisibilityRuleSDKType {
-    return o && (o.$typeUrl === VisibilityRule.typeUrl || typeof o.selector === "string" && typeof o.restriction === "string");
-  },
   isAmino(o: any): o is VisibilityRuleAmino {
     return o && (o.$typeUrl === VisibilityRule.typeUrl || typeof o.selector === "string" && typeof o.restriction === "string");
   },
@@ -362,7 +314,7 @@ export const VisibilityRule = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<VisibilityRule>, I>>(object: I): VisibilityRule {
+  fromPartial(object: DeepPartial<VisibilityRule>): VisibilityRule {
     const message = createBaseVisibilityRule();
     message.selector = object.selector ?? "";
     message.restriction = object.restriction ?? "";

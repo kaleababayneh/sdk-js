@@ -11,6 +11,8 @@
 
 import { SigningStargateClient, GasPrice, QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import type { OfflineSigner } from "@cosmjs/proto-signing";
+import { connectComet } from "@cosmjs/tendermint-rpc";
+import type { CometClient } from "@cosmjs/tendermint-rpc";
 import type {
   TxClient,
   ActionQuery,
@@ -175,22 +177,17 @@ class RpcSupernodeQuery implements SupernodeQuery {
 }
 
 /**
- * Helper function to create RPC query clients from a SigningStargateClient.
+ * Helper function to create RPC query clients from an RPC endpoint.
  *
- * Uses the Tendermint client from the existing SigningStargateClient and instantiates
- * the generated query clients for the Lumera modules.
+ * Creates a direct CometClient connection and instantiates the generated
+ * query clients for the Lumera modules.
  *
- * @param signingClient - The connected SigningStargateClient
- * @returns Object containing instantiated query clients
+ * @param rpcEndpoint - The Tendermint RPC endpoint URL
+ * @returns Promise resolving to object containing instantiated query clients
  */
-function createQueryClients(signingClient: SigningStargateClient) {
-  // Access the protected tmClient via type assertion
-  // This is safe because we know SigningStargateClient has this property
-  const tmClient = signingClient.getTmClient();
-  
-  if (!tmClient) {
-    throw new Error("Tendermint client not available from SigningStargateClient");
-  }
+async function createQueryClients(rpcEndpoint: string) {
+  // Create a direct CometClient connection using connectComet
+  const tmClient = await connectComet(rpcEndpoint);
   
   // Create a QueryClient wrapper
   const queryClient = new QueryClient(tmClient);
@@ -331,13 +328,9 @@ export interface BlockchainClientOptions {
 export async function makeBlockchainClient(
   opts: BlockchainClientOptions
 ): Promise<BlockchainClient> {
-  console.debug(`Connecting to RPC at ${opts.rpcUrl} with address ${opts.address}`);
-
   // Create registry and amino types with Lumera-specific message types
   const registry = createRegistry();
   const aminoTypes = createAminoTypes();
-
-  console.debug("Creating SigningStargateClient");
   
   // Connect to Tendermint RPC via CosmJS SigningStargateClient
   const signingClient = await SigningStargateClient.connectWithSigner(
@@ -350,24 +343,18 @@ export async function makeBlockchainClient(
     }
   );
 
-  console.debug("Creating CosmjsTxClient");
-
   // Create transaction client with REST fallback support
   const txClient = new CosmjsTxClient(signingClient, {
     lcdBaseUrl: opts.lcdUrl,
     gasMultiplier: 1.5,
   });
 
-  console.debug("Creating RPC query clients");
-
-  // Create RPC query clients using the SigningStargateClient
-  const rpcClients = createQueryClients(signingClient);
+  // Create RPC query clients using a direct CometClient connection
+  const rpcClients = await createQueryClients(opts.rpcUrl);
   
   // Wrap generated clients with adapter classes for backward compatibility
   const actionQuery = new RpcActionQuery(rpcClients.action);
   const supernodeQuery = new RpcSupernodeQuery(rpcClients.supernode);
-
-  console.debug("Blockchain client created successfully");
 
   // Compose into the unified blockchain client facade
   return new CosmjsRestBlockchainClient(

@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * EventEpochEnd is an event emitted when an epoch end.
  * @name EventEpochEnd
@@ -22,20 +22,11 @@ export interface EventEpochEndProtoMsg {
  * @see proto type: cosmos.epochs.v1beta1.EventEpochEnd
  */
 export interface EventEpochEndAmino {
-  epoch_number?: string;
+  epoch_number: string;
 }
 export interface EventEpochEndAminoMsg {
   type: "cosmos-sdk/EventEpochEnd";
   value: EventEpochEndAmino;
-}
-/**
- * EventEpochEnd is an event emitted when an epoch end.
- * @name EventEpochEndSDKType
- * @package cosmos.epochs.v1beta1
- * @see proto type: cosmos.epochs.v1beta1.EventEpochEnd
- */
-export interface EventEpochEndSDKType {
-  epoch_number: bigint;
 }
 /**
  * EventEpochStart is an event emitted when an epoch start.
@@ -58,22 +49,12 @@ export interface EventEpochStartProtoMsg {
  * @see proto type: cosmos.epochs.v1beta1.EventEpochStart
  */
 export interface EventEpochStartAmino {
-  epoch_number?: string;
-  epoch_start_time?: string;
+  epoch_number: string;
+  epoch_start_time: string;
 }
 export interface EventEpochStartAminoMsg {
   type: "cosmos-sdk/EventEpochStart";
   value: EventEpochStartAmino;
-}
-/**
- * EventEpochStart is an event emitted when an epoch start.
- * @name EventEpochStartSDKType
- * @package cosmos.epochs.v1beta1
- * @see proto type: cosmos.epochs.v1beta1.EventEpochStart
- */
-export interface EventEpochStartSDKType {
-  epoch_number: bigint;
-  epoch_start_time: bigint;
 }
 function createBaseEventEpochEnd(): EventEpochEnd {
   return {
@@ -91,9 +72,6 @@ export const EventEpochEnd = {
   aminoType: "cosmos-sdk/EventEpochEnd",
   is(o: any): o is EventEpochEnd {
     return o && (o.$typeUrl === EventEpochEnd.typeUrl || typeof o.epochNumber === "bigint");
-  },
-  isSDK(o: any): o is EventEpochEndSDKType {
-    return o && (o.$typeUrl === EventEpochEnd.typeUrl || typeof o.epoch_number === "bigint");
   },
   isAmino(o: any): o is EventEpochEndAmino {
     return o && (o.$typeUrl === EventEpochEnd.typeUrl || typeof o.epoch_number === "bigint");
@@ -121,7 +99,7 @@ export const EventEpochEnd = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventEpochEnd>, I>>(object: I): EventEpochEnd {
+  fromPartial(object: DeepPartial<EventEpochEnd>): EventEpochEnd {
     const message = createBaseEventEpochEnd();
     message.epochNumber = object.epochNumber !== undefined && object.epochNumber !== null ? BigInt(object.epochNumber.toString()) : BigInt(0);
     return message;
@@ -179,9 +157,6 @@ export const EventEpochStart = {
   is(o: any): o is EventEpochStart {
     return o && (o.$typeUrl === EventEpochStart.typeUrl || typeof o.epochNumber === "bigint" && typeof o.epochStartTime === "bigint");
   },
-  isSDK(o: any): o is EventEpochStartSDKType {
-    return o && (o.$typeUrl === EventEpochStart.typeUrl || typeof o.epoch_number === "bigint" && typeof o.epoch_start_time === "bigint");
-  },
   isAmino(o: any): o is EventEpochStartAmino {
     return o && (o.$typeUrl === EventEpochStart.typeUrl || typeof o.epoch_number === "bigint" && typeof o.epoch_start_time === "bigint");
   },
@@ -214,7 +189,7 @@ export const EventEpochStart = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventEpochStart>, I>>(object: I): EventEpochStart {
+  fromPartial(object: DeepPartial<EventEpochStart>): EventEpochStart {
     const message = createBaseEventEpochStart();
     message.epochNumber = object.epochNumber !== undefined && object.epochNumber !== null ? BigInt(object.epochNumber.toString()) : BigInt(0);
     message.epochStartTime = object.epochStartTime !== undefined && object.epochStartTime !== null ? BigInt(object.epochStartTime.toString()) : BigInt(0);

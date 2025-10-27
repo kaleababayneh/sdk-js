@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Duration, DurationAmino, DurationSDKType } from "../protobuf/duration";
+import { Duration, DurationAmino } from "../protobuf/duration";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Represents civil time (or occasionally physical time).
  * 
@@ -117,36 +117,36 @@ export interface DateTimeAmino {
    * Optional. Year of date. Must be from 1 to 9999, or 0 if specifying a
    * datetime without a year.
    */
-  year?: number;
+  year: number;
   /**
    * Required. Month of year. Must be from 1 to 12.
    */
-  month?: number;
+  month: number;
   /**
    * Required. Day of month. Must be from 1 to 31 and valid for the year and
    * month.
    */
-  day?: number;
+  day: number;
   /**
    * Required. Hours of day in 24 hour format. Should be from 0 to 23. An API
    * may choose to allow the value "24:00:00" for scenarios like business
    * closing time.
    */
-  hours?: number;
+  hours: number;
   /**
    * Required. Minutes of hour of day. Must be from 0 to 59.
    */
-  minutes?: number;
+  minutes: number;
   /**
    * Required. Seconds of minutes of the time. Must normally be from 0 to 59. An
    * API may allow the value 60 if it allows leap-seconds.
    */
-  seconds?: number;
+  seconds: number;
   /**
    * Required. Fractions of seconds in nanoseconds. Must be from 0 to
    * 999,999,999.
    */
-  nanos?: number;
+  nanos: number;
   /**
    * UTC offset. Must be whole seconds, between -18 hours and +18 hours.
    * For example, a UTC offset of -4:00 would be represented as
@@ -161,46 +161,6 @@ export interface DateTimeAmino {
 export interface DateTimeAminoMsg {
   type: "/google.type.DateTime";
   value: DateTimeAmino;
-}
-/**
- * Represents civil time (or occasionally physical time).
- * 
- * This type can represent a civil time in one of a few possible ways:
- * 
- *  * When utc_offset is set and time_zone is unset: a civil time on a calendar
- *    day with a particular offset from UTC.
- *  * When time_zone is set and utc_offset is unset: a civil time on a calendar
- *    day in a particular time zone.
- *  * When neither time_zone nor utc_offset is set: a civil time on a calendar
- *    day in local time.
- * 
- * The date is relative to the Proleptic Gregorian Calendar.
- * 
- * If year is 0, the DateTime is considered not to have a specific year. month
- * and day must have valid, non-zero values.
- * 
- * This type may also be used to represent a physical time if all the date and
- * time fields are set and either case of the `time_offset` oneof is set.
- * Consider using `Timestamp` message for physical time instead. If your use
- * case also would like to store the user's timezone, that can be done in
- * another field.
- * 
- * This type is more flexible than some applications may want. Make sure to
- * document and validate your application's limitations.
- * @name DateTimeSDKType
- * @package google.type
- * @see proto type: google.type.DateTime
- */
-export interface DateTimeSDKType {
-  year: number;
-  month: number;
-  day: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-  nanos: number;
-  utc_offset?: DurationSDKType;
-  time_zone?: TimeZoneSDKType;
 }
 /**
  * Represents a time zone from the
@@ -234,26 +194,15 @@ export interface TimeZoneAmino {
   /**
    * IANA Time Zone Database time zone, e.g. "America/New_York".
    */
-  id?: string;
+  id: string;
   /**
    * Optional. IANA Time Zone Database version number, e.g. "2019a".
    */
-  version?: string;
+  version: string;
 }
 export interface TimeZoneAminoMsg {
   type: "/google.type.TimeZone";
   value: TimeZoneAmino;
-}
-/**
- * Represents a time zone from the
- * [IANA Time Zone Database](https://www.iana.org/time-zones).
- * @name TimeZoneSDKType
- * @package google.type
- * @see proto type: google.type.TimeZone
- */
-export interface TimeZoneSDKType {
-  id: string;
-  version: string;
 }
 function createBaseDateTime(): DateTime {
   return {
@@ -300,9 +249,6 @@ function createBaseDateTime(): DateTime {
 export const DateTime = {
   typeUrl: "/google.type.DateTime",
   is(o: any): o is DateTime {
-    return o && (o.$typeUrl === DateTime.typeUrl || typeof o.year === "number" && typeof o.month === "number" && typeof o.day === "number" && typeof o.hours === "number" && typeof o.minutes === "number" && typeof o.seconds === "number" && typeof o.nanos === "number");
-  },
-  isSDK(o: any): o is DateTimeSDKType {
     return o && (o.$typeUrl === DateTime.typeUrl || typeof o.year === "number" && typeof o.month === "number" && typeof o.day === "number" && typeof o.hours === "number" && typeof o.minutes === "number" && typeof o.seconds === "number" && typeof o.nanos === "number");
   },
   isAmino(o: any): o is DateTimeAmino {
@@ -379,7 +325,7 @@ export const DateTime = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DateTime>, I>>(object: I): DateTime {
+  fromPartial(object: DeepPartial<DateTime>): DateTime {
     const message = createBaseDateTime();
     message.year = object.year ?? 0;
     message.month = object.month ?? 0;
@@ -476,9 +422,6 @@ export const TimeZone = {
   is(o: any): o is TimeZone {
     return o && (o.$typeUrl === TimeZone.typeUrl || typeof o.id === "string" && typeof o.version === "string");
   },
-  isSDK(o: any): o is TimeZoneSDKType {
-    return o && (o.$typeUrl === TimeZone.typeUrl || typeof o.id === "string" && typeof o.version === "string");
-  },
   isAmino(o: any): o is TimeZoneAmino {
     return o && (o.$typeUrl === TimeZone.typeUrl || typeof o.id === "string" && typeof o.version === "string");
   },
@@ -511,7 +454,7 @@ export const TimeZone = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TimeZone>, I>>(object: I): TimeZone {
+  fromPartial(object: DeepPartial<TimeZone>): TimeZone {
     const message = createBaseTimeZone();
     message.id = object.id ?? "";
     message.version = object.version ?? "";

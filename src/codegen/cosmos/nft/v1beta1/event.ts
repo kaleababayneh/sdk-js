@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * EventSend is emitted on Msg/Send
  * @name EventSend
@@ -40,35 +40,23 @@ export interface EventSendAmino {
   /**
    * class_id associated with the nft
    */
-  class_id?: string;
+  class_id: string;
   /**
    * id is a unique identifier of the nft
    */
-  id?: string;
+  id: string;
   /**
    * sender is the address of the owner of nft
    */
-  sender?: string;
+  sender: string;
   /**
    * receiver is the receiver address of nft
    */
-  receiver?: string;
+  receiver: string;
 }
 export interface EventSendAminoMsg {
   type: "cosmos-sdk/EventSend";
   value: EventSendAmino;
-}
-/**
- * EventSend is emitted on Msg/Send
- * @name EventSendSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.EventSend
- */
-export interface EventSendSDKType {
-  class_id: string;
-  id: string;
-  sender: string;
-  receiver: string;
 }
 /**
  * EventMint is emitted on Mint
@@ -104,30 +92,19 @@ export interface EventMintAmino {
   /**
    * class_id associated with the nft
    */
-  class_id?: string;
+  class_id: string;
   /**
    * id is a unique identifier of the nft
    */
-  id?: string;
+  id: string;
   /**
    * owner is the owner address of the nft
    */
-  owner?: string;
+  owner: string;
 }
 export interface EventMintAminoMsg {
   type: "cosmos-sdk/EventMint";
   value: EventMintAmino;
-}
-/**
- * EventMint is emitted on Mint
- * @name EventMintSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.EventMint
- */
-export interface EventMintSDKType {
-  class_id: string;
-  id: string;
-  owner: string;
 }
 /**
  * EventBurn is emitted on Burn
@@ -163,30 +140,19 @@ export interface EventBurnAmino {
   /**
    * class_id associated with the nft
    */
-  class_id?: string;
+  class_id: string;
   /**
    * id is a unique identifier of the nft
    */
-  id?: string;
+  id: string;
   /**
    * owner is the owner address of the nft
    */
-  owner?: string;
+  owner: string;
 }
 export interface EventBurnAminoMsg {
   type: "cosmos-sdk/EventBurn";
   value: EventBurnAmino;
-}
-/**
- * EventBurn is emitted on Burn
- * @name EventBurnSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.EventBurn
- */
-export interface EventBurnSDKType {
-  class_id: string;
-  id: string;
-  owner: string;
 }
 function createBaseEventSend(): EventSend {
   return {
@@ -207,9 +173,6 @@ export const EventSend = {
   aminoType: "cosmos-sdk/EventSend",
   is(o: any): o is EventSend {
     return o && (o.$typeUrl === EventSend.typeUrl || typeof o.classId === "string" && typeof o.id === "string" && typeof o.sender === "string" && typeof o.receiver === "string");
-  },
-  isSDK(o: any): o is EventSendSDKType {
-    return o && (o.$typeUrl === EventSend.typeUrl || typeof o.class_id === "string" && typeof o.id === "string" && typeof o.sender === "string" && typeof o.receiver === "string");
   },
   isAmino(o: any): o is EventSendAmino {
     return o && (o.$typeUrl === EventSend.typeUrl || typeof o.class_id === "string" && typeof o.id === "string" && typeof o.sender === "string" && typeof o.receiver === "string");
@@ -255,7 +218,7 @@ export const EventSend = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventSend>, I>>(object: I): EventSend {
+  fromPartial(object: DeepPartial<EventSend>): EventSend {
     const message = createBaseEventSend();
     message.classId = object.classId ?? "";
     message.id = object.id ?? "";
@@ -329,9 +292,6 @@ export const EventMint = {
   is(o: any): o is EventMint {
     return o && (o.$typeUrl === EventMint.typeUrl || typeof o.classId === "string" && typeof o.id === "string" && typeof o.owner === "string");
   },
-  isSDK(o: any): o is EventMintSDKType {
-    return o && (o.$typeUrl === EventMint.typeUrl || typeof o.class_id === "string" && typeof o.id === "string" && typeof o.owner === "string");
-  },
   isAmino(o: any): o is EventMintAmino {
     return o && (o.$typeUrl === EventMint.typeUrl || typeof o.class_id === "string" && typeof o.id === "string" && typeof o.owner === "string");
   },
@@ -370,7 +330,7 @@ export const EventMint = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventMint>, I>>(object: I): EventMint {
+  fromPartial(object: DeepPartial<EventMint>): EventMint {
     const message = createBaseEventMint();
     message.classId = object.classId ?? "";
     message.id = object.id ?? "";
@@ -439,9 +399,6 @@ export const EventBurn = {
   is(o: any): o is EventBurn {
     return o && (o.$typeUrl === EventBurn.typeUrl || typeof o.classId === "string" && typeof o.id === "string" && typeof o.owner === "string");
   },
-  isSDK(o: any): o is EventBurnSDKType {
-    return o && (o.$typeUrl === EventBurn.typeUrl || typeof o.class_id === "string" && typeof o.id === "string" && typeof o.owner === "string");
-  },
   isAmino(o: any): o is EventBurnAmino {
     return o && (o.$typeUrl === EventBurn.typeUrl || typeof o.class_id === "string" && typeof o.id === "string" && typeof o.owner === "string");
   },
@@ -480,7 +437,7 @@ export const EventBurn = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventBurn>, I>>(object: I): EventBurn {
+  fromPartial(object: DeepPartial<EventBurn>): EventBurn {
     const message = createBaseEventBurn();
     message.classId = object.classId ?? "";
     message.id = object.id ?? "";

@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, bytesFromBase64, base64FromBytes, isSet } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes, isSet } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /** StorageType */
 export enum StorageType {
@@ -26,7 +26,6 @@ export enum StorageType {
   STORAGE_TYPE_TRANSIENT = 2,
   UNRECOGNIZED = -1,
 }
-export const StorageTypeSDKType = StorageType;
 export const StorageTypeAmino = StorageType;
 export function storageTypeFromJSON(object: any): StorageType {
   switch (object) {
@@ -83,26 +82,16 @@ export interface ModuleSchemaDescriptorProtoMsg {
  * @see proto type: cosmos.orm.v1alpha1.ModuleSchemaDescriptor
  */
 export interface ModuleSchemaDescriptorAmino {
-  schema_file?: ModuleSchemaDescriptor_FileEntryAmino[];
+  schema_file: ModuleSchemaDescriptor_FileEntryAmino[];
   /**
    * prefix is an optional prefix that precedes all keys in this module's
    * store.
    */
-  prefix?: string;
+  prefix: string;
 }
 export interface ModuleSchemaDescriptorAminoMsg {
   type: "cosmos-sdk/ModuleSchemaDescriptor";
   value: ModuleSchemaDescriptorAmino;
-}
-/**
- * ModuleSchemaDescriptor describe's a module's ORM schema.
- * @name ModuleSchemaDescriptorSDKType
- * @package cosmos.orm.v1alpha1
- * @see proto type: cosmos.orm.v1alpha1.ModuleSchemaDescriptor
- */
-export interface ModuleSchemaDescriptorSDKType {
-  schema_file: ModuleSchemaDescriptor_FileEntrySDKType[];
-  prefix: Uint8Array;
 }
 /**
  * FileEntry describes an ORM file used in a module.
@@ -144,34 +133,23 @@ export interface ModuleSchemaDescriptor_FileEntryAmino {
    * id is a prefix that will be varint encoded and prepended to all the
    * table keys specified in the file's tables.
    */
-  id?: number;
+  id: number;
   /**
    * proto_file_name is the name of a file .proto in that contains
    * table definitions. The .proto file must be in a package that the
    * module has referenced using cosmos.app.v1.ModuleDescriptor.use_package.
    */
-  proto_file_name?: string;
+  proto_file_name: string;
   /**
    * storage_type optionally indicates the type of storage this file's
    * tables should used. If it is left unspecified, the default KV-storage
    * of the app will be used.
    */
-  storage_type?: StorageType;
+  storage_type: StorageType;
 }
 export interface ModuleSchemaDescriptor_FileEntryAminoMsg {
   type: "cosmos-sdk/FileEntry";
   value: ModuleSchemaDescriptor_FileEntryAmino;
-}
-/**
- * FileEntry describes an ORM file used in a module.
- * @name ModuleSchemaDescriptor_FileEntrySDKType
- * @package cosmos.orm.v1alpha1
- * @see proto type: cosmos.orm.v1alpha1.FileEntry
- */
-export interface ModuleSchemaDescriptor_FileEntrySDKType {
-  id: number;
-  proto_file_name: string;
-  storage_type: StorageType;
 }
 function createBaseModuleSchemaDescriptor(): ModuleSchemaDescriptor {
   return {
@@ -190,9 +168,6 @@ export const ModuleSchemaDescriptor = {
   aminoType: "cosmos-sdk/ModuleSchemaDescriptor",
   is(o: any): o is ModuleSchemaDescriptor {
     return o && (o.$typeUrl === ModuleSchemaDescriptor.typeUrl || Array.isArray(o.schemaFile) && (!o.schemaFile.length || ModuleSchemaDescriptor_FileEntry.is(o.schemaFile[0])) && (o.prefix instanceof Uint8Array || typeof o.prefix === "string"));
-  },
-  isSDK(o: any): o is ModuleSchemaDescriptorSDKType {
-    return o && (o.$typeUrl === ModuleSchemaDescriptor.typeUrl || Array.isArray(o.schema_file) && (!o.schema_file.length || ModuleSchemaDescriptor_FileEntry.isSDK(o.schema_file[0])) && (o.prefix instanceof Uint8Array || typeof o.prefix === "string"));
   },
   isAmino(o: any): o is ModuleSchemaDescriptorAmino {
     return o && (o.$typeUrl === ModuleSchemaDescriptor.typeUrl || Array.isArray(o.schema_file) && (!o.schema_file.length || ModuleSchemaDescriptor_FileEntry.isAmino(o.schema_file[0])) && (o.prefix instanceof Uint8Array || typeof o.prefix === "string"));
@@ -226,7 +201,7 @@ export const ModuleSchemaDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ModuleSchemaDescriptor>, I>>(object: I): ModuleSchemaDescriptor {
+  fromPartial(object: DeepPartial<ModuleSchemaDescriptor>): ModuleSchemaDescriptor {
     const message = createBaseModuleSchemaDescriptor();
     message.schemaFile = object.schemaFile?.map(e => ModuleSchemaDescriptor_FileEntry.fromPartial(e)) || [];
     message.prefix = object.prefix ?? new Uint8Array();
@@ -297,9 +272,6 @@ export const ModuleSchemaDescriptor_FileEntry = {
   is(o: any): o is ModuleSchemaDescriptor_FileEntry {
     return o && (o.$typeUrl === ModuleSchemaDescriptor_FileEntry.typeUrl || typeof o.id === "number" && typeof o.protoFileName === "string" && isSet(o.storageType));
   },
-  isSDK(o: any): o is ModuleSchemaDescriptor_FileEntrySDKType {
-    return o && (o.$typeUrl === ModuleSchemaDescriptor_FileEntry.typeUrl || typeof o.id === "number" && typeof o.proto_file_name === "string" && isSet(o.storage_type));
-  },
   isAmino(o: any): o is ModuleSchemaDescriptor_FileEntryAmino {
     return o && (o.$typeUrl === ModuleSchemaDescriptor_FileEntry.typeUrl || typeof o.id === "number" && typeof o.proto_file_name === "string" && isSet(o.storage_type));
   },
@@ -338,7 +310,7 @@ export const ModuleSchemaDescriptor_FileEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ModuleSchemaDescriptor_FileEntry>, I>>(object: I): ModuleSchemaDescriptor_FileEntry {
+  fromPartial(object: DeepPartial<ModuleSchemaDescriptor_FileEntry>): ModuleSchemaDescriptor_FileEntry {
     const message = createBaseModuleSchemaDescriptor_FileEntry();
     message.id = object.id ?? 0;
     message.protoFileName = object.protoFileName ?? "";

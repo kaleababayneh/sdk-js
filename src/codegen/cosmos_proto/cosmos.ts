@@ -1,14 +1,13 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../binary";
-import { Exact } from "../helpers";
+import { DeepPartial } from "../helpers";
 export enum ScalarType {
   SCALAR_TYPE_UNSPECIFIED = 0,
   SCALAR_TYPE_STRING = 1,
   SCALAR_TYPE_BYTES = 2,
   UNRECOGNIZED = -1,
 }
-export const ScalarTypeSDKType = ScalarType;
 export const ScalarTypeAmino = ScalarType;
 export function scalarTypeFromJSON(object: any): ScalarType {
   switch (object) {
@@ -79,27 +78,16 @@ export interface InterfaceDescriptorAmino {
    * package.name, ex. for the package a.b and interface named C, the
    * fully-qualified name will be a.b.C.
    */
-  name?: string;
+  name: string;
   /**
    * description is a human-readable description of the interface and its
    * purpose.
    */
-  description?: string;
+  description: string;
 }
 export interface InterfaceDescriptorAminoMsg {
   type: "/cosmos_proto.InterfaceDescriptor";
   value: InterfaceDescriptorAmino;
-}
-/**
- * InterfaceDescriptor describes an interface type to be used with
- * accepts_interface and implements_interface and declared by declare_interface.
- * @name InterfaceDescriptorSDKType
- * @package cosmos_proto
- * @see proto type: cosmos_proto.InterfaceDescriptor
- */
-export interface InterfaceDescriptorSDKType {
-  name: string;
-  description: string;
 }
 /**
  * ScalarDescriptor describes an scalar type to be used with
@@ -158,41 +146,24 @@ export interface ScalarDescriptorAmino {
    * package.name, ex. for the package a.b and scalar named C, the
    * fully-qualified name will be a.b.C.
    */
-  name?: string;
+  name: string;
   /**
    * description is a human-readable description of the scalar and its
    * encoding format. For instance a big integer or decimal scalar should
    * specify precisely the expected encoding format.
    */
-  description?: string;
+  description: string;
   /**
    * field_type is the type of field with which this scalar can be used.
    * Scalars can be used with one and only one type of field so that
    * encoding standards and simple and clear. Currently only string and
    * bytes fields are supported for scalars.
    */
-  field_type?: ScalarType[];
+  field_type: ScalarType[];
 }
 export interface ScalarDescriptorAminoMsg {
   type: "/cosmos_proto.ScalarDescriptor";
   value: ScalarDescriptorAmino;
-}
-/**
- * ScalarDescriptor describes an scalar type to be used with
- * the scalar field option and declared by declare_scalar.
- * Scalars extend simple protobuf built-in types with additional
- * syntax and semantics, for instance to represent big integers.
- * Scalars should ideally define an encoding such that there is only one
- * valid syntactical representation for a given semantic meaning,
- * i.e. the encoding should be deterministic.
- * @name ScalarDescriptorSDKType
- * @package cosmos_proto
- * @see proto type: cosmos_proto.ScalarDescriptor
- */
-export interface ScalarDescriptorSDKType {
-  name: string;
-  description: string;
-  field_type: ScalarType[];
 }
 function createBaseInterfaceDescriptor(): InterfaceDescriptor {
   return {
@@ -210,9 +181,6 @@ function createBaseInterfaceDescriptor(): InterfaceDescriptor {
 export const InterfaceDescriptor = {
   typeUrl: "/cosmos_proto.InterfaceDescriptor",
   is(o: any): o is InterfaceDescriptor {
-    return o && (o.$typeUrl === InterfaceDescriptor.typeUrl || typeof o.name === "string" && typeof o.description === "string");
-  },
-  isSDK(o: any): o is InterfaceDescriptorSDKType {
     return o && (o.$typeUrl === InterfaceDescriptor.typeUrl || typeof o.name === "string" && typeof o.description === "string");
   },
   isAmino(o: any): o is InterfaceDescriptorAmino {
@@ -247,7 +215,7 @@ export const InterfaceDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<InterfaceDescriptor>, I>>(object: I): InterfaceDescriptor {
+  fromPartial(object: DeepPartial<InterfaceDescriptor>): InterfaceDescriptor {
     const message = createBaseInterfaceDescriptor();
     message.name = object.name ?? "";
     message.description = object.description ?? "";
@@ -310,9 +278,6 @@ export const ScalarDescriptor = {
   is(o: any): o is ScalarDescriptor {
     return o && (o.$typeUrl === ScalarDescriptor.typeUrl || typeof o.name === "string" && typeof o.description === "string" && Array.isArray(o.fieldType));
   },
-  isSDK(o: any): o is ScalarDescriptorSDKType {
-    return o && (o.$typeUrl === ScalarDescriptor.typeUrl || typeof o.name === "string" && typeof o.description === "string" && Array.isArray(o.field_type));
-  },
   isAmino(o: any): o is ScalarDescriptorAmino {
     return o && (o.$typeUrl === ScalarDescriptor.typeUrl || typeof o.name === "string" && typeof o.description === "string" && Array.isArray(o.field_type));
   },
@@ -360,7 +325,7 @@ export const ScalarDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ScalarDescriptor>, I>>(object: I): ScalarDescriptor {
+  fromPartial(object: DeepPartial<ScalarDescriptor>): ScalarDescriptor {
     const message = createBaseScalarDescriptor();
     message.name = object.name ?? "";
     message.description = object.description ?? "";

@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
 import { NullValue } from "../../../protobuf/struct";
-import { Any, AnyAmino, AnySDKType } from "../../../protobuf/any";
+import { Any, AnyAmino } from "../../../protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 /**
  * Represents a CEL value.
  * 
@@ -132,29 +132,6 @@ export interface ValueAminoMsg {
   value: ValueAmino;
 }
 /**
- * Represents a CEL value.
- * 
- * This is similar to `google.protobuf.Value`, but can represent CEL's full
- * range of values.
- * @name ValueSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Value
- */
-export interface ValueSDKType {
-  null_value?: NullValue;
-  bool_value?: boolean;
-  int64_value?: bigint;
-  uint64_value?: bigint;
-  double_value?: number;
-  string_value?: string;
-  bytes_value?: Uint8Array;
-  enum_value?: EnumValueSDKType;
-  object_value?: AnySDKType;
-  map_value?: MapValueSDKType;
-  list_value?: ListValueSDKType;
-  type_value?: string;
-}
-/**
  * An enum value.
  * @name EnumValue
  * @package google.api.expr.v1alpha1
@@ -184,25 +161,15 @@ export interface EnumValueAmino {
   /**
    * The fully qualified name of the enum type.
    */
-  type?: string;
+  type: string;
   /**
    * The value of the enum.
    */
-  value?: number;
+  value: number;
 }
 export interface EnumValueAminoMsg {
   type: "/google.api.expr.v1alpha1.EnumValue";
   value: EnumValueAmino;
-}
-/**
- * An enum value.
- * @name EnumValueSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.EnumValue
- */
-export interface EnumValueSDKType {
-  type: string;
-  value: number;
 }
 /**
  * A list.
@@ -236,23 +203,11 @@ export interface ListValueAmino {
   /**
    * The ordered values in the list.
    */
-  values?: ValueAmino[];
+  values: ValueAmino[];
 }
 export interface ListValueAminoMsg {
   type: "/google.api.expr.v1alpha1.ListValue";
   value: ListValueAmino;
-}
-/**
- * A list.
- * 
- * Wrapped in a message so 'not set' and empty can be differentiated, which is
- * required for use in a 'oneof'.
- * @name ListValueSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.ListValue
- */
-export interface ListValueSDKType {
-  values: ValueSDKType[];
 }
 /**
  * A map.
@@ -292,23 +247,11 @@ export interface MapValueAmino {
    * CEL has fewer restrictions on keys, so a protobuf map represenation
    * cannot be used.
    */
-  entries?: MapValue_EntryAmino[];
+  entries: MapValue_EntryAmino[];
 }
 export interface MapValueAminoMsg {
   type: "/google.api.expr.v1alpha1.MapValue";
   value: MapValueAmino;
-}
-/**
- * A map.
- * 
- * Wrapped in a message so 'not set' and empty can be differentiated, which is
- * required for use in a 'oneof'.
- * @name MapValueSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.MapValue
- */
-export interface MapValueSDKType {
-  entries: MapValue_EntrySDKType[];
 }
 /**
  * An entry in the map.
@@ -356,16 +299,6 @@ export interface MapValue_EntryAminoMsg {
   type: "/google.api.expr.v1alpha1.Entry";
   value: MapValue_EntryAmino;
 }
-/**
- * An entry in the map.
- * @name MapValue_EntrySDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Entry
- */
-export interface MapValue_EntrySDKType {
-  key?: ValueSDKType;
-  value?: ValueSDKType;
-}
 function createBaseValue(): Value {
   return {
     nullValue: undefined,
@@ -394,9 +327,6 @@ function createBaseValue(): Value {
 export const Value = {
   typeUrl: "/google.api.expr.v1alpha1.Value",
   is(o: any): o is Value {
-    return o && o.$typeUrl === Value.typeUrl;
-  },
-  isSDK(o: any): o is ValueSDKType {
     return o && o.$typeUrl === Value.typeUrl;
   },
   isAmino(o: any): o is ValueAmino {
@@ -491,7 +421,7 @@ export const Value = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Value>, I>>(object: I): Value {
+  fromPartial(object: DeepPartial<Value>): Value {
     const message = createBaseValue();
     message.nullValue = object.nullValue ?? undefined;
     message.boolValue = object.boolValue ?? undefined;
@@ -603,9 +533,6 @@ export const EnumValue = {
   is(o: any): o is EnumValue {
     return o && (o.$typeUrl === EnumValue.typeUrl || typeof o.type === "string" && typeof o.value === "number");
   },
-  isSDK(o: any): o is EnumValueSDKType {
-    return o && (o.$typeUrl === EnumValue.typeUrl || typeof o.type === "string" && typeof o.value === "number");
-  },
   isAmino(o: any): o is EnumValueAmino {
     return o && (o.$typeUrl === EnumValue.typeUrl || typeof o.type === "string" && typeof o.value === "number");
   },
@@ -638,7 +565,7 @@ export const EnumValue = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EnumValue>, I>>(object: I): EnumValue {
+  fromPartial(object: DeepPartial<EnumValue>): EnumValue {
     const message = createBaseEnumValue();
     message.type = object.type ?? "";
     message.value = object.value ?? 0;
@@ -696,9 +623,6 @@ export const ListValue = {
   is(o: any): o is ListValue {
     return o && (o.$typeUrl === ListValue.typeUrl || Array.isArray(o.values) && (!o.values.length || Value.is(o.values[0])));
   },
-  isSDK(o: any): o is ListValueSDKType {
-    return o && (o.$typeUrl === ListValue.typeUrl || Array.isArray(o.values) && (!o.values.length || Value.isSDK(o.values[0])));
-  },
   isAmino(o: any): o is ListValueAmino {
     return o && (o.$typeUrl === ListValue.typeUrl || Array.isArray(o.values) && (!o.values.length || Value.isAmino(o.values[0])));
   },
@@ -725,7 +649,7 @@ export const ListValue = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListValue>, I>>(object: I): ListValue {
+  fromPartial(object: DeepPartial<ListValue>): ListValue {
     const message = createBaseListValue();
     message.values = object.values?.map(e => Value.fromPartial(e)) || [];
     return message;
@@ -785,9 +709,6 @@ export const MapValue = {
   is(o: any): o is MapValue {
     return o && (o.$typeUrl === MapValue.typeUrl || Array.isArray(o.entries) && (!o.entries.length || MapValue_Entry.is(o.entries[0])));
   },
-  isSDK(o: any): o is MapValueSDKType {
-    return o && (o.$typeUrl === MapValue.typeUrl || Array.isArray(o.entries) && (!o.entries.length || MapValue_Entry.isSDK(o.entries[0])));
-  },
   isAmino(o: any): o is MapValueAmino {
     return o && (o.$typeUrl === MapValue.typeUrl || Array.isArray(o.entries) && (!o.entries.length || MapValue_Entry.isAmino(o.entries[0])));
   },
@@ -814,7 +735,7 @@ export const MapValue = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MapValue>, I>>(object: I): MapValue {
+  fromPartial(object: DeepPartial<MapValue>): MapValue {
     const message = createBaseMapValue();
     message.entries = object.entries?.map(e => MapValue_Entry.fromPartial(e)) || [];
     return message;
@@ -872,9 +793,6 @@ export const MapValue_Entry = {
   is(o: any): o is MapValue_Entry {
     return o && o.$typeUrl === MapValue_Entry.typeUrl;
   },
-  isSDK(o: any): o is MapValue_EntrySDKType {
-    return o && o.$typeUrl === MapValue_Entry.typeUrl;
-  },
   isAmino(o: any): o is MapValue_EntryAmino {
     return o && o.$typeUrl === MapValue_Entry.typeUrl;
   },
@@ -907,7 +825,7 @@ export const MapValue_Entry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MapValue_Entry>, I>>(object: I): MapValue_Entry {
+  fromPartial(object: DeepPartial<MapValue_Entry>): MapValue_Entry {
     const message = createBaseMapValue_Entry();
     message.key = object.key !== undefined && object.key !== null ? Value.fromPartial(object.key) : undefined;
     message.value = object.value !== undefined && object.value !== null ? Value.fromPartial(object.value) : undefined;

@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Minter, MinterAmino, MinterSDKType, Params, ParamsAmino, ParamsSDKType } from "./mint";
+import { Minter, MinterAmino, Params, ParamsAmino } from "./mint";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * GenesisState defines the mint module's genesis state.
  * @name GenesisState
@@ -44,16 +44,6 @@ export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
 }
-/**
- * GenesisState defines the mint module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.mint.v1beta1
- * @see proto type: cosmos.mint.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  minter: MinterSDKType;
-  params: ParamsSDKType;
-}
 function createBaseGenesisState(): GenesisState {
   return {
     minter: Minter.fromPartial({}),
@@ -71,9 +61,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Minter.is(o.minter) && Params.is(o.params));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Minter.isSDK(o.minter) && Params.isSDK(o.params));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Minter.isAmino(o.minter) && Params.isAmino(o.params));
@@ -107,7 +94,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.minter = object.minter !== undefined && object.minter !== null ? Minter.fromPartial(object.minter) : undefined;
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;

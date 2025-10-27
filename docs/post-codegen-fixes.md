@@ -19,26 +19,7 @@ The [`scripts/post-codegen-fix.ts`](../scripts/post-codegen-fix.ts) script autom
 
 **Impact:** Completely fixed across all 425 generated TypeScript files.
 
-### 2. RPC Client Type Mismatch ✅ FIXED
-
-**Problem:** Generated RPC query files import and use the deprecated `Tendermint34Client` instead of `CometClient`.
-
-**Fix:**
-```typescript
-// Before
-import { Tendermint34Client, HttpEndpoint } from "@cosmjs/tendermint-rpc";
-const tmClient = await Tendermint34Client.connect(rpcEndpoint);
-
-// After
-import { CometClient, HttpEndpoint } from "@cosmjs/tendermint-rpc";
-const tmClient = await CometClient.connect(rpcEndpoint);
-```
-
-**Impact:** Fixed in 2 files:
-- `src/codegen/cosmos/rpc.query.ts`
-- `src/codegen/lumera/rpc.query.ts`
-
-### 3. Nested Message Defaults ⚠️ GENERATOR BUG
+### 2. Nested Message Defaults ⚠️ GENERATOR BUG
 
 **Problem:** The `@cosmology/ast` generator incorrectly marks optional message fields as required in TypeScript interfaces.
 
@@ -123,8 +104,7 @@ The script uses:
 ### Fix Functions
 
 1. **`fixScalarTypes()`** - Replaces all `double` type references with `number`
-2. **`fixRpcClientType()`** - Updates `Tendermint34Client` to `CometClient` 
-3. **`fixNestedMessageDefaults()`** - Currently disabled due to generator bug
+2. **`fixNestedMessageDefaults()`** - Currently disabled due to generator bug
 
 ## Maintenance
 

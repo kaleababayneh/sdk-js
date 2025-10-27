@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType } from "./slashing";
+import { Params, ParamsAmino } from "./slashing";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * MsgUnjail defines the Msg/Unjail request type
@@ -31,15 +31,6 @@ export interface MsgUnjailAminoMsg {
   value: MsgUnjailAmino;
 }
 /**
- * MsgUnjail defines the Msg/Unjail request type
- * @name MsgUnjailSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.MsgUnjail
- */
-export interface MsgUnjailSDKType {
-  validator_addr: string;
-}
-/**
  * MsgUnjailResponse defines the Msg/Unjail response type
  * @name MsgUnjailResponse
  * @package cosmos.slashing.v1beta1
@@ -61,13 +52,6 @@ export interface MsgUnjailResponseAminoMsg {
   type: "cosmos-sdk/MsgUnjailResponse";
   value: MsgUnjailResponseAmino;
 }
-/**
- * MsgUnjailResponse defines the Msg/Unjail response type
- * @name MsgUnjailResponseSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.MsgUnjailResponse
- */
-export interface MsgUnjailResponseSDKType {}
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * 
@@ -104,7 +88,7 @@ export interface MsgUpdateParamsAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/slashing parameters to update.
    * 
@@ -115,18 +99,6 @@ export interface MsgUpdateParamsAmino {
 export interface MsgUpdateParamsAminoMsg {
   type: "cosmos-sdk/x/slashing/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
-}
-/**
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.MsgUpdateParams
- */
-export interface MsgUpdateParamsSDKType {
-  authority: string;
-  params: ParamsSDKType;
 }
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
@@ -156,16 +128,6 @@ export interface MsgUpdateParamsResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateParamsResponse";
   value: MsgUpdateParamsResponseAmino;
 }
-/**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsResponseSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.MsgUpdateParamsResponse
- */
-export interface MsgUpdateParamsResponseSDKType {}
 function createBaseMsgUnjail(): MsgUnjail {
   return {
     validatorAddr: ""
@@ -182,9 +144,6 @@ export const MsgUnjail = {
   aminoType: "cosmos-sdk/MsgUnjail",
   is(o: any): o is MsgUnjail {
     return o && (o.$typeUrl === MsgUnjail.typeUrl || typeof o.validatorAddr === "string");
-  },
-  isSDK(o: any): o is MsgUnjailSDKType {
-    return o && (o.$typeUrl === MsgUnjail.typeUrl || typeof o.validator_addr === "string");
   },
   isAmino(o: any): o is MsgUnjailAmino {
     return o && (o.$typeUrl === MsgUnjail.typeUrl || typeof o.validator_addr === "string");
@@ -212,7 +171,7 @@ export const MsgUnjail = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUnjail>, I>>(object: I): MsgUnjail {
+  fromPartial(object: DeepPartial<MsgUnjail>): MsgUnjail {
     const message = createBaseMsgUnjail();
     message.validatorAddr = object.validatorAddr ?? "";
     return message;
@@ -267,9 +226,6 @@ export const MsgUnjailResponse = {
   is(o: any): o is MsgUnjailResponse {
     return o && o.$typeUrl === MsgUnjailResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUnjailResponseSDKType {
-    return o && o.$typeUrl === MsgUnjailResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUnjailResponseAmino {
     return o && o.$typeUrl === MsgUnjailResponse.typeUrl;
   },
@@ -290,7 +246,7 @@ export const MsgUnjailResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUnjailResponse>, I>>(_: I): MsgUnjailResponse {
+  fromPartial(_: DeepPartial<MsgUnjailResponse>): MsgUnjailResponse {
     const message = createBaseMsgUnjailResponse();
     return message;
   },
@@ -345,9 +301,6 @@ export const MsgUpdateParams = {
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.is(o.params));
   },
-  isSDK(o: any): o is MsgUpdateParamsSDKType {
-    return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isSDK(o.params));
-  },
   isAmino(o: any): o is MsgUpdateParamsAmino {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isAmino(o.params));
   },
@@ -380,7 +333,7 @@ export const MsgUpdateParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParams>, I>>(object: I): MsgUpdateParams {
+  fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
@@ -448,9 +401,6 @@ export const MsgUpdateParamsResponse = {
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateParamsResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateParamsResponseAmino {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -471,7 +421,7 @@ export const MsgUpdateParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParamsResponse>, I>>(_: I): MsgUpdateParamsResponse {
+  fromPartial(_: DeepPartial<MsgUpdateParamsResponse>): MsgUpdateParamsResponse {
     const message = createBaseMsgUpdateParamsResponse();
     return message;
   },

@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * ModuleDescriptor describes an app module.
@@ -50,14 +50,14 @@ export interface ModuleDescriptorAmino {
    * module in the runtime module registry. It is required to make debugging
    * of configuration errors easier for users.
    */
-  go_import?: string;
+  go_import: string;
   /**
    * use_package refers to a protobuf package that this module
    * uses and exposes to the world. In an app, only one module should "use"
    * or own a single protobuf package. It is assumed that the module uses
    * all of the .proto files in a single package.
    */
-  use_package?: PackageReferenceAmino[];
+  use_package: PackageReferenceAmino[];
   /**
    * can_migrate_from defines which module versions this module can migrate
    * state from. The framework will check that one module version is able to
@@ -67,22 +67,11 @@ export interface ModuleDescriptorAmino {
    * declares it can migrate from v1, the framework knows how to migrate
    * from v1 to v3, assuming all 3 module versions are registered at runtime.
    */
-  can_migrate_from?: MigrateFromInfoAmino[];
+  can_migrate_from: MigrateFromInfoAmino[];
 }
 export interface ModuleDescriptorAminoMsg {
   type: "cosmos-sdk/ModuleDescriptor";
   value: ModuleDescriptorAmino;
-}
-/**
- * ModuleDescriptor describes an app module.
- * @name ModuleDescriptorSDKType
- * @package cosmos.app.v1alpha1
- * @see proto type: cosmos.app.v1alpha1.ModuleDescriptor
- */
-export interface ModuleDescriptorSDKType {
-  go_import: string;
-  use_package: PackageReferenceSDKType[];
-  can_migrate_from: MigrateFromInfoSDKType[];
 }
 /**
  * PackageReference is a reference to a protobuf package used by a module.
@@ -148,7 +137,7 @@ export interface PackageReferenceAmino {
   /**
    * name is the fully-qualified name of the package.
    */
-  name?: string;
+  name: string;
   /**
    * revision is the optional revision of the package that is being used.
    * Protobuf packages used in Cosmos should generally have a major version
@@ -186,21 +175,11 @@ export interface PackageReferenceAmino {
    *   are important good client UX
    * * protobuf files are changed in backwards and forwards compatible ways
    */
-  revision?: number;
+  revision: number;
 }
 export interface PackageReferenceAminoMsg {
   type: "cosmos-sdk/PackageReference";
   value: PackageReferenceAmino;
-}
-/**
- * PackageReference is a reference to a protobuf package used by a module.
- * @name PackageReferenceSDKType
- * @package cosmos.app.v1alpha1
- * @see proto type: cosmos.app.v1alpha1.PackageReference
- */
-export interface PackageReferenceSDKType {
-  name: string;
-  revision: number;
 }
 /**
  * MigrateFromInfo is information on a module version that a newer module
@@ -232,21 +211,11 @@ export interface MigrateFromInfoAmino {
    * module is the fully-qualified protobuf name of the module config object
    * for the previous module version, ex: "cosmos.group.module.v1.Module".
    */
-  module?: string;
+  module: string;
 }
 export interface MigrateFromInfoAminoMsg {
   type: "cosmos-sdk/MigrateFromInfo";
   value: MigrateFromInfoAmino;
-}
-/**
- * MigrateFromInfo is information on a module version that a newer module
- * can migrate from.
- * @name MigrateFromInfoSDKType
- * @package cosmos.app.v1alpha1
- * @see proto type: cosmos.app.v1alpha1.MigrateFromInfo
- */
-export interface MigrateFromInfoSDKType {
-  module: string;
 }
 function createBaseModuleDescriptor(): ModuleDescriptor {
   return {
@@ -266,9 +235,6 @@ export const ModuleDescriptor = {
   aminoType: "cosmos-sdk/ModuleDescriptor",
   is(o: any): o is ModuleDescriptor {
     return o && (o.$typeUrl === ModuleDescriptor.typeUrl || typeof o.goImport === "string" && Array.isArray(o.usePackage) && (!o.usePackage.length || PackageReference.is(o.usePackage[0])) && Array.isArray(o.canMigrateFrom) && (!o.canMigrateFrom.length || MigrateFromInfo.is(o.canMigrateFrom[0])));
-  },
-  isSDK(o: any): o is ModuleDescriptorSDKType {
-    return o && (o.$typeUrl === ModuleDescriptor.typeUrl || typeof o.go_import === "string" && Array.isArray(o.use_package) && (!o.use_package.length || PackageReference.isSDK(o.use_package[0])) && Array.isArray(o.can_migrate_from) && (!o.can_migrate_from.length || MigrateFromInfo.isSDK(o.can_migrate_from[0])));
   },
   isAmino(o: any): o is ModuleDescriptorAmino {
     return o && (o.$typeUrl === ModuleDescriptor.typeUrl || typeof o.go_import === "string" && Array.isArray(o.use_package) && (!o.use_package.length || PackageReference.isAmino(o.use_package[0])) && Array.isArray(o.can_migrate_from) && (!o.can_migrate_from.length || MigrateFromInfo.isAmino(o.can_migrate_from[0])));
@@ -308,7 +274,7 @@ export const ModuleDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ModuleDescriptor>, I>>(object: I): ModuleDescriptor {
+  fromPartial(object: DeepPartial<ModuleDescriptor>): ModuleDescriptor {
     const message = createBaseModuleDescriptor();
     message.goImport = object.goImport ?? "";
     message.usePackage = object.usePackage?.map(e => PackageReference.fromPartial(e)) || [];
@@ -386,9 +352,6 @@ export const PackageReference = {
   is(o: any): o is PackageReference {
     return o && (o.$typeUrl === PackageReference.typeUrl || typeof o.name === "string" && typeof o.revision === "number");
   },
-  isSDK(o: any): o is PackageReferenceSDKType {
-    return o && (o.$typeUrl === PackageReference.typeUrl || typeof o.name === "string" && typeof o.revision === "number");
-  },
   isAmino(o: any): o is PackageReferenceAmino {
     return o && (o.$typeUrl === PackageReference.typeUrl || typeof o.name === "string" && typeof o.revision === "number");
   },
@@ -421,7 +384,7 @@ export const PackageReference = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PackageReference>, I>>(object: I): PackageReference {
+  fromPartial(object: DeepPartial<PackageReference>): PackageReference {
     const message = createBasePackageReference();
     message.name = object.name ?? "";
     message.revision = object.revision ?? 0;
@@ -484,9 +447,6 @@ export const MigrateFromInfo = {
   is(o: any): o is MigrateFromInfo {
     return o && (o.$typeUrl === MigrateFromInfo.typeUrl || typeof o.module === "string");
   },
-  isSDK(o: any): o is MigrateFromInfoSDKType {
-    return o && (o.$typeUrl === MigrateFromInfo.typeUrl || typeof o.module === "string");
-  },
   isAmino(o: any): o is MigrateFromInfoAmino {
     return o && (o.$typeUrl === MigrateFromInfo.typeUrl || typeof o.module === "string");
   },
@@ -513,7 +473,7 @@ export const MigrateFromInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MigrateFromInfo>, I>>(object: I): MigrateFromInfo {
+  fromPartial(object: DeepPartial<MigrateFromInfo>): MigrateFromInfo {
     const message = createBaseMigrateFromInfo();
     message.module = object.module ?? "";
     return message;

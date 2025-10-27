@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * Module defines the ORM module which adds providers to the app container for
  * ORM ModuleDB's and in the future will automatically register query
@@ -28,15 +28,6 @@ export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
   value: ModuleAmino;
 }
-/**
- * Module defines the ORM module which adds providers to the app container for
- * ORM ModuleDB's and in the future will automatically register query
- * services for modules that use the ORM.
- * @name ModuleSDKType
- * @package cosmos.orm.module.v1alpha1
- * @see proto type: cosmos.orm.module.v1alpha1.Module
- */
-export interface ModuleSDKType {}
 function createBaseModule(): Module {
   return {};
 }
@@ -52,9 +43,6 @@ export const Module = {
   typeUrl: "/cosmos.orm.module.v1alpha1.Module",
   aminoType: "cosmos-sdk/Module",
   is(o: any): o is Module {
-    return o && o.$typeUrl === Module.typeUrl;
-  },
-  isSDK(o: any): o is ModuleSDKType {
     return o && o.$typeUrl === Module.typeUrl;
   },
   isAmino(o: any): o is ModuleAmino {
@@ -77,7 +65,7 @@ export const Module = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Module>, I>>(_: I): Module {
+  fromPartial(_: DeepPartial<Module>): Module {
     const message = createBaseModule();
     return message;
   },

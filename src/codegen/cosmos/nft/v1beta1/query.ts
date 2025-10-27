@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
-import { NFT, NFTAmino, NFTSDKType, Class, ClassAmino, ClassSDKType } from "./nft";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
+import { NFT, NFTAmino, Class, ClassAmino } from "./nft";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryBalanceRequest is the request type for the Query/Balance RPC method
@@ -35,25 +35,15 @@ export interface QueryBalanceRequestAmino {
   /**
    * class_id associated with the nft
    */
-  class_id?: string;
+  class_id: string;
   /**
    * owner is the owner address of the nft
    */
-  owner?: string;
+  owner: string;
 }
 export interface QueryBalanceRequestAminoMsg {
   type: "cosmos-sdk/QueryBalanceRequest";
   value: QueryBalanceRequestAmino;
-}
-/**
- * QueryBalanceRequest is the request type for the Query/Balance RPC method
- * @name QueryBalanceRequestSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryBalanceRequest
- */
-export interface QueryBalanceRequestSDKType {
-  class_id: string;
-  owner: string;
 }
 /**
  * QueryBalanceResponse is the response type for the Query/Balance RPC method
@@ -81,20 +71,11 @@ export interface QueryBalanceResponseAmino {
   /**
    * amount is the number of all NFTs of a given class owned by the owner
    */
-  amount?: string;
+  amount: string;
 }
 export interface QueryBalanceResponseAminoMsg {
   type: "cosmos-sdk/QueryBalanceResponse";
   value: QueryBalanceResponseAmino;
-}
-/**
- * QueryBalanceResponse is the response type for the Query/Balance RPC method
- * @name QueryBalanceResponseSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryBalanceResponse
- */
-export interface QueryBalanceResponseSDKType {
-  amount: bigint;
 }
 /**
  * QueryOwnerRequest is the request type for the Query/Owner RPC method
@@ -126,25 +107,15 @@ export interface QueryOwnerRequestAmino {
   /**
    * class_id associated with the nft
    */
-  class_id?: string;
+  class_id: string;
   /**
    * id is a unique identifier of the NFT
    */
-  id?: string;
+  id: string;
 }
 export interface QueryOwnerRequestAminoMsg {
   type: "cosmos-sdk/QueryOwnerRequest";
   value: QueryOwnerRequestAmino;
-}
-/**
- * QueryOwnerRequest is the request type for the Query/Owner RPC method
- * @name QueryOwnerRequestSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryOwnerRequest
- */
-export interface QueryOwnerRequestSDKType {
-  class_id: string;
-  id: string;
 }
 /**
  * QueryOwnerResponse is the response type for the Query/Owner RPC method
@@ -172,20 +143,11 @@ export interface QueryOwnerResponseAmino {
   /**
    * owner is the owner address of the nft
    */
-  owner?: string;
+  owner: string;
 }
 export interface QueryOwnerResponseAminoMsg {
   type: "cosmos-sdk/QueryOwnerResponse";
   value: QueryOwnerResponseAmino;
-}
-/**
- * QueryOwnerResponse is the response type for the Query/Owner RPC method
- * @name QueryOwnerResponseSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryOwnerResponse
- */
-export interface QueryOwnerResponseSDKType {
-  owner: string;
 }
 /**
  * QuerySupplyRequest is the request type for the Query/Supply RPC method
@@ -213,20 +175,11 @@ export interface QuerySupplyRequestAmino {
   /**
    * class_id associated with the nft
    */
-  class_id?: string;
+  class_id: string;
 }
 export interface QuerySupplyRequestAminoMsg {
   type: "cosmos-sdk/QuerySupplyRequest";
   value: QuerySupplyRequestAmino;
-}
-/**
- * QuerySupplyRequest is the request type for the Query/Supply RPC method
- * @name QuerySupplyRequestSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QuerySupplyRequest
- */
-export interface QuerySupplyRequestSDKType {
-  class_id: string;
 }
 /**
  * QuerySupplyResponse is the response type for the Query/Supply RPC method
@@ -254,20 +207,11 @@ export interface QuerySupplyResponseAmino {
   /**
    * amount is the number of all NFTs from the given class
    */
-  amount?: string;
+  amount: string;
 }
 export interface QuerySupplyResponseAminoMsg {
   type: "cosmos-sdk/QuerySupplyResponse";
   value: QuerySupplyResponseAmino;
-}
-/**
- * QuerySupplyResponse is the response type for the Query/Supply RPC method
- * @name QuerySupplyResponseSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QuerySupplyResponse
- */
-export interface QuerySupplyResponseSDKType {
-  amount: bigint;
 }
 /**
  * QueryNFTstRequest is the request type for the Query/NFTs RPC method
@@ -303,11 +247,11 @@ export interface QueryNFTsRequestAmino {
   /**
    * class_id associated with the nft
    */
-  class_id?: string;
+  class_id: string;
   /**
    * owner is the owner address of the nft
    */
-  owner?: string;
+  owner: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -316,17 +260,6 @@ export interface QueryNFTsRequestAmino {
 export interface QueryNFTsRequestAminoMsg {
   type: "cosmos-sdk/QueryNFTsRequest";
   value: QueryNFTsRequestAmino;
-}
-/**
- * QueryNFTstRequest is the request type for the Query/NFTs RPC method
- * @name QueryNFTsRequestSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryNFTsRequest
- */
-export interface QueryNFTsRequestSDKType {
-  class_id: string;
-  owner: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryNFTsResponse is the response type for the Query/NFTs RPC methods
@@ -358,7 +291,7 @@ export interface QueryNFTsResponseAmino {
   /**
    * NFT defines the NFT
    */
-  nfts?: NFTAmino[];
+  nfts: NFTAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -367,16 +300,6 @@ export interface QueryNFTsResponseAmino {
 export interface QueryNFTsResponseAminoMsg {
   type: "cosmos-sdk/QueryNFTsResponse";
   value: QueryNFTsResponseAmino;
-}
-/**
- * QueryNFTsResponse is the response type for the Query/NFTs RPC methods
- * @name QueryNFTsResponseSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryNFTsResponse
- */
-export interface QueryNFTsResponseSDKType {
-  nfts: NFTSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryNFTRequest is the request type for the Query/NFT RPC method
@@ -408,25 +331,15 @@ export interface QueryNFTRequestAmino {
   /**
    * class_id associated with the nft
    */
-  class_id?: string;
+  class_id: string;
   /**
    * id is a unique identifier of the NFT
    */
-  id?: string;
+  id: string;
 }
 export interface QueryNFTRequestAminoMsg {
   type: "cosmos-sdk/QueryNFTRequest";
   value: QueryNFTRequestAmino;
-}
-/**
- * QueryNFTRequest is the request type for the Query/NFT RPC method
- * @name QueryNFTRequestSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryNFTRequest
- */
-export interface QueryNFTRequestSDKType {
-  class_id: string;
-  id: string;
 }
 /**
  * QueryNFTResponse is the response type for the Query/NFT RPC method
@@ -461,15 +374,6 @@ export interface QueryNFTResponseAminoMsg {
   value: QueryNFTResponseAmino;
 }
 /**
- * QueryNFTResponse is the response type for the Query/NFT RPC method
- * @name QueryNFTResponseSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryNFTResponse
- */
-export interface QueryNFTResponseSDKType {
-  nft?: NFTSDKType;
-}
-/**
  * QueryClassRequest is the request type for the Query/Class RPC method
  * @name QueryClassRequest
  * @package cosmos.nft.v1beta1
@@ -495,20 +399,11 @@ export interface QueryClassRequestAmino {
   /**
    * class_id associated with the nft
    */
-  class_id?: string;
+  class_id: string;
 }
 export interface QueryClassRequestAminoMsg {
   type: "cosmos-sdk/QueryClassRequest";
   value: QueryClassRequestAmino;
-}
-/**
- * QueryClassRequest is the request type for the Query/Class RPC method
- * @name QueryClassRequestSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryClassRequest
- */
-export interface QueryClassRequestSDKType {
-  class_id: string;
 }
 /**
  * QueryClassResponse is the response type for the Query/Class RPC method
@@ -543,15 +438,6 @@ export interface QueryClassResponseAminoMsg {
   value: QueryClassResponseAmino;
 }
 /**
- * QueryClassResponse is the response type for the Query/Class RPC method
- * @name QueryClassResponseSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryClassResponse
- */
-export interface QueryClassResponseSDKType {
-  class?: ClassSDKType;
-}
-/**
  * QueryClassesRequest is the request type for the Query/Classes RPC method
  * @name QueryClassesRequest
  * @package cosmos.nft.v1beta1
@@ -584,15 +470,6 @@ export interface QueryClassesRequestAminoMsg {
   value: QueryClassesRequestAmino;
 }
 /**
- * QueryClassesRequest is the request type for the Query/Classes RPC method
- * @name QueryClassesRequestSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryClassesRequest
- */
-export interface QueryClassesRequestSDKType {
-  pagination?: PageRequestSDKType;
-}
-/**
  * QueryClassesResponse is the response type for the Query/Classes RPC method
  * @name QueryClassesResponse
  * @package cosmos.nft.v1beta1
@@ -622,7 +499,7 @@ export interface QueryClassesResponseAmino {
   /**
    * class defines the class of the nft type.
    */
-  classes?: ClassAmino[];
+  classes: ClassAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -631,16 +508,6 @@ export interface QueryClassesResponseAmino {
 export interface QueryClassesResponseAminoMsg {
   type: "cosmos-sdk/QueryClassesResponse";
   value: QueryClassesResponseAmino;
-}
-/**
- * QueryClassesResponse is the response type for the Query/Classes RPC method
- * @name QueryClassesResponseSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.QueryClassesResponse
- */
-export interface QueryClassesResponseSDKType {
-  classes: ClassSDKType[];
-  pagination?: PageResponseSDKType;
 }
 function createBaseQueryBalanceRequest(): QueryBalanceRequest {
   return {
@@ -659,9 +526,6 @@ export const QueryBalanceRequest = {
   aminoType: "cosmos-sdk/QueryBalanceRequest",
   is(o: any): o is QueryBalanceRequest {
     return o && (o.$typeUrl === QueryBalanceRequest.typeUrl || typeof o.classId === "string" && typeof o.owner === "string");
-  },
-  isSDK(o: any): o is QueryBalanceRequestSDKType {
-    return o && (o.$typeUrl === QueryBalanceRequest.typeUrl || typeof o.class_id === "string" && typeof o.owner === "string");
   },
   isAmino(o: any): o is QueryBalanceRequestAmino {
     return o && (o.$typeUrl === QueryBalanceRequest.typeUrl || typeof o.class_id === "string" && typeof o.owner === "string");
@@ -695,7 +559,7 @@ export const QueryBalanceRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryBalanceRequest>, I>>(object: I): QueryBalanceRequest {
+  fromPartial(object: DeepPartial<QueryBalanceRequest>): QueryBalanceRequest {
     const message = createBaseQueryBalanceRequest();
     message.classId = object.classId ?? "";
     message.owner = object.owner ?? "";
@@ -757,9 +621,6 @@ export const QueryBalanceResponse = {
   is(o: any): o is QueryBalanceResponse {
     return o && (o.$typeUrl === QueryBalanceResponse.typeUrl || typeof o.amount === "bigint");
   },
-  isSDK(o: any): o is QueryBalanceResponseSDKType {
-    return o && (o.$typeUrl === QueryBalanceResponse.typeUrl || typeof o.amount === "bigint");
-  },
   isAmino(o: any): o is QueryBalanceResponseAmino {
     return o && (o.$typeUrl === QueryBalanceResponse.typeUrl || typeof o.amount === "bigint");
   },
@@ -786,7 +647,7 @@ export const QueryBalanceResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryBalanceResponse>, I>>(object: I): QueryBalanceResponse {
+  fromPartial(object: DeepPartial<QueryBalanceResponse>): QueryBalanceResponse {
     const message = createBaseQueryBalanceResponse();
     message.amount = object.amount !== undefined && object.amount !== null ? BigInt(object.amount.toString()) : BigInt(0);
     return message;
@@ -844,9 +705,6 @@ export const QueryOwnerRequest = {
   is(o: any): o is QueryOwnerRequest {
     return o && (o.$typeUrl === QueryOwnerRequest.typeUrl || typeof o.classId === "string" && typeof o.id === "string");
   },
-  isSDK(o: any): o is QueryOwnerRequestSDKType {
-    return o && (o.$typeUrl === QueryOwnerRequest.typeUrl || typeof o.class_id === "string" && typeof o.id === "string");
-  },
   isAmino(o: any): o is QueryOwnerRequestAmino {
     return o && (o.$typeUrl === QueryOwnerRequest.typeUrl || typeof o.class_id === "string" && typeof o.id === "string");
   },
@@ -879,7 +737,7 @@ export const QueryOwnerRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryOwnerRequest>, I>>(object: I): QueryOwnerRequest {
+  fromPartial(object: DeepPartial<QueryOwnerRequest>): QueryOwnerRequest {
     const message = createBaseQueryOwnerRequest();
     message.classId = object.classId ?? "";
     message.id = object.id ?? "";
@@ -941,9 +799,6 @@ export const QueryOwnerResponse = {
   is(o: any): o is QueryOwnerResponse {
     return o && (o.$typeUrl === QueryOwnerResponse.typeUrl || typeof o.owner === "string");
   },
-  isSDK(o: any): o is QueryOwnerResponseSDKType {
-    return o && (o.$typeUrl === QueryOwnerResponse.typeUrl || typeof o.owner === "string");
-  },
   isAmino(o: any): o is QueryOwnerResponseAmino {
     return o && (o.$typeUrl === QueryOwnerResponse.typeUrl || typeof o.owner === "string");
   },
@@ -970,7 +825,7 @@ export const QueryOwnerResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryOwnerResponse>, I>>(object: I): QueryOwnerResponse {
+  fromPartial(object: DeepPartial<QueryOwnerResponse>): QueryOwnerResponse {
     const message = createBaseQueryOwnerResponse();
     message.owner = object.owner ?? "";
     return message;
@@ -1027,9 +882,6 @@ export const QuerySupplyRequest = {
   is(o: any): o is QuerySupplyRequest {
     return o && (o.$typeUrl === QuerySupplyRequest.typeUrl || typeof o.classId === "string");
   },
-  isSDK(o: any): o is QuerySupplyRequestSDKType {
-    return o && (o.$typeUrl === QuerySupplyRequest.typeUrl || typeof o.class_id === "string");
-  },
   isAmino(o: any): o is QuerySupplyRequestAmino {
     return o && (o.$typeUrl === QuerySupplyRequest.typeUrl || typeof o.class_id === "string");
   },
@@ -1056,7 +908,7 @@ export const QuerySupplyRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySupplyRequest>, I>>(object: I): QuerySupplyRequest {
+  fromPartial(object: DeepPartial<QuerySupplyRequest>): QuerySupplyRequest {
     const message = createBaseQuerySupplyRequest();
     message.classId = object.classId ?? "";
     return message;
@@ -1113,9 +965,6 @@ export const QuerySupplyResponse = {
   is(o: any): o is QuerySupplyResponse {
     return o && (o.$typeUrl === QuerySupplyResponse.typeUrl || typeof o.amount === "bigint");
   },
-  isSDK(o: any): o is QuerySupplyResponseSDKType {
-    return o && (o.$typeUrl === QuerySupplyResponse.typeUrl || typeof o.amount === "bigint");
-  },
   isAmino(o: any): o is QuerySupplyResponseAmino {
     return o && (o.$typeUrl === QuerySupplyResponse.typeUrl || typeof o.amount === "bigint");
   },
@@ -1142,7 +991,7 @@ export const QuerySupplyResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySupplyResponse>, I>>(object: I): QuerySupplyResponse {
+  fromPartial(object: DeepPartial<QuerySupplyResponse>): QuerySupplyResponse {
     const message = createBaseQuerySupplyResponse();
     message.amount = object.amount !== undefined && object.amount !== null ? BigInt(object.amount.toString()) : BigInt(0);
     return message;
@@ -1201,9 +1050,6 @@ export const QueryNFTsRequest = {
   is(o: any): o is QueryNFTsRequest {
     return o && (o.$typeUrl === QueryNFTsRequest.typeUrl || typeof o.classId === "string" && typeof o.owner === "string");
   },
-  isSDK(o: any): o is QueryNFTsRequestSDKType {
-    return o && (o.$typeUrl === QueryNFTsRequest.typeUrl || typeof o.class_id === "string" && typeof o.owner === "string");
-  },
   isAmino(o: any): o is QueryNFTsRequestAmino {
     return o && (o.$typeUrl === QueryNFTsRequest.typeUrl || typeof o.class_id === "string" && typeof o.owner === "string");
   },
@@ -1242,7 +1088,7 @@ export const QueryNFTsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryNFTsRequest>, I>>(object: I): QueryNFTsRequest {
+  fromPartial(object: DeepPartial<QueryNFTsRequest>): QueryNFTsRequest {
     const message = createBaseQueryNFTsRequest();
     message.classId = object.classId ?? "";
     message.owner = object.owner ?? "";
@@ -1315,9 +1161,6 @@ export const QueryNFTsResponse = {
   is(o: any): o is QueryNFTsResponse {
     return o && (o.$typeUrl === QueryNFTsResponse.typeUrl || Array.isArray(o.nfts) && (!o.nfts.length || NFT.is(o.nfts[0])));
   },
-  isSDK(o: any): o is QueryNFTsResponseSDKType {
-    return o && (o.$typeUrl === QueryNFTsResponse.typeUrl || Array.isArray(o.nfts) && (!o.nfts.length || NFT.isSDK(o.nfts[0])));
-  },
   isAmino(o: any): o is QueryNFTsResponseAmino {
     return o && (o.$typeUrl === QueryNFTsResponse.typeUrl || Array.isArray(o.nfts) && (!o.nfts.length || NFT.isAmino(o.nfts[0])));
   },
@@ -1350,7 +1193,7 @@ export const QueryNFTsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryNFTsResponse>, I>>(object: I): QueryNFTsResponse {
+  fromPartial(object: DeepPartial<QueryNFTsResponse>): QueryNFTsResponse {
     const message = createBaseQueryNFTsResponse();
     message.nfts = object.nfts?.map(e => NFT.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -1421,9 +1264,6 @@ export const QueryNFTRequest = {
   is(o: any): o is QueryNFTRequest {
     return o && (o.$typeUrl === QueryNFTRequest.typeUrl || typeof o.classId === "string" && typeof o.id === "string");
   },
-  isSDK(o: any): o is QueryNFTRequestSDKType {
-    return o && (o.$typeUrl === QueryNFTRequest.typeUrl || typeof o.class_id === "string" && typeof o.id === "string");
-  },
   isAmino(o: any): o is QueryNFTRequestAmino {
     return o && (o.$typeUrl === QueryNFTRequest.typeUrl || typeof o.class_id === "string" && typeof o.id === "string");
   },
@@ -1456,7 +1296,7 @@ export const QueryNFTRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryNFTRequest>, I>>(object: I): QueryNFTRequest {
+  fromPartial(object: DeepPartial<QueryNFTRequest>): QueryNFTRequest {
     const message = createBaseQueryNFTRequest();
     message.classId = object.classId ?? "";
     message.id = object.id ?? "";
@@ -1518,9 +1358,6 @@ export const QueryNFTResponse = {
   is(o: any): o is QueryNFTResponse {
     return o && o.$typeUrl === QueryNFTResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryNFTResponseSDKType {
-    return o && o.$typeUrl === QueryNFTResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryNFTResponseAmino {
     return o && o.$typeUrl === QueryNFTResponse.typeUrl;
   },
@@ -1547,7 +1384,7 @@ export const QueryNFTResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryNFTResponse>, I>>(object: I): QueryNFTResponse {
+  fromPartial(object: DeepPartial<QueryNFTResponse>): QueryNFTResponse {
     const message = createBaseQueryNFTResponse();
     message.nft = object.nft !== undefined && object.nft !== null ? NFT.fromPartial(object.nft) : undefined;
     return message;
@@ -1609,9 +1446,6 @@ export const QueryClassRequest = {
   is(o: any): o is QueryClassRequest {
     return o && (o.$typeUrl === QueryClassRequest.typeUrl || typeof o.classId === "string");
   },
-  isSDK(o: any): o is QueryClassRequestSDKType {
-    return o && (o.$typeUrl === QueryClassRequest.typeUrl || typeof o.class_id === "string");
-  },
   isAmino(o: any): o is QueryClassRequestAmino {
     return o && (o.$typeUrl === QueryClassRequest.typeUrl || typeof o.class_id === "string");
   },
@@ -1638,7 +1472,7 @@ export const QueryClassRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryClassRequest>, I>>(object: I): QueryClassRequest {
+  fromPartial(object: DeepPartial<QueryClassRequest>): QueryClassRequest {
     const message = createBaseQueryClassRequest();
     message.classId = object.classId ?? "";
     return message;
@@ -1695,9 +1529,6 @@ export const QueryClassResponse = {
   is(o: any): o is QueryClassResponse {
     return o && o.$typeUrl === QueryClassResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryClassResponseSDKType {
-    return o && o.$typeUrl === QueryClassResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryClassResponseAmino {
     return o && o.$typeUrl === QueryClassResponse.typeUrl;
   },
@@ -1724,7 +1555,7 @@ export const QueryClassResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryClassResponse>, I>>(object: I): QueryClassResponse {
+  fromPartial(object: DeepPartial<QueryClassResponse>): QueryClassResponse {
     const message = createBaseQueryClassResponse();
     message.class = object.class !== undefined && object.class !== null ? Class.fromPartial(object.class) : undefined;
     return message;
@@ -1786,9 +1617,6 @@ export const QueryClassesRequest = {
   is(o: any): o is QueryClassesRequest {
     return o && o.$typeUrl === QueryClassesRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryClassesRequestSDKType {
-    return o && o.$typeUrl === QueryClassesRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryClassesRequestAmino {
     return o && o.$typeUrl === QueryClassesRequest.typeUrl;
   },
@@ -1815,7 +1643,7 @@ export const QueryClassesRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryClassesRequest>, I>>(object: I): QueryClassesRequest {
+  fromPartial(object: DeepPartial<QueryClassesRequest>): QueryClassesRequest {
     const message = createBaseQueryClassesRequest();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -1878,9 +1706,6 @@ export const QueryClassesResponse = {
   is(o: any): o is QueryClassesResponse {
     return o && (o.$typeUrl === QueryClassesResponse.typeUrl || Array.isArray(o.classes) && (!o.classes.length || Class.is(o.classes[0])));
   },
-  isSDK(o: any): o is QueryClassesResponseSDKType {
-    return o && (o.$typeUrl === QueryClassesResponse.typeUrl || Array.isArray(o.classes) && (!o.classes.length || Class.isSDK(o.classes[0])));
-  },
   isAmino(o: any): o is QueryClassesResponseAmino {
     return o && (o.$typeUrl === QueryClassesResponse.typeUrl || Array.isArray(o.classes) && (!o.classes.length || Class.isAmino(o.classes[0])));
   },
@@ -1913,7 +1738,7 @@ export const QueryClassesResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryClassesResponse>, I>>(object: I): QueryClassesResponse {
+  fromPartial(object: DeepPartial<QueryClassesResponse>): QueryClassesResponse {
     const message = createBaseQueryClassesResponse();
     message.classes = object.classes?.map(e => Class.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;

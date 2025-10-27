@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Plan, PlanAmino, PlanSDKType, ModuleVersion, ModuleVersionAmino, ModuleVersionSDKType } from "./upgrade";
+import { Plan, PlanAmino, ModuleVersion, ModuleVersionAmino } from "./upgrade";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryCurrentPlanRequest is the request type for the Query/CurrentPlan RPC
@@ -28,14 +28,6 @@ export interface QueryCurrentPlanRequestAminoMsg {
   type: "cosmos-sdk/QueryCurrentPlanRequest";
   value: QueryCurrentPlanRequestAmino;
 }
-/**
- * QueryCurrentPlanRequest is the request type for the Query/CurrentPlan RPC
- * method.
- * @name QueryCurrentPlanRequestSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.QueryCurrentPlanRequest
- */
-export interface QueryCurrentPlanRequestSDKType {}
 /**
  * QueryCurrentPlanResponse is the response type for the Query/CurrentPlan RPC
  * method.
@@ -71,16 +63,6 @@ export interface QueryCurrentPlanResponseAminoMsg {
   value: QueryCurrentPlanResponseAmino;
 }
 /**
- * QueryCurrentPlanResponse is the response type for the Query/CurrentPlan RPC
- * method.
- * @name QueryCurrentPlanResponseSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.QueryCurrentPlanResponse
- */
-export interface QueryCurrentPlanResponseSDKType {
-  plan?: PlanSDKType;
-}
-/**
  * QueryCurrentPlanRequest is the request type for the Query/AppliedPlan RPC
  * method.
  * @name QueryAppliedPlanRequest
@@ -108,21 +90,11 @@ export interface QueryAppliedPlanRequestAmino {
   /**
    * name is the name of the applied plan to query for.
    */
-  name?: string;
+  name: string;
 }
 export interface QueryAppliedPlanRequestAminoMsg {
   type: "cosmos-sdk/QueryAppliedPlanRequest";
   value: QueryAppliedPlanRequestAmino;
-}
-/**
- * QueryCurrentPlanRequest is the request type for the Query/AppliedPlan RPC
- * method.
- * @name QueryAppliedPlanRequestSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.QueryAppliedPlanRequest
- */
-export interface QueryAppliedPlanRequestSDKType {
-  name: string;
 }
 /**
  * QueryAppliedPlanResponse is the response type for the Query/AppliedPlan RPC
@@ -152,21 +124,11 @@ export interface QueryAppliedPlanResponseAmino {
   /**
    * height is the block height at which the plan was applied.
    */
-  height?: string;
+  height: string;
 }
 export interface QueryAppliedPlanResponseAminoMsg {
   type: "cosmos-sdk/QueryAppliedPlanResponse";
   value: QueryAppliedPlanResponseAmino;
-}
-/**
- * QueryAppliedPlanResponse is the response type for the Query/AppliedPlan RPC
- * method.
- * @name QueryAppliedPlanResponseSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.QueryAppliedPlanResponse
- */
-export interface QueryAppliedPlanResponseSDKType {
-  height: bigint;
 }
 /**
  * QueryUpgradedConsensusStateRequest is the request type for the Query/UpgradedConsensusState
@@ -200,22 +162,11 @@ export interface QueryUpgradedConsensusStateRequestAmino {
    * last height of the current chain must be sent in request
    * as this is the height under which next consensus state is stored
    */
-  last_height?: string;
+  last_height: string;
 }
 export interface QueryUpgradedConsensusStateRequestAminoMsg {
   type: "cosmos-sdk/QueryUpgradedConsensusStateRequest";
   value: QueryUpgradedConsensusStateRequestAmino;
-}
-/**
- * QueryUpgradedConsensusStateRequest is the request type for the Query/UpgradedConsensusState
- * RPC method.
- * @name QueryUpgradedConsensusStateRequestSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.QueryUpgradedConsensusStateRequest
- * @deprecated
- */
-export interface QueryUpgradedConsensusStateRequestSDKType {
-  last_height: bigint;
 }
 /**
  * QueryUpgradedConsensusStateResponse is the response type for the Query/UpgradedConsensusState
@@ -247,22 +198,11 @@ export interface QueryUpgradedConsensusStateResponseAmino {
   /**
    * Since: cosmos-sdk 0.43
    */
-  upgraded_consensus_state?: string;
+  upgraded_consensus_state: string;
 }
 export interface QueryUpgradedConsensusStateResponseAminoMsg {
   type: "cosmos-sdk/QueryUpgradedConsensusStateResponse";
   value: QueryUpgradedConsensusStateResponseAmino;
-}
-/**
- * QueryUpgradedConsensusStateResponse is the response type for the Query/UpgradedConsensusState
- * RPC method.
- * @name QueryUpgradedConsensusStateResponseSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.QueryUpgradedConsensusStateResponse
- * @deprecated
- */
-export interface QueryUpgradedConsensusStateResponseSDKType {
-  upgraded_consensus_state: Uint8Array;
 }
 /**
  * QueryModuleVersionsRequest is the request type for the Query/ModuleVersions
@@ -300,23 +240,11 @@ export interface QueryModuleVersionsRequestAmino {
    * consensus version from state. Leaving this empty will
    * fetch the full list of module versions from state
    */
-  module_name?: string;
+  module_name: string;
 }
 export interface QueryModuleVersionsRequestAminoMsg {
   type: "cosmos-sdk/QueryModuleVersionsRequest";
   value: QueryModuleVersionsRequestAmino;
-}
-/**
- * QueryModuleVersionsRequest is the request type for the Query/ModuleVersions
- * RPC method.
- * 
- * Since: cosmos-sdk 0.43
- * @name QueryModuleVersionsRequestSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.QueryModuleVersionsRequest
- */
-export interface QueryModuleVersionsRequestSDKType {
-  module_name: string;
 }
 /**
  * QueryModuleVersionsResponse is the response type for the Query/ModuleVersions
@@ -350,23 +278,11 @@ export interface QueryModuleVersionsResponseAmino {
   /**
    * module_versions is a list of module names with their consensus versions.
    */
-  module_versions?: ModuleVersionAmino[];
+  module_versions: ModuleVersionAmino[];
 }
 export interface QueryModuleVersionsResponseAminoMsg {
   type: "cosmos-sdk/QueryModuleVersionsResponse";
   value: QueryModuleVersionsResponseAmino;
-}
-/**
- * QueryModuleVersionsResponse is the response type for the Query/ModuleVersions
- * RPC method.
- * 
- * Since: cosmos-sdk 0.43
- * @name QueryModuleVersionsResponseSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.QueryModuleVersionsResponse
- */
-export interface QueryModuleVersionsResponseSDKType {
-  module_versions: ModuleVersionSDKType[];
 }
 /**
  * QueryAuthorityRequest is the request type for Query/Authority
@@ -395,15 +311,6 @@ export interface QueryAuthorityRequestAminoMsg {
   value: QueryAuthorityRequestAmino;
 }
 /**
- * QueryAuthorityRequest is the request type for Query/Authority
- * 
- * Since: cosmos-sdk 0.46
- * @name QueryAuthorityRequestSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.QueryAuthorityRequest
- */
-export interface QueryAuthorityRequestSDKType {}
-/**
  * QueryAuthorityResponse is the response type for Query/Authority
  * 
  * Since: cosmos-sdk 0.46
@@ -427,22 +334,11 @@ export interface QueryAuthorityResponseProtoMsg {
  * @see proto type: cosmos.upgrade.v1beta1.QueryAuthorityResponse
  */
 export interface QueryAuthorityResponseAmino {
-  address?: string;
+  address: string;
 }
 export interface QueryAuthorityResponseAminoMsg {
   type: "cosmos-sdk/QueryAuthorityResponse";
   value: QueryAuthorityResponseAmino;
-}
-/**
- * QueryAuthorityResponse is the response type for Query/Authority
- * 
- * Since: cosmos-sdk 0.46
- * @name QueryAuthorityResponseSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.QueryAuthorityResponse
- */
-export interface QueryAuthorityResponseSDKType {
-  address: string;
 }
 function createBaseQueryCurrentPlanRequest(): QueryCurrentPlanRequest {
   return {};
@@ -458,9 +354,6 @@ export const QueryCurrentPlanRequest = {
   typeUrl: "/cosmos.upgrade.v1beta1.QueryCurrentPlanRequest",
   aminoType: "cosmos-sdk/QueryCurrentPlanRequest",
   is(o: any): o is QueryCurrentPlanRequest {
-    return o && o.$typeUrl === QueryCurrentPlanRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryCurrentPlanRequestSDKType {
     return o && o.$typeUrl === QueryCurrentPlanRequest.typeUrl;
   },
   isAmino(o: any): o is QueryCurrentPlanRequestAmino {
@@ -483,7 +376,7 @@ export const QueryCurrentPlanRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryCurrentPlanRequest>, I>>(_: I): QueryCurrentPlanRequest {
+  fromPartial(_: DeepPartial<QueryCurrentPlanRequest>): QueryCurrentPlanRequest {
     const message = createBaseQueryCurrentPlanRequest();
     return message;
   },
@@ -536,9 +429,6 @@ export const QueryCurrentPlanResponse = {
   is(o: any): o is QueryCurrentPlanResponse {
     return o && o.$typeUrl === QueryCurrentPlanResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryCurrentPlanResponseSDKType {
-    return o && o.$typeUrl === QueryCurrentPlanResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryCurrentPlanResponseAmino {
     return o && o.$typeUrl === QueryCurrentPlanResponse.typeUrl;
   },
@@ -565,7 +455,7 @@ export const QueryCurrentPlanResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryCurrentPlanResponse>, I>>(object: I): QueryCurrentPlanResponse {
+  fromPartial(object: DeepPartial<QueryCurrentPlanResponse>): QueryCurrentPlanResponse {
     const message = createBaseQueryCurrentPlanResponse();
     message.plan = object.plan !== undefined && object.plan !== null ? Plan.fromPartial(object.plan) : undefined;
     return message;
@@ -628,9 +518,6 @@ export const QueryAppliedPlanRequest = {
   is(o: any): o is QueryAppliedPlanRequest {
     return o && (o.$typeUrl === QueryAppliedPlanRequest.typeUrl || typeof o.name === "string");
   },
-  isSDK(o: any): o is QueryAppliedPlanRequestSDKType {
-    return o && (o.$typeUrl === QueryAppliedPlanRequest.typeUrl || typeof o.name === "string");
-  },
   isAmino(o: any): o is QueryAppliedPlanRequestAmino {
     return o && (o.$typeUrl === QueryAppliedPlanRequest.typeUrl || typeof o.name === "string");
   },
@@ -657,7 +544,7 @@ export const QueryAppliedPlanRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAppliedPlanRequest>, I>>(object: I): QueryAppliedPlanRequest {
+  fromPartial(object: DeepPartial<QueryAppliedPlanRequest>): QueryAppliedPlanRequest {
     const message = createBaseQueryAppliedPlanRequest();
     message.name = object.name ?? "";
     return message;
@@ -715,9 +602,6 @@ export const QueryAppliedPlanResponse = {
   is(o: any): o is QueryAppliedPlanResponse {
     return o && (o.$typeUrl === QueryAppliedPlanResponse.typeUrl || typeof o.height === "bigint");
   },
-  isSDK(o: any): o is QueryAppliedPlanResponseSDKType {
-    return o && (o.$typeUrl === QueryAppliedPlanResponse.typeUrl || typeof o.height === "bigint");
-  },
   isAmino(o: any): o is QueryAppliedPlanResponseAmino {
     return o && (o.$typeUrl === QueryAppliedPlanResponse.typeUrl || typeof o.height === "bigint");
   },
@@ -744,7 +628,7 @@ export const QueryAppliedPlanResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAppliedPlanResponse>, I>>(object: I): QueryAppliedPlanResponse {
+  fromPartial(object: DeepPartial<QueryAppliedPlanResponse>): QueryAppliedPlanResponse {
     const message = createBaseQueryAppliedPlanResponse();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     return message;
@@ -803,9 +687,6 @@ export const QueryUpgradedConsensusStateRequest = {
   is(o: any): o is QueryUpgradedConsensusStateRequest {
     return o && (o.$typeUrl === QueryUpgradedConsensusStateRequest.typeUrl || typeof o.lastHeight === "bigint");
   },
-  isSDK(o: any): o is QueryUpgradedConsensusStateRequestSDKType {
-    return o && (o.$typeUrl === QueryUpgradedConsensusStateRequest.typeUrl || typeof o.last_height === "bigint");
-  },
   isAmino(o: any): o is QueryUpgradedConsensusStateRequestAmino {
     return o && (o.$typeUrl === QueryUpgradedConsensusStateRequest.typeUrl || typeof o.last_height === "bigint");
   },
@@ -832,7 +713,7 @@ export const QueryUpgradedConsensusStateRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryUpgradedConsensusStateRequest>, I>>(object: I): QueryUpgradedConsensusStateRequest {
+  fromPartial(object: DeepPartial<QueryUpgradedConsensusStateRequest>): QueryUpgradedConsensusStateRequest {
     const message = createBaseQueryUpgradedConsensusStateRequest();
     message.lastHeight = object.lastHeight !== undefined && object.lastHeight !== null ? BigInt(object.lastHeight.toString()) : BigInt(0);
     return message;
@@ -891,9 +772,6 @@ export const QueryUpgradedConsensusStateResponse = {
   is(o: any): o is QueryUpgradedConsensusStateResponse {
     return o && (o.$typeUrl === QueryUpgradedConsensusStateResponse.typeUrl || o.upgradedConsensusState instanceof Uint8Array || typeof o.upgradedConsensusState === "string");
   },
-  isSDK(o: any): o is QueryUpgradedConsensusStateResponseSDKType {
-    return o && (o.$typeUrl === QueryUpgradedConsensusStateResponse.typeUrl || o.upgraded_consensus_state instanceof Uint8Array || typeof o.upgraded_consensus_state === "string");
-  },
   isAmino(o: any): o is QueryUpgradedConsensusStateResponseAmino {
     return o && (o.$typeUrl === QueryUpgradedConsensusStateResponse.typeUrl || o.upgraded_consensus_state instanceof Uint8Array || typeof o.upgraded_consensus_state === "string");
   },
@@ -920,7 +798,7 @@ export const QueryUpgradedConsensusStateResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryUpgradedConsensusStateResponse>, I>>(object: I): QueryUpgradedConsensusStateResponse {
+  fromPartial(object: DeepPartial<QueryUpgradedConsensusStateResponse>): QueryUpgradedConsensusStateResponse {
     const message = createBaseQueryUpgradedConsensusStateResponse();
     message.upgradedConsensusState = object.upgradedConsensusState ?? new Uint8Array();
     return message;
@@ -980,9 +858,6 @@ export const QueryModuleVersionsRequest = {
   is(o: any): o is QueryModuleVersionsRequest {
     return o && (o.$typeUrl === QueryModuleVersionsRequest.typeUrl || typeof o.moduleName === "string");
   },
-  isSDK(o: any): o is QueryModuleVersionsRequestSDKType {
-    return o && (o.$typeUrl === QueryModuleVersionsRequest.typeUrl || typeof o.module_name === "string");
-  },
   isAmino(o: any): o is QueryModuleVersionsRequestAmino {
     return o && (o.$typeUrl === QueryModuleVersionsRequest.typeUrl || typeof o.module_name === "string");
   },
@@ -1009,7 +884,7 @@ export const QueryModuleVersionsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryModuleVersionsRequest>, I>>(object: I): QueryModuleVersionsRequest {
+  fromPartial(object: DeepPartial<QueryModuleVersionsRequest>): QueryModuleVersionsRequest {
     const message = createBaseQueryModuleVersionsRequest();
     message.moduleName = object.moduleName ?? "";
     return message;
@@ -1069,9 +944,6 @@ export const QueryModuleVersionsResponse = {
   is(o: any): o is QueryModuleVersionsResponse {
     return o && (o.$typeUrl === QueryModuleVersionsResponse.typeUrl || Array.isArray(o.moduleVersions) && (!o.moduleVersions.length || ModuleVersion.is(o.moduleVersions[0])));
   },
-  isSDK(o: any): o is QueryModuleVersionsResponseSDKType {
-    return o && (o.$typeUrl === QueryModuleVersionsResponse.typeUrl || Array.isArray(o.module_versions) && (!o.module_versions.length || ModuleVersion.isSDK(o.module_versions[0])));
-  },
   isAmino(o: any): o is QueryModuleVersionsResponseAmino {
     return o && (o.$typeUrl === QueryModuleVersionsResponse.typeUrl || Array.isArray(o.module_versions) && (!o.module_versions.length || ModuleVersion.isAmino(o.module_versions[0])));
   },
@@ -1098,7 +970,7 @@ export const QueryModuleVersionsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryModuleVersionsResponse>, I>>(object: I): QueryModuleVersionsResponse {
+  fromPartial(object: DeepPartial<QueryModuleVersionsResponse>): QueryModuleVersionsResponse {
     const message = createBaseQueryModuleVersionsResponse();
     message.moduleVersions = object.moduleVersions?.map(e => ModuleVersion.fromPartial(e)) || [];
     return message;
@@ -1162,9 +1034,6 @@ export const QueryAuthorityRequest = {
   is(o: any): o is QueryAuthorityRequest {
     return o && o.$typeUrl === QueryAuthorityRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryAuthorityRequestSDKType {
-    return o && o.$typeUrl === QueryAuthorityRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryAuthorityRequestAmino {
     return o && o.$typeUrl === QueryAuthorityRequest.typeUrl;
   },
@@ -1185,7 +1054,7 @@ export const QueryAuthorityRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAuthorityRequest>, I>>(_: I): QueryAuthorityRequest {
+  fromPartial(_: DeepPartial<QueryAuthorityRequest>): QueryAuthorityRequest {
     const message = createBaseQueryAuthorityRequest();
     return message;
   },
@@ -1239,9 +1108,6 @@ export const QueryAuthorityResponse = {
   is(o: any): o is QueryAuthorityResponse {
     return o && (o.$typeUrl === QueryAuthorityResponse.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is QueryAuthorityResponseSDKType {
-    return o && (o.$typeUrl === QueryAuthorityResponse.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is QueryAuthorityResponseAmino {
     return o && (o.$typeUrl === QueryAuthorityResponse.typeUrl || typeof o.address === "string");
   },
@@ -1268,7 +1134,7 @@ export const QueryAuthorityResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAuthorityResponse>, I>>(object: I): QueryAuthorityResponse {
+  fromPartial(object: DeepPartial<QueryAuthorityResponse>): QueryAuthorityResponse {
     const message = createBaseQueryAuthorityResponse();
     message.address = object.address ?? "";
     return message;

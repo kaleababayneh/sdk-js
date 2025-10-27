@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Any, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * Config represents the configuration for a Cosmos SDK ABCI app.
@@ -48,33 +48,17 @@ export interface ConfigAmino {
   /**
    * modules are the module configurations for the app.
    */
-  modules?: ModuleConfigAmino[];
+  modules: ModuleConfigAmino[];
   /**
    * golang_bindings specifies explicit interface to implementation type bindings which
    * depinject uses to resolve interface inputs to provider functions.  The scope of this
    * field's configuration is global (not module specific).
    */
-  golang_bindings?: GolangBindingAmino[];
+  golang_bindings: GolangBindingAmino[];
 }
 export interface ConfigAminoMsg {
   type: "cosmos-sdk/Config";
   value: ConfigAmino;
-}
-/**
- * Config represents the configuration for a Cosmos SDK ABCI app.
- * It is intended that all state machine logic including the version of
- * baseapp and tx handlers (and possibly even Tendermint) that an app needs
- * can be described in a config object. For compatibility, the framework should
- * allow a mixture of declarative and imperative app wiring, however, apps
- * that strive for the maximum ease of maintainability should be able to describe
- * their state machine with a config object alone.
- * @name ConfigSDKType
- * @package cosmos.app.v1alpha1
- * @see proto type: cosmos.app.v1alpha1.Config
- */
-export interface ConfigSDKType {
-  modules: ModuleConfigSDKType[];
-  golang_bindings: GolangBindingSDKType[];
 }
 /**
  * ModuleConfig is a module configuration for an app.
@@ -131,7 +115,7 @@ export interface ModuleConfigAmino {
    * that the v1 module had. Note: modules should provide info on which versions
    * they can migrate from in the ModuleDescriptor.can_migration_from field.
    */
-  name?: string;
+  name: string;
   /**
    * config is the config object for the module. Module config messages should
    * define a ModuleDescriptor using the cosmos.app.v1alpha1.is_module extension.
@@ -142,22 +126,11 @@ export interface ModuleConfigAmino {
    * depinject uses to resolve interface inputs to provider functions.  The scope of this
    * field's configuration is module specific.
    */
-  golang_bindings?: GolangBindingAmino[];
+  golang_bindings: GolangBindingAmino[];
 }
 export interface ModuleConfigAminoMsg {
   type: "cosmos-sdk/ModuleConfig";
   value: ModuleConfigAmino;
-}
-/**
- * ModuleConfig is a module configuration for an app.
- * @name ModuleConfigSDKType
- * @package cosmos.app.v1alpha1
- * @see proto type: cosmos.app.v1alpha1.ModuleConfig
- */
-export interface ModuleConfigSDKType {
-  name: string;
-  config?: AnySDKType;
-  golang_bindings: GolangBindingSDKType[];
 }
 /**
  * GolangBinding is an explicit interface type to implementing type binding for dependency injection.
@@ -189,25 +162,15 @@ export interface GolangBindingAmino {
   /**
    * interface_type is the interface type which will be bound to a specific implementation type
    */
-  interface_type?: string;
+  interface_type: string;
   /**
    * implementation is the implementing type which will be supplied when an input of type interface is requested
    */
-  implementation?: string;
+  implementation: string;
 }
 export interface GolangBindingAminoMsg {
   type: "cosmos-sdk/GolangBinding";
   value: GolangBindingAmino;
-}
-/**
- * GolangBinding is an explicit interface type to implementing type binding for dependency injection.
- * @name GolangBindingSDKType
- * @package cosmos.app.v1alpha1
- * @see proto type: cosmos.app.v1alpha1.GolangBinding
- */
-export interface GolangBindingSDKType {
-  interface_type: string;
-  implementation: string;
 }
 function createBaseConfig(): Config {
   return {
@@ -232,9 +195,6 @@ export const Config = {
   aminoType: "cosmos-sdk/Config",
   is(o: any): o is Config {
     return o && (o.$typeUrl === Config.typeUrl || Array.isArray(o.modules) && (!o.modules.length || ModuleConfig.is(o.modules[0])) && Array.isArray(o.golangBindings) && (!o.golangBindings.length || GolangBinding.is(o.golangBindings[0])));
-  },
-  isSDK(o: any): o is ConfigSDKType {
-    return o && (o.$typeUrl === Config.typeUrl || Array.isArray(o.modules) && (!o.modules.length || ModuleConfig.isSDK(o.modules[0])) && Array.isArray(o.golang_bindings) && (!o.golang_bindings.length || GolangBinding.isSDK(o.golang_bindings[0])));
   },
   isAmino(o: any): o is ConfigAmino {
     return o && (o.$typeUrl === Config.typeUrl || Array.isArray(o.modules) && (!o.modules.length || ModuleConfig.isAmino(o.modules[0])) && Array.isArray(o.golang_bindings) && (!o.golang_bindings.length || GolangBinding.isAmino(o.golang_bindings[0])));
@@ -268,7 +228,7 @@ export const Config = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Config>, I>>(object: I): Config {
+  fromPartial(object: DeepPartial<Config>): Config {
     const message = createBaseConfig();
     message.modules = object.modules?.map(e => ModuleConfig.fromPartial(e)) || [];
     message.golangBindings = object.golangBindings?.map(e => GolangBinding.fromPartial(e)) || [];
@@ -342,9 +302,6 @@ export const ModuleConfig = {
   is(o: any): o is ModuleConfig {
     return o && (o.$typeUrl === ModuleConfig.typeUrl || typeof o.name === "string" && Array.isArray(o.golangBindings) && (!o.golangBindings.length || GolangBinding.is(o.golangBindings[0])));
   },
-  isSDK(o: any): o is ModuleConfigSDKType {
-    return o && (o.$typeUrl === ModuleConfig.typeUrl || typeof o.name === "string" && Array.isArray(o.golang_bindings) && (!o.golang_bindings.length || GolangBinding.isSDK(o.golang_bindings[0])));
-  },
   isAmino(o: any): o is ModuleConfigAmino {
     return o && (o.$typeUrl === ModuleConfig.typeUrl || typeof o.name === "string" && Array.isArray(o.golang_bindings) && (!o.golang_bindings.length || GolangBinding.isAmino(o.golang_bindings[0])));
   },
@@ -383,7 +340,7 @@ export const ModuleConfig = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ModuleConfig>, I>>(object: I): ModuleConfig {
+  fromPartial(object: DeepPartial<ModuleConfig>): ModuleConfig {
     const message = createBaseModuleConfig();
     message.name = object.name ?? "";
     message.config = object.config !== undefined && object.config !== null ? Any.fromPartial(object.config) : undefined;
@@ -458,9 +415,6 @@ export const GolangBinding = {
   is(o: any): o is GolangBinding {
     return o && (o.$typeUrl === GolangBinding.typeUrl || typeof o.interfaceType === "string" && typeof o.implementation === "string");
   },
-  isSDK(o: any): o is GolangBindingSDKType {
-    return o && (o.$typeUrl === GolangBinding.typeUrl || typeof o.interface_type === "string" && typeof o.implementation === "string");
-  },
   isAmino(o: any): o is GolangBindingAmino {
     return o && (o.$typeUrl === GolangBinding.typeUrl || typeof o.interface_type === "string" && typeof o.implementation === "string");
   },
@@ -493,7 +447,7 @@ export const GolangBinding = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GolangBinding>, I>>(object: I): GolangBinding {
+  fromPartial(object: DeepPartial<GolangBinding>): GolangBinding {
     const message = createBaseGolangBinding();
     message.interfaceType = object.interfaceType ?? "";
     message.implementation = object.implementation ?? "";

@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Op, OpAmino, OpSDKType } from "./benchmark";
+import { Op, OpAmino } from "./benchmark";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * MsgLoadTestOps defines a message containing a sequence of load test operations.
@@ -25,22 +25,12 @@ export interface MsgLoadTestProtoMsg {
  * @see proto type: cosmos.benchmark.v1.MsgLoadTest
  */
 export interface MsgLoadTestAmino {
-  caller?: string;
-  ops?: OpAmino[];
+  caller: string;
+  ops: OpAmino[];
 }
 export interface MsgLoadTestAminoMsg {
   type: "cosmos-sdk/tools/benchmark/v1/MsgLoadTest";
   value: MsgLoadTestAmino;
-}
-/**
- * MsgLoadTestOps defines a message containing a sequence of load test operations.
- * @name MsgLoadTestSDKType
- * @package cosmos.benchmark.v1
- * @see proto type: cosmos.benchmark.v1.MsgLoadTest
- */
-export interface MsgLoadTestSDKType {
-  caller: Uint8Array;
-  ops: OpSDKType[];
 }
 /**
  * MsgLoadTestResponse defines a message containing the results of a load test operation.
@@ -63,22 +53,12 @@ export interface MsgLoadTestResponseProtoMsg {
  * @see proto type: cosmos.benchmark.v1.MsgLoadTestResponse
  */
 export interface MsgLoadTestResponseAmino {
-  total_time?: string;
-  total_errors?: string;
+  total_time: string;
+  total_errors: string;
 }
 export interface MsgLoadTestResponseAminoMsg {
   type: "cosmos-sdk/MsgLoadTestResponse";
   value: MsgLoadTestResponseAmino;
-}
-/**
- * MsgLoadTestResponse defines a message containing the results of a load test operation.
- * @name MsgLoadTestResponseSDKType
- * @package cosmos.benchmark.v1
- * @see proto type: cosmos.benchmark.v1.MsgLoadTestResponse
- */
-export interface MsgLoadTestResponseSDKType {
-  total_time: bigint;
-  total_errors: bigint;
 }
 function createBaseMsgLoadTest(): MsgLoadTest {
   return {
@@ -97,9 +77,6 @@ export const MsgLoadTest = {
   aminoType: "cosmos-sdk/tools/benchmark/v1/MsgLoadTest",
   is(o: any): o is MsgLoadTest {
     return o && (o.$typeUrl === MsgLoadTest.typeUrl || (o.caller instanceof Uint8Array || typeof o.caller === "string") && Array.isArray(o.ops) && (!o.ops.length || Op.is(o.ops[0])));
-  },
-  isSDK(o: any): o is MsgLoadTestSDKType {
-    return o && (o.$typeUrl === MsgLoadTest.typeUrl || (o.caller instanceof Uint8Array || typeof o.caller === "string") && Array.isArray(o.ops) && (!o.ops.length || Op.isSDK(o.ops[0])));
   },
   isAmino(o: any): o is MsgLoadTestAmino {
     return o && (o.$typeUrl === MsgLoadTest.typeUrl || (o.caller instanceof Uint8Array || typeof o.caller === "string") && Array.isArray(o.ops) && (!o.ops.length || Op.isAmino(o.ops[0])));
@@ -133,7 +110,7 @@ export const MsgLoadTest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgLoadTest>, I>>(object: I): MsgLoadTest {
+  fromPartial(object: DeepPartial<MsgLoadTest>): MsgLoadTest {
     const message = createBaseMsgLoadTest();
     message.caller = object.caller ?? new Uint8Array();
     message.ops = object.ops?.map(e => Op.fromPartial(e)) || [];
@@ -203,9 +180,6 @@ export const MsgLoadTestResponse = {
   is(o: any): o is MsgLoadTestResponse {
     return o && (o.$typeUrl === MsgLoadTestResponse.typeUrl || typeof o.totalTime === "bigint" && typeof o.totalErrors === "bigint");
   },
-  isSDK(o: any): o is MsgLoadTestResponseSDKType {
-    return o && (o.$typeUrl === MsgLoadTestResponse.typeUrl || typeof o.total_time === "bigint" && typeof o.total_errors === "bigint");
-  },
   isAmino(o: any): o is MsgLoadTestResponseAmino {
     return o && (o.$typeUrl === MsgLoadTestResponse.typeUrl || typeof o.total_time === "bigint" && typeof o.total_errors === "bigint");
   },
@@ -238,7 +212,7 @@ export const MsgLoadTestResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgLoadTestResponse>, I>>(object: I): MsgLoadTestResponse {
+  fromPartial(object: DeepPartial<MsgLoadTestResponse>): MsgLoadTestResponse {
     const message = createBaseMsgLoadTestResponse();
     message.totalTime = object.totalTime !== undefined && object.totalTime !== null ? BigInt(object.totalTime.toString()) : BigInt(0);
     message.totalErrors = object.totalErrors !== undefined && object.totalErrors !== null ? BigInt(object.totalErrors.toString()) : BigInt(0);

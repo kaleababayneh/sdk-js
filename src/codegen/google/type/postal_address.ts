@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Represents a postal address, e.g. for postal delivery or payments addresses.
  * Given a postal address, a postal service can deliver items to a premise, P.O.
@@ -161,7 +161,7 @@ export interface PostalAddressAmino {
    * 
    * All new revisions **must** be backward compatible with old revisions.
    */
-  revision?: number;
+  revision: number;
   /**
    * Required. CLDR region code of the country/region of the address. This
    * is never inferred and it is up to the user to ensure the value is
@@ -169,7 +169,7 @@ export interface PostalAddressAmino {
    * http://www.unicode.org/cldr/charts/30/supplemental/territory_information.html
    * for details. Example: "CH" for Switzerland.
    */
-  region_code?: string;
+  region_code: string;
   /**
    * Optional. BCP-47 language code of the contents of this address (if
    * known). This is often the UI language of the input form or is expected
@@ -184,14 +184,14 @@ export interface PostalAddressAmino {
    * 
    * Examples: "zh-Hant", "ja", "ja-Latn", "en".
    */
-  language_code?: string;
+  language_code: string;
   /**
    * Optional. Postal code of the address. Not all countries use or require
    * postal codes to be present, but where they are used, they may trigger
    * additional validation with other parts of the address (e.g. state/zip
    * validation in the U.S.A.).
    */
-  postal_code?: string;
+  postal_code: string;
   /**
    * Optional. Additional, country-specific, sorting code. This is not used
    * in most regions. Where it is used, the value is either a string like
@@ -199,7 +199,7 @@ export interface PostalAddressAmino {
    * alone, representing the "sector code" (Jamaica), "delivery area indicator"
    * (Malawi) or "post office indicator" (e.g. Côte d'Ivoire).
    */
-  sorting_code?: string;
+  sorting_code: string;
   /**
    * Optional. Highest administrative subdivision which is used for postal
    * addresses of a country or region.
@@ -209,19 +209,19 @@ export interface PostalAddressAmino {
    * Many countries don't use an administrative area in postal addresses. E.g.
    * in Switzerland this should be left unpopulated.
    */
-  administrative_area?: string;
+  administrative_area: string;
   /**
    * Optional. Generally refers to the city/town portion of the address.
    * Examples: US city, IT comune, UK post town.
    * In regions of the world where localities are not well defined or do not fit
    * into this structure well, leave locality empty and use address_lines.
    */
-  locality?: string;
+  locality: string;
   /**
    * Optional. Sublocality of the address.
    * For example, this can be neighborhoods, boroughs, districts.
    */
-  sublocality?: string;
+  sublocality: string;
   /**
    * Unstructured address lines describing the lower levels of an address.
    * 
@@ -246,56 +246,21 @@ export interface PostalAddressAmino {
    * addresses (as opposed to guessing which parts of the address should be
    * localities or administrative areas).
    */
-  address_lines?: string[];
+  address_lines: string[];
   /**
    * Optional. The recipient at the address.
    * This field may, under certain circumstances, contain multiline information.
    * For example, it might contain "care of" information.
    */
-  recipients?: string[];
+  recipients: string[];
   /**
    * Optional. The name of the organization at the address.
    */
-  organization?: string;
+  organization: string;
 }
 export interface PostalAddressAminoMsg {
   type: "/google.type.PostalAddress";
   value: PostalAddressAmino;
-}
-/**
- * Represents a postal address, e.g. for postal delivery or payments addresses.
- * Given a postal address, a postal service can deliver items to a premise, P.O.
- * Box or similar.
- * It is not intended to model geographical locations (roads, towns,
- * mountains).
- * 
- * In typical usage an address would be created via user input or from importing
- * existing data, depending on the type of process.
- * 
- * Advice on address input / editing:
- *  - Use an i18n-ready address widget such as
- *    https://github.com/google/libaddressinput)
- * - Users should not be presented with UI elements for input or editing of
- *   fields outside countries where that field is used.
- * 
- * For more guidance on how to use this schema, please see:
- * https://support.google.com/business/answer/6397478
- * @name PostalAddressSDKType
- * @package google.type
- * @see proto type: google.type.PostalAddress
- */
-export interface PostalAddressSDKType {
-  revision: number;
-  region_code: string;
-  language_code: string;
-  postal_code: string;
-  sorting_code: string;
-  administrative_area: string;
-  locality: string;
-  sublocality: string;
-  address_lines: string[];
-  recipients: string[];
-  organization: string;
 }
 function createBasePostalAddress(): PostalAddress {
   return {
@@ -338,9 +303,6 @@ export const PostalAddress = {
   typeUrl: "/google.type.PostalAddress",
   is(o: any): o is PostalAddress {
     return o && (o.$typeUrl === PostalAddress.typeUrl || typeof o.revision === "number" && typeof o.regionCode === "string" && typeof o.languageCode === "string" && typeof o.postalCode === "string" && typeof o.sortingCode === "string" && typeof o.administrativeArea === "string" && typeof o.locality === "string" && typeof o.sublocality === "string" && Array.isArray(o.addressLines) && (!o.addressLines.length || typeof o.addressLines[0] === "string") && Array.isArray(o.recipients) && (!o.recipients.length || typeof o.recipients[0] === "string") && typeof o.organization === "string");
-  },
-  isSDK(o: any): o is PostalAddressSDKType {
-    return o && (o.$typeUrl === PostalAddress.typeUrl || typeof o.revision === "number" && typeof o.region_code === "string" && typeof o.language_code === "string" && typeof o.postal_code === "string" && typeof o.sorting_code === "string" && typeof o.administrative_area === "string" && typeof o.locality === "string" && typeof o.sublocality === "string" && Array.isArray(o.address_lines) && (!o.address_lines.length || typeof o.address_lines[0] === "string") && Array.isArray(o.recipients) && (!o.recipients.length || typeof o.recipients[0] === "string") && typeof o.organization === "string");
   },
   isAmino(o: any): o is PostalAddressAmino {
     return o && (o.$typeUrl === PostalAddress.typeUrl || typeof o.revision === "number" && typeof o.region_code === "string" && typeof o.language_code === "string" && typeof o.postal_code === "string" && typeof o.sorting_code === "string" && typeof o.administrative_area === "string" && typeof o.locality === "string" && typeof o.sublocality === "string" && Array.isArray(o.address_lines) && (!o.address_lines.length || typeof o.address_lines[0] === "string") && Array.isArray(o.recipients) && (!o.recipients.length || typeof o.recipients[0] === "string") && typeof o.organization === "string");
@@ -428,7 +390,7 @@ export const PostalAddress = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PostalAddress>, I>>(object: I): PostalAddress {
+  fromPartial(object: DeepPartial<PostalAddress>): PostalAddress {
     const message = createBasePostalAddress();
     message.revision = object.revision ?? 0;
     message.regionCode = object.regionCode ?? "";

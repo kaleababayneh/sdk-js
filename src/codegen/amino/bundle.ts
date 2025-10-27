@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import * as _0 from "./amino";
+import * as _223 from "./amino";
 export const amino = {
-  ..._0
+  ..._223
 };

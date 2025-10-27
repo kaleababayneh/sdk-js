@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Any, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * LegacyAminoPubKey specifies a public key type
  * which nests multiple public keys and a threshold,
@@ -28,24 +28,12 @@ export interface LegacyAminoPubKeyProtoMsg {
  * @see proto type: cosmos.crypto.multisig.LegacyAminoPubKey
  */
 export interface LegacyAminoPubKeyAmino {
-  threshold?: number;
-  public_keys?: AnyAmino[];
+  threshold: number;
+  public_keys: AnyAmino[];
 }
 export interface LegacyAminoPubKeyAminoMsg {
   type: "tendermint/PubKeyMultisigThreshold";
   value: LegacyAminoPubKeyAmino;
-}
-/**
- * LegacyAminoPubKey specifies a public key type
- * which nests multiple public keys and a threshold,
- * it uses legacy amino address rules.
- * @name LegacyAminoPubKeySDKType
- * @package cosmos.crypto.multisig
- * @see proto type: cosmos.crypto.multisig.LegacyAminoPubKey
- */
-export interface LegacyAminoPubKeySDKType {
-  threshold: number;
-  public_keys: AnySDKType[];
 }
 function createBaseLegacyAminoPubKey(): LegacyAminoPubKey {
   return {
@@ -66,9 +54,6 @@ export const LegacyAminoPubKey = {
   aminoType: "tendermint/PubKeyMultisigThreshold",
   is(o: any): o is LegacyAminoPubKey {
     return o && (o.$typeUrl === LegacyAminoPubKey.typeUrl || typeof o.threshold === "number" && Array.isArray(o.publicKeys) && (!o.publicKeys.length || Any.is(o.publicKeys[0])));
-  },
-  isSDK(o: any): o is LegacyAminoPubKeySDKType {
-    return o && (o.$typeUrl === LegacyAminoPubKey.typeUrl || typeof o.threshold === "number" && Array.isArray(o.public_keys) && (!o.public_keys.length || Any.isSDK(o.public_keys[0])));
   },
   isAmino(o: any): o is LegacyAminoPubKeyAmino {
     return o && (o.$typeUrl === LegacyAminoPubKey.typeUrl || typeof o.threshold === "number" && Array.isArray(o.public_keys) && (!o.public_keys.length || Any.isAmino(o.public_keys[0])));
@@ -102,7 +87,7 @@ export const LegacyAminoPubKey = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<LegacyAminoPubKey>, I>>(object: I): LegacyAminoPubKey {
+  fromPartial(object: DeepPartial<LegacyAminoPubKey>): LegacyAminoPubKey {
     const message = createBaseLegacyAminoPubKey();
     message.threshold = object.threshold ?? 0;
     message.publicKeys = object.publicKeys?.map(e => Any.fromPartial(e)) || [];

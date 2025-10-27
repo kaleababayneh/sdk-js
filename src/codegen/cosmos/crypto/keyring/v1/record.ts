@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyAmino, AnySDKType } from "../../../../google/protobuf/any";
-import { BIP44Params, BIP44ParamsAmino, BIP44ParamsSDKType } from "../../hd/v1/hd";
+import { Any, AnyAmino } from "../../../../google/protobuf/any";
+import { BIP44Params, BIP44ParamsAmino } from "../../hd/v1/hd";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * Record is used for representing a key in the keyring.
  * @name Record
@@ -51,7 +51,7 @@ export interface RecordAmino {
   /**
    * name represents a name of Record
    */
-  name?: string;
+  name: string;
   /**
    * pub_key represents a public key in any format
    */
@@ -76,20 +76,6 @@ export interface RecordAmino {
 export interface RecordAminoMsg {
   type: "cosmos-sdk/Record";
   value: RecordAmino;
-}
-/**
- * Record is used for representing a key in the keyring.
- * @name RecordSDKType
- * @package cosmos.crypto.keyring.v1
- * @see proto type: cosmos.crypto.keyring.v1.Record
- */
-export interface RecordSDKType {
-  name: string;
-  pub_key?: AnySDKType;
-  local?: Record_LocalSDKType;
-  ledger?: Record_LedgerSDKType;
-  multi?: Record_MultiSDKType;
-  offline?: Record_OfflineSDKType;
 }
 /**
  * Item is a keyring item stored in a keyring backend.
@@ -120,16 +106,6 @@ export interface Record_LocalAminoMsg {
   value: Record_LocalAmino;
 }
 /**
- * Item is a keyring item stored in a keyring backend.
- * Local item
- * @name Record_LocalSDKType
- * @package cosmos.crypto.keyring.v1
- * @see proto type: cosmos.crypto.keyring.v1.Local
- */
-export interface Record_LocalSDKType {
-  priv_key?: AnySDKType;
-}
-/**
  * Ledger item
  * @name Record_Ledger
  * @package cosmos.crypto.keyring.v1
@@ -156,15 +132,6 @@ export interface Record_LedgerAminoMsg {
   value: Record_LedgerAmino;
 }
 /**
- * Ledger item
- * @name Record_LedgerSDKType
- * @package cosmos.crypto.keyring.v1
- * @see proto type: cosmos.crypto.keyring.v1.Ledger
- */
-export interface Record_LedgerSDKType {
-  path?: BIP44ParamsSDKType;
-}
-/**
  * Multi item
  * @name Record_Multi
  * @package cosmos.crypto.keyring.v1
@@ -187,13 +154,6 @@ export interface Record_MultiAminoMsg {
   value: Record_MultiAmino;
 }
 /**
- * Multi item
- * @name Record_MultiSDKType
- * @package cosmos.crypto.keyring.v1
- * @see proto type: cosmos.crypto.keyring.v1.Multi
- */
-export interface Record_MultiSDKType {}
-/**
  * Offline item
  * @name Record_Offline
  * @package cosmos.crypto.keyring.v1
@@ -215,13 +175,6 @@ export interface Record_OfflineAminoMsg {
   type: "cosmos-sdk/Offline";
   value: Record_OfflineAmino;
 }
-/**
- * Offline item
- * @name Record_OfflineSDKType
- * @package cosmos.crypto.keyring.v1
- * @see proto type: cosmos.crypto.keyring.v1.Offline
- */
-export interface Record_OfflineSDKType {}
 function createBaseRecord(): Record {
   return {
     name: "",
@@ -242,9 +195,6 @@ export const Record = {
   typeUrl: "/cosmos.crypto.keyring.v1.Record",
   aminoType: "cosmos-sdk/Record",
   is(o: any): o is Record {
-    return o && (o.$typeUrl === Record.typeUrl || typeof o.name === "string");
-  },
-  isSDK(o: any): o is RecordSDKType {
     return o && (o.$typeUrl === Record.typeUrl || typeof o.name === "string");
   },
   isAmino(o: any): o is RecordAmino {
@@ -303,7 +253,7 @@ export const Record = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Record>, I>>(object: I): Record {
+  fromPartial(object: DeepPartial<Record>): Record {
     const message = createBaseRecord();
     message.name = object.name ?? "";
     message.pubKey = object.pubKey !== undefined && object.pubKey !== null ? Any.fromPartial(object.pubKey) : undefined;
@@ -394,9 +344,6 @@ export const Record_Local = {
   is(o: any): o is Record_Local {
     return o && o.$typeUrl === Record_Local.typeUrl;
   },
-  isSDK(o: any): o is Record_LocalSDKType {
-    return o && o.$typeUrl === Record_Local.typeUrl;
-  },
   isAmino(o: any): o is Record_LocalAmino {
     return o && o.$typeUrl === Record_Local.typeUrl;
   },
@@ -423,7 +370,7 @@ export const Record_Local = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Record_Local>, I>>(object: I): Record_Local {
+  fromPartial(object: DeepPartial<Record_Local>): Record_Local {
     const message = createBaseRecord_Local();
     message.privKey = object.privKey !== undefined && object.privKey !== null ? Any.fromPartial(object.privKey) : undefined;
     return message;
@@ -480,9 +427,6 @@ export const Record_Ledger = {
   is(o: any): o is Record_Ledger {
     return o && o.$typeUrl === Record_Ledger.typeUrl;
   },
-  isSDK(o: any): o is Record_LedgerSDKType {
-    return o && o.$typeUrl === Record_Ledger.typeUrl;
-  },
   isAmino(o: any): o is Record_LedgerAmino {
     return o && o.$typeUrl === Record_Ledger.typeUrl;
   },
@@ -509,7 +453,7 @@ export const Record_Ledger = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Record_Ledger>, I>>(object: I): Record_Ledger {
+  fromPartial(object: DeepPartial<Record_Ledger>): Record_Ledger {
     const message = createBaseRecord_Ledger();
     message.path = object.path !== undefined && object.path !== null ? BIP44Params.fromPartial(object.path) : undefined;
     return message;
@@ -569,9 +513,6 @@ export const Record_Multi = {
   is(o: any): o is Record_Multi {
     return o && o.$typeUrl === Record_Multi.typeUrl;
   },
-  isSDK(o: any): o is Record_MultiSDKType {
-    return o && o.$typeUrl === Record_Multi.typeUrl;
-  },
   isAmino(o: any): o is Record_MultiAmino {
     return o && o.$typeUrl === Record_Multi.typeUrl;
   },
@@ -592,7 +533,7 @@ export const Record_Multi = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Record_Multi>, I>>(_: I): Record_Multi {
+  fromPartial(_: DeepPartial<Record_Multi>): Record_Multi {
     const message = createBaseRecord_Multi();
     return message;
   },
@@ -642,9 +583,6 @@ export const Record_Offline = {
   is(o: any): o is Record_Offline {
     return o && o.$typeUrl === Record_Offline.typeUrl;
   },
-  isSDK(o: any): o is Record_OfflineSDKType {
-    return o && o.$typeUrl === Record_Offline.typeUrl;
-  },
   isAmino(o: any): o is Record_OfflineAmino {
     return o && o.$typeUrl === Record_Offline.typeUrl;
   },
@@ -665,7 +603,7 @@ export const Record_Offline = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Record_Offline>, I>>(_: I): Record_Offline {
+  fromPartial(_: DeepPartial<Record_Offline>): Record_Offline {
     const message = createBaseRecord_Offline();
     return message;
   },

@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * AppDescriptor describes a cosmos-sdk based application
  * @name AppDescriptor
@@ -78,20 +78,6 @@ export interface AppDescriptorAminoMsg {
   value: AppDescriptorAmino;
 }
 /**
- * AppDescriptor describes a cosmos-sdk based application
- * @name AppDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.AppDescriptor
- */
-export interface AppDescriptorSDKType {
-  authn?: AuthnDescriptorSDKType;
-  chain?: ChainDescriptorSDKType;
-  codec?: CodecDescriptorSDKType;
-  configuration?: ConfigurationDescriptorSDKType;
-  query_services?: QueryServicesDescriptorSDKType;
-  tx?: TxDescriptorSDKType;
-}
-/**
  * TxDescriptor describes the accepted transaction type
  * @name TxDescriptor
  * @package cosmos.base.reflection.v2alpha1
@@ -125,25 +111,15 @@ export interface TxDescriptorAmino {
    * it is not meant to support polymorphism of transaction types, it is supposed to be used by
    * reflection clients to understand if they can handle a specific transaction type in an application.
    */
-  fullname?: string;
+  fullname: string;
   /**
    * msgs lists the accepted application messages (sdk.Msg)
    */
-  msgs?: MsgDescriptorAmino[];
+  msgs: MsgDescriptorAmino[];
 }
 export interface TxDescriptorAminoMsg {
   type: "cosmos-sdk/TxDescriptor";
   value: TxDescriptorAmino;
-}
-/**
- * TxDescriptor describes the accepted transaction type
- * @name TxDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.TxDescriptor
- */
-export interface TxDescriptorSDKType {
-  fullname: string;
-  msgs: MsgDescriptorSDKType[];
 }
 /**
  * AuthnDescriptor provides information on how to sign transactions without relying
@@ -173,21 +149,11 @@ export interface AuthnDescriptorAmino {
   /**
    * sign_modes defines the supported signature algorithm
    */
-  sign_modes?: SigningModeDescriptorAmino[];
+  sign_modes: SigningModeDescriptorAmino[];
 }
 export interface AuthnDescriptorAminoMsg {
   type: "cosmos-sdk/AuthnDescriptor";
   value: AuthnDescriptorAmino;
-}
-/**
- * AuthnDescriptor provides information on how to sign transactions without relying
- * on the online RPCs GetTxMetadata and CombineUnsignedTxAndSignatures
- * @name AuthnDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.AuthnDescriptor
- */
-export interface AuthnDescriptorSDKType {
-  sign_modes: SigningModeDescriptorSDKType[];
 }
 /**
  * SigningModeDescriptor provides information on a signing flow of the application
@@ -230,34 +196,20 @@ export interface SigningModeDescriptorAmino {
   /**
    * name defines the unique name of the signing mode
    */
-  name?: string;
+  name: string;
   /**
    * number is the unique int32 identifier for the sign_mode enum
    */
-  number?: number;
+  number: number;
   /**
    * authn_info_provider_method_fullname defines the fullname of the method to call to get
    * the metadata required to authenticate using the provided sign_modes
    */
-  authn_info_provider_method_fullname?: string;
+  authn_info_provider_method_fullname: string;
 }
 export interface SigningModeDescriptorAminoMsg {
   type: "cosmos-sdk/SigningModeDescriptor";
   value: SigningModeDescriptorAmino;
-}
-/**
- * SigningModeDescriptor provides information on a signing flow of the application
- * NOTE(fdymylja): here we could go as far as providing an entire flow on how
- * to sign a message given a SigningModeDescriptor, but it's better to think about
- * this another time
- * @name SigningModeDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.SigningModeDescriptor
- */
-export interface SigningModeDescriptorSDKType {
-  name: string;
-  number: number;
-  authn_info_provider_method_fullname: string;
 }
 /**
  * ChainDescriptor describes chain information of the application
@@ -285,20 +237,11 @@ export interface ChainDescriptorAmino {
   /**
    * id is the chain id
    */
-  id?: string;
+  id: string;
 }
 export interface ChainDescriptorAminoMsg {
   type: "cosmos-sdk/ChainDescriptor";
   value: ChainDescriptorAmino;
-}
-/**
- * ChainDescriptor describes chain information of the application
- * @name ChainDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.ChainDescriptor
- */
-export interface ChainDescriptorSDKType {
-  id: string;
 }
 /**
  * CodecDescriptor describes the registered interfaces and provides metadata information on the types
@@ -326,20 +269,11 @@ export interface CodecDescriptorAmino {
   /**
    * interfaces is a list of the registerted interfaces descriptors
    */
-  interfaces?: InterfaceDescriptorAmino[];
+  interfaces: InterfaceDescriptorAmino[];
 }
 export interface CodecDescriptorAminoMsg {
   type: "cosmos-sdk/CodecDescriptor";
   value: CodecDescriptorAmino;
-}
-/**
- * CodecDescriptor describes the registered interfaces and provides metadata information on the types
- * @name CodecDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.CodecDescriptor
- */
-export interface CodecDescriptorSDKType {
-  interfaces: InterfaceDescriptorSDKType[];
 }
 /**
  * InterfaceDescriptor describes the implementation of an interface
@@ -376,31 +310,20 @@ export interface InterfaceDescriptorAmino {
   /**
    * fullname is the name of the interface
    */
-  fullname?: string;
+  fullname: string;
   /**
    * interface_accepting_messages contains information regarding the proto messages which contain the interface as
    * google.protobuf.Any field
    */
-  interface_accepting_messages?: InterfaceAcceptingMessageDescriptorAmino[];
+  interface_accepting_messages: InterfaceAcceptingMessageDescriptorAmino[];
   /**
    * interface_implementers is a list of the descriptors of the interface implementers
    */
-  interface_implementers?: InterfaceImplementerDescriptorAmino[];
+  interface_implementers: InterfaceImplementerDescriptorAmino[];
 }
 export interface InterfaceDescriptorAminoMsg {
   type: "cosmos-sdk/InterfaceDescriptor";
   value: InterfaceDescriptorAmino;
-}
-/**
- * InterfaceDescriptor describes the implementation of an interface
- * @name InterfaceDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.InterfaceDescriptor
- */
-export interface InterfaceDescriptorSDKType {
-  fullname: string;
-  interface_accepting_messages: InterfaceAcceptingMessageDescriptorSDKType[];
-  interface_implementers: InterfaceImplementerDescriptorSDKType[];
 }
 /**
  * InterfaceImplementerDescriptor describes an interface implementer
@@ -435,28 +358,18 @@ export interface InterfaceImplementerDescriptorAmino {
   /**
    * fullname is the protobuf queryable name of the interface implementer
    */
-  fullname?: string;
+  fullname: string;
   /**
    * type_url defines the type URL used when marshalling the type as any
    * this is required so we can provide type safe google.protobuf.Any marshalling and
    * unmarshalling, making sure that we don't accept just 'any' type
    * in our interface fields
    */
-  type_url?: string;
+  type_url: string;
 }
 export interface InterfaceImplementerDescriptorAminoMsg {
   type: "cosmos-sdk/InterfaceImplementerDescriptor";
   value: InterfaceImplementerDescriptorAmino;
-}
-/**
- * InterfaceImplementerDescriptor describes an interface implementer
- * @name InterfaceImplementerDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.InterfaceImplementerDescriptor
- */
-export interface InterfaceImplementerDescriptorSDKType {
-  fullname: string;
-  type_url: string;
 }
 /**
  * InterfaceAcceptingMessageDescriptor describes a protobuf message which contains
@@ -492,28 +405,17 @@ export interface InterfaceAcceptingMessageDescriptorAmino {
   /**
    * fullname is the protobuf fullname of the type containing the interface
    */
-  fullname?: string;
+  fullname: string;
   /**
    * field_descriptor_names is a list of the protobuf name (not fullname) of the field
    * which contains the interface as google.protobuf.Any (the interface is the same, but
    * it can be in multiple fields of the same proto message)
    */
-  field_descriptor_names?: string[];
+  field_descriptor_names: string[];
 }
 export interface InterfaceAcceptingMessageDescriptorAminoMsg {
   type: "cosmos-sdk/InterfaceAcceptingMessageDescriptor";
   value: InterfaceAcceptingMessageDescriptorAmino;
-}
-/**
- * InterfaceAcceptingMessageDescriptor describes a protobuf message which contains
- * an interface represented as a google.protobuf.Any
- * @name InterfaceAcceptingMessageDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.InterfaceAcceptingMessageDescriptor
- */
-export interface InterfaceAcceptingMessageDescriptorSDKType {
-  fullname: string;
-  field_descriptor_names: string[];
 }
 /**
  * ConfigurationDescriptor contains metadata information on the sdk.Config
@@ -541,20 +443,11 @@ export interface ConfigurationDescriptorAmino {
   /**
    * bech32_account_address_prefix is the account address prefix
    */
-  bech32_account_address_prefix?: string;
+  bech32_account_address_prefix: string;
 }
 export interface ConfigurationDescriptorAminoMsg {
   type: "cosmos-sdk/ConfigurationDescriptor";
   value: ConfigurationDescriptorAmino;
-}
-/**
- * ConfigurationDescriptor contains metadata information on the sdk.Config
- * @name ConfigurationDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.ConfigurationDescriptor
- */
-export interface ConfigurationDescriptorSDKType {
-  bech32_account_address_prefix: string;
 }
 /**
  * MsgDescriptor describes a cosmos-sdk message that can be delivered with a transaction
@@ -582,20 +475,11 @@ export interface MsgDescriptorAmino {
   /**
    * msg_type_url contains the TypeURL of a sdk.Msg.
    */
-  msg_type_url?: string;
+  msg_type_url: string;
 }
 export interface MsgDescriptorAminoMsg {
   type: "cosmos-sdk/MsgDescriptor";
   value: MsgDescriptorAmino;
-}
-/**
- * MsgDescriptor describes a cosmos-sdk message that can be delivered with a transaction
- * @name MsgDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.MsgDescriptor
- */
-export interface MsgDescriptorSDKType {
-  msg_type_url: string;
 }
 /**
  * GetAuthnDescriptorRequest is the request used for the GetAuthnDescriptor RPC
@@ -619,13 +503,6 @@ export interface GetAuthnDescriptorRequestAminoMsg {
   type: "cosmos-sdk/GetAuthnDescriptorRequest";
   value: GetAuthnDescriptorRequestAmino;
 }
-/**
- * GetAuthnDescriptorRequest is the request used for the GetAuthnDescriptor RPC
- * @name GetAuthnDescriptorRequestSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetAuthnDescriptorRequest
- */
-export interface GetAuthnDescriptorRequestSDKType {}
 /**
  * GetAuthnDescriptorResponse is the response returned by the GetAuthnDescriptor RPC
  * @name GetAuthnDescriptorResponse
@@ -659,15 +536,6 @@ export interface GetAuthnDescriptorResponseAminoMsg {
   value: GetAuthnDescriptorResponseAmino;
 }
 /**
- * GetAuthnDescriptorResponse is the response returned by the GetAuthnDescriptor RPC
- * @name GetAuthnDescriptorResponseSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetAuthnDescriptorResponse
- */
-export interface GetAuthnDescriptorResponseSDKType {
-  authn?: AuthnDescriptorSDKType;
-}
-/**
  * GetChainDescriptorRequest is the request used for the GetChainDescriptor RPC
  * @name GetChainDescriptorRequest
  * @package cosmos.base.reflection.v2alpha1
@@ -689,13 +557,6 @@ export interface GetChainDescriptorRequestAminoMsg {
   type: "cosmos-sdk/GetChainDescriptorRequest";
   value: GetChainDescriptorRequestAmino;
 }
-/**
- * GetChainDescriptorRequest is the request used for the GetChainDescriptor RPC
- * @name GetChainDescriptorRequestSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetChainDescriptorRequest
- */
-export interface GetChainDescriptorRequestSDKType {}
 /**
  * GetChainDescriptorResponse is the response returned by the GetChainDescriptor RPC
  * @name GetChainDescriptorResponse
@@ -729,15 +590,6 @@ export interface GetChainDescriptorResponseAminoMsg {
   value: GetChainDescriptorResponseAmino;
 }
 /**
- * GetChainDescriptorResponse is the response returned by the GetChainDescriptor RPC
- * @name GetChainDescriptorResponseSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetChainDescriptorResponse
- */
-export interface GetChainDescriptorResponseSDKType {
-  chain?: ChainDescriptorSDKType;
-}
-/**
  * GetCodecDescriptorRequest is the request used for the GetCodecDescriptor RPC
  * @name GetCodecDescriptorRequest
  * @package cosmos.base.reflection.v2alpha1
@@ -759,13 +611,6 @@ export interface GetCodecDescriptorRequestAminoMsg {
   type: "cosmos-sdk/GetCodecDescriptorRequest";
   value: GetCodecDescriptorRequestAmino;
 }
-/**
- * GetCodecDescriptorRequest is the request used for the GetCodecDescriptor RPC
- * @name GetCodecDescriptorRequestSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetCodecDescriptorRequest
- */
-export interface GetCodecDescriptorRequestSDKType {}
 /**
  * GetCodecDescriptorResponse is the response returned by the GetCodecDescriptor RPC
  * @name GetCodecDescriptorResponse
@@ -799,15 +644,6 @@ export interface GetCodecDescriptorResponseAminoMsg {
   value: GetCodecDescriptorResponseAmino;
 }
 /**
- * GetCodecDescriptorResponse is the response returned by the GetCodecDescriptor RPC
- * @name GetCodecDescriptorResponseSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetCodecDescriptorResponse
- */
-export interface GetCodecDescriptorResponseSDKType {
-  codec?: CodecDescriptorSDKType;
-}
-/**
  * GetConfigurationDescriptorRequest is the request used for the GetConfigurationDescriptor RPC
  * @name GetConfigurationDescriptorRequest
  * @package cosmos.base.reflection.v2alpha1
@@ -829,13 +665,6 @@ export interface GetConfigurationDescriptorRequestAminoMsg {
   type: "cosmos-sdk/GetConfigurationDescriptorRequest";
   value: GetConfigurationDescriptorRequestAmino;
 }
-/**
- * GetConfigurationDescriptorRequest is the request used for the GetConfigurationDescriptor RPC
- * @name GetConfigurationDescriptorRequestSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetConfigurationDescriptorRequest
- */
-export interface GetConfigurationDescriptorRequestSDKType {}
 /**
  * GetConfigurationDescriptorResponse is the response returned by the GetConfigurationDescriptor RPC
  * @name GetConfigurationDescriptorResponse
@@ -869,15 +698,6 @@ export interface GetConfigurationDescriptorResponseAminoMsg {
   value: GetConfigurationDescriptorResponseAmino;
 }
 /**
- * GetConfigurationDescriptorResponse is the response returned by the GetConfigurationDescriptor RPC
- * @name GetConfigurationDescriptorResponseSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetConfigurationDescriptorResponse
- */
-export interface GetConfigurationDescriptorResponseSDKType {
-  config?: ConfigurationDescriptorSDKType;
-}
-/**
  * GetQueryServicesDescriptorRequest is the request used for the GetQueryServicesDescriptor RPC
  * @name GetQueryServicesDescriptorRequest
  * @package cosmos.base.reflection.v2alpha1
@@ -899,13 +719,6 @@ export interface GetQueryServicesDescriptorRequestAminoMsg {
   type: "cosmos-sdk/GetQueryServicesDescriptorRequest";
   value: GetQueryServicesDescriptorRequestAmino;
 }
-/**
- * GetQueryServicesDescriptorRequest is the request used for the GetQueryServicesDescriptor RPC
- * @name GetQueryServicesDescriptorRequestSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetQueryServicesDescriptorRequest
- */
-export interface GetQueryServicesDescriptorRequestSDKType {}
 /**
  * GetQueryServicesDescriptorResponse is the response returned by the GetQueryServicesDescriptor RPC
  * @name GetQueryServicesDescriptorResponse
@@ -939,15 +752,6 @@ export interface GetQueryServicesDescriptorResponseAminoMsg {
   value: GetQueryServicesDescriptorResponseAmino;
 }
 /**
- * GetQueryServicesDescriptorResponse is the response returned by the GetQueryServicesDescriptor RPC
- * @name GetQueryServicesDescriptorResponseSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetQueryServicesDescriptorResponse
- */
-export interface GetQueryServicesDescriptorResponseSDKType {
-  queries?: QueryServicesDescriptorSDKType;
-}
-/**
  * GetTxDescriptorRequest is the request used for the GetTxDescriptor RPC
  * @name GetTxDescriptorRequest
  * @package cosmos.base.reflection.v2alpha1
@@ -969,13 +773,6 @@ export interface GetTxDescriptorRequestAminoMsg {
   type: "cosmos-sdk/GetTxDescriptorRequest";
   value: GetTxDescriptorRequestAmino;
 }
-/**
- * GetTxDescriptorRequest is the request used for the GetTxDescriptor RPC
- * @name GetTxDescriptorRequestSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetTxDescriptorRequest
- */
-export interface GetTxDescriptorRequestSDKType {}
 /**
  * GetTxDescriptorResponse is the response returned by the GetTxDescriptor RPC
  * @name GetTxDescriptorResponse
@@ -1011,15 +808,6 @@ export interface GetTxDescriptorResponseAminoMsg {
   value: GetTxDescriptorResponseAmino;
 }
 /**
- * GetTxDescriptorResponse is the response returned by the GetTxDescriptor RPC
- * @name GetTxDescriptorResponseSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.GetTxDescriptorResponse
- */
-export interface GetTxDescriptorResponseSDKType {
-  tx?: TxDescriptorSDKType;
-}
-/**
  * QueryServicesDescriptor contains the list of cosmos-sdk queriable services
  * @name QueryServicesDescriptor
  * @package cosmos.base.reflection.v2alpha1
@@ -1045,20 +833,11 @@ export interface QueryServicesDescriptorAmino {
   /**
    * query_services is a list of cosmos-sdk QueryServiceDescriptor
    */
-  query_services?: QueryServiceDescriptorAmino[];
+  query_services: QueryServiceDescriptorAmino[];
 }
 export interface QueryServicesDescriptorAminoMsg {
   type: "cosmos-sdk/QueryServicesDescriptor";
   value: QueryServicesDescriptorAmino;
-}
-/**
- * QueryServicesDescriptor contains the list of cosmos-sdk queriable services
- * @name QueryServicesDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.QueryServicesDescriptor
- */
-export interface QueryServicesDescriptorSDKType {
-  query_services: QueryServiceDescriptorSDKType[];
 }
 /**
  * QueryServiceDescriptor describes a cosmos-sdk queryable service
@@ -1094,30 +873,19 @@ export interface QueryServiceDescriptorAmino {
   /**
    * fullname is the protobuf fullname of the service descriptor
    */
-  fullname?: string;
+  fullname: string;
   /**
    * is_module describes if this service is actually exposed by an application's module
    */
-  is_module?: boolean;
+  is_module: boolean;
   /**
    * methods provides a list of query service methods
    */
-  methods?: QueryMethodDescriptorAmino[];
+  methods: QueryMethodDescriptorAmino[];
 }
 export interface QueryServiceDescriptorAminoMsg {
   type: "cosmos-sdk/QueryServiceDescriptor";
   value: QueryServiceDescriptorAmino;
-}
-/**
- * QueryServiceDescriptor describes a cosmos-sdk queryable service
- * @name QueryServiceDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.QueryServiceDescriptor
- */
-export interface QueryServiceDescriptorSDKType {
-  fullname: string;
-  is_module: boolean;
-  methods: QueryMethodDescriptorSDKType[];
 }
 /**
  * QueryMethodDescriptor describes a queryable method of a query service
@@ -1154,28 +922,16 @@ export interface QueryMethodDescriptorAmino {
   /**
    * name is the protobuf name (not fullname) of the method
    */
-  name?: string;
+  name: string;
   /**
    * full_query_path is the path that can be used to query
    * this method via tendermint abci.Query
    */
-  full_query_path?: string;
+  full_query_path: string;
 }
 export interface QueryMethodDescriptorAminoMsg {
   type: "cosmos-sdk/QueryMethodDescriptor";
   value: QueryMethodDescriptorAmino;
-}
-/**
- * QueryMethodDescriptor describes a queryable method of a query service
- * no other info is provided beside method name and tendermint queryable path
- * because it would be redundant with the grpc reflection service
- * @name QueryMethodDescriptorSDKType
- * @package cosmos.base.reflection.v2alpha1
- * @see proto type: cosmos.base.reflection.v2alpha1.QueryMethodDescriptor
- */
-export interface QueryMethodDescriptorSDKType {
-  name: string;
-  full_query_path: string;
 }
 function createBaseAppDescriptor(): AppDescriptor {
   return {
@@ -1197,9 +953,6 @@ export const AppDescriptor = {
   typeUrl: "/cosmos.base.reflection.v2alpha1.AppDescriptor",
   aminoType: "cosmos-sdk/AppDescriptor",
   is(o: any): o is AppDescriptor {
-    return o && o.$typeUrl === AppDescriptor.typeUrl;
-  },
-  isSDK(o: any): o is AppDescriptorSDKType {
     return o && o.$typeUrl === AppDescriptor.typeUrl;
   },
   isAmino(o: any): o is AppDescriptorAmino {
@@ -1258,7 +1011,7 @@ export const AppDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AppDescriptor>, I>>(object: I): AppDescriptor {
+  fromPartial(object: DeepPartial<AppDescriptor>): AppDescriptor {
     const message = createBaseAppDescriptor();
     message.authn = object.authn !== undefined && object.authn !== null ? AuthnDescriptor.fromPartial(object.authn) : undefined;
     message.chain = object.chain !== undefined && object.chain !== null ? ChainDescriptor.fromPartial(object.chain) : undefined;
@@ -1351,9 +1104,6 @@ export const TxDescriptor = {
   is(o: any): o is TxDescriptor {
     return o && (o.$typeUrl === TxDescriptor.typeUrl || typeof o.fullname === "string" && Array.isArray(o.msgs) && (!o.msgs.length || MsgDescriptor.is(o.msgs[0])));
   },
-  isSDK(o: any): o is TxDescriptorSDKType {
-    return o && (o.$typeUrl === TxDescriptor.typeUrl || typeof o.fullname === "string" && Array.isArray(o.msgs) && (!o.msgs.length || MsgDescriptor.isSDK(o.msgs[0])));
-  },
   isAmino(o: any): o is TxDescriptorAmino {
     return o && (o.$typeUrl === TxDescriptor.typeUrl || typeof o.fullname === "string" && Array.isArray(o.msgs) && (!o.msgs.length || MsgDescriptor.isAmino(o.msgs[0])));
   },
@@ -1386,7 +1136,7 @@ export const TxDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxDescriptor>, I>>(object: I): TxDescriptor {
+  fromPartial(object: DeepPartial<TxDescriptor>): TxDescriptor {
     const message = createBaseTxDescriptor();
     message.fullname = object.fullname ?? "";
     message.msgs = object.msgs?.map(e => MsgDescriptor.fromPartial(e)) || [];
@@ -1456,9 +1206,6 @@ export const AuthnDescriptor = {
   is(o: any): o is AuthnDescriptor {
     return o && (o.$typeUrl === AuthnDescriptor.typeUrl || Array.isArray(o.signModes) && (!o.signModes.length || SigningModeDescriptor.is(o.signModes[0])));
   },
-  isSDK(o: any): o is AuthnDescriptorSDKType {
-    return o && (o.$typeUrl === AuthnDescriptor.typeUrl || Array.isArray(o.sign_modes) && (!o.sign_modes.length || SigningModeDescriptor.isSDK(o.sign_modes[0])));
-  },
   isAmino(o: any): o is AuthnDescriptorAmino {
     return o && (o.$typeUrl === AuthnDescriptor.typeUrl || Array.isArray(o.sign_modes) && (!o.sign_modes.length || SigningModeDescriptor.isAmino(o.sign_modes[0])));
   },
@@ -1485,7 +1232,7 @@ export const AuthnDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AuthnDescriptor>, I>>(object: I): AuthnDescriptor {
+  fromPartial(object: DeepPartial<AuthnDescriptor>): AuthnDescriptor {
     const message = createBaseAuthnDescriptor();
     message.signModes = object.signModes?.map(e => SigningModeDescriptor.fromPartial(e)) || [];
     return message;
@@ -1554,9 +1301,6 @@ export const SigningModeDescriptor = {
   is(o: any): o is SigningModeDescriptor {
     return o && (o.$typeUrl === SigningModeDescriptor.typeUrl || typeof o.name === "string" && typeof o.number === "number" && typeof o.authnInfoProviderMethodFullname === "string");
   },
-  isSDK(o: any): o is SigningModeDescriptorSDKType {
-    return o && (o.$typeUrl === SigningModeDescriptor.typeUrl || typeof o.name === "string" && typeof o.number === "number" && typeof o.authn_info_provider_method_fullname === "string");
-  },
   isAmino(o: any): o is SigningModeDescriptorAmino {
     return o && (o.$typeUrl === SigningModeDescriptor.typeUrl || typeof o.name === "string" && typeof o.number === "number" && typeof o.authn_info_provider_method_fullname === "string");
   },
@@ -1595,7 +1339,7 @@ export const SigningModeDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SigningModeDescriptor>, I>>(object: I): SigningModeDescriptor {
+  fromPartial(object: DeepPartial<SigningModeDescriptor>): SigningModeDescriptor {
     const message = createBaseSigningModeDescriptor();
     message.name = object.name ?? "";
     message.number = object.number ?? 0;
@@ -1662,9 +1406,6 @@ export const ChainDescriptor = {
   is(o: any): o is ChainDescriptor {
     return o && (o.$typeUrl === ChainDescriptor.typeUrl || typeof o.id === "string");
   },
-  isSDK(o: any): o is ChainDescriptorSDKType {
-    return o && (o.$typeUrl === ChainDescriptor.typeUrl || typeof o.id === "string");
-  },
   isAmino(o: any): o is ChainDescriptorAmino {
     return o && (o.$typeUrl === ChainDescriptor.typeUrl || typeof o.id === "string");
   },
@@ -1691,7 +1432,7 @@ export const ChainDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ChainDescriptor>, I>>(object: I): ChainDescriptor {
+  fromPartial(object: DeepPartial<ChainDescriptor>): ChainDescriptor {
     const message = createBaseChainDescriptor();
     message.id = object.id ?? "";
     return message;
@@ -1748,9 +1489,6 @@ export const CodecDescriptor = {
   is(o: any): o is CodecDescriptor {
     return o && (o.$typeUrl === CodecDescriptor.typeUrl || Array.isArray(o.interfaces) && (!o.interfaces.length || InterfaceDescriptor.is(o.interfaces[0])));
   },
-  isSDK(o: any): o is CodecDescriptorSDKType {
-    return o && (o.$typeUrl === CodecDescriptor.typeUrl || Array.isArray(o.interfaces) && (!o.interfaces.length || InterfaceDescriptor.isSDK(o.interfaces[0])));
-  },
   isAmino(o: any): o is CodecDescriptorAmino {
     return o && (o.$typeUrl === CodecDescriptor.typeUrl || Array.isArray(o.interfaces) && (!o.interfaces.length || InterfaceDescriptor.isAmino(o.interfaces[0])));
   },
@@ -1777,7 +1515,7 @@ export const CodecDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CodecDescriptor>, I>>(object: I): CodecDescriptor {
+  fromPartial(object: DeepPartial<CodecDescriptor>): CodecDescriptor {
     const message = createBaseCodecDescriptor();
     message.interfaces = object.interfaces?.map(e => InterfaceDescriptor.fromPartial(e)) || [];
     return message;
@@ -1843,9 +1581,6 @@ export const InterfaceDescriptor = {
   is(o: any): o is InterfaceDescriptor {
     return o && (o.$typeUrl === InterfaceDescriptor.typeUrl || typeof o.fullname === "string" && Array.isArray(o.interfaceAcceptingMessages) && (!o.interfaceAcceptingMessages.length || InterfaceAcceptingMessageDescriptor.is(o.interfaceAcceptingMessages[0])) && Array.isArray(o.interfaceImplementers) && (!o.interfaceImplementers.length || InterfaceImplementerDescriptor.is(o.interfaceImplementers[0])));
   },
-  isSDK(o: any): o is InterfaceDescriptorSDKType {
-    return o && (o.$typeUrl === InterfaceDescriptor.typeUrl || typeof o.fullname === "string" && Array.isArray(o.interface_accepting_messages) && (!o.interface_accepting_messages.length || InterfaceAcceptingMessageDescriptor.isSDK(o.interface_accepting_messages[0])) && Array.isArray(o.interface_implementers) && (!o.interface_implementers.length || InterfaceImplementerDescriptor.isSDK(o.interface_implementers[0])));
-  },
   isAmino(o: any): o is InterfaceDescriptorAmino {
     return o && (o.$typeUrl === InterfaceDescriptor.typeUrl || typeof o.fullname === "string" && Array.isArray(o.interface_accepting_messages) && (!o.interface_accepting_messages.length || InterfaceAcceptingMessageDescriptor.isAmino(o.interface_accepting_messages[0])) && Array.isArray(o.interface_implementers) && (!o.interface_implementers.length || InterfaceImplementerDescriptor.isAmino(o.interface_implementers[0])));
   },
@@ -1884,7 +1619,7 @@ export const InterfaceDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<InterfaceDescriptor>, I>>(object: I): InterfaceDescriptor {
+  fromPartial(object: DeepPartial<InterfaceDescriptor>): InterfaceDescriptor {
     const message = createBaseInterfaceDescriptor();
     message.fullname = object.fullname ?? "";
     message.interfaceAcceptingMessages = object.interfaceAcceptingMessages?.map(e => InterfaceAcceptingMessageDescriptor.fromPartial(e)) || [];
@@ -1962,9 +1697,6 @@ export const InterfaceImplementerDescriptor = {
   is(o: any): o is InterfaceImplementerDescriptor {
     return o && (o.$typeUrl === InterfaceImplementerDescriptor.typeUrl || typeof o.fullname === "string" && typeof o.typeUrl === "string");
   },
-  isSDK(o: any): o is InterfaceImplementerDescriptorSDKType {
-    return o && (o.$typeUrl === InterfaceImplementerDescriptor.typeUrl || typeof o.fullname === "string" && typeof o.type_url === "string");
-  },
   isAmino(o: any): o is InterfaceImplementerDescriptorAmino {
     return o && (o.$typeUrl === InterfaceImplementerDescriptor.typeUrl || typeof o.fullname === "string" && typeof o.type_url === "string");
   },
@@ -1997,7 +1729,7 @@ export const InterfaceImplementerDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<InterfaceImplementerDescriptor>, I>>(object: I): InterfaceImplementerDescriptor {
+  fromPartial(object: DeepPartial<InterfaceImplementerDescriptor>): InterfaceImplementerDescriptor {
     const message = createBaseInterfaceImplementerDescriptor();
     message.fullname = object.fullname ?? "";
     message.typeUrl = object.typeUrl ?? "";
@@ -2061,9 +1793,6 @@ export const InterfaceAcceptingMessageDescriptor = {
   is(o: any): o is InterfaceAcceptingMessageDescriptor {
     return o && (o.$typeUrl === InterfaceAcceptingMessageDescriptor.typeUrl || typeof o.fullname === "string" && Array.isArray(o.fieldDescriptorNames) && (!o.fieldDescriptorNames.length || typeof o.fieldDescriptorNames[0] === "string"));
   },
-  isSDK(o: any): o is InterfaceAcceptingMessageDescriptorSDKType {
-    return o && (o.$typeUrl === InterfaceAcceptingMessageDescriptor.typeUrl || typeof o.fullname === "string" && Array.isArray(o.field_descriptor_names) && (!o.field_descriptor_names.length || typeof o.field_descriptor_names[0] === "string"));
-  },
   isAmino(o: any): o is InterfaceAcceptingMessageDescriptorAmino {
     return o && (o.$typeUrl === InterfaceAcceptingMessageDescriptor.typeUrl || typeof o.fullname === "string" && Array.isArray(o.field_descriptor_names) && (!o.field_descriptor_names.length || typeof o.field_descriptor_names[0] === "string"));
   },
@@ -2096,7 +1825,7 @@ export const InterfaceAcceptingMessageDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<InterfaceAcceptingMessageDescriptor>, I>>(object: I): InterfaceAcceptingMessageDescriptor {
+  fromPartial(object: DeepPartial<InterfaceAcceptingMessageDescriptor>): InterfaceAcceptingMessageDescriptor {
     const message = createBaseInterfaceAcceptingMessageDescriptor();
     message.fullname = object.fullname ?? "";
     message.fieldDescriptorNames = object.fieldDescriptorNames?.map(e => e) || [];
@@ -2160,9 +1889,6 @@ export const ConfigurationDescriptor = {
   is(o: any): o is ConfigurationDescriptor {
     return o && (o.$typeUrl === ConfigurationDescriptor.typeUrl || typeof o.bech32AccountAddressPrefix === "string");
   },
-  isSDK(o: any): o is ConfigurationDescriptorSDKType {
-    return o && (o.$typeUrl === ConfigurationDescriptor.typeUrl || typeof o.bech32_account_address_prefix === "string");
-  },
   isAmino(o: any): o is ConfigurationDescriptorAmino {
     return o && (o.$typeUrl === ConfigurationDescriptor.typeUrl || typeof o.bech32_account_address_prefix === "string");
   },
@@ -2189,7 +1915,7 @@ export const ConfigurationDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ConfigurationDescriptor>, I>>(object: I): ConfigurationDescriptor {
+  fromPartial(object: DeepPartial<ConfigurationDescriptor>): ConfigurationDescriptor {
     const message = createBaseConfigurationDescriptor();
     message.bech32AccountAddressPrefix = object.bech32AccountAddressPrefix ?? "";
     return message;
@@ -2246,9 +1972,6 @@ export const MsgDescriptor = {
   is(o: any): o is MsgDescriptor {
     return o && (o.$typeUrl === MsgDescriptor.typeUrl || typeof o.msgTypeUrl === "string");
   },
-  isSDK(o: any): o is MsgDescriptorSDKType {
-    return o && (o.$typeUrl === MsgDescriptor.typeUrl || typeof o.msg_type_url === "string");
-  },
   isAmino(o: any): o is MsgDescriptorAmino {
     return o && (o.$typeUrl === MsgDescriptor.typeUrl || typeof o.msg_type_url === "string");
   },
@@ -2275,7 +1998,7 @@ export const MsgDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgDescriptor>, I>>(object: I): MsgDescriptor {
+  fromPartial(object: DeepPartial<MsgDescriptor>): MsgDescriptor {
     const message = createBaseMsgDescriptor();
     message.msgTypeUrl = object.msgTypeUrl ?? "";
     return message;
@@ -2330,9 +2053,6 @@ export const GetAuthnDescriptorRequest = {
   is(o: any): o is GetAuthnDescriptorRequest {
     return o && o.$typeUrl === GetAuthnDescriptorRequest.typeUrl;
   },
-  isSDK(o: any): o is GetAuthnDescriptorRequestSDKType {
-    return o && o.$typeUrl === GetAuthnDescriptorRequest.typeUrl;
-  },
   isAmino(o: any): o is GetAuthnDescriptorRequestAmino {
     return o && o.$typeUrl === GetAuthnDescriptorRequest.typeUrl;
   },
@@ -2353,7 +2073,7 @@ export const GetAuthnDescriptorRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetAuthnDescriptorRequest>, I>>(_: I): GetAuthnDescriptorRequest {
+  fromPartial(_: DeepPartial<GetAuthnDescriptorRequest>): GetAuthnDescriptorRequest {
     const message = createBaseGetAuthnDescriptorRequest();
     return message;
   },
@@ -2405,9 +2125,6 @@ export const GetAuthnDescriptorResponse = {
   is(o: any): o is GetAuthnDescriptorResponse {
     return o && o.$typeUrl === GetAuthnDescriptorResponse.typeUrl;
   },
-  isSDK(o: any): o is GetAuthnDescriptorResponseSDKType {
-    return o && o.$typeUrl === GetAuthnDescriptorResponse.typeUrl;
-  },
   isAmino(o: any): o is GetAuthnDescriptorResponseAmino {
     return o && o.$typeUrl === GetAuthnDescriptorResponse.typeUrl;
   },
@@ -2434,7 +2151,7 @@ export const GetAuthnDescriptorResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetAuthnDescriptorResponse>, I>>(object: I): GetAuthnDescriptorResponse {
+  fromPartial(object: DeepPartial<GetAuthnDescriptorResponse>): GetAuthnDescriptorResponse {
     const message = createBaseGetAuthnDescriptorResponse();
     message.authn = object.authn !== undefined && object.authn !== null ? AuthnDescriptor.fromPartial(object.authn) : undefined;
     return message;
@@ -2494,9 +2211,6 @@ export const GetChainDescriptorRequest = {
   is(o: any): o is GetChainDescriptorRequest {
     return o && o.$typeUrl === GetChainDescriptorRequest.typeUrl;
   },
-  isSDK(o: any): o is GetChainDescriptorRequestSDKType {
-    return o && o.$typeUrl === GetChainDescriptorRequest.typeUrl;
-  },
   isAmino(o: any): o is GetChainDescriptorRequestAmino {
     return o && o.$typeUrl === GetChainDescriptorRequest.typeUrl;
   },
@@ -2517,7 +2231,7 @@ export const GetChainDescriptorRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetChainDescriptorRequest>, I>>(_: I): GetChainDescriptorRequest {
+  fromPartial(_: DeepPartial<GetChainDescriptorRequest>): GetChainDescriptorRequest {
     const message = createBaseGetChainDescriptorRequest();
     return message;
   },
@@ -2569,9 +2283,6 @@ export const GetChainDescriptorResponse = {
   is(o: any): o is GetChainDescriptorResponse {
     return o && o.$typeUrl === GetChainDescriptorResponse.typeUrl;
   },
-  isSDK(o: any): o is GetChainDescriptorResponseSDKType {
-    return o && o.$typeUrl === GetChainDescriptorResponse.typeUrl;
-  },
   isAmino(o: any): o is GetChainDescriptorResponseAmino {
     return o && o.$typeUrl === GetChainDescriptorResponse.typeUrl;
   },
@@ -2598,7 +2309,7 @@ export const GetChainDescriptorResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetChainDescriptorResponse>, I>>(object: I): GetChainDescriptorResponse {
+  fromPartial(object: DeepPartial<GetChainDescriptorResponse>): GetChainDescriptorResponse {
     const message = createBaseGetChainDescriptorResponse();
     message.chain = object.chain !== undefined && object.chain !== null ? ChainDescriptor.fromPartial(object.chain) : undefined;
     return message;
@@ -2658,9 +2369,6 @@ export const GetCodecDescriptorRequest = {
   is(o: any): o is GetCodecDescriptorRequest {
     return o && o.$typeUrl === GetCodecDescriptorRequest.typeUrl;
   },
-  isSDK(o: any): o is GetCodecDescriptorRequestSDKType {
-    return o && o.$typeUrl === GetCodecDescriptorRequest.typeUrl;
-  },
   isAmino(o: any): o is GetCodecDescriptorRequestAmino {
     return o && o.$typeUrl === GetCodecDescriptorRequest.typeUrl;
   },
@@ -2681,7 +2389,7 @@ export const GetCodecDescriptorRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetCodecDescriptorRequest>, I>>(_: I): GetCodecDescriptorRequest {
+  fromPartial(_: DeepPartial<GetCodecDescriptorRequest>): GetCodecDescriptorRequest {
     const message = createBaseGetCodecDescriptorRequest();
     return message;
   },
@@ -2733,9 +2441,6 @@ export const GetCodecDescriptorResponse = {
   is(o: any): o is GetCodecDescriptorResponse {
     return o && o.$typeUrl === GetCodecDescriptorResponse.typeUrl;
   },
-  isSDK(o: any): o is GetCodecDescriptorResponseSDKType {
-    return o && o.$typeUrl === GetCodecDescriptorResponse.typeUrl;
-  },
   isAmino(o: any): o is GetCodecDescriptorResponseAmino {
     return o && o.$typeUrl === GetCodecDescriptorResponse.typeUrl;
   },
@@ -2762,7 +2467,7 @@ export const GetCodecDescriptorResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetCodecDescriptorResponse>, I>>(object: I): GetCodecDescriptorResponse {
+  fromPartial(object: DeepPartial<GetCodecDescriptorResponse>): GetCodecDescriptorResponse {
     const message = createBaseGetCodecDescriptorResponse();
     message.codec = object.codec !== undefined && object.codec !== null ? CodecDescriptor.fromPartial(object.codec) : undefined;
     return message;
@@ -2822,9 +2527,6 @@ export const GetConfigurationDescriptorRequest = {
   is(o: any): o is GetConfigurationDescriptorRequest {
     return o && o.$typeUrl === GetConfigurationDescriptorRequest.typeUrl;
   },
-  isSDK(o: any): o is GetConfigurationDescriptorRequestSDKType {
-    return o && o.$typeUrl === GetConfigurationDescriptorRequest.typeUrl;
-  },
   isAmino(o: any): o is GetConfigurationDescriptorRequestAmino {
     return o && o.$typeUrl === GetConfigurationDescriptorRequest.typeUrl;
   },
@@ -2845,7 +2547,7 @@ export const GetConfigurationDescriptorRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetConfigurationDescriptorRequest>, I>>(_: I): GetConfigurationDescriptorRequest {
+  fromPartial(_: DeepPartial<GetConfigurationDescriptorRequest>): GetConfigurationDescriptorRequest {
     const message = createBaseGetConfigurationDescriptorRequest();
     return message;
   },
@@ -2897,9 +2599,6 @@ export const GetConfigurationDescriptorResponse = {
   is(o: any): o is GetConfigurationDescriptorResponse {
     return o && o.$typeUrl === GetConfigurationDescriptorResponse.typeUrl;
   },
-  isSDK(o: any): o is GetConfigurationDescriptorResponseSDKType {
-    return o && o.$typeUrl === GetConfigurationDescriptorResponse.typeUrl;
-  },
   isAmino(o: any): o is GetConfigurationDescriptorResponseAmino {
     return o && o.$typeUrl === GetConfigurationDescriptorResponse.typeUrl;
   },
@@ -2926,7 +2625,7 @@ export const GetConfigurationDescriptorResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetConfigurationDescriptorResponse>, I>>(object: I): GetConfigurationDescriptorResponse {
+  fromPartial(object: DeepPartial<GetConfigurationDescriptorResponse>): GetConfigurationDescriptorResponse {
     const message = createBaseGetConfigurationDescriptorResponse();
     message.config = object.config !== undefined && object.config !== null ? ConfigurationDescriptor.fromPartial(object.config) : undefined;
     return message;
@@ -2986,9 +2685,6 @@ export const GetQueryServicesDescriptorRequest = {
   is(o: any): o is GetQueryServicesDescriptorRequest {
     return o && o.$typeUrl === GetQueryServicesDescriptorRequest.typeUrl;
   },
-  isSDK(o: any): o is GetQueryServicesDescriptorRequestSDKType {
-    return o && o.$typeUrl === GetQueryServicesDescriptorRequest.typeUrl;
-  },
   isAmino(o: any): o is GetQueryServicesDescriptorRequestAmino {
     return o && o.$typeUrl === GetQueryServicesDescriptorRequest.typeUrl;
   },
@@ -3009,7 +2705,7 @@ export const GetQueryServicesDescriptorRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetQueryServicesDescriptorRequest>, I>>(_: I): GetQueryServicesDescriptorRequest {
+  fromPartial(_: DeepPartial<GetQueryServicesDescriptorRequest>): GetQueryServicesDescriptorRequest {
     const message = createBaseGetQueryServicesDescriptorRequest();
     return message;
   },
@@ -3061,9 +2757,6 @@ export const GetQueryServicesDescriptorResponse = {
   is(o: any): o is GetQueryServicesDescriptorResponse {
     return o && o.$typeUrl === GetQueryServicesDescriptorResponse.typeUrl;
   },
-  isSDK(o: any): o is GetQueryServicesDescriptorResponseSDKType {
-    return o && o.$typeUrl === GetQueryServicesDescriptorResponse.typeUrl;
-  },
   isAmino(o: any): o is GetQueryServicesDescriptorResponseAmino {
     return o && o.$typeUrl === GetQueryServicesDescriptorResponse.typeUrl;
   },
@@ -3090,7 +2783,7 @@ export const GetQueryServicesDescriptorResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetQueryServicesDescriptorResponse>, I>>(object: I): GetQueryServicesDescriptorResponse {
+  fromPartial(object: DeepPartial<GetQueryServicesDescriptorResponse>): GetQueryServicesDescriptorResponse {
     const message = createBaseGetQueryServicesDescriptorResponse();
     message.queries = object.queries !== undefined && object.queries !== null ? QueryServicesDescriptor.fromPartial(object.queries) : undefined;
     return message;
@@ -3150,9 +2843,6 @@ export const GetTxDescriptorRequest = {
   is(o: any): o is GetTxDescriptorRequest {
     return o && o.$typeUrl === GetTxDescriptorRequest.typeUrl;
   },
-  isSDK(o: any): o is GetTxDescriptorRequestSDKType {
-    return o && o.$typeUrl === GetTxDescriptorRequest.typeUrl;
-  },
   isAmino(o: any): o is GetTxDescriptorRequestAmino {
     return o && o.$typeUrl === GetTxDescriptorRequest.typeUrl;
   },
@@ -3173,7 +2863,7 @@ export const GetTxDescriptorRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetTxDescriptorRequest>, I>>(_: I): GetTxDescriptorRequest {
+  fromPartial(_: DeepPartial<GetTxDescriptorRequest>): GetTxDescriptorRequest {
     const message = createBaseGetTxDescriptorRequest();
     return message;
   },
@@ -3225,9 +2915,6 @@ export const GetTxDescriptorResponse = {
   is(o: any): o is GetTxDescriptorResponse {
     return o && o.$typeUrl === GetTxDescriptorResponse.typeUrl;
   },
-  isSDK(o: any): o is GetTxDescriptorResponseSDKType {
-    return o && o.$typeUrl === GetTxDescriptorResponse.typeUrl;
-  },
   isAmino(o: any): o is GetTxDescriptorResponseAmino {
     return o && o.$typeUrl === GetTxDescriptorResponse.typeUrl;
   },
@@ -3254,7 +2941,7 @@ export const GetTxDescriptorResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetTxDescriptorResponse>, I>>(object: I): GetTxDescriptorResponse {
+  fromPartial(object: DeepPartial<GetTxDescriptorResponse>): GetTxDescriptorResponse {
     const message = createBaseGetTxDescriptorResponse();
     message.tx = object.tx !== undefined && object.tx !== null ? TxDescriptor.fromPartial(object.tx) : undefined;
     return message;
@@ -3316,9 +3003,6 @@ export const QueryServicesDescriptor = {
   is(o: any): o is QueryServicesDescriptor {
     return o && (o.$typeUrl === QueryServicesDescriptor.typeUrl || Array.isArray(o.queryServices) && (!o.queryServices.length || QueryServiceDescriptor.is(o.queryServices[0])));
   },
-  isSDK(o: any): o is QueryServicesDescriptorSDKType {
-    return o && (o.$typeUrl === QueryServicesDescriptor.typeUrl || Array.isArray(o.query_services) && (!o.query_services.length || QueryServiceDescriptor.isSDK(o.query_services[0])));
-  },
   isAmino(o: any): o is QueryServicesDescriptorAmino {
     return o && (o.$typeUrl === QueryServicesDescriptor.typeUrl || Array.isArray(o.query_services) && (!o.query_services.length || QueryServiceDescriptor.isAmino(o.query_services[0])));
   },
@@ -3345,7 +3029,7 @@ export const QueryServicesDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryServicesDescriptor>, I>>(object: I): QueryServicesDescriptor {
+  fromPartial(object: DeepPartial<QueryServicesDescriptor>): QueryServicesDescriptor {
     const message = createBaseQueryServicesDescriptor();
     message.queryServices = object.queryServices?.map(e => QueryServiceDescriptor.fromPartial(e)) || [];
     return message;
@@ -3411,9 +3095,6 @@ export const QueryServiceDescriptor = {
   is(o: any): o is QueryServiceDescriptor {
     return o && (o.$typeUrl === QueryServiceDescriptor.typeUrl || typeof o.fullname === "string" && typeof o.isModule === "boolean" && Array.isArray(o.methods) && (!o.methods.length || QueryMethodDescriptor.is(o.methods[0])));
   },
-  isSDK(o: any): o is QueryServiceDescriptorSDKType {
-    return o && (o.$typeUrl === QueryServiceDescriptor.typeUrl || typeof o.fullname === "string" && typeof o.is_module === "boolean" && Array.isArray(o.methods) && (!o.methods.length || QueryMethodDescriptor.isSDK(o.methods[0])));
-  },
   isAmino(o: any): o is QueryServiceDescriptorAmino {
     return o && (o.$typeUrl === QueryServiceDescriptor.typeUrl || typeof o.fullname === "string" && typeof o.is_module === "boolean" && Array.isArray(o.methods) && (!o.methods.length || QueryMethodDescriptor.isAmino(o.methods[0])));
   },
@@ -3452,7 +3133,7 @@ export const QueryServiceDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryServiceDescriptor>, I>>(object: I): QueryServiceDescriptor {
+  fromPartial(object: DeepPartial<QueryServiceDescriptor>): QueryServiceDescriptor {
     const message = createBaseQueryServiceDescriptor();
     message.fullname = object.fullname ?? "";
     message.isModule = object.isModule ?? false;
@@ -3529,9 +3210,6 @@ export const QueryMethodDescriptor = {
   is(o: any): o is QueryMethodDescriptor {
     return o && (o.$typeUrl === QueryMethodDescriptor.typeUrl || typeof o.name === "string" && typeof o.fullQueryPath === "string");
   },
-  isSDK(o: any): o is QueryMethodDescriptorSDKType {
-    return o && (o.$typeUrl === QueryMethodDescriptor.typeUrl || typeof o.name === "string" && typeof o.full_query_path === "string");
-  },
   isAmino(o: any): o is QueryMethodDescriptorAmino {
     return o && (o.$typeUrl === QueryMethodDescriptor.typeUrl || typeof o.name === "string" && typeof o.full_query_path === "string");
   },
@@ -3564,7 +3242,7 @@ export const QueryMethodDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryMethodDescriptor>, I>>(object: I): QueryMethodDescriptor {
+  fromPartial(object: DeepPartial<QueryMethodDescriptor>): QueryMethodDescriptor {
     const message = createBaseQueryMethodDescriptor();
     message.name = object.name ?? "";
     message.fullQueryPath = object.fullQueryPath ?? "";

@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * Module is the config object of the staking module.
  * @name Module
@@ -44,35 +44,23 @@ export interface ModuleAmino {
    * of module names which provide a staking hooks instance. If no order is
    * provided, then hooks will be applied in alphabetical order of module names.
    */
-  hooks_order?: string[];
+  hooks_order: string[];
   /**
    * authority defines the custom module authority. If not set, defaults to the governance module.
    */
-  authority?: string;
+  authority: string;
   /**
    * bech32_prefix_validator is the bech32 validator prefix for the app.
    */
-  bech32_prefix_validator?: string;
+  bech32_prefix_validator: string;
   /**
    * bech32_prefix_consensus is the bech32 consensus node prefix for the app.
    */
-  bech32_prefix_consensus?: string;
+  bech32_prefix_consensus: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
   value: ModuleAmino;
-}
-/**
- * Module is the config object of the staking module.
- * @name ModuleSDKType
- * @package cosmos.staking.module.v1
- * @see proto type: cosmos.staking.module.v1.Module
- */
-export interface ModuleSDKType {
-  hooks_order: string[];
-  authority: string;
-  bech32_prefix_validator: string;
-  bech32_prefix_consensus: string;
 }
 function createBaseModule(): Module {
   return {
@@ -93,9 +81,6 @@ export const Module = {
   aminoType: "cosmos-sdk/Module",
   is(o: any): o is Module {
     return o && (o.$typeUrl === Module.typeUrl || Array.isArray(o.hooksOrder) && (!o.hooksOrder.length || typeof o.hooksOrder[0] === "string") && typeof o.authority === "string" && typeof o.bech32PrefixValidator === "string" && typeof o.bech32PrefixConsensus === "string");
-  },
-  isSDK(o: any): o is ModuleSDKType {
-    return o && (o.$typeUrl === Module.typeUrl || Array.isArray(o.hooks_order) && (!o.hooks_order.length || typeof o.hooks_order[0] === "string") && typeof o.authority === "string" && typeof o.bech32_prefix_validator === "string" && typeof o.bech32_prefix_consensus === "string");
   },
   isAmino(o: any): o is ModuleAmino {
     return o && (o.$typeUrl === Module.typeUrl || Array.isArray(o.hooks_order) && (!o.hooks_order.length || typeof o.hooks_order[0] === "string") && typeof o.authority === "string" && typeof o.bech32_prefix_validator === "string" && typeof o.bech32_prefix_consensus === "string");
@@ -141,7 +126,7 @@ export const Module = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Module>, I>>(object: I): Module {
+  fromPartial(object: DeepPartial<Module>): Module {
     const message = createBaseModule();
     message.hooksOrder = object.hooksOrder?.map(e => e) || [];
     message.authority = object.authority ?? "";

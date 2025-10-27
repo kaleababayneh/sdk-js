@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Permissions, PermissionsAmino, PermissionsSDKType } from "./types";
+import { Permissions, PermissionsAmino } from "./types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * MsgAuthorizeCircuitBreaker defines the Msg/AuthorizeCircuitBreaker request type.
  * @name MsgAuthorizeCircuitBreaker
@@ -42,11 +42,11 @@ export interface MsgAuthorizeCircuitBreakerAmino {
    * granter is the granter of the circuit breaker permissions and must have
    * LEVEL_SUPER_ADMIN.
    */
-  granter?: string;
+  granter: string;
   /**
    * grantee is the account authorized with the provided permissions.
    */
-  grantee?: string;
+  grantee: string;
   /**
    * permissions are the circuit breaker permissions that the grantee receives.
    * These will overwrite any existing permissions. LEVEL_NONE_UNSPECIFIED can
@@ -57,17 +57,6 @@ export interface MsgAuthorizeCircuitBreakerAmino {
 export interface MsgAuthorizeCircuitBreakerAminoMsg {
   type: "cosmos-sdk/MsgAuthorizeCircuitBreaker";
   value: MsgAuthorizeCircuitBreakerAmino;
-}
-/**
- * MsgAuthorizeCircuitBreaker defines the Msg/AuthorizeCircuitBreaker request type.
- * @name MsgAuthorizeCircuitBreakerSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.MsgAuthorizeCircuitBreaker
- */
-export interface MsgAuthorizeCircuitBreakerSDKType {
-  granter: string;
-  grantee: string;
-  permissions?: PermissionsSDKType;
 }
 /**
  * MsgAuthorizeCircuitBreakerResponse defines the Msg/AuthorizeCircuitBreaker response type.
@@ -89,20 +78,11 @@ export interface MsgAuthorizeCircuitBreakerResponseProtoMsg {
  * @see proto type: cosmos.circuit.v1.MsgAuthorizeCircuitBreakerResponse
  */
 export interface MsgAuthorizeCircuitBreakerResponseAmino {
-  success?: boolean;
+  success: boolean;
 }
 export interface MsgAuthorizeCircuitBreakerResponseAminoMsg {
   type: "cosmos-sdk/MsgAuthorizeCircuitBreakerResponse";
   value: MsgAuthorizeCircuitBreakerResponseAmino;
-}
-/**
- * MsgAuthorizeCircuitBreakerResponse defines the Msg/AuthorizeCircuitBreaker response type.
- * @name MsgAuthorizeCircuitBreakerResponseSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.MsgAuthorizeCircuitBreakerResponse
- */
-export interface MsgAuthorizeCircuitBreakerResponseSDKType {
-  success: boolean;
 }
 /**
  * MsgTripCircuitBreaker defines the Msg/TripCircuitBreaker request type.
@@ -138,7 +118,7 @@ export interface MsgTripCircuitBreakerAmino {
   /**
    * authority is the account authorized to trip the circuit breaker.
    */
-  authority?: string;
+  authority: string;
   /**
    * msg_type_urls specifies a list of type URLs to immediately stop processing.
    * IF IT IS LEFT EMPTY, ALL MSG PROCESSING WILL STOP IMMEDIATELY.
@@ -146,21 +126,11 @@ export interface MsgTripCircuitBreakerAmino {
    * authority does not have permissions to trip the specified msg type URLs
    * (or all URLs), the operation will fail.
    */
-  msg_type_urls?: string[];
+  msg_type_urls: string[];
 }
 export interface MsgTripCircuitBreakerAminoMsg {
   type: "cosmos-sdk/MsgTripCircuitBreaker";
   value: MsgTripCircuitBreakerAmino;
-}
-/**
- * MsgTripCircuitBreaker defines the Msg/TripCircuitBreaker request type.
- * @name MsgTripCircuitBreakerSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.MsgTripCircuitBreaker
- */
-export interface MsgTripCircuitBreakerSDKType {
-  authority: string;
-  msg_type_urls: string[];
 }
 /**
  * MsgTripCircuitBreakerResponse defines the Msg/TripCircuitBreaker response type.
@@ -182,20 +152,11 @@ export interface MsgTripCircuitBreakerResponseProtoMsg {
  * @see proto type: cosmos.circuit.v1.MsgTripCircuitBreakerResponse
  */
 export interface MsgTripCircuitBreakerResponseAmino {
-  success?: boolean;
+  success: boolean;
 }
 export interface MsgTripCircuitBreakerResponseAminoMsg {
   type: "cosmos-sdk/MsgTripCircuitBreakerResponse";
   value: MsgTripCircuitBreakerResponseAmino;
-}
-/**
- * MsgTripCircuitBreakerResponse defines the Msg/TripCircuitBreaker response type.
- * @name MsgTripCircuitBreakerResponseSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.MsgTripCircuitBreakerResponse
- */
-export interface MsgTripCircuitBreakerResponseSDKType {
-  success: boolean;
 }
 /**
  * MsgResetCircuitBreaker defines the Msg/ResetCircuitBreaker request type.
@@ -229,27 +190,17 @@ export interface MsgResetCircuitBreakerAmino {
   /**
    * authority is the account authorized to trip or reset the circuit breaker.
    */
-  authority?: string;
+  authority: string;
   /**
    * msg_type_urls specifies a list of Msg type URLs to resume processing. If
    * it is left empty all Msg processing for type URLs that the account is
    * authorized to trip will resume.
    */
-  msg_type_urls?: string[];
+  msg_type_urls: string[];
 }
 export interface MsgResetCircuitBreakerAminoMsg {
   type: "cosmos-sdk/MsgResetCircuitBreaker";
   value: MsgResetCircuitBreakerAmino;
-}
-/**
- * MsgResetCircuitBreaker defines the Msg/ResetCircuitBreaker request type.
- * @name MsgResetCircuitBreakerSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.MsgResetCircuitBreaker
- */
-export interface MsgResetCircuitBreakerSDKType {
-  authority: string;
-  msg_type_urls: string[];
 }
 /**
  * MsgResetCircuitBreakerResponse defines the Msg/ResetCircuitBreaker response type.
@@ -271,20 +222,11 @@ export interface MsgResetCircuitBreakerResponseProtoMsg {
  * @see proto type: cosmos.circuit.v1.MsgResetCircuitBreakerResponse
  */
 export interface MsgResetCircuitBreakerResponseAmino {
-  success?: boolean;
+  success: boolean;
 }
 export interface MsgResetCircuitBreakerResponseAminoMsg {
   type: "cosmos-sdk/MsgResetCircuitBreakerResponse";
   value: MsgResetCircuitBreakerResponseAmino;
-}
-/**
- * MsgResetCircuitBreakerResponse defines the Msg/ResetCircuitBreaker response type.
- * @name MsgResetCircuitBreakerResponseSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.MsgResetCircuitBreakerResponse
- */
-export interface MsgResetCircuitBreakerResponseSDKType {
-  success: boolean;
 }
 function createBaseMsgAuthorizeCircuitBreaker(): MsgAuthorizeCircuitBreaker {
   return {
@@ -303,9 +245,6 @@ export const MsgAuthorizeCircuitBreaker = {
   typeUrl: "/cosmos.circuit.v1.MsgAuthorizeCircuitBreaker",
   aminoType: "cosmos-sdk/MsgAuthorizeCircuitBreaker",
   is(o: any): o is MsgAuthorizeCircuitBreaker {
-    return o && (o.$typeUrl === MsgAuthorizeCircuitBreaker.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
-  },
-  isSDK(o: any): o is MsgAuthorizeCircuitBreakerSDKType {
     return o && (o.$typeUrl === MsgAuthorizeCircuitBreaker.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
   },
   isAmino(o: any): o is MsgAuthorizeCircuitBreakerAmino {
@@ -346,7 +285,7 @@ export const MsgAuthorizeCircuitBreaker = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgAuthorizeCircuitBreaker>, I>>(object: I): MsgAuthorizeCircuitBreaker {
+  fromPartial(object: DeepPartial<MsgAuthorizeCircuitBreaker>): MsgAuthorizeCircuitBreaker {
     const message = createBaseMsgAuthorizeCircuitBreaker();
     message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
@@ -418,9 +357,6 @@ export const MsgAuthorizeCircuitBreakerResponse = {
   is(o: any): o is MsgAuthorizeCircuitBreakerResponse {
     return o && (o.$typeUrl === MsgAuthorizeCircuitBreakerResponse.typeUrl || typeof o.success === "boolean");
   },
-  isSDK(o: any): o is MsgAuthorizeCircuitBreakerResponseSDKType {
-    return o && (o.$typeUrl === MsgAuthorizeCircuitBreakerResponse.typeUrl || typeof o.success === "boolean");
-  },
   isAmino(o: any): o is MsgAuthorizeCircuitBreakerResponseAmino {
     return o && (o.$typeUrl === MsgAuthorizeCircuitBreakerResponse.typeUrl || typeof o.success === "boolean");
   },
@@ -447,7 +383,7 @@ export const MsgAuthorizeCircuitBreakerResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgAuthorizeCircuitBreakerResponse>, I>>(object: I): MsgAuthorizeCircuitBreakerResponse {
+  fromPartial(object: DeepPartial<MsgAuthorizeCircuitBreakerResponse>): MsgAuthorizeCircuitBreakerResponse {
     const message = createBaseMsgAuthorizeCircuitBreakerResponse();
     message.success = object.success ?? false;
     return message;
@@ -505,9 +441,6 @@ export const MsgTripCircuitBreaker = {
   is(o: any): o is MsgTripCircuitBreaker {
     return o && (o.$typeUrl === MsgTripCircuitBreaker.typeUrl || typeof o.authority === "string" && Array.isArray(o.msgTypeUrls) && (!o.msgTypeUrls.length || typeof o.msgTypeUrls[0] === "string"));
   },
-  isSDK(o: any): o is MsgTripCircuitBreakerSDKType {
-    return o && (o.$typeUrl === MsgTripCircuitBreaker.typeUrl || typeof o.authority === "string" && Array.isArray(o.msg_type_urls) && (!o.msg_type_urls.length || typeof o.msg_type_urls[0] === "string"));
-  },
   isAmino(o: any): o is MsgTripCircuitBreakerAmino {
     return o && (o.$typeUrl === MsgTripCircuitBreaker.typeUrl || typeof o.authority === "string" && Array.isArray(o.msg_type_urls) && (!o.msg_type_urls.length || typeof o.msg_type_urls[0] === "string"));
   },
@@ -540,7 +473,7 @@ export const MsgTripCircuitBreaker = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgTripCircuitBreaker>, I>>(object: I): MsgTripCircuitBreaker {
+  fromPartial(object: DeepPartial<MsgTripCircuitBreaker>): MsgTripCircuitBreaker {
     const message = createBaseMsgTripCircuitBreaker();
     message.authority = object.authority ?? "";
     message.msgTypeUrls = object.msgTypeUrls?.map(e => e) || [];
@@ -604,9 +537,6 @@ export const MsgTripCircuitBreakerResponse = {
   is(o: any): o is MsgTripCircuitBreakerResponse {
     return o && (o.$typeUrl === MsgTripCircuitBreakerResponse.typeUrl || typeof o.success === "boolean");
   },
-  isSDK(o: any): o is MsgTripCircuitBreakerResponseSDKType {
-    return o && (o.$typeUrl === MsgTripCircuitBreakerResponse.typeUrl || typeof o.success === "boolean");
-  },
   isAmino(o: any): o is MsgTripCircuitBreakerResponseAmino {
     return o && (o.$typeUrl === MsgTripCircuitBreakerResponse.typeUrl || typeof o.success === "boolean");
   },
@@ -633,7 +563,7 @@ export const MsgTripCircuitBreakerResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgTripCircuitBreakerResponse>, I>>(object: I): MsgTripCircuitBreakerResponse {
+  fromPartial(object: DeepPartial<MsgTripCircuitBreakerResponse>): MsgTripCircuitBreakerResponse {
     const message = createBaseMsgTripCircuitBreakerResponse();
     message.success = object.success ?? false;
     return message;
@@ -691,9 +621,6 @@ export const MsgResetCircuitBreaker = {
   is(o: any): o is MsgResetCircuitBreaker {
     return o && (o.$typeUrl === MsgResetCircuitBreaker.typeUrl || typeof o.authority === "string" && Array.isArray(o.msgTypeUrls) && (!o.msgTypeUrls.length || typeof o.msgTypeUrls[0] === "string"));
   },
-  isSDK(o: any): o is MsgResetCircuitBreakerSDKType {
-    return o && (o.$typeUrl === MsgResetCircuitBreaker.typeUrl || typeof o.authority === "string" && Array.isArray(o.msg_type_urls) && (!o.msg_type_urls.length || typeof o.msg_type_urls[0] === "string"));
-  },
   isAmino(o: any): o is MsgResetCircuitBreakerAmino {
     return o && (o.$typeUrl === MsgResetCircuitBreaker.typeUrl || typeof o.authority === "string" && Array.isArray(o.msg_type_urls) && (!o.msg_type_urls.length || typeof o.msg_type_urls[0] === "string"));
   },
@@ -726,7 +653,7 @@ export const MsgResetCircuitBreaker = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgResetCircuitBreaker>, I>>(object: I): MsgResetCircuitBreaker {
+  fromPartial(object: DeepPartial<MsgResetCircuitBreaker>): MsgResetCircuitBreaker {
     const message = createBaseMsgResetCircuitBreaker();
     message.authority = object.authority ?? "";
     message.msgTypeUrls = object.msgTypeUrls?.map(e => e) || [];
@@ -790,9 +717,6 @@ export const MsgResetCircuitBreakerResponse = {
   is(o: any): o is MsgResetCircuitBreakerResponse {
     return o && (o.$typeUrl === MsgResetCircuitBreakerResponse.typeUrl || typeof o.success === "boolean");
   },
-  isSDK(o: any): o is MsgResetCircuitBreakerResponseSDKType {
-    return o && (o.$typeUrl === MsgResetCircuitBreakerResponse.typeUrl || typeof o.success === "boolean");
-  },
   isAmino(o: any): o is MsgResetCircuitBreakerResponseAmino {
     return o && (o.$typeUrl === MsgResetCircuitBreakerResponse.typeUrl || typeof o.success === "boolean");
   },
@@ -819,7 +743,7 @@ export const MsgResetCircuitBreakerResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgResetCircuitBreakerResponse>, I>>(object: I): MsgResetCircuitBreakerResponse {
+  fromPartial(object: DeepPartial<MsgResetCircuitBreakerResponse>): MsgResetCircuitBreakerResponse {
     const message = createBaseMsgResetCircuitBreakerResponse();
     message.success = object.success ?? false;
     return message;

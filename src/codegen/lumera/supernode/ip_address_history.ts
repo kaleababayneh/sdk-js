@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * @name IPAddressHistory
  * @package lumera.supernode
@@ -21,21 +21,12 @@ export interface IPAddressHistoryProtoMsg {
  * @see proto type: lumera.supernode.IPAddressHistory
  */
 export interface IPAddressHistoryAmino {
-  address?: string;
-  height?: string;
+  address: string;
+  height: string;
 }
 export interface IPAddressHistoryAminoMsg {
   type: "/lumera.supernode.IPAddressHistory";
   value: IPAddressHistoryAmino;
-}
-/**
- * @name IPAddressHistorySDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.IPAddressHistory
- */
-export interface IPAddressHistorySDKType {
-  address: string;
-  height: bigint;
 }
 function createBaseIPAddressHistory(): IPAddressHistory {
   return {
@@ -51,9 +42,6 @@ function createBaseIPAddressHistory(): IPAddressHistory {
 export const IPAddressHistory = {
   typeUrl: "/lumera.supernode.IPAddressHistory",
   is(o: any): o is IPAddressHistory {
-    return o && (o.$typeUrl === IPAddressHistory.typeUrl || typeof o.address === "string" && typeof o.height === "bigint");
-  },
-  isSDK(o: any): o is IPAddressHistorySDKType {
     return o && (o.$typeUrl === IPAddressHistory.typeUrl || typeof o.address === "string" && typeof o.height === "bigint");
   },
   isAmino(o: any): o is IPAddressHistoryAmino {
@@ -88,7 +76,7 @@ export const IPAddressHistory = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<IPAddressHistory>, I>>(object: I): IPAddressHistory {
+  fromPartial(object: DeepPartial<IPAddressHistory>): IPAddressHistory {
     const message = createBaseIPAddressHistory();
     message.address = object.address ?? "";
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);

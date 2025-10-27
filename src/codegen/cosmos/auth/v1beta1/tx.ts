@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType } from "./auth";
+import { Params, ParamsAmino } from "./auth";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * 
@@ -40,7 +40,7 @@ export interface MsgUpdateParamsAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/auth parameters to update.
    * 
@@ -51,18 +51,6 @@ export interface MsgUpdateParamsAmino {
 export interface MsgUpdateParamsAminoMsg {
   type: "cosmos-sdk/x/auth/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
-}
-/**
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.MsgUpdateParams
- */
-export interface MsgUpdateParamsSDKType {
-  authority: string;
-  params: ParamsSDKType;
 }
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
@@ -92,16 +80,6 @@ export interface MsgUpdateParamsResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateParamsResponse";
   value: MsgUpdateParamsResponseAmino;
 }
-/**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsResponseSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.MsgUpdateParamsResponse
- */
-export interface MsgUpdateParamsResponseSDKType {}
 function createBaseMsgUpdateParams(): MsgUpdateParams {
   return {
     authority: "",
@@ -121,9 +99,6 @@ export const MsgUpdateParams = {
   aminoType: "cosmos-sdk/x/auth/MsgUpdateParams",
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.is(o.params));
-  },
-  isSDK(o: any): o is MsgUpdateParamsSDKType {
-    return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isSDK(o.params));
   },
   isAmino(o: any): o is MsgUpdateParamsAmino {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isAmino(o.params));
@@ -157,7 +132,7 @@ export const MsgUpdateParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParams>, I>>(object: I): MsgUpdateParams {
+  fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
@@ -225,9 +200,6 @@ export const MsgUpdateParamsResponse = {
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateParamsResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateParamsResponseAmino {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -248,7 +220,7 @@ export const MsgUpdateParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParamsResponse>, I>>(_: I): MsgUpdateParamsResponse {
+  fromPartial(_: DeepPartial<MsgUpdateParamsResponse>): MsgUpdateParamsResponse {
     const message = createBaseMsgUpdateParamsResponse();
     return message;
   },

@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { Timestamp } from "../../../google/protobuf/timestamp";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { toTimestamp, fromTimestamp, Exact } from "../../../helpers";
+import { toTimestamp, fromTimestamp, DeepPartial } from "../../../helpers";
 /**
  * Equivocation implements the Evidence interface and defines evidence of number
  * signing misbehavior.
@@ -43,7 +43,7 @@ export interface EquivocationAmino {
   /**
    * height is the equivocation height.
    */
-  height?: string;
+  height: string;
   /**
    * time is the equivocation time.
    */
@@ -51,28 +51,15 @@ export interface EquivocationAmino {
   /**
    * power is the equivocation validator power.
    */
-  power?: string;
+  power: string;
   /**
    * consensus_address is the equivocation validator consensus address.
    */
-  consensus_address?: string;
+  consensus_address: string;
 }
 export interface EquivocationAminoMsg {
   type: "cosmos-sdk/Equivocation";
   value: EquivocationAmino;
-}
-/**
- * Equivocation implements the Evidence interface and defines evidence of number
- * signing misbehavior.
- * @name EquivocationSDKType
- * @package cosmos.evidence.v1beta1
- * @see proto type: cosmos.evidence.v1beta1.Equivocation
- */
-export interface EquivocationSDKType {
-  height: bigint;
-  time: Date;
-  power: bigint;
-  consensus_address: string;
 }
 function createBaseEquivocation(): Equivocation {
   return {
@@ -94,9 +81,6 @@ export const Equivocation = {
   aminoType: "cosmos-sdk/Equivocation",
   is(o: any): o is Equivocation {
     return o && (o.$typeUrl === Equivocation.typeUrl || typeof o.height === "bigint" && Timestamp.is(o.time) && typeof o.power === "bigint" && typeof o.consensusAddress === "string");
-  },
-  isSDK(o: any): o is EquivocationSDKType {
-    return o && (o.$typeUrl === Equivocation.typeUrl || typeof o.height === "bigint" && Timestamp.isSDK(o.time) && typeof o.power === "bigint" && typeof o.consensus_address === "string");
   },
   isAmino(o: any): o is EquivocationAmino {
     return o && (o.$typeUrl === Equivocation.typeUrl || typeof o.height === "bigint" && Timestamp.isAmino(o.time) && typeof o.power === "bigint" && typeof o.consensus_address === "string");
@@ -142,7 +126,7 @@ export const Equivocation = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Equivocation>, I>>(object: I): Equivocation {
+  fromPartial(object: DeepPartial<Equivocation>): Equivocation {
     const message = createBaseEquivocation();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     message.time = object.time ?? undefined;

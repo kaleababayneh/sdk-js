@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Duration, DurationAmino, DurationSDKType } from "../../../../google/protobuf/duration";
+import { Duration, DurationAmino } from "../../../../google/protobuf/duration";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * Module is the config object of the group module.
  * @name Module
@@ -41,21 +41,11 @@ export interface ModuleAmino {
    * max_metadata_len defines the max length of the metadata bytes field for various entities within the group module.
    * Defaults to 255 if not explicitly set.
    */
-  max_metadata_len?: string;
+  max_metadata_len: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
   value: ModuleAmino;
-}
-/**
- * Module is the config object of the group module.
- * @name ModuleSDKType
- * @package cosmos.group.module.v1
- * @see proto type: cosmos.group.module.v1.Module
- */
-export interface ModuleSDKType {
-  max_execution_period: DurationSDKType;
-  max_metadata_len: bigint;
 }
 function createBaseModule(): Module {
   return {
@@ -74,9 +64,6 @@ export const Module = {
   aminoType: "cosmos-sdk/Module",
   is(o: any): o is Module {
     return o && (o.$typeUrl === Module.typeUrl || Duration.is(o.maxExecutionPeriod) && typeof o.maxMetadataLen === "bigint");
-  },
-  isSDK(o: any): o is ModuleSDKType {
-    return o && (o.$typeUrl === Module.typeUrl || Duration.isSDK(o.max_execution_period) && typeof o.max_metadata_len === "bigint");
   },
   isAmino(o: any): o is ModuleAmino {
     return o && (o.$typeUrl === Module.typeUrl || Duration.isAmino(o.max_execution_period) && typeof o.max_metadata_len === "bigint");
@@ -110,7 +97,7 @@ export const Module = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Module>, I>>(object: I): Module {
+  fromPartial(object: DeepPartial<Module>): Module {
     const message = createBaseModule();
     message.maxExecutionPeriod = object.maxExecutionPeriod !== undefined && object.maxExecutionPeriod !== null ? Duration.fromPartial(object.maxExecutionPeriod) : undefined;
     message.maxMetadataLen = object.maxMetadataLen !== undefined && object.maxMetadataLen !== null ? BigInt(object.maxMetadataLen.toString()) : BigInt(0);

@@ -1,11 +1,11 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Vote, VoteAmino, VoteSDKType, LightBlock, LightBlockAmino, LightBlockSDKType } from "./types";
+import { Vote, VoteAmino, LightBlock, LightBlockAmino } from "./types";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { Validator, ValidatorAmino, ValidatorSDKType } from "./validator";
+import { Validator, ValidatorAmino } from "./validator";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact, toTimestamp, fromTimestamp } from "../../helpers";
+import { DeepPartial, toTimestamp, fromTimestamp } from "../../helpers";
 /**
  * @name Evidence
  * @package tendermint.types
@@ -33,15 +33,6 @@ export interface EvidenceAminoMsg {
   value: EvidenceAmino;
 }
 /**
- * @name EvidenceSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.Evidence
- */
-export interface EvidenceSDKType {
-  duplicate_vote_evidence?: DuplicateVoteEvidenceSDKType;
-  light_client_attack_evidence?: LightClientAttackEvidenceSDKType;
-}
-/**
  * DuplicateVoteEvidence contains evidence of a validator signed two conflicting votes.
  * @name DuplicateVoteEvidence
  * @package tendermint.types
@@ -67,26 +58,13 @@ export interface DuplicateVoteEvidenceProtoMsg {
 export interface DuplicateVoteEvidenceAmino {
   vote_a?: VoteAmino;
   vote_b?: VoteAmino;
-  total_voting_power?: string;
-  validator_power?: string;
-  timestamp?: string;
+  total_voting_power: string;
+  validator_power: string;
+  timestamp: string;
 }
 export interface DuplicateVoteEvidenceAminoMsg {
   type: "/tendermint.types.DuplicateVoteEvidence";
   value: DuplicateVoteEvidenceAmino;
-}
-/**
- * DuplicateVoteEvidence contains evidence of a validator signed two conflicting votes.
- * @name DuplicateVoteEvidenceSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.DuplicateVoteEvidence
- */
-export interface DuplicateVoteEvidenceSDKType {
-  vote_a?: VoteSDKType;
-  vote_b?: VoteSDKType;
-  total_voting_power: bigint;
-  validator_power: bigint;
-  timestamp: Date;
 }
 /**
  * LightClientAttackEvidence contains evidence of a set of validators attempting to mislead a light client.
@@ -113,27 +91,14 @@ export interface LightClientAttackEvidenceProtoMsg {
  */
 export interface LightClientAttackEvidenceAmino {
   conflicting_block?: LightBlockAmino;
-  common_height?: string;
-  byzantine_validators?: ValidatorAmino[];
-  total_voting_power?: string;
-  timestamp?: string;
+  common_height: string;
+  byzantine_validators: ValidatorAmino[];
+  total_voting_power: string;
+  timestamp: string;
 }
 export interface LightClientAttackEvidenceAminoMsg {
   type: "/tendermint.types.LightClientAttackEvidence";
   value: LightClientAttackEvidenceAmino;
-}
-/**
- * LightClientAttackEvidence contains evidence of a set of validators attempting to mislead a light client.
- * @name LightClientAttackEvidenceSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.LightClientAttackEvidence
- */
-export interface LightClientAttackEvidenceSDKType {
-  conflicting_block?: LightBlockSDKType;
-  common_height: bigint;
-  byzantine_validators: ValidatorSDKType[];
-  total_voting_power: bigint;
-  timestamp: Date;
 }
 /**
  * @name EvidenceList
@@ -153,19 +118,11 @@ export interface EvidenceListProtoMsg {
  * @see proto type: tendermint.types.EvidenceList
  */
 export interface EvidenceListAmino {
-  evidence?: EvidenceAmino[];
+  evidence: EvidenceAmino[];
 }
 export interface EvidenceListAminoMsg {
   type: "/tendermint.types.EvidenceList";
   value: EvidenceListAmino;
-}
-/**
- * @name EvidenceListSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.EvidenceList
- */
-export interface EvidenceListSDKType {
-  evidence: EvidenceSDKType[];
 }
 function createBaseEvidence(): Evidence {
   return {
@@ -181,9 +138,6 @@ function createBaseEvidence(): Evidence {
 export const Evidence = {
   typeUrl: "/tendermint.types.Evidence",
   is(o: any): o is Evidence {
-    return o && o.$typeUrl === Evidence.typeUrl;
-  },
-  isSDK(o: any): o is EvidenceSDKType {
     return o && o.$typeUrl === Evidence.typeUrl;
   },
   isAmino(o: any): o is EvidenceAmino {
@@ -218,7 +172,7 @@ export const Evidence = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Evidence>, I>>(object: I): Evidence {
+  fromPartial(object: DeepPartial<Evidence>): Evidence {
     const message = createBaseEvidence();
     message.duplicateVoteEvidence = object.duplicateVoteEvidence !== undefined && object.duplicateVoteEvidence !== null ? DuplicateVoteEvidence.fromPartial(object.duplicateVoteEvidence) : undefined;
     message.lightClientAttackEvidence = object.lightClientAttackEvidence !== undefined && object.lightClientAttackEvidence !== null ? LightClientAttackEvidence.fromPartial(object.lightClientAttackEvidence) : undefined;
@@ -283,9 +237,6 @@ export const DuplicateVoteEvidence = {
   is(o: any): o is DuplicateVoteEvidence {
     return o && (o.$typeUrl === DuplicateVoteEvidence.typeUrl || typeof o.totalVotingPower === "bigint" && typeof o.validatorPower === "bigint" && Timestamp.is(o.timestamp));
   },
-  isSDK(o: any): o is DuplicateVoteEvidenceSDKType {
-    return o && (o.$typeUrl === DuplicateVoteEvidence.typeUrl || typeof o.total_voting_power === "bigint" && typeof o.validator_power === "bigint" && Timestamp.isSDK(o.timestamp));
-  },
   isAmino(o: any): o is DuplicateVoteEvidenceAmino {
     return o && (o.$typeUrl === DuplicateVoteEvidence.typeUrl || typeof o.total_voting_power === "bigint" && typeof o.validator_power === "bigint" && Timestamp.isAmino(o.timestamp));
   },
@@ -336,7 +287,7 @@ export const DuplicateVoteEvidence = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DuplicateVoteEvidence>, I>>(object: I): DuplicateVoteEvidence {
+  fromPartial(object: DeepPartial<DuplicateVoteEvidence>): DuplicateVoteEvidence {
     const message = createBaseDuplicateVoteEvidence();
     message.voteA = object.voteA !== undefined && object.voteA !== null ? Vote.fromPartial(object.voteA) : undefined;
     message.voteB = object.voteB !== undefined && object.voteB !== null ? Vote.fromPartial(object.voteB) : undefined;
@@ -415,9 +366,6 @@ export const LightClientAttackEvidence = {
   is(o: any): o is LightClientAttackEvidence {
     return o && (o.$typeUrl === LightClientAttackEvidence.typeUrl || typeof o.commonHeight === "bigint" && Array.isArray(o.byzantineValidators) && (!o.byzantineValidators.length || Validator.is(o.byzantineValidators[0])) && typeof o.totalVotingPower === "bigint" && Timestamp.is(o.timestamp));
   },
-  isSDK(o: any): o is LightClientAttackEvidenceSDKType {
-    return o && (o.$typeUrl === LightClientAttackEvidence.typeUrl || typeof o.common_height === "bigint" && Array.isArray(o.byzantine_validators) && (!o.byzantine_validators.length || Validator.isSDK(o.byzantine_validators[0])) && typeof o.total_voting_power === "bigint" && Timestamp.isSDK(o.timestamp));
-  },
   isAmino(o: any): o is LightClientAttackEvidenceAmino {
     return o && (o.$typeUrl === LightClientAttackEvidence.typeUrl || typeof o.common_height === "bigint" && Array.isArray(o.byzantine_validators) && (!o.byzantine_validators.length || Validator.isAmino(o.byzantine_validators[0])) && typeof o.total_voting_power === "bigint" && Timestamp.isAmino(o.timestamp));
   },
@@ -468,7 +416,7 @@ export const LightClientAttackEvidence = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<LightClientAttackEvidence>, I>>(object: I): LightClientAttackEvidence {
+  fromPartial(object: DeepPartial<LightClientAttackEvidence>): LightClientAttackEvidence {
     const message = createBaseLightClientAttackEvidence();
     message.conflictingBlock = object.conflictingBlock !== undefined && object.conflictingBlock !== null ? LightBlock.fromPartial(object.conflictingBlock) : undefined;
     message.commonHeight = object.commonHeight !== undefined && object.commonHeight !== null ? BigInt(object.commonHeight.toString()) : BigInt(0);
@@ -545,9 +493,6 @@ export const EvidenceList = {
   is(o: any): o is EvidenceList {
     return o && (o.$typeUrl === EvidenceList.typeUrl || Array.isArray(o.evidence) && (!o.evidence.length || Evidence.is(o.evidence[0])));
   },
-  isSDK(o: any): o is EvidenceListSDKType {
-    return o && (o.$typeUrl === EvidenceList.typeUrl || Array.isArray(o.evidence) && (!o.evidence.length || Evidence.isSDK(o.evidence[0])));
-  },
   isAmino(o: any): o is EvidenceListAmino {
     return o && (o.$typeUrl === EvidenceList.typeUrl || Array.isArray(o.evidence) && (!o.evidence.length || Evidence.isAmino(o.evidence[0])));
   },
@@ -574,7 +519,7 @@ export const EvidenceList = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EvidenceList>, I>>(object: I): EvidenceList {
+  fromPartial(object: DeepPartial<EvidenceList>): EvidenceList {
     const message = createBaseEvidenceList();
     message.evidence = object.evidence?.map(e => Evidence.fromPartial(e)) || [];
     return message;

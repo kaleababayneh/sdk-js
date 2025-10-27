@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { ParamChange, ParamChangeAmino, ParamChangeSDKType } from "./params";
+import { ParamChange, ParamChangeAmino } from "./params";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryParamsRequest is request type for the Query/Params RPC method.
@@ -34,25 +34,15 @@ export interface QueryParamsRequestAmino {
   /**
    * subspace defines the module to query the parameter for.
    */
-  subspace?: string;
+  subspace: string;
   /**
    * key defines the key of the parameter in the subspace.
    */
-  key?: string;
+  key: string;
 }
 export interface QueryParamsRequestAminoMsg {
   type: "cosmos-sdk/QueryParamsRequest";
   value: QueryParamsRequestAmino;
-}
-/**
- * QueryParamsRequest is request type for the Query/Params RPC method.
- * @name QueryParamsRequestSDKType
- * @package cosmos.params.v1beta1
- * @see proto type: cosmos.params.v1beta1.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {
-  subspace: string;
-  key: string;
 }
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
@@ -87,15 +77,6 @@ export interface QueryParamsResponseAminoMsg {
   value: QueryParamsResponseAmino;
 }
 /**
- * QueryParamsResponse is response type for the Query/Params RPC method.
- * @name QueryParamsResponseSDKType
- * @package cosmos.params.v1beta1
- * @see proto type: cosmos.params.v1beta1.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  param: ParamChangeSDKType;
-}
-/**
  * QuerySubspacesRequest defines a request type for querying for all registered
  * subspaces and all keys for a subspace.
  * 
@@ -124,16 +105,6 @@ export interface QuerySubspacesRequestAminoMsg {
   value: QuerySubspacesRequestAmino;
 }
 /**
- * QuerySubspacesRequest defines a request type for querying for all registered
- * subspaces and all keys for a subspace.
- * 
- * Since: cosmos-sdk 0.46
- * @name QuerySubspacesRequestSDKType
- * @package cosmos.params.v1beta1
- * @see proto type: cosmos.params.v1beta1.QuerySubspacesRequest
- */
-export interface QuerySubspacesRequestSDKType {}
-/**
  * QuerySubspacesResponse defines the response types for querying for all
  * registered subspaces and all keys for a subspace.
  * 
@@ -159,23 +130,11 @@ export interface QuerySubspacesResponseProtoMsg {
  * @see proto type: cosmos.params.v1beta1.QuerySubspacesResponse
  */
 export interface QuerySubspacesResponseAmino {
-  subspaces?: SubspaceAmino[];
+  subspaces: SubspaceAmino[];
 }
 export interface QuerySubspacesResponseAminoMsg {
   type: "cosmos-sdk/QuerySubspacesResponse";
   value: QuerySubspacesResponseAmino;
-}
-/**
- * QuerySubspacesResponse defines the response types for querying for all
- * registered subspaces and all keys for a subspace.
- * 
- * Since: cosmos-sdk 0.46
- * @name QuerySubspacesResponseSDKType
- * @package cosmos.params.v1beta1
- * @see proto type: cosmos.params.v1beta1.QuerySubspacesResponse
- */
-export interface QuerySubspacesResponseSDKType {
-  subspaces: SubspaceSDKType[];
 }
 /**
  * Subspace defines a parameter subspace name and all the keys that exist for
@@ -204,25 +163,12 @@ export interface SubspaceProtoMsg {
  * @see proto type: cosmos.params.v1beta1.Subspace
  */
 export interface SubspaceAmino {
-  subspace?: string;
-  keys?: string[];
+  subspace: string;
+  keys: string[];
 }
 export interface SubspaceAminoMsg {
   type: "cosmos-sdk/Subspace";
   value: SubspaceAmino;
-}
-/**
- * Subspace defines a parameter subspace name and all the keys that exist for
- * the subspace.
- * 
- * Since: cosmos-sdk 0.46
- * @name SubspaceSDKType
- * @package cosmos.params.v1beta1
- * @see proto type: cosmos.params.v1beta1.Subspace
- */
-export interface SubspaceSDKType {
-  subspace: string;
-  keys: string[];
 }
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {
@@ -240,9 +186,6 @@ export const QueryParamsRequest = {
   typeUrl: "/cosmos.params.v1beta1.QueryParamsRequest",
   aminoType: "cosmos-sdk/QueryParamsRequest",
   is(o: any): o is QueryParamsRequest {
-    return o && (o.$typeUrl === QueryParamsRequest.typeUrl || typeof o.subspace === "string" && typeof o.key === "string");
-  },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
     return o && (o.$typeUrl === QueryParamsRequest.typeUrl || typeof o.subspace === "string" && typeof o.key === "string");
   },
   isAmino(o: any): o is QueryParamsRequestAmino {
@@ -277,7 +220,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(object: I): QueryParamsRequest {
+  fromPartial(object: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     message.subspace = object.subspace ?? "";
     message.key = object.key ?? "";
@@ -339,9 +282,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || ParamChange.is(o.param));
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && (o.$typeUrl === QueryParamsResponse.typeUrl || ParamChange.isSDK(o.param));
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || ParamChange.isAmino(o.param));
   },
@@ -368,7 +308,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.param = object.param !== undefined && object.param !== null ? ParamChange.fromPartial(object.param) : undefined;
     return message;
@@ -431,9 +371,6 @@ export const QuerySubspacesRequest = {
   is(o: any): o is QuerySubspacesRequest {
     return o && o.$typeUrl === QuerySubspacesRequest.typeUrl;
   },
-  isSDK(o: any): o is QuerySubspacesRequestSDKType {
-    return o && o.$typeUrl === QuerySubspacesRequest.typeUrl;
-  },
   isAmino(o: any): o is QuerySubspacesRequestAmino {
     return o && o.$typeUrl === QuerySubspacesRequest.typeUrl;
   },
@@ -454,7 +391,7 @@ export const QuerySubspacesRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySubspacesRequest>, I>>(_: I): QuerySubspacesRequest {
+  fromPartial(_: DeepPartial<QuerySubspacesRequest>): QuerySubspacesRequest {
     const message = createBaseQuerySubspacesRequest();
     return message;
   },
@@ -509,9 +446,6 @@ export const QuerySubspacesResponse = {
   is(o: any): o is QuerySubspacesResponse {
     return o && (o.$typeUrl === QuerySubspacesResponse.typeUrl || Array.isArray(o.subspaces) && (!o.subspaces.length || Subspace.is(o.subspaces[0])));
   },
-  isSDK(o: any): o is QuerySubspacesResponseSDKType {
-    return o && (o.$typeUrl === QuerySubspacesResponse.typeUrl || Array.isArray(o.subspaces) && (!o.subspaces.length || Subspace.isSDK(o.subspaces[0])));
-  },
   isAmino(o: any): o is QuerySubspacesResponseAmino {
     return o && (o.$typeUrl === QuerySubspacesResponse.typeUrl || Array.isArray(o.subspaces) && (!o.subspaces.length || Subspace.isAmino(o.subspaces[0])));
   },
@@ -538,7 +472,7 @@ export const QuerySubspacesResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuerySubspacesResponse>, I>>(object: I): QuerySubspacesResponse {
+  fromPartial(object: DeepPartial<QuerySubspacesResponse>): QuerySubspacesResponse {
     const message = createBaseQuerySubspacesResponse();
     message.subspaces = object.subspaces?.map(e => Subspace.fromPartial(e)) || [];
     return message;
@@ -606,9 +540,6 @@ export const Subspace = {
   is(o: any): o is Subspace {
     return o && (o.$typeUrl === Subspace.typeUrl || typeof o.subspace === "string" && Array.isArray(o.keys) && (!o.keys.length || typeof o.keys[0] === "string"));
   },
-  isSDK(o: any): o is SubspaceSDKType {
-    return o && (o.$typeUrl === Subspace.typeUrl || typeof o.subspace === "string" && Array.isArray(o.keys) && (!o.keys.length || typeof o.keys[0] === "string"));
-  },
   isAmino(o: any): o is SubspaceAmino {
     return o && (o.$typeUrl === Subspace.typeUrl || typeof o.subspace === "string" && Array.isArray(o.keys) && (!o.keys.length || typeof o.keys[0] === "string"));
   },
@@ -641,7 +572,7 @@ export const Subspace = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Subspace>, I>>(object: I): Subspace {
+  fromPartial(object: DeepPartial<Subspace>): Subspace {
     const message = createBaseSubspace();
     message.subspace = object.subspace ?? "";
     message.keys = object.keys?.map(e => e) || [];

@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * Module is the config object of the mint module.
  * @name Module
@@ -26,25 +26,15 @@ export interface ModuleProtoMsg {
  * @see proto type: cosmos.mint.module.v1.Module
  */
 export interface ModuleAmino {
-  fee_collector_name?: string;
+  fee_collector_name: string;
   /**
    * authority defines the custom module authority. If not set, defaults to the governance module.
    */
-  authority?: string;
+  authority: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
   value: ModuleAmino;
-}
-/**
- * Module is the config object of the mint module.
- * @name ModuleSDKType
- * @package cosmos.mint.module.v1
- * @see proto type: cosmos.mint.module.v1.Module
- */
-export interface ModuleSDKType {
-  fee_collector_name: string;
-  authority: string;
 }
 function createBaseModule(): Module {
   return {
@@ -63,9 +53,6 @@ export const Module = {
   aminoType: "cosmos-sdk/Module",
   is(o: any): o is Module {
     return o && (o.$typeUrl === Module.typeUrl || typeof o.feeCollectorName === "string" && typeof o.authority === "string");
-  },
-  isSDK(o: any): o is ModuleSDKType {
-    return o && (o.$typeUrl === Module.typeUrl || typeof o.fee_collector_name === "string" && typeof o.authority === "string");
   },
   isAmino(o: any): o is ModuleAmino {
     return o && (o.$typeUrl === Module.typeUrl || typeof o.fee_collector_name === "string" && typeof o.authority === "string");
@@ -99,7 +86,7 @@ export const Module = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Module>, I>>(object: I): Module {
+  fromPartial(object: DeepPartial<Module>): Module {
     const message = createBaseModule();
     message.feeCollectorName = object.feeCollectorName ?? "";
     message.authority = object.authority ?? "";

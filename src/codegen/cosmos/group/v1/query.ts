@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
-import { GroupInfo, GroupInfoAmino, GroupInfoSDKType, GroupPolicyInfo, GroupPolicyInfoAmino, GroupPolicyInfoSDKType, GroupMember, GroupMemberAmino, GroupMemberSDKType, Proposal, ProposalAmino, ProposalSDKType, Vote, VoteAmino, VoteSDKType, TallyResult, TallyResultAmino, TallyResultSDKType } from "./types";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
+import { GroupInfo, GroupInfoAmino, GroupPolicyInfo, GroupPolicyInfoAmino, GroupMember, GroupMemberAmino, Proposal, ProposalAmino, Vote, VoteAmino, TallyResult, TallyResultAmino } from "./types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryGroupInfoRequest is the Query/GroupInfo request type.
@@ -31,20 +31,11 @@ export interface QueryGroupInfoRequestAmino {
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
 }
 export interface QueryGroupInfoRequestAminoMsg {
   type: "cosmos-sdk/QueryGroupInfoRequest";
   value: QueryGroupInfoRequestAmino;
-}
-/**
- * QueryGroupInfoRequest is the Query/GroupInfo request type.
- * @name QueryGroupInfoRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupInfoRequest
- */
-export interface QueryGroupInfoRequestSDKType {
-  group_id: bigint;
 }
 /**
  * QueryGroupInfoResponse is the Query/GroupInfo response type.
@@ -79,15 +70,6 @@ export interface QueryGroupInfoResponseAminoMsg {
   value: QueryGroupInfoResponseAmino;
 }
 /**
- * QueryGroupInfoResponse is the Query/GroupInfo response type.
- * @name QueryGroupInfoResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupInfoResponse
- */
-export interface QueryGroupInfoResponseSDKType {
-  info?: GroupInfoSDKType;
-}
-/**
  * QueryGroupPolicyInfoRequest is the Query/GroupPolicyInfo request type.
  * @name QueryGroupPolicyInfoRequest
  * @package cosmos.group.v1
@@ -113,20 +95,11 @@ export interface QueryGroupPolicyInfoRequestAmino {
   /**
    * address is the account address of the group policy.
    */
-  address?: string;
+  address: string;
 }
 export interface QueryGroupPolicyInfoRequestAminoMsg {
   type: "cosmos-sdk/QueryGroupPolicyInfoRequest";
   value: QueryGroupPolicyInfoRequestAmino;
-}
-/**
- * QueryGroupPolicyInfoRequest is the Query/GroupPolicyInfo request type.
- * @name QueryGroupPolicyInfoRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupPolicyInfoRequest
- */
-export interface QueryGroupPolicyInfoRequestSDKType {
-  address: string;
 }
 /**
  * QueryGroupPolicyInfoResponse is the Query/GroupPolicyInfo response type.
@@ -161,15 +134,6 @@ export interface QueryGroupPolicyInfoResponseAminoMsg {
   value: QueryGroupPolicyInfoResponseAmino;
 }
 /**
- * QueryGroupPolicyInfoResponse is the Query/GroupPolicyInfo response type.
- * @name QueryGroupPolicyInfoResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupPolicyInfoResponse
- */
-export interface QueryGroupPolicyInfoResponseSDKType {
-  info?: GroupPolicyInfoSDKType;
-}
-/**
  * QueryGroupMembersRequest is the Query/GroupMembers request type.
  * @name QueryGroupMembersRequest
  * @package cosmos.group.v1
@@ -199,7 +163,7 @@ export interface QueryGroupMembersRequestAmino {
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -208,16 +172,6 @@ export interface QueryGroupMembersRequestAmino {
 export interface QueryGroupMembersRequestAminoMsg {
   type: "cosmos-sdk/QueryGroupMembersRequest";
   value: QueryGroupMembersRequestAmino;
-}
-/**
- * QueryGroupMembersRequest is the Query/GroupMembers request type.
- * @name QueryGroupMembersRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupMembersRequest
- */
-export interface QueryGroupMembersRequestSDKType {
-  group_id: bigint;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryGroupMembersResponse is the Query/GroupMembersResponse response type.
@@ -249,7 +203,7 @@ export interface QueryGroupMembersResponseAmino {
   /**
    * members are the members of the group with given group_id.
    */
-  members?: GroupMemberAmino[];
+  members: GroupMemberAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -258,16 +212,6 @@ export interface QueryGroupMembersResponseAmino {
 export interface QueryGroupMembersResponseAminoMsg {
   type: "cosmos-sdk/QueryGroupMembersResponse";
   value: QueryGroupMembersResponseAmino;
-}
-/**
- * QueryGroupMembersResponse is the Query/GroupMembersResponse response type.
- * @name QueryGroupMembersResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupMembersResponse
- */
-export interface QueryGroupMembersResponseSDKType {
-  members: GroupMemberSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryGroupsByAdminRequest is the Query/GroupsByAdmin request type.
@@ -299,7 +243,7 @@ export interface QueryGroupsByAdminRequestAmino {
   /**
    * admin is the account address of a group's admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -308,16 +252,6 @@ export interface QueryGroupsByAdminRequestAmino {
 export interface QueryGroupsByAdminRequestAminoMsg {
   type: "cosmos-sdk/QueryGroupsByAdminRequest";
   value: QueryGroupsByAdminRequestAmino;
-}
-/**
- * QueryGroupsByAdminRequest is the Query/GroupsByAdmin request type.
- * @name QueryGroupsByAdminRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupsByAdminRequest
- */
-export interface QueryGroupsByAdminRequestSDKType {
-  admin: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryGroupsByAdminResponse is the Query/GroupsByAdminResponse response type.
@@ -349,7 +283,7 @@ export interface QueryGroupsByAdminResponseAmino {
   /**
    * groups are the groups info with the provided admin.
    */
-  groups?: GroupInfoAmino[];
+  groups: GroupInfoAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -358,16 +292,6 @@ export interface QueryGroupsByAdminResponseAmino {
 export interface QueryGroupsByAdminResponseAminoMsg {
   type: "cosmos-sdk/QueryGroupsByAdminResponse";
   value: QueryGroupsByAdminResponseAmino;
-}
-/**
- * QueryGroupsByAdminResponse is the Query/GroupsByAdminResponse response type.
- * @name QueryGroupsByAdminResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupsByAdminResponse
- */
-export interface QueryGroupsByAdminResponseSDKType {
-  groups: GroupInfoSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryGroupPoliciesByGroupRequest is the Query/GroupPoliciesByGroup request type.
@@ -399,7 +323,7 @@ export interface QueryGroupPoliciesByGroupRequestAmino {
   /**
    * group_id is the unique ID of the group policy's group.
    */
-  group_id?: string;
+  group_id: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -408,16 +332,6 @@ export interface QueryGroupPoliciesByGroupRequestAmino {
 export interface QueryGroupPoliciesByGroupRequestAminoMsg {
   type: "cosmos-sdk/QueryGroupPoliciesByGroupRequest";
   value: QueryGroupPoliciesByGroupRequestAmino;
-}
-/**
- * QueryGroupPoliciesByGroupRequest is the Query/GroupPoliciesByGroup request type.
- * @name QueryGroupPoliciesByGroupRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupPoliciesByGroupRequest
- */
-export interface QueryGroupPoliciesByGroupRequestSDKType {
-  group_id: bigint;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryGroupPoliciesByGroupResponse is the Query/GroupPoliciesByGroup response type.
@@ -449,7 +363,7 @@ export interface QueryGroupPoliciesByGroupResponseAmino {
   /**
    * group_policies are the group policies info associated with the provided group.
    */
-  group_policies?: GroupPolicyInfoAmino[];
+  group_policies: GroupPolicyInfoAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -458,16 +372,6 @@ export interface QueryGroupPoliciesByGroupResponseAmino {
 export interface QueryGroupPoliciesByGroupResponseAminoMsg {
   type: "cosmos-sdk/QueryGroupPoliciesByGroupResponse";
   value: QueryGroupPoliciesByGroupResponseAmino;
-}
-/**
- * QueryGroupPoliciesByGroupResponse is the Query/GroupPoliciesByGroup response type.
- * @name QueryGroupPoliciesByGroupResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupPoliciesByGroupResponse
- */
-export interface QueryGroupPoliciesByGroupResponseSDKType {
-  group_policies: GroupPolicyInfoSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryGroupPoliciesByAdminRequest is the Query/GroupPoliciesByAdmin request type.
@@ -499,7 +403,7 @@ export interface QueryGroupPoliciesByAdminRequestAmino {
   /**
    * admin is the admin address of the group policy.
    */
-  admin?: string;
+  admin: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -508,16 +412,6 @@ export interface QueryGroupPoliciesByAdminRequestAmino {
 export interface QueryGroupPoliciesByAdminRequestAminoMsg {
   type: "cosmos-sdk/QueryGroupPoliciesByAdminRequest";
   value: QueryGroupPoliciesByAdminRequestAmino;
-}
-/**
- * QueryGroupPoliciesByAdminRequest is the Query/GroupPoliciesByAdmin request type.
- * @name QueryGroupPoliciesByAdminRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupPoliciesByAdminRequest
- */
-export interface QueryGroupPoliciesByAdminRequestSDKType {
-  admin: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryGroupPoliciesByAdminResponse is the Query/GroupPoliciesByAdmin response type.
@@ -549,7 +443,7 @@ export interface QueryGroupPoliciesByAdminResponseAmino {
   /**
    * group_policies are the group policies info with provided admin.
    */
-  group_policies?: GroupPolicyInfoAmino[];
+  group_policies: GroupPolicyInfoAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -558,16 +452,6 @@ export interface QueryGroupPoliciesByAdminResponseAmino {
 export interface QueryGroupPoliciesByAdminResponseAminoMsg {
   type: "cosmos-sdk/QueryGroupPoliciesByAdminResponse";
   value: QueryGroupPoliciesByAdminResponseAmino;
-}
-/**
- * QueryGroupPoliciesByAdminResponse is the Query/GroupPoliciesByAdmin response type.
- * @name QueryGroupPoliciesByAdminResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupPoliciesByAdminResponse
- */
-export interface QueryGroupPoliciesByAdminResponseSDKType {
-  group_policies: GroupPolicyInfoSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryProposalRequest is the Query/Proposal request type.
@@ -595,20 +479,11 @@ export interface QueryProposalRequestAmino {
   /**
    * proposal_id is the unique ID of a proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
 }
 export interface QueryProposalRequestAminoMsg {
   type: "cosmos-sdk/QueryProposalRequest";
   value: QueryProposalRequestAmino;
-}
-/**
- * QueryProposalRequest is the Query/Proposal request type.
- * @name QueryProposalRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryProposalRequest
- */
-export interface QueryProposalRequestSDKType {
-  proposal_id: bigint;
 }
 /**
  * QueryProposalResponse is the Query/Proposal response type.
@@ -643,15 +518,6 @@ export interface QueryProposalResponseAminoMsg {
   value: QueryProposalResponseAmino;
 }
 /**
- * QueryProposalResponse is the Query/Proposal response type.
- * @name QueryProposalResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryProposalResponse
- */
-export interface QueryProposalResponseSDKType {
-  proposal?: ProposalSDKType;
-}
-/**
  * QueryProposalsByGroupPolicyRequest is the Query/ProposalByGroupPolicy request type.
  * @name QueryProposalsByGroupPolicyRequest
  * @package cosmos.group.v1
@@ -681,7 +547,7 @@ export interface QueryProposalsByGroupPolicyRequestAmino {
   /**
    * address is the account address of the group policy related to proposals.
    */
-  address?: string;
+  address: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -690,16 +556,6 @@ export interface QueryProposalsByGroupPolicyRequestAmino {
 export interface QueryProposalsByGroupPolicyRequestAminoMsg {
   type: "cosmos-sdk/QueryProposalsByGroupPolicyRequest";
   value: QueryProposalsByGroupPolicyRequestAmino;
-}
-/**
- * QueryProposalsByGroupPolicyRequest is the Query/ProposalByGroupPolicy request type.
- * @name QueryProposalsByGroupPolicyRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryProposalsByGroupPolicyRequest
- */
-export interface QueryProposalsByGroupPolicyRequestSDKType {
-  address: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryProposalsByGroupPolicyResponse is the Query/ProposalByGroupPolicy response type.
@@ -731,7 +587,7 @@ export interface QueryProposalsByGroupPolicyResponseAmino {
   /**
    * proposals are the proposals with given group policy.
    */
-  proposals?: ProposalAmino[];
+  proposals: ProposalAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -740,16 +596,6 @@ export interface QueryProposalsByGroupPolicyResponseAmino {
 export interface QueryProposalsByGroupPolicyResponseAminoMsg {
   type: "cosmos-sdk/QueryProposalsByGroupPolicyResponse";
   value: QueryProposalsByGroupPolicyResponseAmino;
-}
-/**
- * QueryProposalsByGroupPolicyResponse is the Query/ProposalByGroupPolicy response type.
- * @name QueryProposalsByGroupPolicyResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryProposalsByGroupPolicyResponse
- */
-export interface QueryProposalsByGroupPolicyResponseSDKType {
-  proposals: ProposalSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryVoteByProposalVoterRequest is the Query/VoteByProposalVoter request type.
@@ -781,25 +627,15 @@ export interface QueryVoteByProposalVoterRequestAmino {
   /**
    * proposal_id is the unique ID of a proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
   /**
    * voter is a proposal voter account address.
    */
-  voter?: string;
+  voter: string;
 }
 export interface QueryVoteByProposalVoterRequestAminoMsg {
   type: "cosmos-sdk/QueryVoteByProposalVoterRequest";
   value: QueryVoteByProposalVoterRequestAmino;
-}
-/**
- * QueryVoteByProposalVoterRequest is the Query/VoteByProposalVoter request type.
- * @name QueryVoteByProposalVoterRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryVoteByProposalVoterRequest
- */
-export interface QueryVoteByProposalVoterRequestSDKType {
-  proposal_id: bigint;
-  voter: string;
 }
 /**
  * QueryVoteByProposalVoterResponse is the Query/VoteByProposalVoter response type.
@@ -834,15 +670,6 @@ export interface QueryVoteByProposalVoterResponseAminoMsg {
   value: QueryVoteByProposalVoterResponseAmino;
 }
 /**
- * QueryVoteByProposalVoterResponse is the Query/VoteByProposalVoter response type.
- * @name QueryVoteByProposalVoterResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryVoteByProposalVoterResponse
- */
-export interface QueryVoteByProposalVoterResponseSDKType {
-  vote?: VoteSDKType;
-}
-/**
  * QueryVotesByProposalRequest is the Query/VotesByProposal request type.
  * @name QueryVotesByProposalRequest
  * @package cosmos.group.v1
@@ -872,7 +699,7 @@ export interface QueryVotesByProposalRequestAmino {
   /**
    * proposal_id is the unique ID of a proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -881,16 +708,6 @@ export interface QueryVotesByProposalRequestAmino {
 export interface QueryVotesByProposalRequestAminoMsg {
   type: "cosmos-sdk/QueryVotesByProposalRequest";
   value: QueryVotesByProposalRequestAmino;
-}
-/**
- * QueryVotesByProposalRequest is the Query/VotesByProposal request type.
- * @name QueryVotesByProposalRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryVotesByProposalRequest
- */
-export interface QueryVotesByProposalRequestSDKType {
-  proposal_id: bigint;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryVotesByProposalResponse is the Query/VotesByProposal response type.
@@ -922,7 +739,7 @@ export interface QueryVotesByProposalResponseAmino {
   /**
    * votes are the list of votes for given proposal_id.
    */
-  votes?: VoteAmino[];
+  votes: VoteAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -931,16 +748,6 @@ export interface QueryVotesByProposalResponseAmino {
 export interface QueryVotesByProposalResponseAminoMsg {
   type: "cosmos-sdk/QueryVotesByProposalResponse";
   value: QueryVotesByProposalResponseAmino;
-}
-/**
- * QueryVotesByProposalResponse is the Query/VotesByProposal response type.
- * @name QueryVotesByProposalResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryVotesByProposalResponse
- */
-export interface QueryVotesByProposalResponseSDKType {
-  votes: VoteSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryVotesByVoterRequest is the Query/VotesByVoter request type.
@@ -972,7 +779,7 @@ export interface QueryVotesByVoterRequestAmino {
   /**
    * voter is a proposal voter account address.
    */
-  voter?: string;
+  voter: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -981,16 +788,6 @@ export interface QueryVotesByVoterRequestAmino {
 export interface QueryVotesByVoterRequestAminoMsg {
   type: "cosmos-sdk/QueryVotesByVoterRequest";
   value: QueryVotesByVoterRequestAmino;
-}
-/**
- * QueryVotesByVoterRequest is the Query/VotesByVoter request type.
- * @name QueryVotesByVoterRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryVotesByVoterRequest
- */
-export interface QueryVotesByVoterRequestSDKType {
-  voter: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryVotesByVoterResponse is the Query/VotesByVoter response type.
@@ -1022,7 +819,7 @@ export interface QueryVotesByVoterResponseAmino {
   /**
    * votes are the list of votes by given voter.
    */
-  votes?: VoteAmino[];
+  votes: VoteAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -1031,16 +828,6 @@ export interface QueryVotesByVoterResponseAmino {
 export interface QueryVotesByVoterResponseAminoMsg {
   type: "cosmos-sdk/QueryVotesByVoterResponse";
   value: QueryVotesByVoterResponseAmino;
-}
-/**
- * QueryVotesByVoterResponse is the Query/VotesByVoter response type.
- * @name QueryVotesByVoterResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryVotesByVoterResponse
- */
-export interface QueryVotesByVoterResponseSDKType {
-  votes: VoteSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryGroupsByMemberRequest is the Query/GroupsByMember request type.
@@ -1072,7 +859,7 @@ export interface QueryGroupsByMemberRequestAmino {
   /**
    * address is the group member address.
    */
-  address?: string;
+  address: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -1081,16 +868,6 @@ export interface QueryGroupsByMemberRequestAmino {
 export interface QueryGroupsByMemberRequestAminoMsg {
   type: "cosmos-sdk/QueryGroupsByMemberRequest";
   value: QueryGroupsByMemberRequestAmino;
-}
-/**
- * QueryGroupsByMemberRequest is the Query/GroupsByMember request type.
- * @name QueryGroupsByMemberRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupsByMemberRequest
- */
-export interface QueryGroupsByMemberRequestSDKType {
-  address: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryGroupsByMemberResponse is the Query/GroupsByMember response type.
@@ -1122,7 +899,7 @@ export interface QueryGroupsByMemberResponseAmino {
   /**
    * groups are the groups info with the provided group member.
    */
-  groups?: GroupInfoAmino[];
+  groups: GroupInfoAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -1131,16 +908,6 @@ export interface QueryGroupsByMemberResponseAmino {
 export interface QueryGroupsByMemberResponseAminoMsg {
   type: "cosmos-sdk/QueryGroupsByMemberResponse";
   value: QueryGroupsByMemberResponseAmino;
-}
-/**
- * QueryGroupsByMemberResponse is the Query/GroupsByMember response type.
- * @name QueryGroupsByMemberResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupsByMemberResponse
- */
-export interface QueryGroupsByMemberResponseSDKType {
-  groups: GroupInfoSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryTallyResultRequest is the Query/TallyResult request type.
@@ -1168,20 +935,11 @@ export interface QueryTallyResultRequestAmino {
   /**
    * proposal_id is the unique id of a proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
 }
 export interface QueryTallyResultRequestAminoMsg {
   type: "cosmos-sdk/QueryTallyResultRequest";
   value: QueryTallyResultRequestAmino;
-}
-/**
- * QueryTallyResultRequest is the Query/TallyResult request type.
- * @name QueryTallyResultRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryTallyResultRequest
- */
-export interface QueryTallyResultRequestSDKType {
-  proposal_id: bigint;
 }
 /**
  * QueryTallyResultResponse is the Query/TallyResult response type.
@@ -1214,15 +972,6 @@ export interface QueryTallyResultResponseAmino {
 export interface QueryTallyResultResponseAminoMsg {
   type: "cosmos-sdk/QueryTallyResultResponse";
   value: QueryTallyResultResponseAmino;
-}
-/**
- * QueryTallyResultResponse is the Query/TallyResult response type.
- * @name QueryTallyResultResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryTallyResultResponse
- */
-export interface QueryTallyResultResponseSDKType {
-  tally: TallyResultSDKType;
 }
 /**
  * QueryGroupsRequest is the Query/Groups request type.
@@ -1261,17 +1010,6 @@ export interface QueryGroupsRequestAminoMsg {
   value: QueryGroupsRequestAmino;
 }
 /**
- * QueryGroupsRequest is the Query/Groups request type.
- * 
- * Since: cosmos-sdk 0.47.1
- * @name QueryGroupsRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupsRequest
- */
-export interface QueryGroupsRequestSDKType {
-  pagination?: PageRequestSDKType;
-}
-/**
  * QueryGroupsResponse is the Query/Groups response type.
  * 
  * Since: cosmos-sdk 0.47.1
@@ -1305,7 +1043,7 @@ export interface QueryGroupsResponseAmino {
   /**
    * `groups` is all the groups present in state.
    */
-  groups?: GroupInfoAmino[];
+  groups: GroupInfoAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -1314,18 +1052,6 @@ export interface QueryGroupsResponseAmino {
 export interface QueryGroupsResponseAminoMsg {
   type: "cosmos-sdk/QueryGroupsResponse";
   value: QueryGroupsResponseAmino;
-}
-/**
- * QueryGroupsResponse is the Query/Groups response type.
- * 
- * Since: cosmos-sdk 0.47.1
- * @name QueryGroupsResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.QueryGroupsResponse
- */
-export interface QueryGroupsResponseSDKType {
-  groups: GroupInfoSDKType[];
-  pagination?: PageResponseSDKType;
 }
 function createBaseQueryGroupInfoRequest(): QueryGroupInfoRequest {
   return {
@@ -1343,9 +1069,6 @@ export const QueryGroupInfoRequest = {
   aminoType: "cosmos-sdk/QueryGroupInfoRequest",
   is(o: any): o is QueryGroupInfoRequest {
     return o && (o.$typeUrl === QueryGroupInfoRequest.typeUrl || typeof o.groupId === "bigint");
-  },
-  isSDK(o: any): o is QueryGroupInfoRequestSDKType {
-    return o && (o.$typeUrl === QueryGroupInfoRequest.typeUrl || typeof o.group_id === "bigint");
   },
   isAmino(o: any): o is QueryGroupInfoRequestAmino {
     return o && (o.$typeUrl === QueryGroupInfoRequest.typeUrl || typeof o.group_id === "bigint");
@@ -1373,7 +1096,7 @@ export const QueryGroupInfoRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupInfoRequest>, I>>(object: I): QueryGroupInfoRequest {
+  fromPartial(object: DeepPartial<QueryGroupInfoRequest>): QueryGroupInfoRequest {
     const message = createBaseQueryGroupInfoRequest();
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
     return message;
@@ -1430,9 +1153,6 @@ export const QueryGroupInfoResponse = {
   is(o: any): o is QueryGroupInfoResponse {
     return o && o.$typeUrl === QueryGroupInfoResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryGroupInfoResponseSDKType {
-    return o && o.$typeUrl === QueryGroupInfoResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryGroupInfoResponseAmino {
     return o && o.$typeUrl === QueryGroupInfoResponse.typeUrl;
   },
@@ -1459,7 +1179,7 @@ export const QueryGroupInfoResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupInfoResponse>, I>>(object: I): QueryGroupInfoResponse {
+  fromPartial(object: DeepPartial<QueryGroupInfoResponse>): QueryGroupInfoResponse {
     const message = createBaseQueryGroupInfoResponse();
     message.info = object.info !== undefined && object.info !== null ? GroupInfo.fromPartial(object.info) : undefined;
     return message;
@@ -1521,9 +1241,6 @@ export const QueryGroupPolicyInfoRequest = {
   is(o: any): o is QueryGroupPolicyInfoRequest {
     return o && (o.$typeUrl === QueryGroupPolicyInfoRequest.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is QueryGroupPolicyInfoRequestSDKType {
-    return o && (o.$typeUrl === QueryGroupPolicyInfoRequest.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is QueryGroupPolicyInfoRequestAmino {
     return o && (o.$typeUrl === QueryGroupPolicyInfoRequest.typeUrl || typeof o.address === "string");
   },
@@ -1550,7 +1267,7 @@ export const QueryGroupPolicyInfoRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupPolicyInfoRequest>, I>>(object: I): QueryGroupPolicyInfoRequest {
+  fromPartial(object: DeepPartial<QueryGroupPolicyInfoRequest>): QueryGroupPolicyInfoRequest {
     const message = createBaseQueryGroupPolicyInfoRequest();
     message.address = object.address ?? "";
     return message;
@@ -1607,9 +1324,6 @@ export const QueryGroupPolicyInfoResponse = {
   is(o: any): o is QueryGroupPolicyInfoResponse {
     return o && o.$typeUrl === QueryGroupPolicyInfoResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryGroupPolicyInfoResponseSDKType {
-    return o && o.$typeUrl === QueryGroupPolicyInfoResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryGroupPolicyInfoResponseAmino {
     return o && o.$typeUrl === QueryGroupPolicyInfoResponse.typeUrl;
   },
@@ -1636,7 +1350,7 @@ export const QueryGroupPolicyInfoResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupPolicyInfoResponse>, I>>(object: I): QueryGroupPolicyInfoResponse {
+  fromPartial(object: DeepPartial<QueryGroupPolicyInfoResponse>): QueryGroupPolicyInfoResponse {
     const message = createBaseQueryGroupPolicyInfoResponse();
     message.info = object.info !== undefined && object.info !== null ? GroupPolicyInfo.fromPartial(object.info) : undefined;
     return message;
@@ -1699,9 +1413,6 @@ export const QueryGroupMembersRequest = {
   is(o: any): o is QueryGroupMembersRequest {
     return o && (o.$typeUrl === QueryGroupMembersRequest.typeUrl || typeof o.groupId === "bigint");
   },
-  isSDK(o: any): o is QueryGroupMembersRequestSDKType {
-    return o && (o.$typeUrl === QueryGroupMembersRequest.typeUrl || typeof o.group_id === "bigint");
-  },
   isAmino(o: any): o is QueryGroupMembersRequestAmino {
     return o && (o.$typeUrl === QueryGroupMembersRequest.typeUrl || typeof o.group_id === "bigint");
   },
@@ -1734,7 +1445,7 @@ export const QueryGroupMembersRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupMembersRequest>, I>>(object: I): QueryGroupMembersRequest {
+  fromPartial(object: DeepPartial<QueryGroupMembersRequest>): QueryGroupMembersRequest {
     const message = createBaseQueryGroupMembersRequest();
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -1802,9 +1513,6 @@ export const QueryGroupMembersResponse = {
   is(o: any): o is QueryGroupMembersResponse {
     return o && (o.$typeUrl === QueryGroupMembersResponse.typeUrl || Array.isArray(o.members) && (!o.members.length || GroupMember.is(o.members[0])));
   },
-  isSDK(o: any): o is QueryGroupMembersResponseSDKType {
-    return o && (o.$typeUrl === QueryGroupMembersResponse.typeUrl || Array.isArray(o.members) && (!o.members.length || GroupMember.isSDK(o.members[0])));
-  },
   isAmino(o: any): o is QueryGroupMembersResponseAmino {
     return o && (o.$typeUrl === QueryGroupMembersResponse.typeUrl || Array.isArray(o.members) && (!o.members.length || GroupMember.isAmino(o.members[0])));
   },
@@ -1837,7 +1545,7 @@ export const QueryGroupMembersResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupMembersResponse>, I>>(object: I): QueryGroupMembersResponse {
+  fromPartial(object: DeepPartial<QueryGroupMembersResponse>): QueryGroupMembersResponse {
     const message = createBaseQueryGroupMembersResponse();
     message.members = object.members?.map(e => GroupMember.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -1908,9 +1616,6 @@ export const QueryGroupsByAdminRequest = {
   is(o: any): o is QueryGroupsByAdminRequest {
     return o && (o.$typeUrl === QueryGroupsByAdminRequest.typeUrl || typeof o.admin === "string");
   },
-  isSDK(o: any): o is QueryGroupsByAdminRequestSDKType {
-    return o && (o.$typeUrl === QueryGroupsByAdminRequest.typeUrl || typeof o.admin === "string");
-  },
   isAmino(o: any): o is QueryGroupsByAdminRequestAmino {
     return o && (o.$typeUrl === QueryGroupsByAdminRequest.typeUrl || typeof o.admin === "string");
   },
@@ -1943,7 +1648,7 @@ export const QueryGroupsByAdminRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupsByAdminRequest>, I>>(object: I): QueryGroupsByAdminRequest {
+  fromPartial(object: DeepPartial<QueryGroupsByAdminRequest>): QueryGroupsByAdminRequest {
     const message = createBaseQueryGroupsByAdminRequest();
     message.admin = object.admin ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -2011,9 +1716,6 @@ export const QueryGroupsByAdminResponse = {
   is(o: any): o is QueryGroupsByAdminResponse {
     return o && (o.$typeUrl === QueryGroupsByAdminResponse.typeUrl || Array.isArray(o.groups) && (!o.groups.length || GroupInfo.is(o.groups[0])));
   },
-  isSDK(o: any): o is QueryGroupsByAdminResponseSDKType {
-    return o && (o.$typeUrl === QueryGroupsByAdminResponse.typeUrl || Array.isArray(o.groups) && (!o.groups.length || GroupInfo.isSDK(o.groups[0])));
-  },
   isAmino(o: any): o is QueryGroupsByAdminResponseAmino {
     return o && (o.$typeUrl === QueryGroupsByAdminResponse.typeUrl || Array.isArray(o.groups) && (!o.groups.length || GroupInfo.isAmino(o.groups[0])));
   },
@@ -2046,7 +1748,7 @@ export const QueryGroupsByAdminResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupsByAdminResponse>, I>>(object: I): QueryGroupsByAdminResponse {
+  fromPartial(object: DeepPartial<QueryGroupsByAdminResponse>): QueryGroupsByAdminResponse {
     const message = createBaseQueryGroupsByAdminResponse();
     message.groups = object.groups?.map(e => GroupInfo.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -2117,9 +1819,6 @@ export const QueryGroupPoliciesByGroupRequest = {
   is(o: any): o is QueryGroupPoliciesByGroupRequest {
     return o && (o.$typeUrl === QueryGroupPoliciesByGroupRequest.typeUrl || typeof o.groupId === "bigint");
   },
-  isSDK(o: any): o is QueryGroupPoliciesByGroupRequestSDKType {
-    return o && (o.$typeUrl === QueryGroupPoliciesByGroupRequest.typeUrl || typeof o.group_id === "bigint");
-  },
   isAmino(o: any): o is QueryGroupPoliciesByGroupRequestAmino {
     return o && (o.$typeUrl === QueryGroupPoliciesByGroupRequest.typeUrl || typeof o.group_id === "bigint");
   },
@@ -2152,7 +1851,7 @@ export const QueryGroupPoliciesByGroupRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupPoliciesByGroupRequest>, I>>(object: I): QueryGroupPoliciesByGroupRequest {
+  fromPartial(object: DeepPartial<QueryGroupPoliciesByGroupRequest>): QueryGroupPoliciesByGroupRequest {
     const message = createBaseQueryGroupPoliciesByGroupRequest();
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -2220,9 +1919,6 @@ export const QueryGroupPoliciesByGroupResponse = {
   is(o: any): o is QueryGroupPoliciesByGroupResponse {
     return o && (o.$typeUrl === QueryGroupPoliciesByGroupResponse.typeUrl || Array.isArray(o.groupPolicies) && (!o.groupPolicies.length || GroupPolicyInfo.is(o.groupPolicies[0])));
   },
-  isSDK(o: any): o is QueryGroupPoliciesByGroupResponseSDKType {
-    return o && (o.$typeUrl === QueryGroupPoliciesByGroupResponse.typeUrl || Array.isArray(o.group_policies) && (!o.group_policies.length || GroupPolicyInfo.isSDK(o.group_policies[0])));
-  },
   isAmino(o: any): o is QueryGroupPoliciesByGroupResponseAmino {
     return o && (o.$typeUrl === QueryGroupPoliciesByGroupResponse.typeUrl || Array.isArray(o.group_policies) && (!o.group_policies.length || GroupPolicyInfo.isAmino(o.group_policies[0])));
   },
@@ -2255,7 +1951,7 @@ export const QueryGroupPoliciesByGroupResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupPoliciesByGroupResponse>, I>>(object: I): QueryGroupPoliciesByGroupResponse {
+  fromPartial(object: DeepPartial<QueryGroupPoliciesByGroupResponse>): QueryGroupPoliciesByGroupResponse {
     const message = createBaseQueryGroupPoliciesByGroupResponse();
     message.groupPolicies = object.groupPolicies?.map(e => GroupPolicyInfo.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -2326,9 +2022,6 @@ export const QueryGroupPoliciesByAdminRequest = {
   is(o: any): o is QueryGroupPoliciesByAdminRequest {
     return o && (o.$typeUrl === QueryGroupPoliciesByAdminRequest.typeUrl || typeof o.admin === "string");
   },
-  isSDK(o: any): o is QueryGroupPoliciesByAdminRequestSDKType {
-    return o && (o.$typeUrl === QueryGroupPoliciesByAdminRequest.typeUrl || typeof o.admin === "string");
-  },
   isAmino(o: any): o is QueryGroupPoliciesByAdminRequestAmino {
     return o && (o.$typeUrl === QueryGroupPoliciesByAdminRequest.typeUrl || typeof o.admin === "string");
   },
@@ -2361,7 +2054,7 @@ export const QueryGroupPoliciesByAdminRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupPoliciesByAdminRequest>, I>>(object: I): QueryGroupPoliciesByAdminRequest {
+  fromPartial(object: DeepPartial<QueryGroupPoliciesByAdminRequest>): QueryGroupPoliciesByAdminRequest {
     const message = createBaseQueryGroupPoliciesByAdminRequest();
     message.admin = object.admin ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -2429,9 +2122,6 @@ export const QueryGroupPoliciesByAdminResponse = {
   is(o: any): o is QueryGroupPoliciesByAdminResponse {
     return o && (o.$typeUrl === QueryGroupPoliciesByAdminResponse.typeUrl || Array.isArray(o.groupPolicies) && (!o.groupPolicies.length || GroupPolicyInfo.is(o.groupPolicies[0])));
   },
-  isSDK(o: any): o is QueryGroupPoliciesByAdminResponseSDKType {
-    return o && (o.$typeUrl === QueryGroupPoliciesByAdminResponse.typeUrl || Array.isArray(o.group_policies) && (!o.group_policies.length || GroupPolicyInfo.isSDK(o.group_policies[0])));
-  },
   isAmino(o: any): o is QueryGroupPoliciesByAdminResponseAmino {
     return o && (o.$typeUrl === QueryGroupPoliciesByAdminResponse.typeUrl || Array.isArray(o.group_policies) && (!o.group_policies.length || GroupPolicyInfo.isAmino(o.group_policies[0])));
   },
@@ -2464,7 +2154,7 @@ export const QueryGroupPoliciesByAdminResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupPoliciesByAdminResponse>, I>>(object: I): QueryGroupPoliciesByAdminResponse {
+  fromPartial(object: DeepPartial<QueryGroupPoliciesByAdminResponse>): QueryGroupPoliciesByAdminResponse {
     const message = createBaseQueryGroupPoliciesByAdminResponse();
     message.groupPolicies = object.groupPolicies?.map(e => GroupPolicyInfo.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -2534,9 +2224,6 @@ export const QueryProposalRequest = {
   is(o: any): o is QueryProposalRequest {
     return o && (o.$typeUrl === QueryProposalRequest.typeUrl || typeof o.proposalId === "bigint");
   },
-  isSDK(o: any): o is QueryProposalRequestSDKType {
-    return o && (o.$typeUrl === QueryProposalRequest.typeUrl || typeof o.proposal_id === "bigint");
-  },
   isAmino(o: any): o is QueryProposalRequestAmino {
     return o && (o.$typeUrl === QueryProposalRequest.typeUrl || typeof o.proposal_id === "bigint");
   },
@@ -2563,7 +2250,7 @@ export const QueryProposalRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryProposalRequest>, I>>(object: I): QueryProposalRequest {
+  fromPartial(object: DeepPartial<QueryProposalRequest>): QueryProposalRequest {
     const message = createBaseQueryProposalRequest();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     return message;
@@ -2620,9 +2307,6 @@ export const QueryProposalResponse = {
   is(o: any): o is QueryProposalResponse {
     return o && o.$typeUrl === QueryProposalResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryProposalResponseSDKType {
-    return o && o.$typeUrl === QueryProposalResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryProposalResponseAmino {
     return o && o.$typeUrl === QueryProposalResponse.typeUrl;
   },
@@ -2649,7 +2333,7 @@ export const QueryProposalResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryProposalResponse>, I>>(object: I): QueryProposalResponse {
+  fromPartial(object: DeepPartial<QueryProposalResponse>): QueryProposalResponse {
     const message = createBaseQueryProposalResponse();
     message.proposal = object.proposal !== undefined && object.proposal !== null ? Proposal.fromPartial(object.proposal) : undefined;
     return message;
@@ -2712,9 +2396,6 @@ export const QueryProposalsByGroupPolicyRequest = {
   is(o: any): o is QueryProposalsByGroupPolicyRequest {
     return o && (o.$typeUrl === QueryProposalsByGroupPolicyRequest.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is QueryProposalsByGroupPolicyRequestSDKType {
-    return o && (o.$typeUrl === QueryProposalsByGroupPolicyRequest.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is QueryProposalsByGroupPolicyRequestAmino {
     return o && (o.$typeUrl === QueryProposalsByGroupPolicyRequest.typeUrl || typeof o.address === "string");
   },
@@ -2747,7 +2428,7 @@ export const QueryProposalsByGroupPolicyRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryProposalsByGroupPolicyRequest>, I>>(object: I): QueryProposalsByGroupPolicyRequest {
+  fromPartial(object: DeepPartial<QueryProposalsByGroupPolicyRequest>): QueryProposalsByGroupPolicyRequest {
     const message = createBaseQueryProposalsByGroupPolicyRequest();
     message.address = object.address ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -2815,9 +2496,6 @@ export const QueryProposalsByGroupPolicyResponse = {
   is(o: any): o is QueryProposalsByGroupPolicyResponse {
     return o && (o.$typeUrl === QueryProposalsByGroupPolicyResponse.typeUrl || Array.isArray(o.proposals) && (!o.proposals.length || Proposal.is(o.proposals[0])));
   },
-  isSDK(o: any): o is QueryProposalsByGroupPolicyResponseSDKType {
-    return o && (o.$typeUrl === QueryProposalsByGroupPolicyResponse.typeUrl || Array.isArray(o.proposals) && (!o.proposals.length || Proposal.isSDK(o.proposals[0])));
-  },
   isAmino(o: any): o is QueryProposalsByGroupPolicyResponseAmino {
     return o && (o.$typeUrl === QueryProposalsByGroupPolicyResponse.typeUrl || Array.isArray(o.proposals) && (!o.proposals.length || Proposal.isAmino(o.proposals[0])));
   },
@@ -2850,7 +2528,7 @@ export const QueryProposalsByGroupPolicyResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryProposalsByGroupPolicyResponse>, I>>(object: I): QueryProposalsByGroupPolicyResponse {
+  fromPartial(object: DeepPartial<QueryProposalsByGroupPolicyResponse>): QueryProposalsByGroupPolicyResponse {
     const message = createBaseQueryProposalsByGroupPolicyResponse();
     message.proposals = object.proposals?.map(e => Proposal.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -2921,9 +2599,6 @@ export const QueryVoteByProposalVoterRequest = {
   is(o: any): o is QueryVoteByProposalVoterRequest {
     return o && (o.$typeUrl === QueryVoteByProposalVoterRequest.typeUrl || typeof o.proposalId === "bigint" && typeof o.voter === "string");
   },
-  isSDK(o: any): o is QueryVoteByProposalVoterRequestSDKType {
-    return o && (o.$typeUrl === QueryVoteByProposalVoterRequest.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string");
-  },
   isAmino(o: any): o is QueryVoteByProposalVoterRequestAmino {
     return o && (o.$typeUrl === QueryVoteByProposalVoterRequest.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string");
   },
@@ -2956,7 +2631,7 @@ export const QueryVoteByProposalVoterRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryVoteByProposalVoterRequest>, I>>(object: I): QueryVoteByProposalVoterRequest {
+  fromPartial(object: DeepPartial<QueryVoteByProposalVoterRequest>): QueryVoteByProposalVoterRequest {
     const message = createBaseQueryVoteByProposalVoterRequest();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.voter = object.voter ?? "";
@@ -3018,9 +2693,6 @@ export const QueryVoteByProposalVoterResponse = {
   is(o: any): o is QueryVoteByProposalVoterResponse {
     return o && o.$typeUrl === QueryVoteByProposalVoterResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryVoteByProposalVoterResponseSDKType {
-    return o && o.$typeUrl === QueryVoteByProposalVoterResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryVoteByProposalVoterResponseAmino {
     return o && o.$typeUrl === QueryVoteByProposalVoterResponse.typeUrl;
   },
@@ -3047,7 +2719,7 @@ export const QueryVoteByProposalVoterResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryVoteByProposalVoterResponse>, I>>(object: I): QueryVoteByProposalVoterResponse {
+  fromPartial(object: DeepPartial<QueryVoteByProposalVoterResponse>): QueryVoteByProposalVoterResponse {
     const message = createBaseQueryVoteByProposalVoterResponse();
     message.vote = object.vote !== undefined && object.vote !== null ? Vote.fromPartial(object.vote) : undefined;
     return message;
@@ -3110,9 +2782,6 @@ export const QueryVotesByProposalRequest = {
   is(o: any): o is QueryVotesByProposalRequest {
     return o && (o.$typeUrl === QueryVotesByProposalRequest.typeUrl || typeof o.proposalId === "bigint");
   },
-  isSDK(o: any): o is QueryVotesByProposalRequestSDKType {
-    return o && (o.$typeUrl === QueryVotesByProposalRequest.typeUrl || typeof o.proposal_id === "bigint");
-  },
   isAmino(o: any): o is QueryVotesByProposalRequestAmino {
     return o && (o.$typeUrl === QueryVotesByProposalRequest.typeUrl || typeof o.proposal_id === "bigint");
   },
@@ -3145,7 +2814,7 @@ export const QueryVotesByProposalRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryVotesByProposalRequest>, I>>(object: I): QueryVotesByProposalRequest {
+  fromPartial(object: DeepPartial<QueryVotesByProposalRequest>): QueryVotesByProposalRequest {
     const message = createBaseQueryVotesByProposalRequest();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -3213,9 +2882,6 @@ export const QueryVotesByProposalResponse = {
   is(o: any): o is QueryVotesByProposalResponse {
     return o && (o.$typeUrl === QueryVotesByProposalResponse.typeUrl || Array.isArray(o.votes) && (!o.votes.length || Vote.is(o.votes[0])));
   },
-  isSDK(o: any): o is QueryVotesByProposalResponseSDKType {
-    return o && (o.$typeUrl === QueryVotesByProposalResponse.typeUrl || Array.isArray(o.votes) && (!o.votes.length || Vote.isSDK(o.votes[0])));
-  },
   isAmino(o: any): o is QueryVotesByProposalResponseAmino {
     return o && (o.$typeUrl === QueryVotesByProposalResponse.typeUrl || Array.isArray(o.votes) && (!o.votes.length || Vote.isAmino(o.votes[0])));
   },
@@ -3248,7 +2914,7 @@ export const QueryVotesByProposalResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryVotesByProposalResponse>, I>>(object: I): QueryVotesByProposalResponse {
+  fromPartial(object: DeepPartial<QueryVotesByProposalResponse>): QueryVotesByProposalResponse {
     const message = createBaseQueryVotesByProposalResponse();
     message.votes = object.votes?.map(e => Vote.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -3319,9 +2985,6 @@ export const QueryVotesByVoterRequest = {
   is(o: any): o is QueryVotesByVoterRequest {
     return o && (o.$typeUrl === QueryVotesByVoterRequest.typeUrl || typeof o.voter === "string");
   },
-  isSDK(o: any): o is QueryVotesByVoterRequestSDKType {
-    return o && (o.$typeUrl === QueryVotesByVoterRequest.typeUrl || typeof o.voter === "string");
-  },
   isAmino(o: any): o is QueryVotesByVoterRequestAmino {
     return o && (o.$typeUrl === QueryVotesByVoterRequest.typeUrl || typeof o.voter === "string");
   },
@@ -3354,7 +3017,7 @@ export const QueryVotesByVoterRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryVotesByVoterRequest>, I>>(object: I): QueryVotesByVoterRequest {
+  fromPartial(object: DeepPartial<QueryVotesByVoterRequest>): QueryVotesByVoterRequest {
     const message = createBaseQueryVotesByVoterRequest();
     message.voter = object.voter ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -3422,9 +3085,6 @@ export const QueryVotesByVoterResponse = {
   is(o: any): o is QueryVotesByVoterResponse {
     return o && (o.$typeUrl === QueryVotesByVoterResponse.typeUrl || Array.isArray(o.votes) && (!o.votes.length || Vote.is(o.votes[0])));
   },
-  isSDK(o: any): o is QueryVotesByVoterResponseSDKType {
-    return o && (o.$typeUrl === QueryVotesByVoterResponse.typeUrl || Array.isArray(o.votes) && (!o.votes.length || Vote.isSDK(o.votes[0])));
-  },
   isAmino(o: any): o is QueryVotesByVoterResponseAmino {
     return o && (o.$typeUrl === QueryVotesByVoterResponse.typeUrl || Array.isArray(o.votes) && (!o.votes.length || Vote.isAmino(o.votes[0])));
   },
@@ -3457,7 +3117,7 @@ export const QueryVotesByVoterResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryVotesByVoterResponse>, I>>(object: I): QueryVotesByVoterResponse {
+  fromPartial(object: DeepPartial<QueryVotesByVoterResponse>): QueryVotesByVoterResponse {
     const message = createBaseQueryVotesByVoterResponse();
     message.votes = object.votes?.map(e => Vote.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -3528,9 +3188,6 @@ export const QueryGroupsByMemberRequest = {
   is(o: any): o is QueryGroupsByMemberRequest {
     return o && (o.$typeUrl === QueryGroupsByMemberRequest.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is QueryGroupsByMemberRequestSDKType {
-    return o && (o.$typeUrl === QueryGroupsByMemberRequest.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is QueryGroupsByMemberRequestAmino {
     return o && (o.$typeUrl === QueryGroupsByMemberRequest.typeUrl || typeof o.address === "string");
   },
@@ -3563,7 +3220,7 @@ export const QueryGroupsByMemberRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupsByMemberRequest>, I>>(object: I): QueryGroupsByMemberRequest {
+  fromPartial(object: DeepPartial<QueryGroupsByMemberRequest>): QueryGroupsByMemberRequest {
     const message = createBaseQueryGroupsByMemberRequest();
     message.address = object.address ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -3631,9 +3288,6 @@ export const QueryGroupsByMemberResponse = {
   is(o: any): o is QueryGroupsByMemberResponse {
     return o && (o.$typeUrl === QueryGroupsByMemberResponse.typeUrl || Array.isArray(o.groups) && (!o.groups.length || GroupInfo.is(o.groups[0])));
   },
-  isSDK(o: any): o is QueryGroupsByMemberResponseSDKType {
-    return o && (o.$typeUrl === QueryGroupsByMemberResponse.typeUrl || Array.isArray(o.groups) && (!o.groups.length || GroupInfo.isSDK(o.groups[0])));
-  },
   isAmino(o: any): o is QueryGroupsByMemberResponseAmino {
     return o && (o.$typeUrl === QueryGroupsByMemberResponse.typeUrl || Array.isArray(o.groups) && (!o.groups.length || GroupInfo.isAmino(o.groups[0])));
   },
@@ -3666,7 +3320,7 @@ export const QueryGroupsByMemberResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupsByMemberResponse>, I>>(object: I): QueryGroupsByMemberResponse {
+  fromPartial(object: DeepPartial<QueryGroupsByMemberResponse>): QueryGroupsByMemberResponse {
     const message = createBaseQueryGroupsByMemberResponse();
     message.groups = object.groups?.map(e => GroupInfo.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -3736,9 +3390,6 @@ export const QueryTallyResultRequest = {
   is(o: any): o is QueryTallyResultRequest {
     return o && (o.$typeUrl === QueryTallyResultRequest.typeUrl || typeof o.proposalId === "bigint");
   },
-  isSDK(o: any): o is QueryTallyResultRequestSDKType {
-    return o && (o.$typeUrl === QueryTallyResultRequest.typeUrl || typeof o.proposal_id === "bigint");
-  },
   isAmino(o: any): o is QueryTallyResultRequestAmino {
     return o && (o.$typeUrl === QueryTallyResultRequest.typeUrl || typeof o.proposal_id === "bigint");
   },
@@ -3765,7 +3416,7 @@ export const QueryTallyResultRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryTallyResultRequest>, I>>(object: I): QueryTallyResultRequest {
+  fromPartial(object: DeepPartial<QueryTallyResultRequest>): QueryTallyResultRequest {
     const message = createBaseQueryTallyResultRequest();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     return message;
@@ -3822,9 +3473,6 @@ export const QueryTallyResultResponse = {
   is(o: any): o is QueryTallyResultResponse {
     return o && (o.$typeUrl === QueryTallyResultResponse.typeUrl || TallyResult.is(o.tally));
   },
-  isSDK(o: any): o is QueryTallyResultResponseSDKType {
-    return o && (o.$typeUrl === QueryTallyResultResponse.typeUrl || TallyResult.isSDK(o.tally));
-  },
   isAmino(o: any): o is QueryTallyResultResponseAmino {
     return o && (o.$typeUrl === QueryTallyResultResponse.typeUrl || TallyResult.isAmino(o.tally));
   },
@@ -3851,7 +3499,7 @@ export const QueryTallyResultResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryTallyResultResponse>, I>>(object: I): QueryTallyResultResponse {
+  fromPartial(object: DeepPartial<QueryTallyResultResponse>): QueryTallyResultResponse {
     const message = createBaseQueryTallyResultResponse();
     message.tally = object.tally !== undefined && object.tally !== null ? TallyResult.fromPartial(object.tally) : undefined;
     return message;
@@ -3915,9 +3563,6 @@ export const QueryGroupsRequest = {
   is(o: any): o is QueryGroupsRequest {
     return o && o.$typeUrl === QueryGroupsRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryGroupsRequestSDKType {
-    return o && o.$typeUrl === QueryGroupsRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryGroupsRequestAmino {
     return o && o.$typeUrl === QueryGroupsRequest.typeUrl;
   },
@@ -3944,7 +3589,7 @@ export const QueryGroupsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupsRequest>, I>>(object: I): QueryGroupsRequest {
+  fromPartial(object: DeepPartial<QueryGroupsRequest>): QueryGroupsRequest {
     const message = createBaseQueryGroupsRequest();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -4009,9 +3654,6 @@ export const QueryGroupsResponse = {
   is(o: any): o is QueryGroupsResponse {
     return o && (o.$typeUrl === QueryGroupsResponse.typeUrl || Array.isArray(o.groups) && (!o.groups.length || GroupInfo.is(o.groups[0])));
   },
-  isSDK(o: any): o is QueryGroupsResponseSDKType {
-    return o && (o.$typeUrl === QueryGroupsResponse.typeUrl || Array.isArray(o.groups) && (!o.groups.length || GroupInfo.isSDK(o.groups[0])));
-  },
   isAmino(o: any): o is QueryGroupsResponseAmino {
     return o && (o.$typeUrl === QueryGroupsResponse.typeUrl || Array.isArray(o.groups) && (!o.groups.length || GroupInfo.isAmino(o.groups[0])));
   },
@@ -4044,7 +3686,7 @@ export const QueryGroupsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGroupsResponse>, I>>(object: I): QueryGroupsResponse {
+  fromPartial(object: DeepPartial<QueryGroupsResponse>): QueryGroupsResponse {
     const message = createBaseQueryGroupsResponse();
     message.groups = object.groups?.map(e => GroupInfo.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;

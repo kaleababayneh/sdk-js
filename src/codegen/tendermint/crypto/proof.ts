@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
  * @name Proof
@@ -24,25 +24,14 @@ export interface ProofProtoMsg {
  * @see proto type: tendermint.crypto.Proof
  */
 export interface ProofAmino {
-  total?: string;
-  index?: string;
-  leaf_hash?: string;
-  aunts?: string[];
+  total: string;
+  index: string;
+  leaf_hash: string;
+  aunts: string[];
 }
 export interface ProofAminoMsg {
   type: "/tendermint.crypto.Proof";
   value: ProofAmino;
-}
-/**
- * @name ProofSDKType
- * @package tendermint.crypto
- * @see proto type: tendermint.crypto.Proof
- */
-export interface ProofSDKType {
-  total: bigint;
-  index: bigint;
-  leaf_hash: Uint8Array;
-  aunts: Uint8Array[];
 }
 /**
  * @name ValueOp
@@ -72,7 +61,7 @@ export interface ValueOpAmino {
   /**
    * Encoded in ProofOp.Key.
    */
-  key?: string;
+  key: string;
   /**
    * To encode in ProofOp.Data
    */
@@ -81,15 +70,6 @@ export interface ValueOpAmino {
 export interface ValueOpAminoMsg {
   type: "/tendermint.crypto.ValueOp";
   value: ValueOpAmino;
-}
-/**
- * @name ValueOpSDKType
- * @package tendermint.crypto
- * @see proto type: tendermint.crypto.ValueOp
- */
-export interface ValueOpSDKType {
-  key: Uint8Array;
-  proof?: ProofSDKType;
 }
 /**
  * @name DominoOp
@@ -111,23 +91,13 @@ export interface DominoOpProtoMsg {
  * @see proto type: tendermint.crypto.DominoOp
  */
 export interface DominoOpAmino {
-  key?: string;
-  input?: string;
-  output?: string;
+  key: string;
+  input: string;
+  output: string;
 }
 export interface DominoOpAminoMsg {
   type: "/tendermint.crypto.DominoOp";
   value: DominoOpAmino;
-}
-/**
- * @name DominoOpSDKType
- * @package tendermint.crypto
- * @see proto type: tendermint.crypto.DominoOp
- */
-export interface DominoOpSDKType {
-  key: string;
-  input: string;
-  output: string;
 }
 /**
  * ProofOp defines an operation used for calculating Merkle root
@@ -155,26 +125,13 @@ export interface ProofOpProtoMsg {
  * @see proto type: tendermint.crypto.ProofOp
  */
 export interface ProofOpAmino {
-  type?: string;
-  key?: string;
-  data?: string;
+  type: string;
+  key: string;
+  data: string;
 }
 export interface ProofOpAminoMsg {
   type: "/tendermint.crypto.ProofOp";
   value: ProofOpAmino;
-}
-/**
- * ProofOp defines an operation used for calculating Merkle root
- * The data could be arbitrary format, providing nessecary data
- * for example neighbouring node hash
- * @name ProofOpSDKType
- * @package tendermint.crypto
- * @see proto type: tendermint.crypto.ProofOp
- */
-export interface ProofOpSDKType {
-  type: string;
-  key: Uint8Array;
-  data: Uint8Array;
 }
 /**
  * ProofOps is Merkle proof defined by the list of ProofOps
@@ -196,20 +153,11 @@ export interface ProofOpsProtoMsg {
  * @see proto type: tendermint.crypto.ProofOps
  */
 export interface ProofOpsAmino {
-  ops?: ProofOpAmino[];
+  ops: ProofOpAmino[];
 }
 export interface ProofOpsAminoMsg {
   type: "/tendermint.crypto.ProofOps";
   value: ProofOpsAmino;
-}
-/**
- * ProofOps is Merkle proof defined by the list of ProofOps
- * @name ProofOpsSDKType
- * @package tendermint.crypto
- * @see proto type: tendermint.crypto.ProofOps
- */
-export interface ProofOpsSDKType {
-  ops: ProofOpSDKType[];
 }
 function createBaseProof(): Proof {
   return {
@@ -228,9 +176,6 @@ export const Proof = {
   typeUrl: "/tendermint.crypto.Proof",
   is(o: any): o is Proof {
     return o && (o.$typeUrl === Proof.typeUrl || typeof o.total === "bigint" && typeof o.index === "bigint" && (o.leafHash instanceof Uint8Array || typeof o.leafHash === "string") && Array.isArray(o.aunts) && (!o.aunts.length || o.aunts[0] instanceof Uint8Array || typeof o.aunts[0] === "string"));
-  },
-  isSDK(o: any): o is ProofSDKType {
-    return o && (o.$typeUrl === Proof.typeUrl || typeof o.total === "bigint" && typeof o.index === "bigint" && (o.leaf_hash instanceof Uint8Array || typeof o.leaf_hash === "string") && Array.isArray(o.aunts) && (!o.aunts.length || o.aunts[0] instanceof Uint8Array || typeof o.aunts[0] === "string"));
   },
   isAmino(o: any): o is ProofAmino {
     return o && (o.$typeUrl === Proof.typeUrl || typeof o.total === "bigint" && typeof o.index === "bigint" && (o.leaf_hash instanceof Uint8Array || typeof o.leaf_hash === "string") && Array.isArray(o.aunts) && (!o.aunts.length || o.aunts[0] instanceof Uint8Array || typeof o.aunts[0] === "string"));
@@ -276,7 +221,7 @@ export const Proof = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Proof>, I>>(object: I): Proof {
+  fromPartial(object: DeepPartial<Proof>): Proof {
     const message = createBaseProof();
     message.total = object.total !== undefined && object.total !== null ? BigInt(object.total.toString()) : BigInt(0);
     message.index = object.index !== undefined && object.index !== null ? BigInt(object.index.toString()) : BigInt(0);
@@ -343,9 +288,6 @@ export const ValueOp = {
   is(o: any): o is ValueOp {
     return o && (o.$typeUrl === ValueOp.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
   },
-  isSDK(o: any): o is ValueOpSDKType {
-    return o && (o.$typeUrl === ValueOp.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
-  },
   isAmino(o: any): o is ValueOpAmino {
     return o && (o.$typeUrl === ValueOp.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
   },
@@ -378,7 +320,7 @@ export const ValueOp = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValueOp>, I>>(object: I): ValueOp {
+  fromPartial(object: DeepPartial<ValueOp>): ValueOp {
     const message = createBaseValueOp();
     message.key = object.key ?? new Uint8Array();
     message.proof = object.proof !== undefined && object.proof !== null ? Proof.fromPartial(object.proof) : undefined;
@@ -439,9 +381,6 @@ export const DominoOp = {
   is(o: any): o is DominoOp {
     return o && (o.$typeUrl === DominoOp.typeUrl || typeof o.key === "string" && typeof o.input === "string" && typeof o.output === "string");
   },
-  isSDK(o: any): o is DominoOpSDKType {
-    return o && (o.$typeUrl === DominoOp.typeUrl || typeof o.key === "string" && typeof o.input === "string" && typeof o.output === "string");
-  },
   isAmino(o: any): o is DominoOpAmino {
     return o && (o.$typeUrl === DominoOp.typeUrl || typeof o.key === "string" && typeof o.input === "string" && typeof o.output === "string");
   },
@@ -480,7 +419,7 @@ export const DominoOp = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DominoOp>, I>>(object: I): DominoOp {
+  fromPartial(object: DeepPartial<DominoOp>): DominoOp {
     const message = createBaseDominoOp();
     message.key = object.key ?? "";
     message.input = object.input ?? "";
@@ -544,9 +483,6 @@ export const ProofOp = {
   is(o: any): o is ProofOp {
     return o && (o.$typeUrl === ProofOp.typeUrl || typeof o.type === "string" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.data instanceof Uint8Array || typeof o.data === "string"));
   },
-  isSDK(o: any): o is ProofOpSDKType {
-    return o && (o.$typeUrl === ProofOp.typeUrl || typeof o.type === "string" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.data instanceof Uint8Array || typeof o.data === "string"));
-  },
   isAmino(o: any): o is ProofOpAmino {
     return o && (o.$typeUrl === ProofOp.typeUrl || typeof o.type === "string" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.data instanceof Uint8Array || typeof o.data === "string"));
   },
@@ -585,7 +521,7 @@ export const ProofOp = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ProofOp>, I>>(object: I): ProofOp {
+  fromPartial(object: DeepPartial<ProofOp>): ProofOp {
     const message = createBaseProofOp();
     message.type = object.type ?? "";
     message.key = object.key ?? new Uint8Array();
@@ -645,9 +581,6 @@ export const ProofOps = {
   is(o: any): o is ProofOps {
     return o && (o.$typeUrl === ProofOps.typeUrl || Array.isArray(o.ops) && (!o.ops.length || ProofOp.is(o.ops[0])));
   },
-  isSDK(o: any): o is ProofOpsSDKType {
-    return o && (o.$typeUrl === ProofOps.typeUrl || Array.isArray(o.ops) && (!o.ops.length || ProofOp.isSDK(o.ops[0])));
-  },
   isAmino(o: any): o is ProofOpsAmino {
     return o && (o.$typeUrl === ProofOps.typeUrl || Array.isArray(o.ops) && (!o.ops.length || ProofOp.isAmino(o.ops[0])));
   },
@@ -674,7 +607,7 @@ export const ProofOps = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ProofOps>, I>>(object: I): ProofOps {
+  fromPartial(object: DeepPartial<ProofOps>): ProofOps {
     const message = createBaseProofOps();
     message.ops = object.ops?.map(e => ProofOp.fromPartial(e)) || [];
     return message;

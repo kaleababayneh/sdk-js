@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Represents a fraction in terms of a numerator divided by a denominator.
  * @name Fraction
@@ -33,26 +33,16 @@ export interface FractionAmino {
   /**
    * The numerator in the fraction, e.g. 2 in 2/3.
    */
-  numerator?: string;
+  numerator: string;
   /**
    * The value by which the numerator is divided, e.g. 3 in 2/3. Must be
    * positive.
    */
-  denominator?: string;
+  denominator: string;
 }
 export interface FractionAminoMsg {
   type: "/google.type.Fraction";
   value: FractionAmino;
-}
-/**
- * Represents a fraction in terms of a numerator divided by a denominator.
- * @name FractionSDKType
- * @package google.type
- * @see proto type: google.type.Fraction
- */
-export interface FractionSDKType {
-  numerator: bigint;
-  denominator: bigint;
 }
 function createBaseFraction(): Fraction {
   return {
@@ -69,9 +59,6 @@ function createBaseFraction(): Fraction {
 export const Fraction = {
   typeUrl: "/google.type.Fraction",
   is(o: any): o is Fraction {
-    return o && (o.$typeUrl === Fraction.typeUrl || typeof o.numerator === "bigint" && typeof o.denominator === "bigint");
-  },
-  isSDK(o: any): o is FractionSDKType {
     return o && (o.$typeUrl === Fraction.typeUrl || typeof o.numerator === "bigint" && typeof o.denominator === "bigint");
   },
   isAmino(o: any): o is FractionAmino {
@@ -106,7 +93,7 @@ export const Fraction = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Fraction>, I>>(object: I): Fraction {
+  fromPartial(object: DeepPartial<Fraction>): Fraction {
     const message = createBaseFraction();
     message.numerator = object.numerator !== undefined && object.numerator !== null ? BigInt(object.numerator.toString()) : BigInt(0);
     message.denominator = object.denominator !== undefined && object.denominator !== null ? BigInt(object.denominator.toString()) : BigInt(0);

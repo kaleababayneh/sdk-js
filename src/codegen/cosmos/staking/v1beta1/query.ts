@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
-import { Validator, ValidatorAmino, ValidatorSDKType, DelegationResponse, DelegationResponseAmino, DelegationResponseSDKType, UnbondingDelegation, UnbondingDelegationAmino, UnbondingDelegationSDKType, RedelegationResponse, RedelegationResponseAmino, RedelegationResponseSDKType, HistoricalInfo, HistoricalInfoAmino, HistoricalInfoSDKType, Pool, PoolAmino, PoolSDKType, Params, ParamsAmino, ParamsSDKType } from "./staking";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
+import { Validator, ValidatorAmino, DelegationResponse, DelegationResponseAmino, UnbondingDelegation, UnbondingDelegationAmino, RedelegationResponse, RedelegationResponseAmino, HistoricalInfo, HistoricalInfoAmino, Pool, PoolAmino, Params, ParamsAmino } from "./staking";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * QueryValidatorsRequest is request type for Query/Validators RPC method.
  * @name QueryValidatorsRequest
@@ -35,7 +35,7 @@ export interface QueryValidatorsRequestAmino {
   /**
    * status enables to query for validators matching a given status.
    */
-  status?: string;
+  status: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -44,16 +44,6 @@ export interface QueryValidatorsRequestAmino {
 export interface QueryValidatorsRequestAminoMsg {
   type: "cosmos-sdk/QueryValidatorsRequest";
   value: QueryValidatorsRequestAmino;
-}
-/**
- * QueryValidatorsRequest is request type for Query/Validators RPC method.
- * @name QueryValidatorsRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryValidatorsRequest
- */
-export interface QueryValidatorsRequestSDKType {
-  status: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryValidatorsResponse is response type for the Query/Validators RPC method
@@ -96,16 +86,6 @@ export interface QueryValidatorsResponseAminoMsg {
   value: QueryValidatorsResponseAmino;
 }
 /**
- * QueryValidatorsResponse is response type for the Query/Validators RPC method
- * @name QueryValidatorsResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryValidatorsResponse
- */
-export interface QueryValidatorsResponseSDKType {
-  validators: ValidatorSDKType[];
-  pagination?: PageResponseSDKType;
-}
-/**
  * QueryValidatorRequest is response type for the Query/Validator RPC method
  * @name QueryValidatorRequest
  * @package cosmos.staking.v1beta1
@@ -131,20 +111,11 @@ export interface QueryValidatorRequestAmino {
   /**
    * validator_addr defines the validator address to query for.
    */
-  validator_addr?: string;
+  validator_addr: string;
 }
 export interface QueryValidatorRequestAminoMsg {
   type: "cosmos-sdk/QueryValidatorRequest";
   value: QueryValidatorRequestAmino;
-}
-/**
- * QueryValidatorRequest is response type for the Query/Validator RPC method
- * @name QueryValidatorRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryValidatorRequest
- */
-export interface QueryValidatorRequestSDKType {
-  validator_addr: string;
 }
 /**
  * QueryValidatorResponse is response type for the Query/Validator RPC method
@@ -179,15 +150,6 @@ export interface QueryValidatorResponseAminoMsg {
   value: QueryValidatorResponseAmino;
 }
 /**
- * QueryValidatorResponse is response type for the Query/Validator RPC method
- * @name QueryValidatorResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryValidatorResponse
- */
-export interface QueryValidatorResponseSDKType {
-  validator: ValidatorSDKType;
-}
-/**
  * QueryValidatorDelegationsRequest is request type for the
  * Query/ValidatorDelegations RPC method
  * @name QueryValidatorDelegationsRequest
@@ -219,7 +181,7 @@ export interface QueryValidatorDelegationsRequestAmino {
   /**
    * validator_addr defines the validator address to query for.
    */
-  validator_addr?: string;
+  validator_addr: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -228,17 +190,6 @@ export interface QueryValidatorDelegationsRequestAmino {
 export interface QueryValidatorDelegationsRequestAminoMsg {
   type: "cosmos-sdk/QueryValidatorDelegationsRequest";
   value: QueryValidatorDelegationsRequestAmino;
-}
-/**
- * QueryValidatorDelegationsRequest is request type for the
- * Query/ValidatorDelegations RPC method
- * @name QueryValidatorDelegationsRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryValidatorDelegationsRequest
- */
-export interface QueryValidatorDelegationsRequestSDKType {
-  validator_addr: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryValidatorDelegationsResponse is response type for the
@@ -277,17 +228,6 @@ export interface QueryValidatorDelegationsResponseAminoMsg {
   value: QueryValidatorDelegationsResponseAmino;
 }
 /**
- * QueryValidatorDelegationsResponse is response type for the
- * Query/ValidatorDelegations RPC method
- * @name QueryValidatorDelegationsResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryValidatorDelegationsResponse
- */
-export interface QueryValidatorDelegationsResponseSDKType {
-  delegation_responses: DelegationResponseSDKType[];
-  pagination?: PageResponseSDKType;
-}
-/**
  * QueryValidatorUnbondingDelegationsRequest is required type for the
  * Query/ValidatorUnbondingDelegations RPC method
  * @name QueryValidatorUnbondingDelegationsRequest
@@ -319,7 +259,7 @@ export interface QueryValidatorUnbondingDelegationsRequestAmino {
   /**
    * validator_addr defines the validator address to query for.
    */
-  validator_addr?: string;
+  validator_addr: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -328,17 +268,6 @@ export interface QueryValidatorUnbondingDelegationsRequestAmino {
 export interface QueryValidatorUnbondingDelegationsRequestAminoMsg {
   type: "cosmos-sdk/QueryValidatorUnbondingDelegationsRequest";
   value: QueryValidatorUnbondingDelegationsRequestAmino;
-}
-/**
- * QueryValidatorUnbondingDelegationsRequest is required type for the
- * Query/ValidatorUnbondingDelegations RPC method
- * @name QueryValidatorUnbondingDelegationsRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryValidatorUnbondingDelegationsRequest
- */
-export interface QueryValidatorUnbondingDelegationsRequestSDKType {
-  validator_addr: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryValidatorUnbondingDelegationsResponse is response type for the
@@ -377,17 +306,6 @@ export interface QueryValidatorUnbondingDelegationsResponseAminoMsg {
   value: QueryValidatorUnbondingDelegationsResponseAmino;
 }
 /**
- * QueryValidatorUnbondingDelegationsResponse is response type for the
- * Query/ValidatorUnbondingDelegations RPC method.
- * @name QueryValidatorUnbondingDelegationsResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryValidatorUnbondingDelegationsResponse
- */
-export interface QueryValidatorUnbondingDelegationsResponseSDKType {
-  unbonding_responses: UnbondingDelegationSDKType[];
-  pagination?: PageResponseSDKType;
-}
-/**
  * QueryDelegationRequest is request type for the Query/Delegation RPC method.
  * @name QueryDelegationRequest
  * @package cosmos.staking.v1beta1
@@ -417,25 +335,15 @@ export interface QueryDelegationRequestAmino {
   /**
    * delegator_addr defines the delegator address to query for.
    */
-  delegator_addr?: string;
+  delegator_addr: string;
   /**
    * validator_addr defines the validator address to query for.
    */
-  validator_addr?: string;
+  validator_addr: string;
 }
 export interface QueryDelegationRequestAminoMsg {
   type: "cosmos-sdk/QueryDelegationRequest";
   value: QueryDelegationRequestAmino;
-}
-/**
- * QueryDelegationRequest is request type for the Query/Delegation RPC method.
- * @name QueryDelegationRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryDelegationRequest
- */
-export interface QueryDelegationRequestSDKType {
-  delegator_addr: string;
-  validator_addr: string;
 }
 /**
  * QueryDelegationResponse is response type for the Query/Delegation RPC method.
@@ -470,15 +378,6 @@ export interface QueryDelegationResponseAminoMsg {
   value: QueryDelegationResponseAmino;
 }
 /**
- * QueryDelegationResponse is response type for the Query/Delegation RPC method.
- * @name QueryDelegationResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryDelegationResponse
- */
-export interface QueryDelegationResponseSDKType {
-  delegation_response?: DelegationResponseSDKType;
-}
-/**
  * QueryUnbondingDelegationRequest is request type for the
  * Query/UnbondingDelegation RPC method.
  * @name QueryUnbondingDelegationRequest
@@ -510,26 +409,15 @@ export interface QueryUnbondingDelegationRequestAmino {
   /**
    * delegator_addr defines the delegator address to query for.
    */
-  delegator_addr?: string;
+  delegator_addr: string;
   /**
    * validator_addr defines the validator address to query for.
    */
-  validator_addr?: string;
+  validator_addr: string;
 }
 export interface QueryUnbondingDelegationRequestAminoMsg {
   type: "cosmos-sdk/QueryUnbondingDelegationRequest";
   value: QueryUnbondingDelegationRequestAmino;
-}
-/**
- * QueryUnbondingDelegationRequest is request type for the
- * Query/UnbondingDelegation RPC method.
- * @name QueryUnbondingDelegationRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryUnbondingDelegationRequest
- */
-export interface QueryUnbondingDelegationRequestSDKType {
-  delegator_addr: string;
-  validator_addr: string;
 }
 /**
  * QueryDelegationResponse is response type for the Query/UnbondingDelegation
@@ -566,16 +454,6 @@ export interface QueryUnbondingDelegationResponseAminoMsg {
   value: QueryUnbondingDelegationResponseAmino;
 }
 /**
- * QueryDelegationResponse is response type for the Query/UnbondingDelegation
- * RPC method.
- * @name QueryUnbondingDelegationResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryUnbondingDelegationResponse
- */
-export interface QueryUnbondingDelegationResponseSDKType {
-  unbond: UnbondingDelegationSDKType;
-}
-/**
  * QueryDelegatorDelegationsRequest is request type for the
  * Query/DelegatorDelegations RPC method.
  * @name QueryDelegatorDelegationsRequest
@@ -607,7 +485,7 @@ export interface QueryDelegatorDelegationsRequestAmino {
   /**
    * delegator_addr defines the delegator address to query for.
    */
-  delegator_addr?: string;
+  delegator_addr: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -616,17 +494,6 @@ export interface QueryDelegatorDelegationsRequestAmino {
 export interface QueryDelegatorDelegationsRequestAminoMsg {
   type: "cosmos-sdk/QueryDelegatorDelegationsRequest";
   value: QueryDelegatorDelegationsRequestAmino;
-}
-/**
- * QueryDelegatorDelegationsRequest is request type for the
- * Query/DelegatorDelegations RPC method.
- * @name QueryDelegatorDelegationsRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryDelegatorDelegationsRequest
- */
-export interface QueryDelegatorDelegationsRequestSDKType {
-  delegator_addr: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryDelegatorDelegationsResponse is response type for the
@@ -671,17 +538,6 @@ export interface QueryDelegatorDelegationsResponseAminoMsg {
   value: QueryDelegatorDelegationsResponseAmino;
 }
 /**
- * QueryDelegatorDelegationsResponse is response type for the
- * Query/DelegatorDelegations RPC method.
- * @name QueryDelegatorDelegationsResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryDelegatorDelegationsResponse
- */
-export interface QueryDelegatorDelegationsResponseSDKType {
-  delegation_responses: DelegationResponseSDKType[];
-  pagination?: PageResponseSDKType;
-}
-/**
  * QueryDelegatorUnbondingDelegationsRequest is request type for the
  * Query/DelegatorUnbondingDelegations RPC method.
  * @name QueryDelegatorUnbondingDelegationsRequest
@@ -713,7 +569,7 @@ export interface QueryDelegatorUnbondingDelegationsRequestAmino {
   /**
    * delegator_addr defines the delegator address to query for.
    */
-  delegator_addr?: string;
+  delegator_addr: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -722,17 +578,6 @@ export interface QueryDelegatorUnbondingDelegationsRequestAmino {
 export interface QueryDelegatorUnbondingDelegationsRequestAminoMsg {
   type: "cosmos-sdk/QueryDelegatorUnbondingDelegationsRequest";
   value: QueryDelegatorUnbondingDelegationsRequestAmino;
-}
-/**
- * QueryDelegatorUnbondingDelegationsRequest is request type for the
- * Query/DelegatorUnbondingDelegations RPC method.
- * @name QueryDelegatorUnbondingDelegationsRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryDelegatorUnbondingDelegationsRequest
- */
-export interface QueryDelegatorUnbondingDelegationsRequestSDKType {
-  delegator_addr: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryUnbondingDelegatorDelegationsResponse is response type for the
@@ -769,17 +614,6 @@ export interface QueryDelegatorUnbondingDelegationsResponseAmino {
 export interface QueryDelegatorUnbondingDelegationsResponseAminoMsg {
   type: "cosmos-sdk/QueryDelegatorUnbondingDelegationsResponse";
   value: QueryDelegatorUnbondingDelegationsResponseAmino;
-}
-/**
- * QueryUnbondingDelegatorDelegationsResponse is response type for the
- * Query/UnbondingDelegatorDelegations RPC method.
- * @name QueryDelegatorUnbondingDelegationsResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryDelegatorUnbondingDelegationsResponse
- */
-export interface QueryDelegatorUnbondingDelegationsResponseSDKType {
-  unbonding_responses: UnbondingDelegationSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryRedelegationsRequest is request type for the Query/Redelegations RPC
@@ -821,15 +655,15 @@ export interface QueryRedelegationsRequestAmino {
   /**
    * delegator_addr defines the delegator address to query for.
    */
-  delegator_addr?: string;
+  delegator_addr: string;
   /**
    * src_validator_addr defines the validator address to redelegate from.
    */
-  src_validator_addr?: string;
+  src_validator_addr: string;
   /**
    * dst_validator_addr defines the validator address to redelegate to.
    */
-  dst_validator_addr?: string;
+  dst_validator_addr: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -838,19 +672,6 @@ export interface QueryRedelegationsRequestAmino {
 export interface QueryRedelegationsRequestAminoMsg {
   type: "cosmos-sdk/QueryRedelegationsRequest";
   value: QueryRedelegationsRequestAmino;
-}
-/**
- * QueryRedelegationsRequest is request type for the Query/Redelegations RPC
- * method.
- * @name QueryRedelegationsRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryRedelegationsRequest
- */
-export interface QueryRedelegationsRequestSDKType {
-  delegator_addr: string;
-  src_validator_addr: string;
-  dst_validator_addr: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryRedelegationsResponse is response type for the Query/Redelegations RPC
@@ -889,17 +710,6 @@ export interface QueryRedelegationsResponseAminoMsg {
   value: QueryRedelegationsResponseAmino;
 }
 /**
- * QueryRedelegationsResponse is response type for the Query/Redelegations RPC
- * method.
- * @name QueryRedelegationsResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryRedelegationsResponse
- */
-export interface QueryRedelegationsResponseSDKType {
-  redelegation_responses: RedelegationResponseSDKType[];
-  pagination?: PageResponseSDKType;
-}
-/**
  * QueryDelegatorValidatorsRequest is request type for the
  * Query/DelegatorValidators RPC method.
  * @name QueryDelegatorValidatorsRequest
@@ -931,7 +741,7 @@ export interface QueryDelegatorValidatorsRequestAmino {
   /**
    * delegator_addr defines the delegator address to query for.
    */
-  delegator_addr?: string;
+  delegator_addr: string;
   /**
    * pagination defines an optional pagination for the request.
    */
@@ -940,17 +750,6 @@ export interface QueryDelegatorValidatorsRequestAmino {
 export interface QueryDelegatorValidatorsRequestAminoMsg {
   type: "cosmos-sdk/QueryDelegatorValidatorsRequest";
   value: QueryDelegatorValidatorsRequestAmino;
-}
-/**
- * QueryDelegatorValidatorsRequest is request type for the
- * Query/DelegatorValidators RPC method.
- * @name QueryDelegatorValidatorsRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryDelegatorValidatorsRequest
- */
-export interface QueryDelegatorValidatorsRequestSDKType {
-  delegator_addr: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryDelegatorValidatorsResponse is response type for the
@@ -995,17 +794,6 @@ export interface QueryDelegatorValidatorsResponseAminoMsg {
   value: QueryDelegatorValidatorsResponseAmino;
 }
 /**
- * QueryDelegatorValidatorsResponse is response type for the
- * Query/DelegatorValidators RPC method.
- * @name QueryDelegatorValidatorsResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryDelegatorValidatorsResponse
- */
-export interface QueryDelegatorValidatorsResponseSDKType {
-  validators: ValidatorSDKType[];
-  pagination?: PageResponseSDKType;
-}
-/**
  * QueryDelegatorValidatorRequest is request type for the
  * Query/DelegatorValidator RPC method.
  * @name QueryDelegatorValidatorRequest
@@ -1037,26 +825,15 @@ export interface QueryDelegatorValidatorRequestAmino {
   /**
    * delegator_addr defines the delegator address to query for.
    */
-  delegator_addr?: string;
+  delegator_addr: string;
   /**
    * validator_addr defines the validator address to query for.
    */
-  validator_addr?: string;
+  validator_addr: string;
 }
 export interface QueryDelegatorValidatorRequestAminoMsg {
   type: "cosmos-sdk/QueryDelegatorValidatorRequest";
   value: QueryDelegatorValidatorRequestAmino;
-}
-/**
- * QueryDelegatorValidatorRequest is request type for the
- * Query/DelegatorValidator RPC method.
- * @name QueryDelegatorValidatorRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryDelegatorValidatorRequest
- */
-export interface QueryDelegatorValidatorRequestSDKType {
-  delegator_addr: string;
-  validator_addr: string;
 }
 /**
  * QueryDelegatorValidatorResponse response type for the
@@ -1093,16 +870,6 @@ export interface QueryDelegatorValidatorResponseAminoMsg {
   value: QueryDelegatorValidatorResponseAmino;
 }
 /**
- * QueryDelegatorValidatorResponse response type for the
- * Query/DelegatorValidator RPC method.
- * @name QueryDelegatorValidatorResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryDelegatorValidatorResponse
- */
-export interface QueryDelegatorValidatorResponseSDKType {
-  validator: ValidatorSDKType;
-}
-/**
  * QueryHistoricalInfoRequest is request type for the Query/HistoricalInfo RPC
  * method.
  * @name QueryHistoricalInfoRequest
@@ -1130,21 +897,11 @@ export interface QueryHistoricalInfoRequestAmino {
   /**
    * height defines at which height to query the historical info.
    */
-  height?: string;
+  height: string;
 }
 export interface QueryHistoricalInfoRequestAminoMsg {
   type: "cosmos-sdk/QueryHistoricalInfoRequest";
   value: QueryHistoricalInfoRequestAmino;
-}
-/**
- * QueryHistoricalInfoRequest is request type for the Query/HistoricalInfo RPC
- * method.
- * @name QueryHistoricalInfoRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryHistoricalInfoRequest
- */
-export interface QueryHistoricalInfoRequestSDKType {
-  height: bigint;
 }
 /**
  * QueryHistoricalInfoResponse is response type for the Query/HistoricalInfo RPC
@@ -1181,16 +938,6 @@ export interface QueryHistoricalInfoResponseAminoMsg {
   value: QueryHistoricalInfoResponseAmino;
 }
 /**
- * QueryHistoricalInfoResponse is response type for the Query/HistoricalInfo RPC
- * method.
- * @name QueryHistoricalInfoResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryHistoricalInfoResponse
- */
-export interface QueryHistoricalInfoResponseSDKType {
-  hist?: HistoricalInfoSDKType;
-}
-/**
  * QueryPoolRequest is request type for the Query/Pool RPC method.
  * @name QueryPoolRequest
  * @package cosmos.staking.v1beta1
@@ -1212,13 +959,6 @@ export interface QueryPoolRequestAminoMsg {
   type: "cosmos-sdk/QueryPoolRequest";
   value: QueryPoolRequestAmino;
 }
-/**
- * QueryPoolRequest is request type for the Query/Pool RPC method.
- * @name QueryPoolRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryPoolRequest
- */
-export interface QueryPoolRequestSDKType {}
 /**
  * QueryPoolResponse is response type for the Query/Pool RPC method.
  * @name QueryPoolResponse
@@ -1252,15 +992,6 @@ export interface QueryPoolResponseAminoMsg {
   value: QueryPoolResponseAmino;
 }
 /**
- * QueryPoolResponse is response type for the Query/Pool RPC method.
- * @name QueryPoolResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryPoolResponse
- */
-export interface QueryPoolResponseSDKType {
-  pool: PoolSDKType;
-}
-/**
  * QueryParamsRequest is request type for the Query/Params RPC method.
  * @name QueryParamsRequest
  * @package cosmos.staking.v1beta1
@@ -1282,13 +1013,6 @@ export interface QueryParamsRequestAminoMsg {
   type: "cosmos-sdk/QueryParamsRequest";
   value: QueryParamsRequestAmino;
 }
-/**
- * QueryParamsRequest is request type for the Query/Params RPC method.
- * @name QueryParamsRequestSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {}
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
  * @name QueryParamsResponse
@@ -1321,15 +1045,6 @@ export interface QueryParamsResponseAminoMsg {
   type: "cosmos-sdk/QueryParamsResponse";
   value: QueryParamsResponseAmino;
 }
-/**
- * QueryParamsResponse is response type for the Query/Params RPC method.
- * @name QueryParamsResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  params: ParamsSDKType;
-}
 function createBaseQueryValidatorsRequest(): QueryValidatorsRequest {
   return {
     status: "",
@@ -1346,9 +1061,6 @@ export const QueryValidatorsRequest = {
   typeUrl: "/cosmos.staking.v1beta1.QueryValidatorsRequest",
   aminoType: "cosmos-sdk/QueryValidatorsRequest",
   is(o: any): o is QueryValidatorsRequest {
-    return o && (o.$typeUrl === QueryValidatorsRequest.typeUrl || typeof o.status === "string");
-  },
-  isSDK(o: any): o is QueryValidatorsRequestSDKType {
     return o && (o.$typeUrl === QueryValidatorsRequest.typeUrl || typeof o.status === "string");
   },
   isAmino(o: any): o is QueryValidatorsRequestAmino {
@@ -1383,7 +1095,7 @@ export const QueryValidatorsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryValidatorsRequest>, I>>(object: I): QueryValidatorsRequest {
+  fromPartial(object: DeepPartial<QueryValidatorsRequest>): QueryValidatorsRequest {
     const message = createBaseQueryValidatorsRequest();
     message.status = object.status ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -1451,9 +1163,6 @@ export const QueryValidatorsResponse = {
   is(o: any): o is QueryValidatorsResponse {
     return o && (o.$typeUrl === QueryValidatorsResponse.typeUrl || Array.isArray(o.validators) && (!o.validators.length || Validator.is(o.validators[0])));
   },
-  isSDK(o: any): o is QueryValidatorsResponseSDKType {
-    return o && (o.$typeUrl === QueryValidatorsResponse.typeUrl || Array.isArray(o.validators) && (!o.validators.length || Validator.isSDK(o.validators[0])));
-  },
   isAmino(o: any): o is QueryValidatorsResponseAmino {
     return o && (o.$typeUrl === QueryValidatorsResponse.typeUrl || Array.isArray(o.validators) && (!o.validators.length || Validator.isAmino(o.validators[0])));
   },
@@ -1486,7 +1195,7 @@ export const QueryValidatorsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryValidatorsResponse>, I>>(object: I): QueryValidatorsResponse {
+  fromPartial(object: DeepPartial<QueryValidatorsResponse>): QueryValidatorsResponse {
     const message = createBaseQueryValidatorsResponse();
     message.validators = object.validators?.map(e => Validator.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -1556,9 +1265,6 @@ export const QueryValidatorRequest = {
   is(o: any): o is QueryValidatorRequest {
     return o && (o.$typeUrl === QueryValidatorRequest.typeUrl || typeof o.validatorAddr === "string");
   },
-  isSDK(o: any): o is QueryValidatorRequestSDKType {
-    return o && (o.$typeUrl === QueryValidatorRequest.typeUrl || typeof o.validator_addr === "string");
-  },
   isAmino(o: any): o is QueryValidatorRequestAmino {
     return o && (o.$typeUrl === QueryValidatorRequest.typeUrl || typeof o.validator_addr === "string");
   },
@@ -1585,7 +1291,7 @@ export const QueryValidatorRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryValidatorRequest>, I>>(object: I): QueryValidatorRequest {
+  fromPartial(object: DeepPartial<QueryValidatorRequest>): QueryValidatorRequest {
     const message = createBaseQueryValidatorRequest();
     message.validatorAddr = object.validatorAddr ?? "";
     return message;
@@ -1642,9 +1348,6 @@ export const QueryValidatorResponse = {
   is(o: any): o is QueryValidatorResponse {
     return o && (o.$typeUrl === QueryValidatorResponse.typeUrl || Validator.is(o.validator));
   },
-  isSDK(o: any): o is QueryValidatorResponseSDKType {
-    return o && (o.$typeUrl === QueryValidatorResponse.typeUrl || Validator.isSDK(o.validator));
-  },
   isAmino(o: any): o is QueryValidatorResponseAmino {
     return o && (o.$typeUrl === QueryValidatorResponse.typeUrl || Validator.isAmino(o.validator));
   },
@@ -1671,7 +1374,7 @@ export const QueryValidatorResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryValidatorResponse>, I>>(object: I): QueryValidatorResponse {
+  fromPartial(object: DeepPartial<QueryValidatorResponse>): QueryValidatorResponse {
     const message = createBaseQueryValidatorResponse();
     message.validator = object.validator !== undefined && object.validator !== null ? Validator.fromPartial(object.validator) : undefined;
     return message;
@@ -1735,9 +1438,6 @@ export const QueryValidatorDelegationsRequest = {
   is(o: any): o is QueryValidatorDelegationsRequest {
     return o && (o.$typeUrl === QueryValidatorDelegationsRequest.typeUrl || typeof o.validatorAddr === "string");
   },
-  isSDK(o: any): o is QueryValidatorDelegationsRequestSDKType {
-    return o && (o.$typeUrl === QueryValidatorDelegationsRequest.typeUrl || typeof o.validator_addr === "string");
-  },
   isAmino(o: any): o is QueryValidatorDelegationsRequestAmino {
     return o && (o.$typeUrl === QueryValidatorDelegationsRequest.typeUrl || typeof o.validator_addr === "string");
   },
@@ -1770,7 +1470,7 @@ export const QueryValidatorDelegationsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryValidatorDelegationsRequest>, I>>(object: I): QueryValidatorDelegationsRequest {
+  fromPartial(object: DeepPartial<QueryValidatorDelegationsRequest>): QueryValidatorDelegationsRequest {
     const message = createBaseQueryValidatorDelegationsRequest();
     message.validatorAddr = object.validatorAddr ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -1839,9 +1539,6 @@ export const QueryValidatorDelegationsResponse = {
   is(o: any): o is QueryValidatorDelegationsResponse {
     return o && (o.$typeUrl === QueryValidatorDelegationsResponse.typeUrl || Array.isArray(o.delegationResponses) && (!o.delegationResponses.length || DelegationResponse.is(o.delegationResponses[0])));
   },
-  isSDK(o: any): o is QueryValidatorDelegationsResponseSDKType {
-    return o && (o.$typeUrl === QueryValidatorDelegationsResponse.typeUrl || Array.isArray(o.delegation_responses) && (!o.delegation_responses.length || DelegationResponse.isSDK(o.delegation_responses[0])));
-  },
   isAmino(o: any): o is QueryValidatorDelegationsResponseAmino {
     return o && (o.$typeUrl === QueryValidatorDelegationsResponse.typeUrl || Array.isArray(o.delegation_responses) && (!o.delegation_responses.length || DelegationResponse.isAmino(o.delegation_responses[0])));
   },
@@ -1874,7 +1571,7 @@ export const QueryValidatorDelegationsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryValidatorDelegationsResponse>, I>>(object: I): QueryValidatorDelegationsResponse {
+  fromPartial(object: DeepPartial<QueryValidatorDelegationsResponse>): QueryValidatorDelegationsResponse {
     const message = createBaseQueryValidatorDelegationsResponse();
     message.delegationResponses = object.delegationResponses?.map(e => DelegationResponse.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -1946,9 +1643,6 @@ export const QueryValidatorUnbondingDelegationsRequest = {
   is(o: any): o is QueryValidatorUnbondingDelegationsRequest {
     return o && (o.$typeUrl === QueryValidatorUnbondingDelegationsRequest.typeUrl || typeof o.validatorAddr === "string");
   },
-  isSDK(o: any): o is QueryValidatorUnbondingDelegationsRequestSDKType {
-    return o && (o.$typeUrl === QueryValidatorUnbondingDelegationsRequest.typeUrl || typeof o.validator_addr === "string");
-  },
   isAmino(o: any): o is QueryValidatorUnbondingDelegationsRequestAmino {
     return o && (o.$typeUrl === QueryValidatorUnbondingDelegationsRequest.typeUrl || typeof o.validator_addr === "string");
   },
@@ -1981,7 +1675,7 @@ export const QueryValidatorUnbondingDelegationsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryValidatorUnbondingDelegationsRequest>, I>>(object: I): QueryValidatorUnbondingDelegationsRequest {
+  fromPartial(object: DeepPartial<QueryValidatorUnbondingDelegationsRequest>): QueryValidatorUnbondingDelegationsRequest {
     const message = createBaseQueryValidatorUnbondingDelegationsRequest();
     message.validatorAddr = object.validatorAddr ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -2050,9 +1744,6 @@ export const QueryValidatorUnbondingDelegationsResponse = {
   is(o: any): o is QueryValidatorUnbondingDelegationsResponse {
     return o && (o.$typeUrl === QueryValidatorUnbondingDelegationsResponse.typeUrl || Array.isArray(o.unbondingResponses) && (!o.unbondingResponses.length || UnbondingDelegation.is(o.unbondingResponses[0])));
   },
-  isSDK(o: any): o is QueryValidatorUnbondingDelegationsResponseSDKType {
-    return o && (o.$typeUrl === QueryValidatorUnbondingDelegationsResponse.typeUrl || Array.isArray(o.unbonding_responses) && (!o.unbonding_responses.length || UnbondingDelegation.isSDK(o.unbonding_responses[0])));
-  },
   isAmino(o: any): o is QueryValidatorUnbondingDelegationsResponseAmino {
     return o && (o.$typeUrl === QueryValidatorUnbondingDelegationsResponse.typeUrl || Array.isArray(o.unbonding_responses) && (!o.unbonding_responses.length || UnbondingDelegation.isAmino(o.unbonding_responses[0])));
   },
@@ -2085,7 +1776,7 @@ export const QueryValidatorUnbondingDelegationsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryValidatorUnbondingDelegationsResponse>, I>>(object: I): QueryValidatorUnbondingDelegationsResponse {
+  fromPartial(object: DeepPartial<QueryValidatorUnbondingDelegationsResponse>): QueryValidatorUnbondingDelegationsResponse {
     const message = createBaseQueryValidatorUnbondingDelegationsResponse();
     message.unbondingResponses = object.unbondingResponses?.map(e => UnbondingDelegation.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -2156,9 +1847,6 @@ export const QueryDelegationRequest = {
   is(o: any): o is QueryDelegationRequest {
     return o && (o.$typeUrl === QueryDelegationRequest.typeUrl || typeof o.delegatorAddr === "string" && typeof o.validatorAddr === "string");
   },
-  isSDK(o: any): o is QueryDelegationRequestSDKType {
-    return o && (o.$typeUrl === QueryDelegationRequest.typeUrl || typeof o.delegator_addr === "string" && typeof o.validator_addr === "string");
-  },
   isAmino(o: any): o is QueryDelegationRequestAmino {
     return o && (o.$typeUrl === QueryDelegationRequest.typeUrl || typeof o.delegator_addr === "string" && typeof o.validator_addr === "string");
   },
@@ -2191,7 +1879,7 @@ export const QueryDelegationRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDelegationRequest>, I>>(object: I): QueryDelegationRequest {
+  fromPartial(object: DeepPartial<QueryDelegationRequest>): QueryDelegationRequest {
     const message = createBaseQueryDelegationRequest();
     message.delegatorAddr = object.delegatorAddr ?? "";
     message.validatorAddr = object.validatorAddr ?? "";
@@ -2253,9 +1941,6 @@ export const QueryDelegationResponse = {
   is(o: any): o is QueryDelegationResponse {
     return o && o.$typeUrl === QueryDelegationResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryDelegationResponseSDKType {
-    return o && o.$typeUrl === QueryDelegationResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryDelegationResponseAmino {
     return o && o.$typeUrl === QueryDelegationResponse.typeUrl;
   },
@@ -2282,7 +1967,7 @@ export const QueryDelegationResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDelegationResponse>, I>>(object: I): QueryDelegationResponse {
+  fromPartial(object: DeepPartial<QueryDelegationResponse>): QueryDelegationResponse {
     const message = createBaseQueryDelegationResponse();
     message.delegationResponse = object.delegationResponse !== undefined && object.delegationResponse !== null ? DelegationResponse.fromPartial(object.delegationResponse) : undefined;
     return message;
@@ -2346,9 +2031,6 @@ export const QueryUnbondingDelegationRequest = {
   is(o: any): o is QueryUnbondingDelegationRequest {
     return o && (o.$typeUrl === QueryUnbondingDelegationRequest.typeUrl || typeof o.delegatorAddr === "string" && typeof o.validatorAddr === "string");
   },
-  isSDK(o: any): o is QueryUnbondingDelegationRequestSDKType {
-    return o && (o.$typeUrl === QueryUnbondingDelegationRequest.typeUrl || typeof o.delegator_addr === "string" && typeof o.validator_addr === "string");
-  },
   isAmino(o: any): o is QueryUnbondingDelegationRequestAmino {
     return o && (o.$typeUrl === QueryUnbondingDelegationRequest.typeUrl || typeof o.delegator_addr === "string" && typeof o.validator_addr === "string");
   },
@@ -2381,7 +2063,7 @@ export const QueryUnbondingDelegationRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryUnbondingDelegationRequest>, I>>(object: I): QueryUnbondingDelegationRequest {
+  fromPartial(object: DeepPartial<QueryUnbondingDelegationRequest>): QueryUnbondingDelegationRequest {
     const message = createBaseQueryUnbondingDelegationRequest();
     message.delegatorAddr = object.delegatorAddr ?? "";
     message.validatorAddr = object.validatorAddr ?? "";
@@ -2444,9 +2126,6 @@ export const QueryUnbondingDelegationResponse = {
   is(o: any): o is QueryUnbondingDelegationResponse {
     return o && (o.$typeUrl === QueryUnbondingDelegationResponse.typeUrl || UnbondingDelegation.is(o.unbond));
   },
-  isSDK(o: any): o is QueryUnbondingDelegationResponseSDKType {
-    return o && (o.$typeUrl === QueryUnbondingDelegationResponse.typeUrl || UnbondingDelegation.isSDK(o.unbond));
-  },
   isAmino(o: any): o is QueryUnbondingDelegationResponseAmino {
     return o && (o.$typeUrl === QueryUnbondingDelegationResponse.typeUrl || UnbondingDelegation.isAmino(o.unbond));
   },
@@ -2473,7 +2152,7 @@ export const QueryUnbondingDelegationResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryUnbondingDelegationResponse>, I>>(object: I): QueryUnbondingDelegationResponse {
+  fromPartial(object: DeepPartial<QueryUnbondingDelegationResponse>): QueryUnbondingDelegationResponse {
     const message = createBaseQueryUnbondingDelegationResponse();
     message.unbond = object.unbond !== undefined && object.unbond !== null ? UnbondingDelegation.fromPartial(object.unbond) : undefined;
     return message;
@@ -2537,9 +2216,6 @@ export const QueryDelegatorDelegationsRequest = {
   is(o: any): o is QueryDelegatorDelegationsRequest {
     return o && (o.$typeUrl === QueryDelegatorDelegationsRequest.typeUrl || typeof o.delegatorAddr === "string");
   },
-  isSDK(o: any): o is QueryDelegatorDelegationsRequestSDKType {
-    return o && (o.$typeUrl === QueryDelegatorDelegationsRequest.typeUrl || typeof o.delegator_addr === "string");
-  },
   isAmino(o: any): o is QueryDelegatorDelegationsRequestAmino {
     return o && (o.$typeUrl === QueryDelegatorDelegationsRequest.typeUrl || typeof o.delegator_addr === "string");
   },
@@ -2572,7 +2248,7 @@ export const QueryDelegatorDelegationsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDelegatorDelegationsRequest>, I>>(object: I): QueryDelegatorDelegationsRequest {
+  fromPartial(object: DeepPartial<QueryDelegatorDelegationsRequest>): QueryDelegatorDelegationsRequest {
     const message = createBaseQueryDelegatorDelegationsRequest();
     message.delegatorAddr = object.delegatorAddr ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -2641,9 +2317,6 @@ export const QueryDelegatorDelegationsResponse = {
   is(o: any): o is QueryDelegatorDelegationsResponse {
     return o && (o.$typeUrl === QueryDelegatorDelegationsResponse.typeUrl || Array.isArray(o.delegationResponses) && (!o.delegationResponses.length || DelegationResponse.is(o.delegationResponses[0])));
   },
-  isSDK(o: any): o is QueryDelegatorDelegationsResponseSDKType {
-    return o && (o.$typeUrl === QueryDelegatorDelegationsResponse.typeUrl || Array.isArray(o.delegation_responses) && (!o.delegation_responses.length || DelegationResponse.isSDK(o.delegation_responses[0])));
-  },
   isAmino(o: any): o is QueryDelegatorDelegationsResponseAmino {
     return o && (o.$typeUrl === QueryDelegatorDelegationsResponse.typeUrl || Array.isArray(o.delegation_responses) && (!o.delegation_responses.length || DelegationResponse.isAmino(o.delegation_responses[0])));
   },
@@ -2676,7 +2349,7 @@ export const QueryDelegatorDelegationsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDelegatorDelegationsResponse>, I>>(object: I): QueryDelegatorDelegationsResponse {
+  fromPartial(object: DeepPartial<QueryDelegatorDelegationsResponse>): QueryDelegatorDelegationsResponse {
     const message = createBaseQueryDelegatorDelegationsResponse();
     message.delegationResponses = object.delegationResponses?.map(e => DelegationResponse.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -2748,9 +2421,6 @@ export const QueryDelegatorUnbondingDelegationsRequest = {
   is(o: any): o is QueryDelegatorUnbondingDelegationsRequest {
     return o && (o.$typeUrl === QueryDelegatorUnbondingDelegationsRequest.typeUrl || typeof o.delegatorAddr === "string");
   },
-  isSDK(o: any): o is QueryDelegatorUnbondingDelegationsRequestSDKType {
-    return o && (o.$typeUrl === QueryDelegatorUnbondingDelegationsRequest.typeUrl || typeof o.delegator_addr === "string");
-  },
   isAmino(o: any): o is QueryDelegatorUnbondingDelegationsRequestAmino {
     return o && (o.$typeUrl === QueryDelegatorUnbondingDelegationsRequest.typeUrl || typeof o.delegator_addr === "string");
   },
@@ -2783,7 +2453,7 @@ export const QueryDelegatorUnbondingDelegationsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDelegatorUnbondingDelegationsRequest>, I>>(object: I): QueryDelegatorUnbondingDelegationsRequest {
+  fromPartial(object: DeepPartial<QueryDelegatorUnbondingDelegationsRequest>): QueryDelegatorUnbondingDelegationsRequest {
     const message = createBaseQueryDelegatorUnbondingDelegationsRequest();
     message.delegatorAddr = object.delegatorAddr ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -2852,9 +2522,6 @@ export const QueryDelegatorUnbondingDelegationsResponse = {
   is(o: any): o is QueryDelegatorUnbondingDelegationsResponse {
     return o && (o.$typeUrl === QueryDelegatorUnbondingDelegationsResponse.typeUrl || Array.isArray(o.unbondingResponses) && (!o.unbondingResponses.length || UnbondingDelegation.is(o.unbondingResponses[0])));
   },
-  isSDK(o: any): o is QueryDelegatorUnbondingDelegationsResponseSDKType {
-    return o && (o.$typeUrl === QueryDelegatorUnbondingDelegationsResponse.typeUrl || Array.isArray(o.unbonding_responses) && (!o.unbonding_responses.length || UnbondingDelegation.isSDK(o.unbonding_responses[0])));
-  },
   isAmino(o: any): o is QueryDelegatorUnbondingDelegationsResponseAmino {
     return o && (o.$typeUrl === QueryDelegatorUnbondingDelegationsResponse.typeUrl || Array.isArray(o.unbonding_responses) && (!o.unbonding_responses.length || UnbondingDelegation.isAmino(o.unbonding_responses[0])));
   },
@@ -2887,7 +2554,7 @@ export const QueryDelegatorUnbondingDelegationsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDelegatorUnbondingDelegationsResponse>, I>>(object: I): QueryDelegatorUnbondingDelegationsResponse {
+  fromPartial(object: DeepPartial<QueryDelegatorUnbondingDelegationsResponse>): QueryDelegatorUnbondingDelegationsResponse {
     const message = createBaseQueryDelegatorUnbondingDelegationsResponse();
     message.unbondingResponses = object.unbondingResponses?.map(e => UnbondingDelegation.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -2961,9 +2628,6 @@ export const QueryRedelegationsRequest = {
   is(o: any): o is QueryRedelegationsRequest {
     return o && (o.$typeUrl === QueryRedelegationsRequest.typeUrl || typeof o.delegatorAddr === "string" && typeof o.srcValidatorAddr === "string" && typeof o.dstValidatorAddr === "string");
   },
-  isSDK(o: any): o is QueryRedelegationsRequestSDKType {
-    return o && (o.$typeUrl === QueryRedelegationsRequest.typeUrl || typeof o.delegator_addr === "string" && typeof o.src_validator_addr === "string" && typeof o.dst_validator_addr === "string");
-  },
   isAmino(o: any): o is QueryRedelegationsRequestAmino {
     return o && (o.$typeUrl === QueryRedelegationsRequest.typeUrl || typeof o.delegator_addr === "string" && typeof o.src_validator_addr === "string" && typeof o.dst_validator_addr === "string");
   },
@@ -3008,7 +2672,7 @@ export const QueryRedelegationsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryRedelegationsRequest>, I>>(object: I): QueryRedelegationsRequest {
+  fromPartial(object: DeepPartial<QueryRedelegationsRequest>): QueryRedelegationsRequest {
     const message = createBaseQueryRedelegationsRequest();
     message.delegatorAddr = object.delegatorAddr ?? "";
     message.srcValidatorAddr = object.srcValidatorAddr ?? "";
@@ -3087,9 +2751,6 @@ export const QueryRedelegationsResponse = {
   is(o: any): o is QueryRedelegationsResponse {
     return o && (o.$typeUrl === QueryRedelegationsResponse.typeUrl || Array.isArray(o.redelegationResponses) && (!o.redelegationResponses.length || RedelegationResponse.is(o.redelegationResponses[0])));
   },
-  isSDK(o: any): o is QueryRedelegationsResponseSDKType {
-    return o && (o.$typeUrl === QueryRedelegationsResponse.typeUrl || Array.isArray(o.redelegation_responses) && (!o.redelegation_responses.length || RedelegationResponse.isSDK(o.redelegation_responses[0])));
-  },
   isAmino(o: any): o is QueryRedelegationsResponseAmino {
     return o && (o.$typeUrl === QueryRedelegationsResponse.typeUrl || Array.isArray(o.redelegation_responses) && (!o.redelegation_responses.length || RedelegationResponse.isAmino(o.redelegation_responses[0])));
   },
@@ -3122,7 +2783,7 @@ export const QueryRedelegationsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryRedelegationsResponse>, I>>(object: I): QueryRedelegationsResponse {
+  fromPartial(object: DeepPartial<QueryRedelegationsResponse>): QueryRedelegationsResponse {
     const message = createBaseQueryRedelegationsResponse();
     message.redelegationResponses = object.redelegationResponses?.map(e => RedelegationResponse.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -3194,9 +2855,6 @@ export const QueryDelegatorValidatorsRequest = {
   is(o: any): o is QueryDelegatorValidatorsRequest {
     return o && (o.$typeUrl === QueryDelegatorValidatorsRequest.typeUrl || typeof o.delegatorAddr === "string");
   },
-  isSDK(o: any): o is QueryDelegatorValidatorsRequestSDKType {
-    return o && (o.$typeUrl === QueryDelegatorValidatorsRequest.typeUrl || typeof o.delegator_addr === "string");
-  },
   isAmino(o: any): o is QueryDelegatorValidatorsRequestAmino {
     return o && (o.$typeUrl === QueryDelegatorValidatorsRequest.typeUrl || typeof o.delegator_addr === "string");
   },
@@ -3229,7 +2887,7 @@ export const QueryDelegatorValidatorsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDelegatorValidatorsRequest>, I>>(object: I): QueryDelegatorValidatorsRequest {
+  fromPartial(object: DeepPartial<QueryDelegatorValidatorsRequest>): QueryDelegatorValidatorsRequest {
     const message = createBaseQueryDelegatorValidatorsRequest();
     message.delegatorAddr = object.delegatorAddr ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -3298,9 +2956,6 @@ export const QueryDelegatorValidatorsResponse = {
   is(o: any): o is QueryDelegatorValidatorsResponse {
     return o && (o.$typeUrl === QueryDelegatorValidatorsResponse.typeUrl || Array.isArray(o.validators) && (!o.validators.length || Validator.is(o.validators[0])));
   },
-  isSDK(o: any): o is QueryDelegatorValidatorsResponseSDKType {
-    return o && (o.$typeUrl === QueryDelegatorValidatorsResponse.typeUrl || Array.isArray(o.validators) && (!o.validators.length || Validator.isSDK(o.validators[0])));
-  },
   isAmino(o: any): o is QueryDelegatorValidatorsResponseAmino {
     return o && (o.$typeUrl === QueryDelegatorValidatorsResponse.typeUrl || Array.isArray(o.validators) && (!o.validators.length || Validator.isAmino(o.validators[0])));
   },
@@ -3333,7 +2988,7 @@ export const QueryDelegatorValidatorsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDelegatorValidatorsResponse>, I>>(object: I): QueryDelegatorValidatorsResponse {
+  fromPartial(object: DeepPartial<QueryDelegatorValidatorsResponse>): QueryDelegatorValidatorsResponse {
     const message = createBaseQueryDelegatorValidatorsResponse();
     message.validators = object.validators?.map(e => Validator.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -3405,9 +3060,6 @@ export const QueryDelegatorValidatorRequest = {
   is(o: any): o is QueryDelegatorValidatorRequest {
     return o && (o.$typeUrl === QueryDelegatorValidatorRequest.typeUrl || typeof o.delegatorAddr === "string" && typeof o.validatorAddr === "string");
   },
-  isSDK(o: any): o is QueryDelegatorValidatorRequestSDKType {
-    return o && (o.$typeUrl === QueryDelegatorValidatorRequest.typeUrl || typeof o.delegator_addr === "string" && typeof o.validator_addr === "string");
-  },
   isAmino(o: any): o is QueryDelegatorValidatorRequestAmino {
     return o && (o.$typeUrl === QueryDelegatorValidatorRequest.typeUrl || typeof o.delegator_addr === "string" && typeof o.validator_addr === "string");
   },
@@ -3440,7 +3092,7 @@ export const QueryDelegatorValidatorRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDelegatorValidatorRequest>, I>>(object: I): QueryDelegatorValidatorRequest {
+  fromPartial(object: DeepPartial<QueryDelegatorValidatorRequest>): QueryDelegatorValidatorRequest {
     const message = createBaseQueryDelegatorValidatorRequest();
     message.delegatorAddr = object.delegatorAddr ?? "";
     message.validatorAddr = object.validatorAddr ?? "";
@@ -3503,9 +3155,6 @@ export const QueryDelegatorValidatorResponse = {
   is(o: any): o is QueryDelegatorValidatorResponse {
     return o && (o.$typeUrl === QueryDelegatorValidatorResponse.typeUrl || Validator.is(o.validator));
   },
-  isSDK(o: any): o is QueryDelegatorValidatorResponseSDKType {
-    return o && (o.$typeUrl === QueryDelegatorValidatorResponse.typeUrl || Validator.isSDK(o.validator));
-  },
   isAmino(o: any): o is QueryDelegatorValidatorResponseAmino {
     return o && (o.$typeUrl === QueryDelegatorValidatorResponse.typeUrl || Validator.isAmino(o.validator));
   },
@@ -3532,7 +3181,7 @@ export const QueryDelegatorValidatorResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDelegatorValidatorResponse>, I>>(object: I): QueryDelegatorValidatorResponse {
+  fromPartial(object: DeepPartial<QueryDelegatorValidatorResponse>): QueryDelegatorValidatorResponse {
     const message = createBaseQueryDelegatorValidatorResponse();
     message.validator = object.validator !== undefined && object.validator !== null ? Validator.fromPartial(object.validator) : undefined;
     return message;
@@ -3595,9 +3244,6 @@ export const QueryHistoricalInfoRequest = {
   is(o: any): o is QueryHistoricalInfoRequest {
     return o && (o.$typeUrl === QueryHistoricalInfoRequest.typeUrl || typeof o.height === "bigint");
   },
-  isSDK(o: any): o is QueryHistoricalInfoRequestSDKType {
-    return o && (o.$typeUrl === QueryHistoricalInfoRequest.typeUrl || typeof o.height === "bigint");
-  },
   isAmino(o: any): o is QueryHistoricalInfoRequestAmino {
     return o && (o.$typeUrl === QueryHistoricalInfoRequest.typeUrl || typeof o.height === "bigint");
   },
@@ -3624,7 +3270,7 @@ export const QueryHistoricalInfoRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryHistoricalInfoRequest>, I>>(object: I): QueryHistoricalInfoRequest {
+  fromPartial(object: DeepPartial<QueryHistoricalInfoRequest>): QueryHistoricalInfoRequest {
     const message = createBaseQueryHistoricalInfoRequest();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     return message;
@@ -3682,9 +3328,6 @@ export const QueryHistoricalInfoResponse = {
   is(o: any): o is QueryHistoricalInfoResponse {
     return o && o.$typeUrl === QueryHistoricalInfoResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryHistoricalInfoResponseSDKType {
-    return o && o.$typeUrl === QueryHistoricalInfoResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryHistoricalInfoResponseAmino {
     return o && o.$typeUrl === QueryHistoricalInfoResponse.typeUrl;
   },
@@ -3711,7 +3354,7 @@ export const QueryHistoricalInfoResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryHistoricalInfoResponse>, I>>(object: I): QueryHistoricalInfoResponse {
+  fromPartial(object: DeepPartial<QueryHistoricalInfoResponse>): QueryHistoricalInfoResponse {
     const message = createBaseQueryHistoricalInfoResponse();
     message.hist = object.hist !== undefined && object.hist !== null ? HistoricalInfo.fromPartial(object.hist) : undefined;
     return message;
@@ -3771,9 +3414,6 @@ export const QueryPoolRequest = {
   is(o: any): o is QueryPoolRequest {
     return o && o.$typeUrl === QueryPoolRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryPoolRequestSDKType {
-    return o && o.$typeUrl === QueryPoolRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryPoolRequestAmino {
     return o && o.$typeUrl === QueryPoolRequest.typeUrl;
   },
@@ -3794,7 +3434,7 @@ export const QueryPoolRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryPoolRequest>, I>>(_: I): QueryPoolRequest {
+  fromPartial(_: DeepPartial<QueryPoolRequest>): QueryPoolRequest {
     const message = createBaseQueryPoolRequest();
     return message;
   },
@@ -3846,9 +3486,6 @@ export const QueryPoolResponse = {
   is(o: any): o is QueryPoolResponse {
     return o && (o.$typeUrl === QueryPoolResponse.typeUrl || Pool.is(o.pool));
   },
-  isSDK(o: any): o is QueryPoolResponseSDKType {
-    return o && (o.$typeUrl === QueryPoolResponse.typeUrl || Pool.isSDK(o.pool));
-  },
   isAmino(o: any): o is QueryPoolResponseAmino {
     return o && (o.$typeUrl === QueryPoolResponse.typeUrl || Pool.isAmino(o.pool));
   },
@@ -3875,7 +3512,7 @@ export const QueryPoolResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryPoolResponse>, I>>(object: I): QueryPoolResponse {
+  fromPartial(object: DeepPartial<QueryPoolResponse>): QueryPoolResponse {
     const message = createBaseQueryPoolResponse();
     message.pool = object.pool !== undefined && object.pool !== null ? Pool.fromPartial(object.pool) : undefined;
     return message;
@@ -3935,9 +3572,6 @@ export const QueryParamsRequest = {
   is(o: any): o is QueryParamsRequest {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
-    return o && o.$typeUrl === QueryParamsRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryParamsRequestAmino {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
@@ -3958,7 +3592,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(_: I): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -4010,9 +3644,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.is(o.params));
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isSDK(o.params));
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isAmino(o.params));
   },
@@ -4039,7 +3670,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;

@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { ActionType } from "./action_type";
 import { ActionState } from "./action_state";
-import { isSet, Exact, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { isSet, DeepPartial, bytesFromBase64, base64FromBytes } from "../../helpers";
 import { BinaryReader, BinaryWriter } from "../../binary";
 /**
  * @name Action
@@ -30,35 +30,19 @@ export interface ActionProtoMsg {
  * @see proto type: lumera.action.Action
  */
 export interface ActionAmino {
-  creator?: string;
-  actionID?: string;
-  actionType?: ActionType;
-  metadata?: string;
-  price?: string;
-  expirationTime?: string;
-  state?: ActionState;
-  blockHeight?: string;
-  superNodes?: string[];
+  creator: string;
+  actionID: string;
+  actionType: ActionType;
+  metadata: string;
+  price: string;
+  expirationTime: string;
+  state: ActionState;
+  blockHeight: string;
+  superNodes: string[];
 }
 export interface ActionAminoMsg {
   type: "/lumera.action.Action";
   value: ActionAmino;
-}
-/**
- * @name ActionSDKType
- * @package lumera.action
- * @see proto type: lumera.action.Action
- */
-export interface ActionSDKType {
-  creator: string;
-  actionID: string;
-  actionType: ActionType;
-  metadata: Uint8Array;
-  price: string;
-  expirationTime: bigint;
-  state: ActionState;
-  blockHeight: bigint;
-  superNodes: string[];
 }
 function createBaseAction(): Action {
   return {
@@ -81,9 +65,6 @@ function createBaseAction(): Action {
 export const Action = {
   typeUrl: "/lumera.action.Action",
   is(o: any): o is Action {
-    return o && (o.$typeUrl === Action.typeUrl || typeof o.creator === "string" && typeof o.actionID === "string" && isSet(o.actionType) && (o.metadata instanceof Uint8Array || typeof o.metadata === "string") && typeof o.price === "string" && typeof o.expirationTime === "bigint" && isSet(o.state) && typeof o.blockHeight === "bigint" && Array.isArray(o.superNodes) && (!o.superNodes.length || typeof o.superNodes[0] === "string"));
-  },
-  isSDK(o: any): o is ActionSDKType {
     return o && (o.$typeUrl === Action.typeUrl || typeof o.creator === "string" && typeof o.actionID === "string" && isSet(o.actionType) && (o.metadata instanceof Uint8Array || typeof o.metadata === "string") && typeof o.price === "string" && typeof o.expirationTime === "bigint" && isSet(o.state) && typeof o.blockHeight === "bigint" && Array.isArray(o.superNodes) && (!o.superNodes.length || typeof o.superNodes[0] === "string"));
   },
   isAmino(o: any): o is ActionAmino {
@@ -160,7 +141,7 @@ export const Action = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Action>, I>>(object: I): Action {
+  fromPartial(object: DeepPartial<Action>): Action {
     const message = createBaseAction();
     message.creator = object.creator ?? "";
     message.actionID = object.actionID ?? "";

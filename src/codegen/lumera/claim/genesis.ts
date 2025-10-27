@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType } from "./params";
-import { ClaimRecord, ClaimRecordAmino, ClaimRecordSDKType } from "./claim_record";
+import { Params, ParamsAmino } from "./params";
+import { ClaimRecord, ClaimRecordAmino } from "./claim_record";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * GenesisState defines the claim module's genesis state.
  * @name GenesisState
@@ -35,25 +35,13 @@ export interface GenesisStateAmino {
    * params defines all the parameters of the module.
    */
   params: ParamsAmino;
-  claim_records?: ClaimRecordAmino[];
-  total_claimable_amount?: string;
-  claims_denom?: string;
+  claim_records: ClaimRecordAmino[];
+  total_claimable_amount: string;
+  claims_denom: string;
 }
 export interface GenesisStateAminoMsg {
   type: "/lumera.claim.GenesisState";
   value: GenesisStateAmino;
-}
-/**
- * GenesisState defines the claim module's genesis state.
- * @name GenesisStateSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.GenesisState
- */
-export interface GenesisStateSDKType {
-  params: ParamsSDKType;
-  claim_records: ClaimRecordSDKType[];
-  total_claimable_amount: bigint;
-  claims_denom: string;
 }
 function createBaseGenesisState(): GenesisState {
   return {
@@ -73,9 +61,6 @@ export const GenesisState = {
   typeUrl: "/lumera.claim.GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.is(o.params) && Array.isArray(o.claimRecords) && (!o.claimRecords.length || ClaimRecord.is(o.claimRecords[0])) && typeof o.totalClaimableAmount === "bigint" && typeof o.claimsDenom === "string");
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Params.isSDK(o.params) && Array.isArray(o.claim_records) && (!o.claim_records.length || ClaimRecord.isSDK(o.claim_records[0])) && typeof o.total_claimable_amount === "bigint" && typeof o.claims_denom === "string");
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.isAmino(o.params) && Array.isArray(o.claim_records) && (!o.claim_records.length || ClaimRecord.isAmino(o.claim_records[0])) && typeof o.total_claimable_amount === "bigint" && typeof o.claims_denom === "string");
@@ -121,7 +106,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     message.claimRecords = object.claimRecords?.map(e => ClaimRecord.fromPartial(e)) || [];

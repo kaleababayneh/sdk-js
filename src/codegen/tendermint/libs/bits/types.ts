@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * @name BitArray
  * @package tendermint.libs.bits
@@ -21,21 +21,12 @@ export interface BitArrayProtoMsg {
  * @see proto type: tendermint.libs.bits.BitArray
  */
 export interface BitArrayAmino {
-  bits?: string;
-  elems?: string[];
+  bits: string;
+  elems: string[];
 }
 export interface BitArrayAminoMsg {
   type: "/tendermint.libs.bits.BitArray";
   value: BitArrayAmino;
-}
-/**
- * @name BitArraySDKType
- * @package tendermint.libs.bits
- * @see proto type: tendermint.libs.bits.BitArray
- */
-export interface BitArraySDKType {
-  bits: bigint;
-  elems: bigint[];
 }
 function createBaseBitArray(): BitArray {
   return {
@@ -51,9 +42,6 @@ function createBaseBitArray(): BitArray {
 export const BitArray = {
   typeUrl: "/tendermint.libs.bits.BitArray",
   is(o: any): o is BitArray {
-    return o && (o.$typeUrl === BitArray.typeUrl || typeof o.bits === "bigint" && Array.isArray(o.elems) && (!o.elems.length || typeof o.elems[0] === "bigint"));
-  },
-  isSDK(o: any): o is BitArraySDKType {
     return o && (o.$typeUrl === BitArray.typeUrl || typeof o.bits === "bigint" && Array.isArray(o.elems) && (!o.elems.length || typeof o.elems[0] === "bigint"));
   },
   isAmino(o: any): o is BitArrayAmino {
@@ -97,7 +85,7 @@ export const BitArray = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BitArray>, I>>(object: I): BitArray {
+  fromPartial(object: DeepPartial<BitArray>): BitArray {
     const message = createBaseBitArray();
     message.bits = object.bits !== undefined && object.bits !== null ? BigInt(object.bits.toString()) : BigInt(0);
     message.elems = object.elems?.map(e => BigInt(e.toString())) || [];

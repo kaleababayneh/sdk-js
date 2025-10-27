@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
-import { Input, InputAmino, InputSDKType, Output, OutputAmino, OutputSDKType, Params, ParamsAmino, ParamsSDKType, SendEnabled, SendEnabledAmino, SendEnabledSDKType } from "./bank";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
+import { Input, InputAmino, Output, OutputAmino, Params, ParamsAmino, SendEnabled, SendEnabledAmino } from "./bank";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * MsgSend represents a message to send coins from one account to another.
@@ -27,24 +27,13 @@ export interface MsgSendProtoMsg {
  * @see proto type: cosmos.bank.v1beta1.MsgSend
  */
 export interface MsgSendAmino {
-  from_address?: string;
-  to_address?: string;
+  from_address: string;
+  to_address: string;
   amount: CoinAmino[];
 }
 export interface MsgSendAminoMsg {
   type: "cosmos-sdk/MsgSend";
   value: MsgSendAmino;
-}
-/**
- * MsgSend represents a message to send coins from one account to another.
- * @name MsgSendSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.MsgSend
- */
-export interface MsgSendSDKType {
-  from_address: string;
-  to_address: string;
-  amount: CoinSDKType[];
 }
 /**
  * MsgSendResponse defines the Msg/Send response type.
@@ -68,13 +57,6 @@ export interface MsgSendResponseAminoMsg {
   type: "cosmos-sdk/MsgSendResponse";
   value: MsgSendResponseAmino;
 }
-/**
- * MsgSendResponse defines the Msg/Send response type.
- * @name MsgSendResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.MsgSendResponse
- */
-export interface MsgSendResponseSDKType {}
 /**
  * MsgMultiSend represents an arbitrary multi-in, multi-out send message.
  * @name MsgMultiSend
@@ -112,16 +94,6 @@ export interface MsgMultiSendAminoMsg {
   value: MsgMultiSendAmino;
 }
 /**
- * MsgMultiSend represents an arbitrary multi-in, multi-out send message.
- * @name MsgMultiSendSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.MsgMultiSend
- */
-export interface MsgMultiSendSDKType {
-  inputs: InputSDKType[];
-  outputs: OutputSDKType[];
-}
-/**
  * MsgMultiSendResponse defines the Msg/MultiSend response type.
  * @name MsgMultiSendResponse
  * @package cosmos.bank.v1beta1
@@ -143,13 +115,6 @@ export interface MsgMultiSendResponseAminoMsg {
   type: "cosmos-sdk/MsgMultiSendResponse";
   value: MsgMultiSendResponseAmino;
 }
-/**
- * MsgMultiSendResponse defines the Msg/MultiSend response type.
- * @name MsgMultiSendResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.MsgMultiSendResponse
- */
-export interface MsgMultiSendResponseSDKType {}
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * 
@@ -186,7 +151,7 @@ export interface MsgUpdateParamsAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/bank parameters to update.
    * 
@@ -197,18 +162,6 @@ export interface MsgUpdateParamsAmino {
 export interface MsgUpdateParamsAminoMsg {
   type: "cosmos-sdk/x/bank/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
-}
-/**
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.MsgUpdateParams
- */
-export interface MsgUpdateParamsSDKType {
-  authority: string;
-  params: ParamsSDKType;
 }
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
@@ -238,16 +191,6 @@ export interface MsgUpdateParamsResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateParamsResponse";
   value: MsgUpdateParamsResponseAmino;
 }
-/**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.MsgUpdateParamsResponse
- */
-export interface MsgUpdateParamsResponseSDKType {}
 /**
  * MsgSetSendEnabled is the Msg/SetSendEnabled request type.
  * 
@@ -297,39 +240,22 @@ export interface MsgSetSendEnabledAmino {
   /**
    * authority is the address that controls the module.
    */
-  authority?: string;
+  authority: string;
   /**
    * send_enabled is the list of entries to add or update.
    */
-  send_enabled?: SendEnabledAmino[];
+  send_enabled: SendEnabledAmino[];
   /**
    * use_default_for is a list of denoms that should use the params.default_send_enabled value.
    * Denoms listed here will have their SendEnabled entries deleted.
    * If a denom is included that doesn't have a SendEnabled entry,
    * it will be ignored.
    */
-  use_default_for?: string[];
+  use_default_for: string[];
 }
 export interface MsgSetSendEnabledAminoMsg {
   type: "cosmos-sdk/MsgSetSendEnabled";
   value: MsgSetSendEnabledAmino;
-}
-/**
- * MsgSetSendEnabled is the Msg/SetSendEnabled request type.
- * 
- * Only entries to add/update/delete need to be included.
- * Existing SendEnabled entries that are not included in this
- * message are left unchanged.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgSetSendEnabledSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.MsgSetSendEnabled
- */
-export interface MsgSetSendEnabledSDKType {
-  authority: string;
-  send_enabled: SendEnabledSDKType[];
-  use_default_for: string[];
 }
 /**
  * MsgSetSendEnabledResponse defines the Msg/SetSendEnabled response type.
@@ -357,15 +283,6 @@ export interface MsgSetSendEnabledResponseAminoMsg {
   type: "cosmos-sdk/MsgSetSendEnabledResponse";
   value: MsgSetSendEnabledResponseAmino;
 }
-/**
- * MsgSetSendEnabledResponse defines the Msg/SetSendEnabled response type.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgSetSendEnabledResponseSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.MsgSetSendEnabledResponse
- */
-export interface MsgSetSendEnabledResponseSDKType {}
 function createBaseMsgSend(): MsgSend {
   return {
     fromAddress: "",
@@ -384,9 +301,6 @@ export const MsgSend = {
   aminoType: "cosmos-sdk/MsgSend",
   is(o: any): o is MsgSend {
     return o && (o.$typeUrl === MsgSend.typeUrl || typeof o.fromAddress === "string" && typeof o.toAddress === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])));
-  },
-  isSDK(o: any): o is MsgSendSDKType {
-    return o && (o.$typeUrl === MsgSend.typeUrl || typeof o.from_address === "string" && typeof o.to_address === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])));
   },
   isAmino(o: any): o is MsgSendAmino {
     return o && (o.$typeUrl === MsgSend.typeUrl || typeof o.from_address === "string" && typeof o.to_address === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])));
@@ -426,7 +340,7 @@ export const MsgSend = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSend>, I>>(object: I): MsgSend {
+  fromPartial(object: DeepPartial<MsgSend>): MsgSend {
     const message = createBaseMsgSend();
     message.fromAddress = object.fromAddress ?? "";
     message.toAddress = object.toAddress ?? "";
@@ -498,9 +412,6 @@ export const MsgSendResponse = {
   is(o: any): o is MsgSendResponse {
     return o && o.$typeUrl === MsgSendResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgSendResponseSDKType {
-    return o && o.$typeUrl === MsgSendResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgSendResponseAmino {
     return o && o.$typeUrl === MsgSendResponse.typeUrl;
   },
@@ -521,7 +432,7 @@ export const MsgSendResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSendResponse>, I>>(_: I): MsgSendResponse {
+  fromPartial(_: DeepPartial<MsgSendResponse>): MsgSendResponse {
     const message = createBaseMsgSendResponse();
     return message;
   },
@@ -574,9 +485,6 @@ export const MsgMultiSend = {
   is(o: any): o is MsgMultiSend {
     return o && (o.$typeUrl === MsgMultiSend.typeUrl || Array.isArray(o.inputs) && (!o.inputs.length || Input.is(o.inputs[0])) && Array.isArray(o.outputs) && (!o.outputs.length || Output.is(o.outputs[0])));
   },
-  isSDK(o: any): o is MsgMultiSendSDKType {
-    return o && (o.$typeUrl === MsgMultiSend.typeUrl || Array.isArray(o.inputs) && (!o.inputs.length || Input.isSDK(o.inputs[0])) && Array.isArray(o.outputs) && (!o.outputs.length || Output.isSDK(o.outputs[0])));
-  },
   isAmino(o: any): o is MsgMultiSendAmino {
     return o && (o.$typeUrl === MsgMultiSend.typeUrl || Array.isArray(o.inputs) && (!o.inputs.length || Input.isAmino(o.inputs[0])) && Array.isArray(o.outputs) && (!o.outputs.length || Output.isAmino(o.outputs[0])));
   },
@@ -609,7 +517,7 @@ export const MsgMultiSend = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgMultiSend>, I>>(object: I): MsgMultiSend {
+  fromPartial(object: DeepPartial<MsgMultiSend>): MsgMultiSend {
     const message = createBaseMsgMultiSend();
     message.inputs = object.inputs?.map(e => Input.fromPartial(e)) || [];
     message.outputs = object.outputs?.map(e => Output.fromPartial(e)) || [];
@@ -679,9 +587,6 @@ export const MsgMultiSendResponse = {
   is(o: any): o is MsgMultiSendResponse {
     return o && o.$typeUrl === MsgMultiSendResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgMultiSendResponseSDKType {
-    return o && o.$typeUrl === MsgMultiSendResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgMultiSendResponseAmino {
     return o && o.$typeUrl === MsgMultiSendResponse.typeUrl;
   },
@@ -702,7 +607,7 @@ export const MsgMultiSendResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgMultiSendResponse>, I>>(_: I): MsgMultiSendResponse {
+  fromPartial(_: DeepPartial<MsgMultiSendResponse>): MsgMultiSendResponse {
     const message = createBaseMsgMultiSendResponse();
     return message;
   },
@@ -757,9 +662,6 @@ export const MsgUpdateParams = {
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.is(o.params));
   },
-  isSDK(o: any): o is MsgUpdateParamsSDKType {
-    return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isSDK(o.params));
-  },
   isAmino(o: any): o is MsgUpdateParamsAmino {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isAmino(o.params));
   },
@@ -792,7 +694,7 @@ export const MsgUpdateParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParams>, I>>(object: I): MsgUpdateParams {
+  fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
@@ -860,9 +762,6 @@ export const MsgUpdateParamsResponse = {
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateParamsResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateParamsResponseAmino {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -883,7 +782,7 @@ export const MsgUpdateParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParamsResponse>, I>>(_: I): MsgUpdateParamsResponse {
+  fromPartial(_: DeepPartial<MsgUpdateParamsResponse>): MsgUpdateParamsResponse {
     const message = createBaseMsgUpdateParamsResponse();
     return message;
   },
@@ -943,9 +842,6 @@ export const MsgSetSendEnabled = {
   is(o: any): o is MsgSetSendEnabled {
     return o && (o.$typeUrl === MsgSetSendEnabled.typeUrl || typeof o.authority === "string" && Array.isArray(o.sendEnabled) && (!o.sendEnabled.length || SendEnabled.is(o.sendEnabled[0])) && Array.isArray(o.useDefaultFor) && (!o.useDefaultFor.length || typeof o.useDefaultFor[0] === "string"));
   },
-  isSDK(o: any): o is MsgSetSendEnabledSDKType {
-    return o && (o.$typeUrl === MsgSetSendEnabled.typeUrl || typeof o.authority === "string" && Array.isArray(o.send_enabled) && (!o.send_enabled.length || SendEnabled.isSDK(o.send_enabled[0])) && Array.isArray(o.use_default_for) && (!o.use_default_for.length || typeof o.use_default_for[0] === "string"));
-  },
   isAmino(o: any): o is MsgSetSendEnabledAmino {
     return o && (o.$typeUrl === MsgSetSendEnabled.typeUrl || typeof o.authority === "string" && Array.isArray(o.send_enabled) && (!o.send_enabled.length || SendEnabled.isAmino(o.send_enabled[0])) && Array.isArray(o.use_default_for) && (!o.use_default_for.length || typeof o.use_default_for[0] === "string"));
   },
@@ -984,7 +880,7 @@ export const MsgSetSendEnabled = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSetSendEnabled>, I>>(object: I): MsgSetSendEnabled {
+  fromPartial(object: DeepPartial<MsgSetSendEnabled>): MsgSetSendEnabled {
     const message = createBaseMsgSetSendEnabled();
     message.authority = object.authority ?? "";
     message.sendEnabled = object.sendEnabled?.map(e => SendEnabled.fromPartial(e)) || [];
@@ -1060,9 +956,6 @@ export const MsgSetSendEnabledResponse = {
   is(o: any): o is MsgSetSendEnabledResponse {
     return o && o.$typeUrl === MsgSetSendEnabledResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgSetSendEnabledResponseSDKType {
-    return o && o.$typeUrl === MsgSetSendEnabledResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgSetSendEnabledResponseAmino {
     return o && o.$typeUrl === MsgSetSendEnabledResponse.typeUrl;
   },
@@ -1083,7 +976,7 @@ export const MsgSetSendEnabledResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSetSendEnabledResponse>, I>>(_: I): MsgSetSendEnabledResponse {
+  fromPartial(_: DeepPartial<MsgSetSendEnabledResponse>): MsgSetSendEnabledResponse {
     const message = createBaseMsgSetSendEnabledResponse();
     return message;
   },

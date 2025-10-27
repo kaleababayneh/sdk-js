@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 /**
  * PubKey defines a secp256k1 public key
  * Key is the compressed form of the pubkey. The first byte depends is a 0x02 byte
@@ -30,24 +30,11 @@ export interface PubKeyProtoMsg {
  * @see proto type: cosmos.crypto.secp256k1.PubKey
  */
 export interface PubKeyAmino {
-  key?: string;
+  key: string;
 }
 export interface PubKeyAminoMsg {
   type: "tendermint/PubKeySecp256k1";
   value: PubKeyAmino;
-}
-/**
- * PubKey defines a secp256k1 public key
- * Key is the compressed form of the pubkey. The first byte depends is a 0x02 byte
- * if the y-coordinate is the lexicographically largest of the two associated with
- * the x-coordinate. Otherwise the first byte is a 0x03.
- * This prefix is followed with the x-coordinate.
- * @name PubKeySDKType
- * @package cosmos.crypto.secp256k1
- * @see proto type: cosmos.crypto.secp256k1.PubKey
- */
-export interface PubKeySDKType {
-  key: Uint8Array;
 }
 /**
  * PrivKey defines a secp256k1 private key.
@@ -69,20 +56,11 @@ export interface PrivKeyProtoMsg {
  * @see proto type: cosmos.crypto.secp256k1.PrivKey
  */
 export interface PrivKeyAmino {
-  key?: string;
+  key: string;
 }
 export interface PrivKeyAminoMsg {
   type: "tendermint/PrivKeySecp256k1";
   value: PrivKeyAmino;
-}
-/**
- * PrivKey defines a secp256k1 private key.
- * @name PrivKeySDKType
- * @package cosmos.crypto.secp256k1
- * @see proto type: cosmos.crypto.secp256k1.PrivKey
- */
-export interface PrivKeySDKType {
-  key: Uint8Array;
 }
 function createBasePubKey(): PubKey {
   return {
@@ -103,9 +81,6 @@ export const PubKey = {
   typeUrl: "/cosmos.crypto.secp256k1.PubKey",
   aminoType: "tendermint/PubKeySecp256k1",
   is(o: any): o is PubKey {
-    return o && (o.$typeUrl === PubKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
-  },
-  isSDK(o: any): o is PubKeySDKType {
     return o && (o.$typeUrl === PubKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
   },
   isAmino(o: any): o is PubKeyAmino {
@@ -134,7 +109,7 @@ export const PubKey = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PubKey>, I>>(object: I): PubKey {
+  fromPartial(object: DeepPartial<PubKey>): PubKey {
     const message = createBasePubKey();
     message.key = object.key ?? new Uint8Array();
     return message;
@@ -191,9 +166,6 @@ export const PrivKey = {
   is(o: any): o is PrivKey {
     return o && (o.$typeUrl === PrivKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
   },
-  isSDK(o: any): o is PrivKeySDKType {
-    return o && (o.$typeUrl === PrivKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
-  },
   isAmino(o: any): o is PrivKeyAmino {
     return o && (o.$typeUrl === PrivKey.typeUrl || o.key instanceof Uint8Array || typeof o.key === "string");
   },
@@ -220,7 +192,7 @@ export const PrivKey = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PrivKey>, I>>(object: I): PrivKey {
+  fromPartial(object: DeepPartial<PrivKey>): PrivKey {
     const message = createBasePrivKey();
     message.key = object.key ?? new Uint8Array();
     return message;

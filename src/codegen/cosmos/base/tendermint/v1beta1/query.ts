@@ -1,18 +1,16 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../query/v1beta1/pagination";
-import { Any, AnyAmino, AnySDKType } from "../../../../google/protobuf/any";
-import { BlockID, BlockIDAmino, BlockIDSDKType } from "../../../../tendermint/types/types";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../query/v1beta1/pagination";
+import { Any, AnyAmino } from "../../../../google/protobuf/any";
+import { BlockID, BlockIDAmino } from "../../../../tendermint/types/types";
 import { Block as Block1 } from "../../../../tendermint/types/block";
 import { BlockAmino as Block1Amino } from "../../../../tendermint/types/block";
-import { BlockSDKType as Block1SDKType } from "../../../../tendermint/types/block";
 import { Block as Block2 } from "./types";
 import { BlockAmino as Block2Amino } from "./types";
-import { BlockSDKType as Block2SDKType } from "./types";
-import { DefaultNodeInfo, DefaultNodeInfoAmino, DefaultNodeInfoSDKType } from "../../../../tendermint/p2p/types";
+import { DefaultNodeInfo, DefaultNodeInfoAmino } from "../../../../tendermint/p2p/types";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 /**
  * GetValidatorSetByHeightRequest is the request type for the Query/GetValidatorSetByHeight RPC method.
  * @name GetValidatorSetByHeightRequest
@@ -37,7 +35,7 @@ export interface GetValidatorSetByHeightRequestProtoMsg {
  * @see proto type: cosmos.base.tendermint.v1beta1.GetValidatorSetByHeightRequest
  */
 export interface GetValidatorSetByHeightRequestAmino {
-  height?: string;
+  height: string;
   /**
    * pagination defines an pagination for the request.
    */
@@ -46,16 +44,6 @@ export interface GetValidatorSetByHeightRequestAmino {
 export interface GetValidatorSetByHeightRequestAminoMsg {
   type: "cosmos-sdk/GetValidatorSetByHeightRequest";
   value: GetValidatorSetByHeightRequestAmino;
-}
-/**
- * GetValidatorSetByHeightRequest is the request type for the Query/GetValidatorSetByHeight RPC method.
- * @name GetValidatorSetByHeightRequestSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetValidatorSetByHeightRequest
- */
-export interface GetValidatorSetByHeightRequestSDKType {
-  height: bigint;
-  pagination?: PageRequestSDKType;
 }
 /**
  * GetValidatorSetByHeightResponse is the response type for the Query/GetValidatorSetByHeight RPC method.
@@ -82,8 +70,8 @@ export interface GetValidatorSetByHeightResponseProtoMsg {
  * @see proto type: cosmos.base.tendermint.v1beta1.GetValidatorSetByHeightResponse
  */
 export interface GetValidatorSetByHeightResponseAmino {
-  block_height?: string;
-  validators?: ValidatorAmino[];
+  block_height: string;
+  validators: ValidatorAmino[];
   /**
    * pagination defines an pagination for the response.
    */
@@ -92,17 +80,6 @@ export interface GetValidatorSetByHeightResponseAmino {
 export interface GetValidatorSetByHeightResponseAminoMsg {
   type: "cosmos-sdk/GetValidatorSetByHeightResponse";
   value: GetValidatorSetByHeightResponseAmino;
-}
-/**
- * GetValidatorSetByHeightResponse is the response type for the Query/GetValidatorSetByHeight RPC method.
- * @name GetValidatorSetByHeightResponseSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetValidatorSetByHeightResponse
- */
-export interface GetValidatorSetByHeightResponseSDKType {
-  block_height: bigint;
-  validators: ValidatorSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * GetLatestValidatorSetRequest is the request type for the Query/GetValidatorSetByHeight RPC method.
@@ -137,15 +114,6 @@ export interface GetLatestValidatorSetRequestAminoMsg {
   value: GetLatestValidatorSetRequestAmino;
 }
 /**
- * GetLatestValidatorSetRequest is the request type for the Query/GetValidatorSetByHeight RPC method.
- * @name GetLatestValidatorSetRequestSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetLatestValidatorSetRequest
- */
-export interface GetLatestValidatorSetRequestSDKType {
-  pagination?: PageRequestSDKType;
-}
-/**
  * GetLatestValidatorSetResponse is the response type for the Query/GetValidatorSetByHeight RPC method.
  * @name GetLatestValidatorSetResponse
  * @package cosmos.base.tendermint.v1beta1
@@ -170,8 +138,8 @@ export interface GetLatestValidatorSetResponseProtoMsg {
  * @see proto type: cosmos.base.tendermint.v1beta1.GetLatestValidatorSetResponse
  */
 export interface GetLatestValidatorSetResponseAmino {
-  block_height?: string;
-  validators?: ValidatorAmino[];
+  block_height: string;
+  validators: ValidatorAmino[];
   /**
    * pagination defines an pagination for the response.
    */
@@ -180,17 +148,6 @@ export interface GetLatestValidatorSetResponseAmino {
 export interface GetLatestValidatorSetResponseAminoMsg {
   type: "cosmos-sdk/GetLatestValidatorSetResponse";
   value: GetLatestValidatorSetResponseAmino;
-}
-/**
- * GetLatestValidatorSetResponse is the response type for the Query/GetValidatorSetByHeight RPC method.
- * @name GetLatestValidatorSetResponseSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetLatestValidatorSetResponse
- */
-export interface GetLatestValidatorSetResponseSDKType {
-  block_height: bigint;
-  validators: ValidatorSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * Validator is the type for the validator-set.
@@ -215,26 +172,14 @@ export interface ValidatorProtoMsg {
  * @see proto type: cosmos.base.tendermint.v1beta1.Validator
  */
 export interface ValidatorAmino {
-  address?: string;
+  address: string;
   pub_key?: AnyAmino;
-  voting_power?: string;
-  proposer_priority?: string;
+  voting_power: string;
+  proposer_priority: string;
 }
 export interface ValidatorAminoMsg {
   type: "cosmos-sdk/Validator";
   value: ValidatorAmino;
-}
-/**
- * Validator is the type for the validator-set.
- * @name ValidatorSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.Validator
- */
-export interface ValidatorSDKType {
-  address: string;
-  pub_key?: AnySDKType;
-  voting_power: bigint;
-  proposer_priority: bigint;
 }
 /**
  * GetBlockByHeightRequest is the request type for the Query/GetBlockByHeight RPC method.
@@ -256,20 +201,11 @@ export interface GetBlockByHeightRequestProtoMsg {
  * @see proto type: cosmos.base.tendermint.v1beta1.GetBlockByHeightRequest
  */
 export interface GetBlockByHeightRequestAmino {
-  height?: string;
+  height: string;
 }
 export interface GetBlockByHeightRequestAminoMsg {
   type: "cosmos-sdk/GetBlockByHeightRequest";
   value: GetBlockByHeightRequestAmino;
-}
-/**
- * GetBlockByHeightRequest is the request type for the Query/GetBlockByHeight RPC method.
- * @name GetBlockByHeightRequestSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetBlockByHeightRequest
- */
-export interface GetBlockByHeightRequestSDKType {
-  height: bigint;
 }
 /**
  * GetBlockByHeightResponse is the response type for the Query/GetBlockByHeight RPC method.
@@ -314,17 +250,6 @@ export interface GetBlockByHeightResponseAminoMsg {
   value: GetBlockByHeightResponseAmino;
 }
 /**
- * GetBlockByHeightResponse is the response type for the Query/GetBlockByHeight RPC method.
- * @name GetBlockByHeightResponseSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetBlockByHeightResponse
- */
-export interface GetBlockByHeightResponseSDKType {
-  block_id?: BlockIDSDKType;
-  block?: Block1SDKType;
-  sdk_block?: Block2SDKType;
-}
-/**
  * GetLatestBlockRequest is the request type for the Query/GetLatestBlock RPC method.
  * @name GetLatestBlockRequest
  * @package cosmos.base.tendermint.v1beta1
@@ -346,13 +271,6 @@ export interface GetLatestBlockRequestAminoMsg {
   type: "cosmos-sdk/GetLatestBlockRequest";
   value: GetLatestBlockRequestAmino;
 }
-/**
- * GetLatestBlockRequest is the request type for the Query/GetLatestBlock RPC method.
- * @name GetLatestBlockRequestSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetLatestBlockRequest
- */
-export interface GetLatestBlockRequestSDKType {}
 /**
  * GetLatestBlockResponse is the response type for the Query/GetLatestBlock RPC method.
  * @name GetLatestBlockResponse
@@ -396,17 +314,6 @@ export interface GetLatestBlockResponseAminoMsg {
   value: GetLatestBlockResponseAmino;
 }
 /**
- * GetLatestBlockResponse is the response type for the Query/GetLatestBlock RPC method.
- * @name GetLatestBlockResponseSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetLatestBlockResponse
- */
-export interface GetLatestBlockResponseSDKType {
-  block_id?: BlockIDSDKType;
-  block?: Block1SDKType;
-  sdk_block?: Block2SDKType;
-}
-/**
  * GetSyncingRequest is the request type for the Query/GetSyncing RPC method.
  * @name GetSyncingRequest
  * @package cosmos.base.tendermint.v1beta1
@@ -429,13 +336,6 @@ export interface GetSyncingRequestAminoMsg {
   value: GetSyncingRequestAmino;
 }
 /**
- * GetSyncingRequest is the request type for the Query/GetSyncing RPC method.
- * @name GetSyncingRequestSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetSyncingRequest
- */
-export interface GetSyncingRequestSDKType {}
-/**
  * GetSyncingResponse is the response type for the Query/GetSyncing RPC method.
  * @name GetSyncingResponse
  * @package cosmos.base.tendermint.v1beta1
@@ -455,20 +355,11 @@ export interface GetSyncingResponseProtoMsg {
  * @see proto type: cosmos.base.tendermint.v1beta1.GetSyncingResponse
  */
 export interface GetSyncingResponseAmino {
-  syncing?: boolean;
+  syncing: boolean;
 }
 export interface GetSyncingResponseAminoMsg {
   type: "cosmos-sdk/GetSyncingResponse";
   value: GetSyncingResponseAmino;
-}
-/**
- * GetSyncingResponse is the response type for the Query/GetSyncing RPC method.
- * @name GetSyncingResponseSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetSyncingResponse
- */
-export interface GetSyncingResponseSDKType {
-  syncing: boolean;
 }
 /**
  * GetNodeInfoRequest is the request type for the Query/GetNodeInfo RPC method.
@@ -492,13 +383,6 @@ export interface GetNodeInfoRequestAminoMsg {
   type: "cosmos-sdk/GetNodeInfoRequest";
   value: GetNodeInfoRequestAmino;
 }
-/**
- * GetNodeInfoRequest is the request type for the Query/GetNodeInfo RPC method.
- * @name GetNodeInfoRequestSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetNodeInfoRequest
- */
-export interface GetNodeInfoRequestSDKType {}
 /**
  * GetNodeInfoResponse is the response type for the Query/GetNodeInfo RPC method.
  * @name GetNodeInfoResponse
@@ -526,16 +410,6 @@ export interface GetNodeInfoResponseAmino {
 export interface GetNodeInfoResponseAminoMsg {
   type: "cosmos-sdk/GetNodeInfoResponse";
   value: GetNodeInfoResponseAmino;
-}
-/**
- * GetNodeInfoResponse is the response type for the Query/GetNodeInfo RPC method.
- * @name GetNodeInfoResponseSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.GetNodeInfoResponse
- */
-export interface GetNodeInfoResponseSDKType {
-  default_node_info?: DefaultNodeInfoSDKType;
-  application_version?: VersionInfoSDKType;
 }
 /**
  * VersionInfo is the type for the GetNodeInfoResponse message.
@@ -567,37 +441,21 @@ export interface VersionInfoProtoMsg {
  * @see proto type: cosmos.base.tendermint.v1beta1.VersionInfo
  */
 export interface VersionInfoAmino {
-  name?: string;
-  app_name?: string;
-  version?: string;
-  git_commit?: string;
-  build_tags?: string;
-  go_version?: string;
-  build_deps?: ModuleAmino[];
-  /**
-   * Since: cosmos-sdk 0.43
-   */
-  cosmos_sdk_version?: string;
-}
-export interface VersionInfoAminoMsg {
-  type: "cosmos-sdk/VersionInfo";
-  value: VersionInfoAmino;
-}
-/**
- * VersionInfo is the type for the GetNodeInfoResponse message.
- * @name VersionInfoSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.VersionInfo
- */
-export interface VersionInfoSDKType {
   name: string;
   app_name: string;
   version: string;
   git_commit: string;
   build_tags: string;
   go_version: string;
-  build_deps: ModuleSDKType[];
+  build_deps: ModuleAmino[];
+  /**
+   * Since: cosmos-sdk 0.43
+   */
   cosmos_sdk_version: string;
+}
+export interface VersionInfoAminoMsg {
+  type: "cosmos-sdk/VersionInfo";
+  value: VersionInfoAmino;
 }
 /**
  * Module is the type for VersionInfo
@@ -633,30 +491,19 @@ export interface ModuleAmino {
   /**
    * module path
    */
-  path?: string;
+  path: string;
   /**
    * module version
    */
-  version?: string;
+  version: string;
   /**
    * checksum
    */
-  sum?: string;
+  sum: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
   value: ModuleAmino;
-}
-/**
- * Module is the type for VersionInfo
- * @name ModuleSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.Module
- */
-export interface ModuleSDKType {
-  path: string;
-  version: string;
-  sum: string;
 }
 /**
  * ABCIQueryRequest defines the request structure for the ABCIQuery gRPC query.
@@ -681,26 +528,14 @@ export interface ABCIQueryRequestProtoMsg {
  * @see proto type: cosmos.base.tendermint.v1beta1.ABCIQueryRequest
  */
 export interface ABCIQueryRequestAmino {
-  data?: string;
-  path?: string;
-  height?: string;
-  prove?: boolean;
+  data: string;
+  path: string;
+  height: string;
+  prove: boolean;
 }
 export interface ABCIQueryRequestAminoMsg {
   type: "cosmos-sdk/ABCIQueryRequest";
   value: ABCIQueryRequestAmino;
-}
-/**
- * ABCIQueryRequest defines the request structure for the ABCIQuery gRPC query.
- * @name ABCIQueryRequestSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.ABCIQueryRequest
- */
-export interface ABCIQueryRequestSDKType {
-  data: Uint8Array;
-  path: string;
-  height: bigint;
-  prove: boolean;
 }
 /**
  * ABCIQueryResponse defines the response structure for the ABCIQuery gRPC query.
@@ -742,45 +577,25 @@ export interface ABCIQueryResponseProtoMsg {
  * @see proto type: cosmos.base.tendermint.v1beta1.ABCIQueryResponse
  */
 export interface ABCIQueryResponseAmino {
-  code?: number;
+  code: number;
   /**
    * nondeterministic
    */
-  log?: string;
+  log: string;
   /**
    * nondeterministic
    */
-  info?: string;
-  index?: string;
-  key?: string;
-  value?: string;
+  info: string;
+  index: string;
+  key: string;
+  value: string;
   proof_ops?: ProofOpsAmino;
-  height?: string;
-  codespace?: string;
+  height: string;
+  codespace: string;
 }
 export interface ABCIQueryResponseAminoMsg {
   type: "cosmos-sdk/ABCIQueryResponse";
   value: ABCIQueryResponseAmino;
-}
-/**
- * ABCIQueryResponse defines the response structure for the ABCIQuery gRPC query.
- * 
- * Note: This type is a duplicate of the ResponseQuery proto type defined in
- * Tendermint.
- * @name ABCIQueryResponseSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.ABCIQueryResponse
- */
-export interface ABCIQueryResponseSDKType {
-  code: number;
-  log: string;
-  info: string;
-  index: bigint;
-  key: Uint8Array;
-  value: Uint8Array;
-  proof_ops?: ProofOpsSDKType;
-  height: bigint;
-  codespace: string;
 }
 /**
  * ProofOp defines an operation used for calculating Merkle root. The data could
@@ -812,28 +627,13 @@ export interface ProofOpProtoMsg {
  * @see proto type: cosmos.base.tendermint.v1beta1.ProofOp
  */
 export interface ProofOpAmino {
-  type?: string;
-  key?: string;
-  data?: string;
+  type: string;
+  key: string;
+  data: string;
 }
 export interface ProofOpAminoMsg {
   type: "cosmos-sdk/ProofOp";
   value: ProofOpAmino;
-}
-/**
- * ProofOp defines an operation used for calculating Merkle root. The data could
- * be arbitrary format, providing necessary data for example neighbouring node
- * hash.
- * 
- * Note: This type is a duplicate of the ProofOp proto type defined in Tendermint.
- * @name ProofOpSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.ProofOp
- */
-export interface ProofOpSDKType {
-  type: string;
-  key: Uint8Array;
-  data: Uint8Array;
 }
 /**
  * ProofOps is Merkle proof defined by the list of ProofOps.
@@ -865,17 +665,6 @@ export interface ProofOpsAminoMsg {
   type: "cosmos-sdk/ProofOps";
   value: ProofOpsAmino;
 }
-/**
- * ProofOps is Merkle proof defined by the list of ProofOps.
- * 
- * Note: This type is a duplicate of the ProofOps proto type defined in Tendermint.
- * @name ProofOpsSDKType
- * @package cosmos.base.tendermint.v1beta1
- * @see proto type: cosmos.base.tendermint.v1beta1.ProofOps
- */
-export interface ProofOpsSDKType {
-  ops: ProofOpSDKType[];
-}
 function createBaseGetValidatorSetByHeightRequest(): GetValidatorSetByHeightRequest {
   return {
     height: BigInt(0),
@@ -892,9 +681,6 @@ export const GetValidatorSetByHeightRequest = {
   typeUrl: "/cosmos.base.tendermint.v1beta1.GetValidatorSetByHeightRequest",
   aminoType: "cosmos-sdk/GetValidatorSetByHeightRequest",
   is(o: any): o is GetValidatorSetByHeightRequest {
-    return o && (o.$typeUrl === GetValidatorSetByHeightRequest.typeUrl || typeof o.height === "bigint");
-  },
-  isSDK(o: any): o is GetValidatorSetByHeightRequestSDKType {
     return o && (o.$typeUrl === GetValidatorSetByHeightRequest.typeUrl || typeof o.height === "bigint");
   },
   isAmino(o: any): o is GetValidatorSetByHeightRequestAmino {
@@ -929,7 +715,7 @@ export const GetValidatorSetByHeightRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetValidatorSetByHeightRequest>, I>>(object: I): GetValidatorSetByHeightRequest {
+  fromPartial(object: DeepPartial<GetValidatorSetByHeightRequest>): GetValidatorSetByHeightRequest {
     const message = createBaseGetValidatorSetByHeightRequest();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -998,9 +784,6 @@ export const GetValidatorSetByHeightResponse = {
   is(o: any): o is GetValidatorSetByHeightResponse {
     return o && (o.$typeUrl === GetValidatorSetByHeightResponse.typeUrl || typeof o.blockHeight === "bigint" && Array.isArray(o.validators) && (!o.validators.length || Validator.is(o.validators[0])));
   },
-  isSDK(o: any): o is GetValidatorSetByHeightResponseSDKType {
-    return o && (o.$typeUrl === GetValidatorSetByHeightResponse.typeUrl || typeof o.block_height === "bigint" && Array.isArray(o.validators) && (!o.validators.length || Validator.isSDK(o.validators[0])));
-  },
   isAmino(o: any): o is GetValidatorSetByHeightResponseAmino {
     return o && (o.$typeUrl === GetValidatorSetByHeightResponse.typeUrl || typeof o.block_height === "bigint" && Array.isArray(o.validators) && (!o.validators.length || Validator.isAmino(o.validators[0])));
   },
@@ -1039,7 +822,7 @@ export const GetValidatorSetByHeightResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetValidatorSetByHeightResponse>, I>>(object: I): GetValidatorSetByHeightResponse {
+  fromPartial(object: DeepPartial<GetValidatorSetByHeightResponse>): GetValidatorSetByHeightResponse {
     const message = createBaseGetValidatorSetByHeightResponse();
     message.blockHeight = object.blockHeight !== undefined && object.blockHeight !== null ? BigInt(object.blockHeight.toString()) : BigInt(0);
     message.validators = object.validators?.map(e => Validator.fromPartial(e)) || [];
@@ -1114,9 +897,6 @@ export const GetLatestValidatorSetRequest = {
   is(o: any): o is GetLatestValidatorSetRequest {
     return o && o.$typeUrl === GetLatestValidatorSetRequest.typeUrl;
   },
-  isSDK(o: any): o is GetLatestValidatorSetRequestSDKType {
-    return o && o.$typeUrl === GetLatestValidatorSetRequest.typeUrl;
-  },
   isAmino(o: any): o is GetLatestValidatorSetRequestAmino {
     return o && o.$typeUrl === GetLatestValidatorSetRequest.typeUrl;
   },
@@ -1143,7 +923,7 @@ export const GetLatestValidatorSetRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetLatestValidatorSetRequest>, I>>(object: I): GetLatestValidatorSetRequest {
+  fromPartial(object: DeepPartial<GetLatestValidatorSetRequest>): GetLatestValidatorSetRequest {
     const message = createBaseGetLatestValidatorSetRequest();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -1207,9 +987,6 @@ export const GetLatestValidatorSetResponse = {
   is(o: any): o is GetLatestValidatorSetResponse {
     return o && (o.$typeUrl === GetLatestValidatorSetResponse.typeUrl || typeof o.blockHeight === "bigint" && Array.isArray(o.validators) && (!o.validators.length || Validator.is(o.validators[0])));
   },
-  isSDK(o: any): o is GetLatestValidatorSetResponseSDKType {
-    return o && (o.$typeUrl === GetLatestValidatorSetResponse.typeUrl || typeof o.block_height === "bigint" && Array.isArray(o.validators) && (!o.validators.length || Validator.isSDK(o.validators[0])));
-  },
   isAmino(o: any): o is GetLatestValidatorSetResponseAmino {
     return o && (o.$typeUrl === GetLatestValidatorSetResponse.typeUrl || typeof o.block_height === "bigint" && Array.isArray(o.validators) && (!o.validators.length || Validator.isAmino(o.validators[0])));
   },
@@ -1248,7 +1025,7 @@ export const GetLatestValidatorSetResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetLatestValidatorSetResponse>, I>>(object: I): GetLatestValidatorSetResponse {
+  fromPartial(object: DeepPartial<GetLatestValidatorSetResponse>): GetLatestValidatorSetResponse {
     const message = createBaseGetLatestValidatorSetResponse();
     message.blockHeight = object.blockHeight !== undefined && object.blockHeight !== null ? BigInt(object.blockHeight.toString()) : BigInt(0);
     message.validators = object.validators?.map(e => Validator.fromPartial(e)) || [];
@@ -1326,9 +1103,6 @@ export const Validator = {
   is(o: any): o is Validator {
     return o && (o.$typeUrl === Validator.typeUrl || typeof o.address === "string" && typeof o.votingPower === "bigint" && typeof o.proposerPriority === "bigint");
   },
-  isSDK(o: any): o is ValidatorSDKType {
-    return o && (o.$typeUrl === Validator.typeUrl || typeof o.address === "string" && typeof o.voting_power === "bigint" && typeof o.proposer_priority === "bigint");
-  },
   isAmino(o: any): o is ValidatorAmino {
     return o && (o.$typeUrl === Validator.typeUrl || typeof o.address === "string" && typeof o.voting_power === "bigint" && typeof o.proposer_priority === "bigint");
   },
@@ -1373,7 +1147,7 @@ export const Validator = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Validator>, I>>(object: I): Validator {
+  fromPartial(object: DeepPartial<Validator>): Validator {
     const message = createBaseValidator();
     message.address = object.address ?? "";
     message.pubKey = object.pubKey !== undefined && object.pubKey !== null ? Any.fromPartial(object.pubKey) : undefined;
@@ -1445,9 +1219,6 @@ export const GetBlockByHeightRequest = {
   is(o: any): o is GetBlockByHeightRequest {
     return o && (o.$typeUrl === GetBlockByHeightRequest.typeUrl || typeof o.height === "bigint");
   },
-  isSDK(o: any): o is GetBlockByHeightRequestSDKType {
-    return o && (o.$typeUrl === GetBlockByHeightRequest.typeUrl || typeof o.height === "bigint");
-  },
   isAmino(o: any): o is GetBlockByHeightRequestAmino {
     return o && (o.$typeUrl === GetBlockByHeightRequest.typeUrl || typeof o.height === "bigint");
   },
@@ -1474,7 +1245,7 @@ export const GetBlockByHeightRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetBlockByHeightRequest>, I>>(object: I): GetBlockByHeightRequest {
+  fromPartial(object: DeepPartial<GetBlockByHeightRequest>): GetBlockByHeightRequest {
     const message = createBaseGetBlockByHeightRequest();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     return message;
@@ -1533,9 +1304,6 @@ export const GetBlockByHeightResponse = {
   is(o: any): o is GetBlockByHeightResponse {
     return o && o.$typeUrl === GetBlockByHeightResponse.typeUrl;
   },
-  isSDK(o: any): o is GetBlockByHeightResponseSDKType {
-    return o && o.$typeUrl === GetBlockByHeightResponse.typeUrl;
-  },
   isAmino(o: any): o is GetBlockByHeightResponseAmino {
     return o && o.$typeUrl === GetBlockByHeightResponse.typeUrl;
   },
@@ -1574,7 +1342,7 @@ export const GetBlockByHeightResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetBlockByHeightResponse>, I>>(object: I): GetBlockByHeightResponse {
+  fromPartial(object: DeepPartial<GetBlockByHeightResponse>): GetBlockByHeightResponse {
     const message = createBaseGetBlockByHeightResponse();
     message.blockId = object.blockId !== undefined && object.blockId !== null ? BlockID.fromPartial(object.blockId) : undefined;
     message.block = object.block !== undefined && object.block !== null ? Block1.fromPartial(object.block) : undefined;
@@ -1646,9 +1414,6 @@ export const GetLatestBlockRequest = {
   is(o: any): o is GetLatestBlockRequest {
     return o && o.$typeUrl === GetLatestBlockRequest.typeUrl;
   },
-  isSDK(o: any): o is GetLatestBlockRequestSDKType {
-    return o && o.$typeUrl === GetLatestBlockRequest.typeUrl;
-  },
   isAmino(o: any): o is GetLatestBlockRequestAmino {
     return o && o.$typeUrl === GetLatestBlockRequest.typeUrl;
   },
@@ -1669,7 +1434,7 @@ export const GetLatestBlockRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetLatestBlockRequest>, I>>(_: I): GetLatestBlockRequest {
+  fromPartial(_: DeepPartial<GetLatestBlockRequest>): GetLatestBlockRequest {
     const message = createBaseGetLatestBlockRequest();
     return message;
   },
@@ -1723,9 +1488,6 @@ export const GetLatestBlockResponse = {
   is(o: any): o is GetLatestBlockResponse {
     return o && o.$typeUrl === GetLatestBlockResponse.typeUrl;
   },
-  isSDK(o: any): o is GetLatestBlockResponseSDKType {
-    return o && o.$typeUrl === GetLatestBlockResponse.typeUrl;
-  },
   isAmino(o: any): o is GetLatestBlockResponseAmino {
     return o && o.$typeUrl === GetLatestBlockResponse.typeUrl;
   },
@@ -1764,7 +1526,7 @@ export const GetLatestBlockResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetLatestBlockResponse>, I>>(object: I): GetLatestBlockResponse {
+  fromPartial(object: DeepPartial<GetLatestBlockResponse>): GetLatestBlockResponse {
     const message = createBaseGetLatestBlockResponse();
     message.blockId = object.blockId !== undefined && object.blockId !== null ? BlockID.fromPartial(object.blockId) : undefined;
     message.block = object.block !== undefined && object.block !== null ? Block1.fromPartial(object.block) : undefined;
@@ -1836,9 +1598,6 @@ export const GetSyncingRequest = {
   is(o: any): o is GetSyncingRequest {
     return o && o.$typeUrl === GetSyncingRequest.typeUrl;
   },
-  isSDK(o: any): o is GetSyncingRequestSDKType {
-    return o && o.$typeUrl === GetSyncingRequest.typeUrl;
-  },
   isAmino(o: any): o is GetSyncingRequestAmino {
     return o && o.$typeUrl === GetSyncingRequest.typeUrl;
   },
@@ -1859,7 +1618,7 @@ export const GetSyncingRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetSyncingRequest>, I>>(_: I): GetSyncingRequest {
+  fromPartial(_: DeepPartial<GetSyncingRequest>): GetSyncingRequest {
     const message = createBaseGetSyncingRequest();
     return message;
   },
@@ -1911,9 +1670,6 @@ export const GetSyncingResponse = {
   is(o: any): o is GetSyncingResponse {
     return o && (o.$typeUrl === GetSyncingResponse.typeUrl || typeof o.syncing === "boolean");
   },
-  isSDK(o: any): o is GetSyncingResponseSDKType {
-    return o && (o.$typeUrl === GetSyncingResponse.typeUrl || typeof o.syncing === "boolean");
-  },
   isAmino(o: any): o is GetSyncingResponseAmino {
     return o && (o.$typeUrl === GetSyncingResponse.typeUrl || typeof o.syncing === "boolean");
   },
@@ -1940,7 +1696,7 @@ export const GetSyncingResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetSyncingResponse>, I>>(object: I): GetSyncingResponse {
+  fromPartial(object: DeepPartial<GetSyncingResponse>): GetSyncingResponse {
     const message = createBaseGetSyncingResponse();
     message.syncing = object.syncing ?? false;
     return message;
@@ -1995,9 +1751,6 @@ export const GetNodeInfoRequest = {
   is(o: any): o is GetNodeInfoRequest {
     return o && o.$typeUrl === GetNodeInfoRequest.typeUrl;
   },
-  isSDK(o: any): o is GetNodeInfoRequestSDKType {
-    return o && o.$typeUrl === GetNodeInfoRequest.typeUrl;
-  },
   isAmino(o: any): o is GetNodeInfoRequestAmino {
     return o && o.$typeUrl === GetNodeInfoRequest.typeUrl;
   },
@@ -2018,7 +1771,7 @@ export const GetNodeInfoRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetNodeInfoRequest>, I>>(_: I): GetNodeInfoRequest {
+  fromPartial(_: DeepPartial<GetNodeInfoRequest>): GetNodeInfoRequest {
     const message = createBaseGetNodeInfoRequest();
     return message;
   },
@@ -2071,9 +1824,6 @@ export const GetNodeInfoResponse = {
   is(o: any): o is GetNodeInfoResponse {
     return o && o.$typeUrl === GetNodeInfoResponse.typeUrl;
   },
-  isSDK(o: any): o is GetNodeInfoResponseSDKType {
-    return o && o.$typeUrl === GetNodeInfoResponse.typeUrl;
-  },
   isAmino(o: any): o is GetNodeInfoResponseAmino {
     return o && o.$typeUrl === GetNodeInfoResponse.typeUrl;
   },
@@ -2106,7 +1856,7 @@ export const GetNodeInfoResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetNodeInfoResponse>, I>>(object: I): GetNodeInfoResponse {
+  fromPartial(object: DeepPartial<GetNodeInfoResponse>): GetNodeInfoResponse {
     const message = createBaseGetNodeInfoResponse();
     message.defaultNodeInfo = object.defaultNodeInfo !== undefined && object.defaultNodeInfo !== null ? DefaultNodeInfo.fromPartial(object.defaultNodeInfo) : undefined;
     message.applicationVersion = object.applicationVersion !== undefined && object.applicationVersion !== null ? VersionInfo.fromPartial(object.applicationVersion) : undefined;
@@ -2181,9 +1931,6 @@ export const VersionInfo = {
   is(o: any): o is VersionInfo {
     return o && (o.$typeUrl === VersionInfo.typeUrl || typeof o.name === "string" && typeof o.appName === "string" && typeof o.version === "string" && typeof o.gitCommit === "string" && typeof o.buildTags === "string" && typeof o.goVersion === "string" && Array.isArray(o.buildDeps) && (!o.buildDeps.length || Module.is(o.buildDeps[0])) && typeof o.cosmosSdkVersion === "string");
   },
-  isSDK(o: any): o is VersionInfoSDKType {
-    return o && (o.$typeUrl === VersionInfo.typeUrl || typeof o.name === "string" && typeof o.app_name === "string" && typeof o.version === "string" && typeof o.git_commit === "string" && typeof o.build_tags === "string" && typeof o.go_version === "string" && Array.isArray(o.build_deps) && (!o.build_deps.length || Module.isSDK(o.build_deps[0])) && typeof o.cosmos_sdk_version === "string");
-  },
   isAmino(o: any): o is VersionInfoAmino {
     return o && (o.$typeUrl === VersionInfo.typeUrl || typeof o.name === "string" && typeof o.app_name === "string" && typeof o.version === "string" && typeof o.git_commit === "string" && typeof o.build_tags === "string" && typeof o.go_version === "string" && Array.isArray(o.build_deps) && (!o.build_deps.length || Module.isAmino(o.build_deps[0])) && typeof o.cosmos_sdk_version === "string");
   },
@@ -2252,7 +1999,7 @@ export const VersionInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<VersionInfo>, I>>(object: I): VersionInfo {
+  fromPartial(object: DeepPartial<VersionInfo>): VersionInfo {
     const message = createBaseVersionInfo();
     message.name = object.name ?? "";
     message.appName = object.appName ?? "";
@@ -2353,9 +2100,6 @@ export const Module = {
   is(o: any): o is Module {
     return o && (o.$typeUrl === Module.typeUrl || typeof o.path === "string" && typeof o.version === "string" && typeof o.sum === "string");
   },
-  isSDK(o: any): o is ModuleSDKType {
-    return o && (o.$typeUrl === Module.typeUrl || typeof o.path === "string" && typeof o.version === "string" && typeof o.sum === "string");
-  },
   isAmino(o: any): o is ModuleAmino {
     return o && (o.$typeUrl === Module.typeUrl || typeof o.path === "string" && typeof o.version === "string" && typeof o.sum === "string");
   },
@@ -2394,7 +2138,7 @@ export const Module = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Module>, I>>(object: I): Module {
+  fromPartial(object: DeepPartial<Module>): Module {
     const message = createBaseModule();
     message.path = object.path ?? "";
     message.version = object.version ?? "";
@@ -2464,9 +2208,6 @@ export const ABCIQueryRequest = {
   is(o: any): o is ABCIQueryRequest {
     return o && (o.$typeUrl === ABCIQueryRequest.typeUrl || (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.path === "string" && typeof o.height === "bigint" && typeof o.prove === "boolean");
   },
-  isSDK(o: any): o is ABCIQueryRequestSDKType {
-    return o && (o.$typeUrl === ABCIQueryRequest.typeUrl || (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.path === "string" && typeof o.height === "bigint" && typeof o.prove === "boolean");
-  },
   isAmino(o: any): o is ABCIQueryRequestAmino {
     return o && (o.$typeUrl === ABCIQueryRequest.typeUrl || (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.path === "string" && typeof o.height === "bigint" && typeof o.prove === "boolean");
   },
@@ -2511,7 +2252,7 @@ export const ABCIQueryRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ABCIQueryRequest>, I>>(object: I): ABCIQueryRequest {
+  fromPartial(object: DeepPartial<ABCIQueryRequest>): ABCIQueryRequest {
     const message = createBaseABCIQueryRequest();
     message.data = object.data ?? new Uint8Array();
     message.path = object.path ?? "";
@@ -2594,9 +2335,6 @@ export const ABCIQueryResponse = {
   is(o: any): o is ABCIQueryResponse {
     return o && (o.$typeUrl === ABCIQueryResponse.typeUrl || typeof o.code === "number" && typeof o.log === "string" && typeof o.info === "string" && typeof o.index === "bigint" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string") && typeof o.height === "bigint" && typeof o.codespace === "string");
   },
-  isSDK(o: any): o is ABCIQueryResponseSDKType {
-    return o && (o.$typeUrl === ABCIQueryResponse.typeUrl || typeof o.code === "number" && typeof o.log === "string" && typeof o.info === "string" && typeof o.index === "bigint" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string") && typeof o.height === "bigint" && typeof o.codespace === "string");
-  },
   isAmino(o: any): o is ABCIQueryResponseAmino {
     return o && (o.$typeUrl === ABCIQueryResponse.typeUrl || typeof o.code === "number" && typeof o.log === "string" && typeof o.info === "string" && typeof o.index === "bigint" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string") && typeof o.height === "bigint" && typeof o.codespace === "string");
   },
@@ -2671,7 +2409,7 @@ export const ABCIQueryResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ABCIQueryResponse>, I>>(object: I): ABCIQueryResponse {
+  fromPartial(object: DeepPartial<ABCIQueryResponse>): ABCIQueryResponse {
     const message = createBaseABCIQueryResponse();
     message.code = object.code ?? 0;
     message.log = object.log ?? "";
@@ -2779,9 +2517,6 @@ export const ProofOp = {
   is(o: any): o is ProofOp {
     return o && (o.$typeUrl === ProofOp.typeUrl || typeof o.type === "string" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.data instanceof Uint8Array || typeof o.data === "string"));
   },
-  isSDK(o: any): o is ProofOpSDKType {
-    return o && (o.$typeUrl === ProofOp.typeUrl || typeof o.type === "string" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.data instanceof Uint8Array || typeof o.data === "string"));
-  },
   isAmino(o: any): o is ProofOpAmino {
     return o && (o.$typeUrl === ProofOp.typeUrl || typeof o.type === "string" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.data instanceof Uint8Array || typeof o.data === "string"));
   },
@@ -2820,7 +2555,7 @@ export const ProofOp = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ProofOp>, I>>(object: I): ProofOp {
+  fromPartial(object: DeepPartial<ProofOp>): ProofOp {
     const message = createBaseProofOp();
     message.type = object.type ?? "";
     message.key = object.key ?? new Uint8Array();
@@ -2889,9 +2624,6 @@ export const ProofOps = {
   is(o: any): o is ProofOps {
     return o && (o.$typeUrl === ProofOps.typeUrl || Array.isArray(o.ops) && (!o.ops.length || ProofOp.is(o.ops[0])));
   },
-  isSDK(o: any): o is ProofOpsSDKType {
-    return o && (o.$typeUrl === ProofOps.typeUrl || Array.isArray(o.ops) && (!o.ops.length || ProofOp.isSDK(o.ops[0])));
-  },
   isAmino(o: any): o is ProofOpsAmino {
     return o && (o.$typeUrl === ProofOps.typeUrl || Array.isArray(o.ops) && (!o.ops.length || ProofOp.isAmino(o.ops[0])));
   },
@@ -2918,7 +2650,7 @@ export const ProofOps = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ProofOps>, I>>(object: I): ProofOps {
+  fromPartial(object: DeepPartial<ProofOps>): ProofOps {
     const message = createBaseProofOps();
     message.ops = object.ops?.map(e => ProofOp.fromPartial(e)) || [];
     return message;

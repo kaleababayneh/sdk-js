@@ -11,7 +11,6 @@ export enum ActionState {
   ACTION_STATE_EXPIRED = 7,
   UNRECOGNIZED = -1,
 }
-export const ActionStateSDKType = ActionState;
 export const ActionStateAmino = ActionState;
 export function actionStateFromJSON(object: any): ActionState {
   switch (object) {

@@ -3,21 +3,21 @@
 import { GeneratedType, Registry, OfflineSigner } from "@cosmjs/proto-signing";
 import { defaultRegistryTypes, AminoTypes, SigningStargateClient } from "@cosmjs/stargate";
 import { HttpEndpoint } from "@cosmjs/tendermint-rpc";
-import * as lumeraActionTxRegistry from "./action/tx.registry";
-import * as lumeraClaimTxRegistry from "./claim/tx.registry";
-import * as lumeraLumeraidTxRegistry from "./lumeraid/tx.registry";
 import * as lumeraSupernodeTxRegistry from "./supernode/tx.registry";
-import * as lumeraActionTxAmino from "./action/tx.amino";
-import * as lumeraClaimTxAmino from "./claim/tx.amino";
-import * as lumeraLumeraidTxAmino from "./lumeraid/tx.amino";
+import * as lumeraLumeraidTxRegistry from "./lumeraid/tx.registry";
+import * as lumeraClaimTxRegistry from "./claim/tx.registry";
+import * as lumeraActionTxRegistry from "./action/tx.registry";
 import * as lumeraSupernodeTxAmino from "./supernode/tx.amino";
+import * as lumeraLumeraidTxAmino from "./lumeraid/tx.amino";
+import * as lumeraClaimTxAmino from "./claim/tx.amino";
+import * as lumeraActionTxAmino from "./action/tx.amino";
 export const lumeraAminoConverters = {
-  ...lumeraActionTxAmino.AminoConverter,
-  ...lumeraClaimTxAmino.AminoConverter,
+  ...lumeraSupernodeTxAmino.AminoConverter,
   ...lumeraLumeraidTxAmino.AminoConverter,
-  ...lumeraSupernodeTxAmino.AminoConverter
+  ...lumeraClaimTxAmino.AminoConverter,
+  ...lumeraActionTxAmino.AminoConverter
 };
-export const lumeraProtoRegistry: ReadonlyArray<[string, GeneratedType]> = [...lumeraActionTxRegistry.registry, ...lumeraClaimTxRegistry.registry, ...lumeraLumeraidTxRegistry.registry, ...lumeraSupernodeTxRegistry.registry];
+export const lumeraProtoRegistry: ReadonlyArray<[string, GeneratedType]> = [...lumeraSupernodeTxRegistry.registry, ...lumeraLumeraidTxRegistry.registry, ...lumeraClaimTxRegistry.registry, ...lumeraActionTxRegistry.registry];
 export const getSigningLumeraClientOptions = ({
   defaultTypes = defaultRegistryTypes
 }: {

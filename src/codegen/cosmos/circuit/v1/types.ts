@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import { isSet, Exact } from "../../../helpers";
+import { isSet, DeepPartial } from "../../../helpers";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
 /** Level is the permission level. */
@@ -29,7 +29,6 @@ export enum Permissions_Level {
   LEVEL_SUPER_ADMIN = 3,
   UNRECOGNIZED = -1,
 }
-export const Permissions_LevelSDKType = Permissions_Level;
 export const Permissions_LevelAmino = Permissions_Level;
 export function permissions_LevelFromJSON(object: any): Permissions_Level {
   switch (object) {
@@ -100,28 +99,17 @@ export interface PermissionsAmino {
   /**
    * level is the level of permissions granted to this account.
    */
-  level?: Permissions_Level;
+  level: Permissions_Level;
   /**
    * limit_type_urls is used with LEVEL_SOME_MSGS to limit the lists of Msg type
    * URLs that the account can trip. It is an error to use limit_type_urls with
    * a level other than LEVEL_SOME_MSGS.
    */
-  limit_type_urls?: string[];
+  limit_type_urls: string[];
 }
 export interface PermissionsAminoMsg {
   type: "cosmos-sdk/Permissions";
   value: PermissionsAmino;
-}
-/**
- * Permissions are the permissions that an account has to trip
- * or reset the circuit breaker.
- * @name PermissionsSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.Permissions
- */
-export interface PermissionsSDKType {
-  level: Permissions_Level;
-  limit_type_urls: string[];
 }
 /**
  * GenesisAccountPermissions is the account permissions for the circuit breaker in genesis
@@ -144,22 +132,12 @@ export interface GenesisAccountPermissionsProtoMsg {
  * @see proto type: cosmos.circuit.v1.GenesisAccountPermissions
  */
 export interface GenesisAccountPermissionsAmino {
-  address?: string;
+  address: string;
   permissions?: PermissionsAmino;
 }
 export interface GenesisAccountPermissionsAminoMsg {
   type: "cosmos-sdk/GenesisAccountPermissions";
   value: GenesisAccountPermissionsAmino;
-}
-/**
- * GenesisAccountPermissions is the account permissions for the circuit breaker in genesis
- * @name GenesisAccountPermissionsSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.GenesisAccountPermissions
- */
-export interface GenesisAccountPermissionsSDKType {
-  address: string;
-  permissions?: PermissionsSDKType;
 }
 /**
  * GenesisState is the state that must be provided at genesis.
@@ -182,22 +160,12 @@ export interface GenesisStateProtoMsg {
  * @see proto type: cosmos.circuit.v1.GenesisState
  */
 export interface GenesisStateAmino {
-  account_permissions?: GenesisAccountPermissionsAmino[];
-  disabled_type_urls?: string[];
+  account_permissions: GenesisAccountPermissionsAmino[];
+  disabled_type_urls: string[];
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
-}
-/**
- * GenesisState is the state that must be provided at genesis.
- * @name GenesisStateSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.GenesisState
- */
-export interface GenesisStateSDKType {
-  account_permissions: GenesisAccountPermissionsSDKType[];
-  disabled_type_urls: string[];
 }
 function createBasePermissions(): Permissions {
   return {
@@ -217,9 +185,6 @@ export const Permissions = {
   aminoType: "cosmos-sdk/Permissions",
   is(o: any): o is Permissions {
     return o && (o.$typeUrl === Permissions.typeUrl || isSet(o.level) && Array.isArray(o.limitTypeUrls) && (!o.limitTypeUrls.length || typeof o.limitTypeUrls[0] === "string"));
-  },
-  isSDK(o: any): o is PermissionsSDKType {
-    return o && (o.$typeUrl === Permissions.typeUrl || isSet(o.level) && Array.isArray(o.limit_type_urls) && (!o.limit_type_urls.length || typeof o.limit_type_urls[0] === "string"));
   },
   isAmino(o: any): o is PermissionsAmino {
     return o && (o.$typeUrl === Permissions.typeUrl || isSet(o.level) && Array.isArray(o.limit_type_urls) && (!o.limit_type_urls.length || typeof o.limit_type_urls[0] === "string"));
@@ -253,7 +218,7 @@ export const Permissions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Permissions>, I>>(object: I): Permissions {
+  fromPartial(object: DeepPartial<Permissions>): Permissions {
     const message = createBasePermissions();
     message.level = object.level ?? 0;
     message.limitTypeUrls = object.limitTypeUrls?.map(e => e) || [];
@@ -318,9 +283,6 @@ export const GenesisAccountPermissions = {
   is(o: any): o is GenesisAccountPermissions {
     return o && (o.$typeUrl === GenesisAccountPermissions.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is GenesisAccountPermissionsSDKType {
-    return o && (o.$typeUrl === GenesisAccountPermissions.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is GenesisAccountPermissionsAmino {
     return o && (o.$typeUrl === GenesisAccountPermissions.typeUrl || typeof o.address === "string");
   },
@@ -353,7 +315,7 @@ export const GenesisAccountPermissions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisAccountPermissions>, I>>(object: I): GenesisAccountPermissions {
+  fromPartial(object: DeepPartial<GenesisAccountPermissions>): GenesisAccountPermissions {
     const message = createBaseGenesisAccountPermissions();
     message.address = object.address ?? "";
     message.permissions = object.permissions !== undefined && object.permissions !== null ? Permissions.fromPartial(object.permissions) : undefined;
@@ -421,9 +383,6 @@ export const GenesisState = {
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.accountPermissions) && (!o.accountPermissions.length || GenesisAccountPermissions.is(o.accountPermissions[0])) && Array.isArray(o.disabledTypeUrls) && (!o.disabledTypeUrls.length || typeof o.disabledTypeUrls[0] === "string"));
   },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.account_permissions) && (!o.account_permissions.length || GenesisAccountPermissions.isSDK(o.account_permissions[0])) && Array.isArray(o.disabled_type_urls) && (!o.disabled_type_urls.length || typeof o.disabled_type_urls[0] === "string"));
-  },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.account_permissions) && (!o.account_permissions.length || GenesisAccountPermissions.isAmino(o.account_permissions[0])) && Array.isArray(o.disabled_type_urls) && (!o.disabled_type_urls.length || typeof o.disabled_type_urls[0] === "string"));
   },
@@ -456,7 +415,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.accountPermissions = object.accountPermissions?.map(e => GenesisAccountPermissions.fromPartial(e)) || [];
     message.disabledTypeUrls = object.disabledTypeUrls?.map(e => e) || [];

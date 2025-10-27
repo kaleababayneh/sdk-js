@@ -1,12 +1,12 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Any, AnyAmino } from "../../../google/protobuf/any";
 import { SignMode } from "../signing/v1beta1/signing";
-import { CompactBitArray, CompactBitArrayAmino, CompactBitArraySDKType } from "../../crypto/multisig/v1beta1/multisig";
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
+import { CompactBitArray, CompactBitArrayAmino } from "../../crypto/multisig/v1beta1/multisig";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact, bytesFromBase64, base64FromBytes, isSet } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes, isSet } from "../../../helpers";
 /**
  * Tx is the standard type used for broadcasting transactions.
  * @name Tx
@@ -55,22 +55,11 @@ export interface TxAmino {
    * AuthInfo's signer_infos to allow connecting signature meta information like
    * public key and signing mode by position.
    */
-  signatures?: string[];
+  signatures: string[];
 }
 export interface TxAminoMsg {
   type: "cosmos-sdk/Tx";
   value: TxAmino;
-}
-/**
- * Tx is the standard type used for broadcasting transactions.
- * @name TxSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.Tx
- */
-export interface TxSDKType {
-  body?: TxBodySDKType;
-  auth_info?: AuthInfoSDKType;
-  signatures: Uint8Array[];
 }
 /**
  * TxRaw is a variant of Tx that pins the signer's exact binary representation
@@ -119,37 +108,22 @@ export interface TxRawAmino {
    * body_bytes is a protobuf serialization of a TxBody that matches the
    * representation in SignDoc.
    */
-  body_bytes?: string;
+  body_bytes: string;
   /**
    * auth_info_bytes is a protobuf serialization of an AuthInfo that matches the
    * representation in SignDoc.
    */
-  auth_info_bytes?: string;
+  auth_info_bytes: string;
   /**
    * signatures is a list of signatures that matches the length and order of
    * AuthInfo's signer_infos to allow connecting signature meta information like
    * public key and signing mode by position.
    */
-  signatures?: string[];
+  signatures: string[];
 }
 export interface TxRawAminoMsg {
   type: "cosmos-sdk/TxRaw";
   value: TxRawAmino;
-}
-/**
- * TxRaw is a variant of Tx that pins the signer's exact binary representation
- * of body and auth_info. This is used for signing, broadcasting and
- * verification. The binary `serialize(tx: TxRaw)` is stored in Tendermint and
- * the hash `sha256(serialize(tx: TxRaw))` becomes the "txhash", commonly used
- * as the transaction ID.
- * @name TxRawSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.TxRaw
- */
-export interface TxRawSDKType {
-  body_bytes: Uint8Array;
-  auth_info_bytes: Uint8Array;
-  signatures: Uint8Array[];
 }
 /**
  * SignDoc is the type used for generating sign bytes for SIGN_MODE_DIRECT.
@@ -194,38 +168,26 @@ export interface SignDocAmino {
    * body_bytes is protobuf serialization of a TxBody that matches the
    * representation in TxRaw.
    */
-  body_bytes?: string;
+  body_bytes: string;
   /**
    * auth_info_bytes is a protobuf serialization of an AuthInfo that matches the
    * representation in TxRaw.
    */
-  auth_info_bytes?: string;
+  auth_info_bytes: string;
   /**
    * chain_id is the unique identifier of the chain this transaction targets.
    * It prevents signed transactions from being used on another chain by an
    * attacker
    */
-  chain_id?: string;
+  chain_id: string;
   /**
    * account_number is the account number of the account in state
    */
-  account_number?: string;
+  account_number: string;
 }
 export interface SignDocAminoMsg {
   type: "cosmos-sdk/SignDoc";
   value: SignDocAmino;
-}
-/**
- * SignDoc is the type used for generating sign bytes for SIGN_MODE_DIRECT.
- * @name SignDocSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.SignDoc
- */
-export interface SignDocSDKType {
-  body_bytes: Uint8Array;
-  auth_info_bytes: Uint8Array;
-  chain_id: string;
-  account_number: bigint;
 }
 /**
  * SignDocDirectAux is the type used for generating sign bytes for
@@ -284,7 +246,7 @@ export interface SignDocDirectAuxAmino {
    * body_bytes is protobuf serialization of a TxBody that matches the
    * representation in TxRaw.
    */
-  body_bytes?: string;
+  body_bytes: string;
   /**
    * public_key is the public key of the signing account.
    */
@@ -294,15 +256,15 @@ export interface SignDocDirectAuxAmino {
    * It prevents signed transactions from being used on another chain by an
    * attacker.
    */
-  chain_id?: string;
+  chain_id: string;
   /**
    * account_number is the account number of the account in state.
    */
-  account_number?: string;
+  account_number: string;
   /**
    * sequence is the sequence number of the signing account.
    */
-  sequence?: string;
+  sequence: string;
   /**
    * tips have been depreacted and should not be used
    * @deprecated
@@ -312,26 +274,6 @@ export interface SignDocDirectAuxAmino {
 export interface SignDocDirectAuxAminoMsg {
   type: "cosmos-sdk/SignDocDirectAux";
   value: SignDocDirectAuxAmino;
-}
-/**
- * SignDocDirectAux is the type used for generating sign bytes for
- * SIGN_MODE_DIRECT_AUX.
- * 
- * Since: cosmos-sdk 0.46
- * @name SignDocDirectAuxSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.SignDocDirectAux
- */
-export interface SignDocDirectAuxSDKType {
-  body_bytes: Uint8Array;
-  public_key?: AnySDKType;
-  chain_id: string;
-  account_number: bigint;
-  sequence: bigint;
-  /**
-   * @deprecated
-   */
-  tip?: TipSDKType;
 }
 /**
  * TxBody is the body of a transaction that all signers sign over.
@@ -394,47 +336,34 @@ export interface TxBodyAmino {
    * is referred to as the primary signer and pays the fee for the whole
    * transaction.
    */
-  messages?: AnyAmino[];
+  messages: AnyAmino[];
   /**
    * memo is any arbitrary note/comment to be added to the transaction.
    * WARNING: in clients, any publicly exposed text should not be called memo,
    * but should be called `note` instead (see https://github.com/cosmos/cosmos-sdk/issues/9122).
    */
-  memo?: string;
+  memo: string;
   /**
    * timeout is the block height after which this transaction will not
    * be processed by the chain
    */
-  timeout_height?: string;
+  timeout_height: string;
   /**
    * extension_options are arbitrary options that can be added by chains
    * when the default options are not sufficient. If any of these are present
    * and can't be handled, the transaction will be rejected
    */
-  extension_options?: AnyAmino[];
+  extension_options: AnyAmino[];
   /**
    * extension_options are arbitrary options that can be added by chains
    * when the default options are not sufficient. If any of these are present
    * and can't be handled, they will be ignored
    */
-  non_critical_extension_options?: AnyAmino[];
+  non_critical_extension_options: AnyAmino[];
 }
 export interface TxBodyAminoMsg {
   type: "cosmos-sdk/TxBody";
   value: TxBodyAmino;
-}
-/**
- * TxBody is the body of a transaction that all signers sign over.
- * @name TxBodySDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.TxBody
- */
-export interface TxBodySDKType {
-  messages: AnySDKType[];
-  memo: string;
-  timeout_height: bigint;
-  extension_options: AnySDKType[];
-  non_critical_extension_options: AnySDKType[];
 }
 /**
  * AuthInfo describes the fee and signer modes that are used to sign a
@@ -487,7 +416,7 @@ export interface AuthInfoAmino {
    * messages. The first element is the primary signer and the one which pays
    * the fee.
    */
-  signer_infos?: SignerInfoAmino[];
+  signer_infos: SignerInfoAmino[];
   /**
    * Fee is the fee and gas limit for the transaction. The first signer is the
    * primary signer and the one which pays the fee. The fee can be calculated
@@ -509,21 +438,6 @@ export interface AuthInfoAmino {
 export interface AuthInfoAminoMsg {
   type: "cosmos-sdk/AuthInfo";
   value: AuthInfoAmino;
-}
-/**
- * AuthInfo describes the fee and signer modes that are used to sign a
- * transaction.
- * @name AuthInfoSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.AuthInfo
- */
-export interface AuthInfoSDKType {
-  signer_infos: SignerInfoSDKType[];
-  fee?: FeeSDKType;
-  /**
-   * @deprecated
-   */
-  tip?: TipSDKType;
 }
 /**
  * SignerInfo describes the public key and signing mode of a single top-level
@@ -579,23 +493,11 @@ export interface SignerInfoAmino {
    * number of committed transactions signed by a given address. It is used to
    * prevent replay attacks.
    */
-  sequence?: string;
+  sequence: string;
 }
 export interface SignerInfoAminoMsg {
   type: "cosmos-sdk/SignerInfo";
   value: SignerInfoAmino;
-}
-/**
- * SignerInfo describes the public key and signing mode of a single top-level
- * signer.
- * @name SignerInfoSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.SignerInfo
- */
-export interface SignerInfoSDKType {
-  public_key?: AnySDKType;
-  mode_info?: ModeInfoSDKType;
-  sequence: bigint;
 }
 /**
  * ModeInfo describes the signing mode of a single or nested multisig signer.
@@ -638,16 +540,6 @@ export interface ModeInfoAminoMsg {
   value: ModeInfoAmino;
 }
 /**
- * ModeInfo describes the signing mode of a single or nested multisig signer.
- * @name ModeInfoSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.ModeInfo
- */
-export interface ModeInfoSDKType {
-  single?: ModeInfo_SingleSDKType;
-  multi?: ModeInfo_MultiSDKType;
-}
-/**
  * Single is the mode info for a single signer. It is structured as a message
  * to allow for additional fields such as locale for SIGN_MODE_TEXTUAL in the
  * future
@@ -677,22 +569,11 @@ export interface ModeInfo_SingleAmino {
   /**
    * mode is the signing mode of the single signer
    */
-  mode?: SignMode;
+  mode: SignMode;
 }
 export interface ModeInfo_SingleAminoMsg {
   type: "cosmos-sdk/Single";
   value: ModeInfo_SingleAmino;
-}
-/**
- * Single is the mode info for a single signer. It is structured as a message
- * to allow for additional fields such as locale for SIGN_MODE_TEXTUAL in the
- * future
- * @name ModeInfo_SingleSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.Single
- */
-export interface ModeInfo_SingleSDKType {
-  mode: SignMode;
 }
 /**
  * Multi is the mode info for a multisig public key
@@ -730,21 +611,11 @@ export interface ModeInfo_MultiAmino {
    * mode_infos is the corresponding modes of the signers of the multisig
    * which could include nested multisig public keys
    */
-  mode_infos?: ModeInfoAmino[];
+  mode_infos: ModeInfoAmino[];
 }
 export interface ModeInfo_MultiAminoMsg {
   type: "cosmos-sdk/Multi";
   value: ModeInfo_MultiAmino;
-}
-/**
- * Multi is the mode info for a multisig public key
- * @name ModeInfo_MultiSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.Multi
- */
-export interface ModeInfo_MultiSDKType {
-  bitarray?: CompactBitArraySDKType;
-  mode_infos: ModeInfoSDKType[];
 }
 /**
  * Fee includes the amount of coins paid in fees and the maximum
@@ -798,37 +669,23 @@ export interface FeeAmino {
    * gas_limit is the maximum gas that can be used in transaction processing
    * before an out of gas error occurs
    */
-  gas_limit?: string;
+  gas_limit: string;
   /**
    * if unset, the first signer is responsible for paying the fees. If set, the specified account must pay the fees.
    * the payer must be a tx signer (and thus have signed this field in AuthInfo).
    * setting this field does *not* change the ordering of required signers for the transaction.
    */
-  payer?: string;
+  payer: string;
   /**
    * if set, the fee payer (either the first signer or the value of the payer field) requests that a fee grant be used
    * to pay fees instead of the fee payer's own balance. If an appropriate fee grant does not exist or the chain does
    * not support fee grants, this will fail
    */
-  granter?: string;
+  granter: string;
 }
 export interface FeeAminoMsg {
   type: "cosmos-sdk/Fee";
   value: FeeAmino;
-}
-/**
- * Fee includes the amount of coins paid in fees and the maximum
- * gas to be used by the transaction. The ratio yields an effective "gasprice",
- * which must be above some miminum to be accepted into the mempool.
- * @name FeeSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.Fee
- */
-export interface FeeSDKType {
-  amount: CoinSDKType[];
-  gas_limit: bigint;
-  payer: string;
-  granter: string;
 }
 /**
  * Tip is the tip used for meta-transactions.
@@ -870,24 +727,11 @@ export interface TipAmino {
   /**
    * tipper is the address of the account paying for the tip
    */
-  tipper?: string;
+  tipper: string;
 }
 export interface TipAminoMsg {
   type: "cosmos-sdk/Tip";
   value: TipAmino;
-}
-/**
- * Tip is the tip used for meta-transactions.
- * 
- * Since: cosmos-sdk 0.46
- * @name TipSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.Tip
- * @deprecated
- */
-export interface TipSDKType {
-  amount: CoinSDKType[];
-  tipper: string;
 }
 /**
  * AuxSignerData is the intermediary format that an auxiliary signer (e.g. a
@@ -943,7 +787,7 @@ export interface AuxSignerDataAmino {
    * AuxSignerData across different chains, the bech32 prefix of the target
    * chain (where the final transaction is broadcasted) should be used.
    */
-  address?: string;
+  address: string;
   /**
    * sign_doc is the SIGN_MODE_DIRECT_AUX sign doc that the auxiliary signer
    * signs. Note: we use the same sign doc even if we're signing with
@@ -953,32 +797,15 @@ export interface AuxSignerDataAmino {
   /**
    * mode is the signing mode of the single signer.
    */
-  mode?: SignMode;
+  mode: SignMode;
   /**
    * sig is the signature of the sign doc.
    */
-  sig?: string;
+  sig: string;
 }
 export interface AuxSignerDataAminoMsg {
   type: "cosmos-sdk/AuxSignerData";
   value: AuxSignerDataAmino;
-}
-/**
- * AuxSignerData is the intermediary format that an auxiliary signer (e.g. a
- * tipper) builds and sends to the fee payer (who will build and broadcast the
- * actual tx). AuxSignerData is not a valid tx in itself, and will be rejected
- * by the node if sent directly as-is.
- * 
- * Since: cosmos-sdk 0.46
- * @name AuxSignerDataSDKType
- * @package cosmos.tx.v1beta1
- * @see proto type: cosmos.tx.v1beta1.AuxSignerData
- */
-export interface AuxSignerDataSDKType {
-  address: string;
-  sign_doc?: SignDocDirectAuxSDKType;
-  mode: SignMode;
-  sig: Uint8Array;
 }
 function createBaseTx(): Tx {
   return {
@@ -997,9 +824,6 @@ export const Tx = {
   typeUrl: "/cosmos.tx.v1beta1.Tx",
   aminoType: "cosmos-sdk/Tx",
   is(o: any): o is Tx {
-    return o && (o.$typeUrl === Tx.typeUrl || Array.isArray(o.signatures) && (!o.signatures.length || o.signatures[0] instanceof Uint8Array || typeof o.signatures[0] === "string"));
-  },
-  isSDK(o: any): o is TxSDKType {
     return o && (o.$typeUrl === Tx.typeUrl || Array.isArray(o.signatures) && (!o.signatures.length || o.signatures[0] instanceof Uint8Array || typeof o.signatures[0] === "string"));
   },
   isAmino(o: any): o is TxAmino {
@@ -1040,7 +864,7 @@ export const Tx = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Tx>, I>>(object: I): Tx {
+  fromPartial(object: DeepPartial<Tx>): Tx {
     const message = createBaseTx();
     message.body = object.body !== undefined && object.body !== null ? TxBody.fromPartial(object.body) : undefined;
     message.authInfo = object.authInfo !== undefined && object.authInfo !== null ? AuthInfo.fromPartial(object.authInfo) : undefined;
@@ -1121,9 +945,6 @@ export const TxRaw = {
   is(o: any): o is TxRaw {
     return o && (o.$typeUrl === TxRaw.typeUrl || (o.bodyBytes instanceof Uint8Array || typeof o.bodyBytes === "string") && (o.authInfoBytes instanceof Uint8Array || typeof o.authInfoBytes === "string") && Array.isArray(o.signatures) && (!o.signatures.length || o.signatures[0] instanceof Uint8Array || typeof o.signatures[0] === "string"));
   },
-  isSDK(o: any): o is TxRawSDKType {
-    return o && (o.$typeUrl === TxRaw.typeUrl || (o.body_bytes instanceof Uint8Array || typeof o.body_bytes === "string") && (o.auth_info_bytes instanceof Uint8Array || typeof o.auth_info_bytes === "string") && Array.isArray(o.signatures) && (!o.signatures.length || o.signatures[0] instanceof Uint8Array || typeof o.signatures[0] === "string"));
-  },
   isAmino(o: any): o is TxRawAmino {
     return o && (o.$typeUrl === TxRaw.typeUrl || (o.body_bytes instanceof Uint8Array || typeof o.body_bytes === "string") && (o.auth_info_bytes instanceof Uint8Array || typeof o.auth_info_bytes === "string") && Array.isArray(o.signatures) && (!o.signatures.length || o.signatures[0] instanceof Uint8Array || typeof o.signatures[0] === "string"));
   },
@@ -1162,7 +983,7 @@ export const TxRaw = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxRaw>, I>>(object: I): TxRaw {
+  fromPartial(object: DeepPartial<TxRaw>): TxRaw {
     const message = createBaseTxRaw();
     message.bodyBytes = object.bodyBytes ?? new Uint8Array();
     message.authInfoBytes = object.authInfoBytes ?? new Uint8Array();
@@ -1234,9 +1055,6 @@ export const SignDoc = {
   is(o: any): o is SignDoc {
     return o && (o.$typeUrl === SignDoc.typeUrl || (o.bodyBytes instanceof Uint8Array || typeof o.bodyBytes === "string") && (o.authInfoBytes instanceof Uint8Array || typeof o.authInfoBytes === "string") && typeof o.chainId === "string" && typeof o.accountNumber === "bigint");
   },
-  isSDK(o: any): o is SignDocSDKType {
-    return o && (o.$typeUrl === SignDoc.typeUrl || (o.body_bytes instanceof Uint8Array || typeof o.body_bytes === "string") && (o.auth_info_bytes instanceof Uint8Array || typeof o.auth_info_bytes === "string") && typeof o.chain_id === "string" && typeof o.account_number === "bigint");
-  },
   isAmino(o: any): o is SignDocAmino {
     return o && (o.$typeUrl === SignDoc.typeUrl || (o.body_bytes instanceof Uint8Array || typeof o.body_bytes === "string") && (o.auth_info_bytes instanceof Uint8Array || typeof o.auth_info_bytes === "string") && typeof o.chain_id === "string" && typeof o.account_number === "bigint");
   },
@@ -1281,7 +1099,7 @@ export const SignDoc = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SignDoc>, I>>(object: I): SignDoc {
+  fromPartial(object: DeepPartial<SignDoc>): SignDoc {
     const message = createBaseSignDoc();
     message.bodyBytes = object.bodyBytes ?? new Uint8Array();
     message.authInfoBytes = object.authInfoBytes ?? new Uint8Array();
@@ -1361,9 +1179,6 @@ export const SignDocDirectAux = {
   is(o: any): o is SignDocDirectAux {
     return o && (o.$typeUrl === SignDocDirectAux.typeUrl || (o.bodyBytes instanceof Uint8Array || typeof o.bodyBytes === "string") && typeof o.chainId === "string" && typeof o.accountNumber === "bigint" && typeof o.sequence === "bigint");
   },
-  isSDK(o: any): o is SignDocDirectAuxSDKType {
-    return o && (o.$typeUrl === SignDocDirectAux.typeUrl || (o.body_bytes instanceof Uint8Array || typeof o.body_bytes === "string") && typeof o.chain_id === "string" && typeof o.account_number === "bigint" && typeof o.sequence === "bigint");
-  },
   isAmino(o: any): o is SignDocDirectAuxAmino {
     return o && (o.$typeUrl === SignDocDirectAux.typeUrl || (o.body_bytes instanceof Uint8Array || typeof o.body_bytes === "string") && typeof o.chain_id === "string" && typeof o.account_number === "bigint" && typeof o.sequence === "bigint");
   },
@@ -1420,7 +1235,7 @@ export const SignDocDirectAux = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SignDocDirectAux>, I>>(object: I): SignDocDirectAux {
+  fromPartial(object: DeepPartial<SignDocDirectAux>): SignDocDirectAux {
     const message = createBaseSignDocDirectAux();
     message.bodyBytes = object.bodyBytes ?? new Uint8Array();
     message.publicKey = object.publicKey !== undefined && object.publicKey !== null ? Any.fromPartial(object.publicKey) : undefined;
@@ -1511,9 +1326,6 @@ export const TxBody = {
   is(o: any): o is TxBody {
     return o && (o.$typeUrl === TxBody.typeUrl || Array.isArray(o.messages) && (!o.messages.length || Any.is(o.messages[0])) && typeof o.memo === "string" && typeof o.timeoutHeight === "bigint" && Array.isArray(o.extensionOptions) && (!o.extensionOptions.length || Any.is(o.extensionOptions[0])) && Array.isArray(o.nonCriticalExtensionOptions) && (!o.nonCriticalExtensionOptions.length || Any.is(o.nonCriticalExtensionOptions[0])));
   },
-  isSDK(o: any): o is TxBodySDKType {
-    return o && (o.$typeUrl === TxBody.typeUrl || Array.isArray(o.messages) && (!o.messages.length || Any.isSDK(o.messages[0])) && typeof o.memo === "string" && typeof o.timeout_height === "bigint" && Array.isArray(o.extension_options) && (!o.extension_options.length || Any.isSDK(o.extension_options[0])) && Array.isArray(o.non_critical_extension_options) && (!o.non_critical_extension_options.length || Any.isSDK(o.non_critical_extension_options[0])));
-  },
   isAmino(o: any): o is TxBodyAmino {
     return o && (o.$typeUrl === TxBody.typeUrl || Array.isArray(o.messages) && (!o.messages.length || Any.isAmino(o.messages[0])) && typeof o.memo === "string" && typeof o.timeout_height === "bigint" && Array.isArray(o.extension_options) && (!o.extension_options.length || Any.isAmino(o.extension_options[0])) && Array.isArray(o.non_critical_extension_options) && (!o.non_critical_extension_options.length || Any.isAmino(o.non_critical_extension_options[0])));
   },
@@ -1564,7 +1376,7 @@ export const TxBody = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxBody>, I>>(object: I): TxBody {
+  fromPartial(object: DeepPartial<TxBody>): TxBody {
     const message = createBaseTxBody();
     message.messages = object.messages?.map(e => Any.fromPartial(e)) || [];
     message.memo = object.memo ?? "";
@@ -1650,9 +1462,6 @@ export const AuthInfo = {
   is(o: any): o is AuthInfo {
     return o && (o.$typeUrl === AuthInfo.typeUrl || Array.isArray(o.signerInfos) && (!o.signerInfos.length || SignerInfo.is(o.signerInfos[0])));
   },
-  isSDK(o: any): o is AuthInfoSDKType {
-    return o && (o.$typeUrl === AuthInfo.typeUrl || Array.isArray(o.signer_infos) && (!o.signer_infos.length || SignerInfo.isSDK(o.signer_infos[0])));
-  },
   isAmino(o: any): o is AuthInfoAmino {
     return o && (o.$typeUrl === AuthInfo.typeUrl || Array.isArray(o.signer_infos) && (!o.signer_infos.length || SignerInfo.isAmino(o.signer_infos[0])));
   },
@@ -1691,7 +1500,7 @@ export const AuthInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AuthInfo>, I>>(object: I): AuthInfo {
+  fromPartial(object: DeepPartial<AuthInfo>): AuthInfo {
     const message = createBaseAuthInfo();
     message.signerInfos = object.signerInfos?.map(e => SignerInfo.fromPartial(e)) || [];
     message.fee = object.fee !== undefined && object.fee !== null ? Fee.fromPartial(object.fee) : undefined;
@@ -1770,9 +1579,6 @@ export const SignerInfo = {
   is(o: any): o is SignerInfo {
     return o && (o.$typeUrl === SignerInfo.typeUrl || typeof o.sequence === "bigint");
   },
-  isSDK(o: any): o is SignerInfoSDKType {
-    return o && (o.$typeUrl === SignerInfo.typeUrl || typeof o.sequence === "bigint");
-  },
   isAmino(o: any): o is SignerInfoAmino {
     return o && (o.$typeUrl === SignerInfo.typeUrl || typeof o.sequence === "bigint");
   },
@@ -1811,7 +1617,7 @@ export const SignerInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SignerInfo>, I>>(object: I): SignerInfo {
+  fromPartial(object: DeepPartial<SignerInfo>): SignerInfo {
     const message = createBaseSignerInfo();
     message.publicKey = object.publicKey !== undefined && object.publicKey !== null ? Any.fromPartial(object.publicKey) : undefined;
     message.modeInfo = object.modeInfo !== undefined && object.modeInfo !== null ? ModeInfo.fromPartial(object.modeInfo) : undefined;
@@ -1884,9 +1690,6 @@ export const ModeInfo = {
   is(o: any): o is ModeInfo {
     return o && o.$typeUrl === ModeInfo.typeUrl;
   },
-  isSDK(o: any): o is ModeInfoSDKType {
-    return o && o.$typeUrl === ModeInfo.typeUrl;
-  },
   isAmino(o: any): o is ModeInfoAmino {
     return o && o.$typeUrl === ModeInfo.typeUrl;
   },
@@ -1919,7 +1722,7 @@ export const ModeInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ModeInfo>, I>>(object: I): ModeInfo {
+  fromPartial(object: DeepPartial<ModeInfo>): ModeInfo {
     const message = createBaseModeInfo();
     message.single = object.single !== undefined && object.single !== null ? ModeInfo_Single.fromPartial(object.single) : undefined;
     message.multi = object.multi !== undefined && object.multi !== null ? ModeInfo_Multi.fromPartial(object.multi) : undefined;
@@ -1989,9 +1792,6 @@ export const ModeInfo_Single = {
   is(o: any): o is ModeInfo_Single {
     return o && (o.$typeUrl === ModeInfo_Single.typeUrl || isSet(o.mode));
   },
-  isSDK(o: any): o is ModeInfo_SingleSDKType {
-    return o && (o.$typeUrl === ModeInfo_Single.typeUrl || isSet(o.mode));
-  },
   isAmino(o: any): o is ModeInfo_SingleAmino {
     return o && (o.$typeUrl === ModeInfo_Single.typeUrl || isSet(o.mode));
   },
@@ -2018,7 +1818,7 @@ export const ModeInfo_Single = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ModeInfo_Single>, I>>(object: I): ModeInfo_Single {
+  fromPartial(object: DeepPartial<ModeInfo_Single>): ModeInfo_Single {
     const message = createBaseModeInfo_Single();
     message.mode = object.mode ?? 0;
     return message;
@@ -2076,9 +1876,6 @@ export const ModeInfo_Multi = {
   is(o: any): o is ModeInfo_Multi {
     return o && (o.$typeUrl === ModeInfo_Multi.typeUrl || Array.isArray(o.modeInfos) && (!o.modeInfos.length || ModeInfo.is(o.modeInfos[0])));
   },
-  isSDK(o: any): o is ModeInfo_MultiSDKType {
-    return o && (o.$typeUrl === ModeInfo_Multi.typeUrl || Array.isArray(o.mode_infos) && (!o.mode_infos.length || ModeInfo.isSDK(o.mode_infos[0])));
-  },
   isAmino(o: any): o is ModeInfo_MultiAmino {
     return o && (o.$typeUrl === ModeInfo_Multi.typeUrl || Array.isArray(o.mode_infos) && (!o.mode_infos.length || ModeInfo.isAmino(o.mode_infos[0])));
   },
@@ -2111,7 +1908,7 @@ export const ModeInfo_Multi = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ModeInfo_Multi>, I>>(object: I): ModeInfo_Multi {
+  fromPartial(object: DeepPartial<ModeInfo_Multi>): ModeInfo_Multi {
     const message = createBaseModeInfo_Multi();
     message.bitarray = object.bitarray !== undefined && object.bitarray !== null ? CompactBitArray.fromPartial(object.bitarray) : undefined;
     message.modeInfos = object.modeInfos?.map(e => ModeInfo.fromPartial(e)) || [];
@@ -2186,9 +1983,6 @@ export const Fee = {
   is(o: any): o is Fee {
     return o && (o.$typeUrl === Fee.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])) && typeof o.gasLimit === "bigint" && typeof o.payer === "string" && typeof o.granter === "string");
   },
-  isSDK(o: any): o is FeeSDKType {
-    return o && (o.$typeUrl === Fee.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])) && typeof o.gas_limit === "bigint" && typeof o.payer === "string" && typeof o.granter === "string");
-  },
   isAmino(o: any): o is FeeAmino {
     return o && (o.$typeUrl === Fee.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])) && typeof o.gas_limit === "bigint" && typeof o.payer === "string" && typeof o.granter === "string");
   },
@@ -2233,7 +2027,7 @@ export const Fee = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Fee>, I>>(object: I): Fee {
+  fromPartial(object: DeepPartial<Fee>): Fee {
     const message = createBaseFee();
     message.amount = object.amount?.map(e => Coin.fromPartial(e)) || [];
     message.gasLimit = object.gasLimit !== undefined && object.gasLimit !== null ? BigInt(object.gasLimit.toString()) : BigInt(0);
@@ -2316,9 +2110,6 @@ export const Tip = {
   is(o: any): o is Tip {
     return o && (o.$typeUrl === Tip.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])) && typeof o.tipper === "string");
   },
-  isSDK(o: any): o is TipSDKType {
-    return o && (o.$typeUrl === Tip.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])) && typeof o.tipper === "string");
-  },
   isAmino(o: any): o is TipAmino {
     return o && (o.$typeUrl === Tip.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])) && typeof o.tipper === "string");
   },
@@ -2351,7 +2142,7 @@ export const Tip = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Tip>, I>>(object: I): Tip {
+  fromPartial(object: DeepPartial<Tip>): Tip {
     const message = createBaseTip();
     message.amount = object.amount?.map(e => Coin.fromPartial(e)) || [];
     message.tipper = object.tipper ?? "";
@@ -2428,9 +2219,6 @@ export const AuxSignerData = {
   is(o: any): o is AuxSignerData {
     return o && (o.$typeUrl === AuxSignerData.typeUrl || typeof o.address === "string" && isSet(o.mode) && (o.sig instanceof Uint8Array || typeof o.sig === "string"));
   },
-  isSDK(o: any): o is AuxSignerDataSDKType {
-    return o && (o.$typeUrl === AuxSignerData.typeUrl || typeof o.address === "string" && isSet(o.mode) && (o.sig instanceof Uint8Array || typeof o.sig === "string"));
-  },
   isAmino(o: any): o is AuxSignerDataAmino {
     return o && (o.$typeUrl === AuxSignerData.typeUrl || typeof o.address === "string" && isSet(o.mode) && (o.sig instanceof Uint8Array || typeof o.sig === "string"));
   },
@@ -2475,7 +2263,7 @@ export const AuxSignerData = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AuxSignerData>, I>>(object: I): AuxSignerData {
+  fromPartial(object: DeepPartial<AuxSignerData>): AuxSignerData {
     const message = createBaseAuxSignerData();
     message.address = object.address ?? "";
     message.signDoc = object.signDoc !== undefined && object.signDoc !== null ? SignDocDirectAux.fromPartial(object.signDoc) : undefined;

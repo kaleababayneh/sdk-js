@@ -13,13 +13,13 @@ export class QueryClientImpl implements Query {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.getCount = this.getCount.bind(this);
   }
-  getCount(request: QueryGetCountRequest = {}): Promise<QueryGetCountResponse> {
+  /* GetCount queries the parameters of x/Counter module. */
+  getCount = async (request: QueryGetCountRequest = {}): Promise<QueryGetCountResponse> => {
     const data = QueryGetCountRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.counter.v1.Query", "GetCount", data);
     return promise.then(data => QueryGetCountResponse.decode(new BinaryReader(data)));
-  }
+  };
 }
 export const createRpcQueryExtension = (base: QueryClient) => {
   const rpc = createProtobufRpcClient(base);

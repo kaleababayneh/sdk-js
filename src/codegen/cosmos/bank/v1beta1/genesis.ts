@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType, Metadata, MetadataAmino, MetadataSDKType, SendEnabled, SendEnabledAmino, SendEnabledSDKType } from "./bank";
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
+import { Params, ParamsAmino, Metadata, MetadataAmino, SendEnabled, SendEnabledAmino } from "./bank";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * GenesisState defines the bank module's genesis state.
  * @name GenesisState
@@ -76,19 +76,6 @@ export interface GenesisStateAminoMsg {
   value: GenesisStateAmino;
 }
 /**
- * GenesisState defines the bank module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  params: ParamsSDKType;
-  balances: BalanceSDKType[];
-  supply: CoinSDKType[];
-  denom_metadata: MetadataSDKType[];
-  send_enabled: SendEnabledSDKType[];
-}
-/**
  * Balance defines an account address and balance pair used in the bank module's
  * genesis state.
  * @name Balance
@@ -120,7 +107,7 @@ export interface BalanceAmino {
   /**
    * address is the address of the balance holder.
    */
-  address?: string;
+  address: string;
   /**
    * coins defines the different coins this balance holds.
    */
@@ -129,17 +116,6 @@ export interface BalanceAmino {
 export interface BalanceAminoMsg {
   type: "cosmos-sdk/Balance";
   value: BalanceAmino;
-}
-/**
- * Balance defines an account address and balance pair used in the bank module's
- * genesis state.
- * @name BalanceSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.Balance
- */
-export interface BalanceSDKType {
-  address: string;
-  coins: CoinSDKType[];
 }
 function createBaseGenesisState(): GenesisState {
   return {
@@ -161,9 +137,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.is(o.params) && Array.isArray(o.balances) && (!o.balances.length || Balance.is(o.balances[0])) && Array.isArray(o.supply) && (!o.supply.length || Coin.is(o.supply[0])) && Array.isArray(o.denomMetadata) && (!o.denomMetadata.length || Metadata.is(o.denomMetadata[0])) && Array.isArray(o.sendEnabled) && (!o.sendEnabled.length || SendEnabled.is(o.sendEnabled[0])));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Params.isSDK(o.params) && Array.isArray(o.balances) && (!o.balances.length || Balance.isSDK(o.balances[0])) && Array.isArray(o.supply) && (!o.supply.length || Coin.isSDK(o.supply[0])) && Array.isArray(o.denom_metadata) && (!o.denom_metadata.length || Metadata.isSDK(o.denom_metadata[0])) && Array.isArray(o.send_enabled) && (!o.send_enabled.length || SendEnabled.isSDK(o.send_enabled[0])));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.isAmino(o.params) && Array.isArray(o.balances) && (!o.balances.length || Balance.isAmino(o.balances[0])) && Array.isArray(o.supply) && (!o.supply.length || Coin.isAmino(o.supply[0])) && Array.isArray(o.denom_metadata) && (!o.denom_metadata.length || Metadata.isAmino(o.denom_metadata[0])) && Array.isArray(o.send_enabled) && (!o.send_enabled.length || SendEnabled.isAmino(o.send_enabled[0])));
@@ -215,7 +188,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     message.balances = object.balances?.map(e => Balance.fromPartial(e)) || [];
@@ -311,9 +284,6 @@ export const Balance = {
   is(o: any): o is Balance {
     return o && (o.$typeUrl === Balance.typeUrl || typeof o.address === "string" && Array.isArray(o.coins) && (!o.coins.length || Coin.is(o.coins[0])));
   },
-  isSDK(o: any): o is BalanceSDKType {
-    return o && (o.$typeUrl === Balance.typeUrl || typeof o.address === "string" && Array.isArray(o.coins) && (!o.coins.length || Coin.isSDK(o.coins[0])));
-  },
   isAmino(o: any): o is BalanceAmino {
     return o && (o.$typeUrl === Balance.typeUrl || typeof o.address === "string" && Array.isArray(o.coins) && (!o.coins.length || Coin.isAmino(o.coins[0])));
   },
@@ -346,7 +316,7 @@ export const Balance = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Balance>, I>>(object: I): Balance {
+  fromPartial(object: DeepPartial<Balance>): Balance {
     const message = createBaseBalance();
     message.address = object.address ?? "";
     message.coins = object.coins?.map(e => Coin.fromPartial(e)) || [];

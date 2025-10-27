@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * Module is the config object of the vesting module.
  * @name Module
@@ -24,13 +24,6 @@ export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
   value: ModuleAmino;
 }
-/**
- * Module is the config object of the vesting module.
- * @name ModuleSDKType
- * @package cosmos.vesting.module.v1
- * @see proto type: cosmos.vesting.module.v1.Module
- */
-export interface ModuleSDKType {}
 function createBaseModule(): Module {
   return {};
 }
@@ -44,9 +37,6 @@ export const Module = {
   typeUrl: "/cosmos.vesting.module.v1.Module",
   aminoType: "cosmos-sdk/Module",
   is(o: any): o is Module {
-    return o && o.$typeUrl === Module.typeUrl;
-  },
-  isSDK(o: any): o is ModuleSDKType {
     return o && o.$typeUrl === Module.typeUrl;
   },
   isAmino(o: any): o is ModuleAmino {
@@ -69,7 +59,7 @@ export const Module = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Module>, I>>(_: I): Module {
+  fromPartial(_: DeepPartial<Module>): Module {
     const message = createBaseModule();
     return message;
   },

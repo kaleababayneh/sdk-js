@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { Timestamp } from "../../../../google/protobuf/timestamp";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes } from "../../../../helpers";
+import { DeepPartial, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 /**
  * ConfigRequest defines the request structure for the Config gRPC query.
  * @name ConfigRequest
@@ -25,13 +25,6 @@ export interface ConfigRequestAminoMsg {
   type: "cosmos-sdk/ConfigRequest";
   value: ConfigRequestAmino;
 }
-/**
- * ConfigRequest defines the request structure for the Config gRPC query.
- * @name ConfigRequestSDKType
- * @package cosmos.base.node.v1beta1
- * @see proto type: cosmos.base.node.v1beta1.ConfigRequest
- */
-export interface ConfigRequestSDKType {}
 /**
  * ConfigResponse defines the response structure for the Config gRPC query.
  * @name ConfigResponse
@@ -57,27 +50,16 @@ export interface ConfigResponseProtoMsg {
  * @see proto type: cosmos.base.node.v1beta1.ConfigResponse
  */
 export interface ConfigResponseAmino {
-  minimum_gas_price?: string;
+  minimum_gas_price: string;
   /**
    * pruning settings
    */
-  pruning_keep_recent?: string;
-  pruning_interval?: string;
+  pruning_keep_recent: string;
+  pruning_interval: string;
 }
 export interface ConfigResponseAminoMsg {
   type: "cosmos-sdk/ConfigResponse";
   value: ConfigResponseAmino;
-}
-/**
- * ConfigResponse defines the response structure for the Config gRPC query.
- * @name ConfigResponseSDKType
- * @package cosmos.base.node.v1beta1
- * @see proto type: cosmos.base.node.v1beta1.ConfigResponse
- */
-export interface ConfigResponseSDKType {
-  minimum_gas_price: string;
-  pruning_keep_recent: string;
-  pruning_interval: string;
 }
 /**
  * StateRequest defines the request structure for the status of a node.
@@ -101,13 +83,6 @@ export interface StatusRequestAminoMsg {
   type: "cosmos-sdk/StatusRequest";
   value: StatusRequestAmino;
 }
-/**
- * StateRequest defines the request structure for the status of a node.
- * @name StatusRequestSDKType
- * @package cosmos.base.node.v1beta1
- * @see proto type: cosmos.base.node.v1beta1.StatusRequest
- */
-export interface StatusRequestSDKType {}
 /**
  * StateResponse defines the response structure for the status of a node.
  * @name StatusResponse
@@ -150,11 +125,11 @@ export interface StatusResponseAmino {
   /**
    * earliest block height available in the store
    */
-  earliest_store_height?: string;
+  earliest_store_height: string;
   /**
    * current block height
    */
-  height?: string;
+  height: string;
   /**
    * block height timestamp
    */
@@ -162,28 +137,15 @@ export interface StatusResponseAmino {
   /**
    * app hash of the current block
    */
-  app_hash?: string;
+  app_hash: string;
   /**
    * validator hash provided by the consensus header
    */
-  validator_hash?: string;
+  validator_hash: string;
 }
 export interface StatusResponseAminoMsg {
   type: "cosmos-sdk/StatusResponse";
   value: StatusResponseAmino;
-}
-/**
- * StateResponse defines the response structure for the status of a node.
- * @name StatusResponseSDKType
- * @package cosmos.base.node.v1beta1
- * @see proto type: cosmos.base.node.v1beta1.StatusResponse
- */
-export interface StatusResponseSDKType {
-  earliest_store_height: bigint;
-  height: bigint;
-  timestamp?: Date;
-  app_hash: Uint8Array;
-  validator_hash: Uint8Array;
 }
 function createBaseConfigRequest(): ConfigRequest {
   return {};
@@ -198,9 +160,6 @@ export const ConfigRequest = {
   typeUrl: "/cosmos.base.node.v1beta1.ConfigRequest",
   aminoType: "cosmos-sdk/ConfigRequest",
   is(o: any): o is ConfigRequest {
-    return o && o.$typeUrl === ConfigRequest.typeUrl;
-  },
-  isSDK(o: any): o is ConfigRequestSDKType {
     return o && o.$typeUrl === ConfigRequest.typeUrl;
   },
   isAmino(o: any): o is ConfigRequestAmino {
@@ -223,7 +182,7 @@ export const ConfigRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ConfigRequest>, I>>(_: I): ConfigRequest {
+  fromPartial(_: DeepPartial<ConfigRequest>): ConfigRequest {
     const message = createBaseConfigRequest();
     return message;
   },
@@ -277,9 +236,6 @@ export const ConfigResponse = {
   is(o: any): o is ConfigResponse {
     return o && (o.$typeUrl === ConfigResponse.typeUrl || typeof o.minimumGasPrice === "string" && typeof o.pruningKeepRecent === "string" && typeof o.pruningInterval === "string");
   },
-  isSDK(o: any): o is ConfigResponseSDKType {
-    return o && (o.$typeUrl === ConfigResponse.typeUrl || typeof o.minimum_gas_price === "string" && typeof o.pruning_keep_recent === "string" && typeof o.pruning_interval === "string");
-  },
   isAmino(o: any): o is ConfigResponseAmino {
     return o && (o.$typeUrl === ConfigResponse.typeUrl || typeof o.minimum_gas_price === "string" && typeof o.pruning_keep_recent === "string" && typeof o.pruning_interval === "string");
   },
@@ -318,7 +274,7 @@ export const ConfigResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ConfigResponse>, I>>(object: I): ConfigResponse {
+  fromPartial(object: DeepPartial<ConfigResponse>): ConfigResponse {
     const message = createBaseConfigResponse();
     message.minimumGasPrice = object.minimumGasPrice ?? "";
     message.pruningKeepRecent = object.pruningKeepRecent ?? "";
@@ -383,9 +339,6 @@ export const StatusRequest = {
   is(o: any): o is StatusRequest {
     return o && o.$typeUrl === StatusRequest.typeUrl;
   },
-  isSDK(o: any): o is StatusRequestSDKType {
-    return o && o.$typeUrl === StatusRequest.typeUrl;
-  },
   isAmino(o: any): o is StatusRequestAmino {
     return o && o.$typeUrl === StatusRequest.typeUrl;
   },
@@ -406,7 +359,7 @@ export const StatusRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<StatusRequest>, I>>(_: I): StatusRequest {
+  fromPartial(_: DeepPartial<StatusRequest>): StatusRequest {
     const message = createBaseStatusRequest();
     return message;
   },
@@ -462,9 +415,6 @@ export const StatusResponse = {
   is(o: any): o is StatusResponse {
     return o && (o.$typeUrl === StatusResponse.typeUrl || typeof o.earliestStoreHeight === "bigint" && typeof o.height === "bigint" && (o.appHash instanceof Uint8Array || typeof o.appHash === "string") && (o.validatorHash instanceof Uint8Array || typeof o.validatorHash === "string"));
   },
-  isSDK(o: any): o is StatusResponseSDKType {
-    return o && (o.$typeUrl === StatusResponse.typeUrl || typeof o.earliest_store_height === "bigint" && typeof o.height === "bigint" && (o.app_hash instanceof Uint8Array || typeof o.app_hash === "string") && (o.validator_hash instanceof Uint8Array || typeof o.validator_hash === "string"));
-  },
   isAmino(o: any): o is StatusResponseAmino {
     return o && (o.$typeUrl === StatusResponse.typeUrl || typeof o.earliest_store_height === "bigint" && typeof o.height === "bigint" && (o.app_hash instanceof Uint8Array || typeof o.app_hash === "string") && (o.validator_hash instanceof Uint8Array || typeof o.validator_hash === "string"));
   },
@@ -515,7 +465,7 @@ export const StatusResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<StatusResponse>, I>>(object: I): StatusResponse {
+  fromPartial(object: DeepPartial<StatusResponse>): StatusResponse {
     const message = createBaseStatusResponse();
     message.earliestStoreHeight = object.earliestStoreHeight !== undefined && object.earliestStoreHeight !== null ? BigInt(object.earliestStoreHeight.toString()) : BigInt(0);
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);

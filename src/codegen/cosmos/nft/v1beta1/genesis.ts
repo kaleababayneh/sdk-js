@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Class, ClassAmino, ClassSDKType, NFT, NFTAmino, NFTSDKType } from "./nft";
+import { Class, ClassAmino, NFT, NFTAmino } from "./nft";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * GenesisState defines the nft module's genesis state.
@@ -34,25 +34,15 @@ export interface GenesisStateAmino {
   /**
    * class defines the class of the nft type.
    */
-  classes?: ClassAmino[];
+  classes: ClassAmino[];
   /**
    * entry defines all nft owned by a person.
    */
-  entries?: EntryAmino[];
+  entries: EntryAmino[];
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
-}
-/**
- * GenesisState defines the nft module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  classes: ClassSDKType[];
-  entries: EntrySDKType[];
 }
 /**
  * Entry Defines all nft owned by a person
@@ -84,25 +74,15 @@ export interface EntryAmino {
   /**
    * owner is the owner address of the following nft
    */
-  owner?: string;
+  owner: string;
   /**
    * nfts is a group of nfts of the same owner
    */
-  nfts?: NFTAmino[];
+  nfts: NFTAmino[];
 }
 export interface EntryAminoMsg {
   type: "cosmos-sdk/Entry";
   value: EntryAmino;
-}
-/**
- * Entry Defines all nft owned by a person
- * @name EntrySDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.Entry
- */
-export interface EntrySDKType {
-  owner: string;
-  nfts: NFTSDKType[];
 }
 function createBaseGenesisState(): GenesisState {
   return {
@@ -121,9 +101,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.classes) && (!o.classes.length || Class.is(o.classes[0])) && Array.isArray(o.entries) && (!o.entries.length || Entry.is(o.entries[0])));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.classes) && (!o.classes.length || Class.isSDK(o.classes[0])) && Array.isArray(o.entries) && (!o.entries.length || Entry.isSDK(o.entries[0])));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.classes) && (!o.classes.length || Class.isAmino(o.classes[0])) && Array.isArray(o.entries) && (!o.entries.length || Entry.isAmino(o.entries[0])));
@@ -157,7 +134,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.classes = object.classes?.map(e => Class.fromPartial(e)) || [];
     message.entries = object.entries?.map(e => Entry.fromPartial(e)) || [];
@@ -230,9 +207,6 @@ export const Entry = {
   is(o: any): o is Entry {
     return o && (o.$typeUrl === Entry.typeUrl || typeof o.owner === "string" && Array.isArray(o.nfts) && (!o.nfts.length || NFT.is(o.nfts[0])));
   },
-  isSDK(o: any): o is EntrySDKType {
-    return o && (o.$typeUrl === Entry.typeUrl || typeof o.owner === "string" && Array.isArray(o.nfts) && (!o.nfts.length || NFT.isSDK(o.nfts[0])));
-  },
   isAmino(o: any): o is EntryAmino {
     return o && (o.$typeUrl === Entry.typeUrl || typeof o.owner === "string" && Array.isArray(o.nfts) && (!o.nfts.length || NFT.isAmino(o.nfts[0])));
   },
@@ -265,7 +239,7 @@ export const Entry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Entry>, I>>(object: I): Entry {
+  fromPartial(object: DeepPartial<Entry>): Entry {
     const message = createBaseEntry();
     message.owner = object.owner ?? "";
     message.nfts = object.nfts?.map(e => NFT.fromPartial(e)) || [];

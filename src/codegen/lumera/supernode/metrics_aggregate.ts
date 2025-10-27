@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, isSet } from "../../helpers";
+import { DeepPartial, isSet } from "../../helpers";
 /**
  * @name MetricsAggregate_MetricsEntry
  * @package lumera.supernode
@@ -21,21 +21,12 @@ export interface MetricsAggregate_MetricsEntryProtoMsg {
  * @see proto type: lumera.supernode.MetricsAggregate_MetricsEntry
  */
 export interface MetricsAggregate_MetricsEntryAmino {
-  key?: string;
-  value?: number;
+  key: string;
+  value: number;
 }
 export interface MetricsAggregate_MetricsEntryAminoMsg {
   type: string;
   value: MetricsAggregate_MetricsEntryAmino;
-}
-/**
- * @name MetricsAggregate_MetricsEntrySDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.undefined
- */
-export interface MetricsAggregate_MetricsEntrySDKType {
-  key: string;
-  value: number;
 }
 /**
  * @name MetricsAggregate
@@ -59,27 +50,15 @@ export interface MetricsAggregateProtoMsg {
  * @see proto type: lumera.supernode.MetricsAggregate
  */
 export interface MetricsAggregateAmino {
-  metrics?: {
+  metrics: {
     [key: string]: number;
   };
-  report_count?: string;
-  height?: string;
+  report_count: string;
+  height: string;
 }
 export interface MetricsAggregateAminoMsg {
   type: "/lumera.supernode.MetricsAggregate";
   value: MetricsAggregateAmino;
-}
-/**
- * @name MetricsAggregateSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.MetricsAggregate
- */
-export interface MetricsAggregateSDKType {
-  metrics: {
-    [key: string]: number;
-  };
-  report_count: bigint;
-  height: bigint;
 }
 function createBaseMetricsAggregate_MetricsEntry(): MetricsAggregate_MetricsEntry {
   return {
@@ -122,7 +101,7 @@ export const MetricsAggregate_MetricsEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MetricsAggregate_MetricsEntry>, I>>(object: I): MetricsAggregate_MetricsEntry {
+  fromPartial(object: DeepPartial<MetricsAggregate_MetricsEntry>): MetricsAggregate_MetricsEntry {
     const message = createBaseMetricsAggregate_MetricsEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? 0;
@@ -172,9 +151,6 @@ export const MetricsAggregate = {
   is(o: any): o is MetricsAggregate {
     return o && (o.$typeUrl === MetricsAggregate.typeUrl || isSet(o.metrics) && typeof o.reportCount === "bigint" && typeof o.height === "bigint");
   },
-  isSDK(o: any): o is MetricsAggregateSDKType {
-    return o && (o.$typeUrl === MetricsAggregate.typeUrl || isSet(o.metrics) && typeof o.report_count === "bigint" && typeof o.height === "bigint");
-  },
   isAmino(o: any): o is MetricsAggregateAmino {
     return o && (o.$typeUrl === MetricsAggregate.typeUrl || isSet(o.metrics) && typeof o.report_count === "bigint" && typeof o.height === "bigint");
   },
@@ -219,7 +195,7 @@ export const MetricsAggregate = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MetricsAggregate>, I>>(object: I): MetricsAggregate {
+  fromPartial(object: DeepPartial<MetricsAggregate>): MetricsAggregate {
     const message = createBaseMetricsAggregate();
     message.metrics = Object.entries(object.metrics ?? {}).reduce<{
       [key: string]: number;

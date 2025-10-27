@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
  * @name NetAddress
@@ -23,23 +23,13 @@ export interface NetAddressProtoMsg {
  * @see proto type: tendermint.p2p.NetAddress
  */
 export interface NetAddressAmino {
-  id?: string;
-  ip?: string;
-  port?: number;
+  id: string;
+  ip: string;
+  port: number;
 }
 export interface NetAddressAminoMsg {
   type: "/tendermint.p2p.NetAddress";
   value: NetAddressAmino;
-}
-/**
- * @name NetAddressSDKType
- * @package tendermint.p2p
- * @see proto type: tendermint.p2p.NetAddress
- */
-export interface NetAddressSDKType {
-  id: string;
-  ip: string;
-  port: number;
 }
 /**
  * @name ProtocolVersion
@@ -61,23 +51,13 @@ export interface ProtocolVersionProtoMsg {
  * @see proto type: tendermint.p2p.ProtocolVersion
  */
 export interface ProtocolVersionAmino {
-  p2p?: string;
-  block?: string;
-  app?: string;
+  p2p: string;
+  block: string;
+  app: string;
 }
 export interface ProtocolVersionAminoMsg {
   type: "/tendermint.p2p.ProtocolVersion";
   value: ProtocolVersionAmino;
-}
-/**
- * @name ProtocolVersionSDKType
- * @package tendermint.p2p
- * @see proto type: tendermint.p2p.ProtocolVersion
- */
-export interface ProtocolVersionSDKType {
-  p2p: bigint;
-  block: bigint;
-  app: bigint;
 }
 /**
  * @name DefaultNodeInfo
@@ -104,33 +84,18 @@ export interface DefaultNodeInfoProtoMsg {
  * @see proto type: tendermint.p2p.DefaultNodeInfo
  */
 export interface DefaultNodeInfoAmino {
-  protocol_version?: ProtocolVersionAmino;
-  default_node_id?: string;
-  listen_addr?: string;
-  network?: string;
-  version?: string;
-  channels?: string;
-  moniker?: string;
-  other?: DefaultNodeInfoOtherAmino;
-}
-export interface DefaultNodeInfoAminoMsg {
-  type: "/tendermint.p2p.DefaultNodeInfo";
-  value: DefaultNodeInfoAmino;
-}
-/**
- * @name DefaultNodeInfoSDKType
- * @package tendermint.p2p
- * @see proto type: tendermint.p2p.DefaultNodeInfo
- */
-export interface DefaultNodeInfoSDKType {
-  protocol_version: ProtocolVersionSDKType;
+  protocol_version: ProtocolVersionAmino;
   default_node_id: string;
   listen_addr: string;
   network: string;
   version: string;
-  channels: Uint8Array;
+  channels: string;
   moniker: string;
-  other: DefaultNodeInfoOtherSDKType;
+  other: DefaultNodeInfoOtherAmino;
+}
+export interface DefaultNodeInfoAminoMsg {
+  type: "/tendermint.p2p.DefaultNodeInfo";
+  value: DefaultNodeInfoAmino;
 }
 /**
  * @name DefaultNodeInfoOther
@@ -151,21 +116,12 @@ export interface DefaultNodeInfoOtherProtoMsg {
  * @see proto type: tendermint.p2p.DefaultNodeInfoOther
  */
 export interface DefaultNodeInfoOtherAmino {
-  tx_index?: string;
-  rpc_address?: string;
+  tx_index: string;
+  rpc_address: string;
 }
 export interface DefaultNodeInfoOtherAminoMsg {
   type: "/tendermint.p2p.DefaultNodeInfoOther";
   value: DefaultNodeInfoOtherAmino;
-}
-/**
- * @name DefaultNodeInfoOtherSDKType
- * @package tendermint.p2p
- * @see proto type: tendermint.p2p.DefaultNodeInfoOther
- */
-export interface DefaultNodeInfoOtherSDKType {
-  tx_index: string;
-  rpc_address: string;
 }
 function createBaseNetAddress(): NetAddress {
   return {
@@ -182,9 +138,6 @@ function createBaseNetAddress(): NetAddress {
 export const NetAddress = {
   typeUrl: "/tendermint.p2p.NetAddress",
   is(o: any): o is NetAddress {
-    return o && (o.$typeUrl === NetAddress.typeUrl || typeof o.id === "string" && typeof o.ip === "string" && typeof o.port === "number");
-  },
-  isSDK(o: any): o is NetAddressSDKType {
     return o && (o.$typeUrl === NetAddress.typeUrl || typeof o.id === "string" && typeof o.ip === "string" && typeof o.port === "number");
   },
   isAmino(o: any): o is NetAddressAmino {
@@ -225,7 +178,7 @@ export const NetAddress = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<NetAddress>, I>>(object: I): NetAddress {
+  fromPartial(object: DeepPartial<NetAddress>): NetAddress {
     const message = createBaseNetAddress();
     message.id = object.id ?? "";
     message.ip = object.ip ?? "";
@@ -286,9 +239,6 @@ export const ProtocolVersion = {
   is(o: any): o is ProtocolVersion {
     return o && (o.$typeUrl === ProtocolVersion.typeUrl || typeof o.p2p === "bigint" && typeof o.block === "bigint" && typeof o.app === "bigint");
   },
-  isSDK(o: any): o is ProtocolVersionSDKType {
-    return o && (o.$typeUrl === ProtocolVersion.typeUrl || typeof o.p2p === "bigint" && typeof o.block === "bigint" && typeof o.app === "bigint");
-  },
   isAmino(o: any): o is ProtocolVersionAmino {
     return o && (o.$typeUrl === ProtocolVersion.typeUrl || typeof o.p2p === "bigint" && typeof o.block === "bigint" && typeof o.app === "bigint");
   },
@@ -327,7 +277,7 @@ export const ProtocolVersion = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ProtocolVersion>, I>>(object: I): ProtocolVersion {
+  fromPartial(object: DeepPartial<ProtocolVersion>): ProtocolVersion {
     const message = createBaseProtocolVersion();
     message.p2p = object.p2p !== undefined && object.p2p !== null ? BigInt(object.p2p.toString()) : BigInt(0);
     message.block = object.block !== undefined && object.block !== null ? BigInt(object.block.toString()) : BigInt(0);
@@ -392,9 +342,6 @@ export const DefaultNodeInfo = {
   typeUrl: "/tendermint.p2p.DefaultNodeInfo",
   is(o: any): o is DefaultNodeInfo {
     return o && (o.$typeUrl === DefaultNodeInfo.typeUrl || ProtocolVersion.is(o.protocolVersion) && typeof o.defaultNodeId === "string" && typeof o.listenAddr === "string" && typeof o.network === "string" && typeof o.version === "string" && (o.channels instanceof Uint8Array || typeof o.channels === "string") && typeof o.moniker === "string" && DefaultNodeInfoOther.is(o.other));
-  },
-  isSDK(o: any): o is DefaultNodeInfoSDKType {
-    return o && (o.$typeUrl === DefaultNodeInfo.typeUrl || ProtocolVersion.isSDK(o.protocol_version) && typeof o.default_node_id === "string" && typeof o.listen_addr === "string" && typeof o.network === "string" && typeof o.version === "string" && (o.channels instanceof Uint8Array || typeof o.channels === "string") && typeof o.moniker === "string" && DefaultNodeInfoOther.isSDK(o.other));
   },
   isAmino(o: any): o is DefaultNodeInfoAmino {
     return o && (o.$typeUrl === DefaultNodeInfo.typeUrl || ProtocolVersion.isAmino(o.protocol_version) && typeof o.default_node_id === "string" && typeof o.listen_addr === "string" && typeof o.network === "string" && typeof o.version === "string" && (o.channels instanceof Uint8Array || typeof o.channels === "string") && typeof o.moniker === "string" && DefaultNodeInfoOther.isAmino(o.other));
@@ -464,7 +411,7 @@ export const DefaultNodeInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DefaultNodeInfo>, I>>(object: I): DefaultNodeInfo {
+  fromPartial(object: DeepPartial<DefaultNodeInfo>): DefaultNodeInfo {
     const message = createBaseDefaultNodeInfo();
     message.protocolVersion = object.protocolVersion !== undefined && object.protocolVersion !== null ? ProtocolVersion.fromPartial(object.protocolVersion) : undefined;
     message.defaultNodeId = object.defaultNodeId ?? "";
@@ -555,9 +502,6 @@ export const DefaultNodeInfoOther = {
   is(o: any): o is DefaultNodeInfoOther {
     return o && (o.$typeUrl === DefaultNodeInfoOther.typeUrl || typeof o.txIndex === "string" && typeof o.rpcAddress === "string");
   },
-  isSDK(o: any): o is DefaultNodeInfoOtherSDKType {
-    return o && (o.$typeUrl === DefaultNodeInfoOther.typeUrl || typeof o.tx_index === "string" && typeof o.rpc_address === "string");
-  },
   isAmino(o: any): o is DefaultNodeInfoOtherAmino {
     return o && (o.$typeUrl === DefaultNodeInfoOther.typeUrl || typeof o.tx_index === "string" && typeof o.rpc_address === "string");
   },
@@ -590,7 +534,7 @@ export const DefaultNodeInfoOther = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DefaultNodeInfoOther>, I>>(object: I): DefaultNodeInfoOther {
+  fromPartial(object: DeepPartial<DefaultNodeInfoOther>): DefaultNodeInfoOther {
     const message = createBaseDefaultNodeInfoOther();
     message.txIndex = object.txIndex ?? "";
     message.rpcAddress = object.rpcAddress ?? "";

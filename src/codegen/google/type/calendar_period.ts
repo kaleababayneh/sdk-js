@@ -34,7 +34,6 @@ export enum CalendarPeriod {
   YEAR = 7,
   UNRECOGNIZED = -1,
 }
-export const CalendarPeriodSDKType = CalendarPeriod;
 export const CalendarPeriodAmino = CalendarPeriod;
 export function calendarPeriodFromJSON(object: any): CalendarPeriod {
   switch (object) {

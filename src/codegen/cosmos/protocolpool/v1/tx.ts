@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
 import { Timestamp } from "../../../google/protobuf/timestamp";
-import { Params, ParamsAmino, ParamsSDKType } from "./types";
+import { Params, ParamsAmino } from "./types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, toTimestamp, fromTimestamp } from "../../../helpers";
+import { DeepPartial, toTimestamp, fromTimestamp } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 import { Decimal } from "@interchainjs/math";
 /**
@@ -30,23 +30,12 @@ export interface MsgFundCommunityPoolProtoMsg {
  * @see proto type: cosmos.protocolpool.v1.MsgFundCommunityPool
  */
 export interface MsgFundCommunityPoolAmino {
-  depositor?: string;
-  amount?: CoinAmino[];
+  depositor: string;
+  amount: CoinAmino[];
 }
 export interface MsgFundCommunityPoolAminoMsg {
   type: "cosmos-sdk/MsgFundCommunityPool";
   value: MsgFundCommunityPoolAmino;
-}
-/**
- * MsgFundCommunityPool allows an account to directly
- * fund the community pool.
- * @name MsgFundCommunityPoolSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.MsgFundCommunityPool
- */
-export interface MsgFundCommunityPoolSDKType {
-  depositor: string;
-  amount: CoinSDKType[];
 }
 /**
  * MsgFundCommunityPoolResponse defines the Msg/FundCommunityPool response type.
@@ -70,13 +59,6 @@ export interface MsgFundCommunityPoolResponseAminoMsg {
   type: "cosmos-sdk/MsgFundCommunityPoolResponse";
   value: MsgFundCommunityPoolResponseAmino;
 }
-/**
- * MsgFundCommunityPoolResponse defines the Msg/FundCommunityPool response type.
- * @name MsgFundCommunityPoolResponseSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.MsgFundCommunityPoolResponse
- */
-export interface MsgFundCommunityPoolResponseSDKType {}
 /**
  * MsgCommunityPoolSpend defines a message for sending tokens from the community
  * pool to another account. This message is typically executed via a governance
@@ -109,26 +91,13 @@ export interface MsgCommunityPoolSpendAmino {
   /**
    * Authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
-  recipient?: string;
-  amount?: CoinAmino[];
+  authority: string;
+  recipient: string;
+  amount: CoinAmino[];
 }
 export interface MsgCommunityPoolSpendAminoMsg {
   type: "cosmos-sdk/MsgCommunityPoolSpend";
   value: MsgCommunityPoolSpendAmino;
-}
-/**
- * MsgCommunityPoolSpend defines a message for sending tokens from the community
- * pool to another account. This message is typically executed via a governance
- * proposal with the governance module being the executing authority.
- * @name MsgCommunityPoolSpendSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.MsgCommunityPoolSpend
- */
-export interface MsgCommunityPoolSpendSDKType {
-  authority: string;
-  recipient: string;
-  amount: CoinSDKType[];
 }
 /**
  * MsgCommunityPoolSpendResponse defines the response to executing a
@@ -154,14 +123,6 @@ export interface MsgCommunityPoolSpendResponseAminoMsg {
   type: "cosmos-sdk/MsgCommunityPoolSpendResponse";
   value: MsgCommunityPoolSpendResponseAmino;
 }
-/**
- * MsgCommunityPoolSpendResponse defines the response to executing a
- * MsgCommunityPoolSpend message.
- * @name MsgCommunityPoolSpendResponseSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.MsgCommunityPoolSpendResponse
- */
-export interface MsgCommunityPoolSpendResponseSDKType {}
 /**
  * MsgCreateContinuousFund defines a message for adding continuous funds.
  * @name MsgCreateContinuousFund
@@ -200,15 +161,15 @@ export interface MsgCreateContinuousFundAmino {
   /**
    * Authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * Recipient address of the account receiving funds.
    */
-  recipient?: string;
+  recipient: string;
   /**
    * Percentage is the percentage of funds to be allocated from Community pool.
    */
-  percentage?: string;
+  percentage: string;
   /**
    * Optional, if expiry is set, removes the state object when expired.
    */
@@ -217,18 +178,6 @@ export interface MsgCreateContinuousFundAmino {
 export interface MsgCreateContinuousFundAminoMsg {
   type: "cosmos-sdk/MsgCreateContinuousFund";
   value: MsgCreateContinuousFundAmino;
-}
-/**
- * MsgCreateContinuousFund defines a message for adding continuous funds.
- * @name MsgCreateContinuousFundSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.MsgCreateContinuousFund
- */
-export interface MsgCreateContinuousFundSDKType {
-  authority: string;
-  recipient: string;
-  percentage: string;
-  expiry?: Date;
 }
 /**
  * MsgCreateContinuousFundResponse defines the response to executing a
@@ -254,14 +203,6 @@ export interface MsgCreateContinuousFundResponseAminoMsg {
   type: "cosmos-sdk/MsgCreateContinuousFundResponse";
   value: MsgCreateContinuousFundResponseAmino;
 }
-/**
- * MsgCreateContinuousFundResponse defines the response to executing a
- * MsgCreateContinuousFund message.
- * @name MsgCreateContinuousFundResponseSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.MsgCreateContinuousFundResponse
- */
-export interface MsgCreateContinuousFundResponseSDKType {}
 /**
  * MsgCancelContinuousFund defines a message to cancel continuous funds for a specific recipient.
  * @name MsgCancelContinuousFund
@@ -292,25 +233,15 @@ export interface MsgCancelContinuousFundAmino {
   /**
    * Authority is the account address of authority.
    */
-  authority?: string;
+  authority: string;
   /**
    * Recipient is the account address string of the recipient whose funds are to be cancelled.
    */
-  recipient?: string;
+  recipient: string;
 }
 export interface MsgCancelContinuousFundAminoMsg {
   type: "cosmos-sdk/MsgCancelContinuousFund";
   value: MsgCancelContinuousFundAmino;
-}
-/**
- * MsgCancelContinuousFund defines a message to cancel continuous funds for a specific recipient.
- * @name MsgCancelContinuousFundSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.MsgCancelContinuousFund
- */
-export interface MsgCancelContinuousFundSDKType {
-  authority: string;
-  recipient: string;
 }
 /**
  * MsgCancelContinuousFundResponse defines the response to executing a
@@ -348,31 +279,19 @@ export interface MsgCancelContinuousFundResponseAmino {
   /**
    * CanceledTime is the canceled time.
    */
-  canceled_time?: string;
+  canceled_time: string;
   /**
    * CanceledHeight defines the canceled block height.
    */
-  canceled_height?: string;
+  canceled_height: string;
   /**
    * Recipient is the account address string of the recipient whose funds are cancelled.
    */
-  recipient?: string;
+  recipient: string;
 }
 export interface MsgCancelContinuousFundResponseAminoMsg {
   type: "cosmos-sdk/MsgCancelContinuousFundResponse";
   value: MsgCancelContinuousFundResponseAmino;
-}
-/**
- * MsgCancelContinuousFundResponse defines the response to executing a
- * MsgCancelContinuousFund message.
- * @name MsgCancelContinuousFundResponseSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.MsgCancelContinuousFundResponse
- */
-export interface MsgCancelContinuousFundResponseSDKType {
-  canceled_time: Date;
-  canceled_height: bigint;
-  recipient: string;
 }
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
@@ -406,27 +325,17 @@ export interface MsgUpdateParamsAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/protocolpool parameters to update.
    * 
    * NOTE: All parameters must be supplied.
    */
-  params?: ParamsAmino;
+  params: ParamsAmino;
 }
 export interface MsgUpdateParamsAminoMsg {
   type: "cosmos-sdk/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
-}
-/**
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * @name MsgUpdateParamsSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.MsgUpdateParams
- */
-export interface MsgUpdateParamsSDKType {
-  authority: string;
-  params: ParamsSDKType;
 }
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
@@ -452,14 +361,6 @@ export interface MsgUpdateParamsResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateParamsResponse";
   value: MsgUpdateParamsResponseAmino;
 }
-/**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- * @name MsgUpdateParamsResponseSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.MsgUpdateParamsResponse
- */
-export interface MsgUpdateParamsResponseSDKType {}
 function createBaseMsgFundCommunityPool(): MsgFundCommunityPool {
   return {
     depositor: "",
@@ -478,9 +379,6 @@ export const MsgFundCommunityPool = {
   aminoType: "cosmos-sdk/MsgFundCommunityPool",
   is(o: any): o is MsgFundCommunityPool {
     return o && (o.$typeUrl === MsgFundCommunityPool.typeUrl || typeof o.depositor === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])));
-  },
-  isSDK(o: any): o is MsgFundCommunityPoolSDKType {
-    return o && (o.$typeUrl === MsgFundCommunityPool.typeUrl || typeof o.depositor === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])));
   },
   isAmino(o: any): o is MsgFundCommunityPoolAmino {
     return o && (o.$typeUrl === MsgFundCommunityPool.typeUrl || typeof o.depositor === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])));
@@ -514,7 +412,7 @@ export const MsgFundCommunityPool = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgFundCommunityPool>, I>>(object: I): MsgFundCommunityPool {
+  fromPartial(object: DeepPartial<MsgFundCommunityPool>): MsgFundCommunityPool {
     const message = createBaseMsgFundCommunityPool();
     message.depositor = object.depositor ?? "";
     message.amount = object.amount?.map(e => Coin.fromPartial(e)) || [];
@@ -581,9 +479,6 @@ export const MsgFundCommunityPoolResponse = {
   is(o: any): o is MsgFundCommunityPoolResponse {
     return o && o.$typeUrl === MsgFundCommunityPoolResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgFundCommunityPoolResponseSDKType {
-    return o && o.$typeUrl === MsgFundCommunityPoolResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgFundCommunityPoolResponseAmino {
     return o && o.$typeUrl === MsgFundCommunityPoolResponse.typeUrl;
   },
@@ -604,7 +499,7 @@ export const MsgFundCommunityPoolResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgFundCommunityPoolResponse>, I>>(_: I): MsgFundCommunityPoolResponse {
+  fromPartial(_: DeepPartial<MsgFundCommunityPoolResponse>): MsgFundCommunityPoolResponse {
     const message = createBaseMsgFundCommunityPoolResponse();
     return message;
   },
@@ -660,9 +555,6 @@ export const MsgCommunityPoolSpend = {
   is(o: any): o is MsgCommunityPoolSpend {
     return o && (o.$typeUrl === MsgCommunityPoolSpend.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])));
   },
-  isSDK(o: any): o is MsgCommunityPoolSpendSDKType {
-    return o && (o.$typeUrl === MsgCommunityPoolSpend.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])));
-  },
   isAmino(o: any): o is MsgCommunityPoolSpendAmino {
     return o && (o.$typeUrl === MsgCommunityPoolSpend.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])));
   },
@@ -701,7 +593,7 @@ export const MsgCommunityPoolSpend = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCommunityPoolSpend>, I>>(object: I): MsgCommunityPoolSpend {
+  fromPartial(object: DeepPartial<MsgCommunityPoolSpend>): MsgCommunityPoolSpend {
     const message = createBaseMsgCommunityPoolSpend();
     message.authority = object.authority ?? "";
     message.recipient = object.recipient ?? "";
@@ -774,9 +666,6 @@ export const MsgCommunityPoolSpendResponse = {
   is(o: any): o is MsgCommunityPoolSpendResponse {
     return o && o.$typeUrl === MsgCommunityPoolSpendResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgCommunityPoolSpendResponseSDKType {
-    return o && o.$typeUrl === MsgCommunityPoolSpendResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgCommunityPoolSpendResponseAmino {
     return o && o.$typeUrl === MsgCommunityPoolSpendResponse.typeUrl;
   },
@@ -797,7 +686,7 @@ export const MsgCommunityPoolSpendResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCommunityPoolSpendResponse>, I>>(_: I): MsgCommunityPoolSpendResponse {
+  fromPartial(_: DeepPartial<MsgCommunityPoolSpendResponse>): MsgCommunityPoolSpendResponse {
     const message = createBaseMsgCommunityPoolSpendResponse();
     return message;
   },
@@ -852,9 +741,6 @@ export const MsgCreateContinuousFund = {
   is(o: any): o is MsgCreateContinuousFund {
     return o && (o.$typeUrl === MsgCreateContinuousFund.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string" && typeof o.percentage === "string");
   },
-  isSDK(o: any): o is MsgCreateContinuousFundSDKType {
-    return o && (o.$typeUrl === MsgCreateContinuousFund.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string" && typeof o.percentage === "string");
-  },
   isAmino(o: any): o is MsgCreateContinuousFundAmino {
     return o && (o.$typeUrl === MsgCreateContinuousFund.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string" && typeof o.percentage === "string");
   },
@@ -899,7 +785,7 @@ export const MsgCreateContinuousFund = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCreateContinuousFund>, I>>(object: I): MsgCreateContinuousFund {
+  fromPartial(object: DeepPartial<MsgCreateContinuousFund>): MsgCreateContinuousFund {
     const message = createBaseMsgCreateContinuousFund();
     message.authority = object.authority ?? "";
     message.recipient = object.recipient ?? "";
@@ -970,9 +856,6 @@ export const MsgCreateContinuousFundResponse = {
   is(o: any): o is MsgCreateContinuousFundResponse {
     return o && o.$typeUrl === MsgCreateContinuousFundResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgCreateContinuousFundResponseSDKType {
-    return o && o.$typeUrl === MsgCreateContinuousFundResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgCreateContinuousFundResponseAmino {
     return o && o.$typeUrl === MsgCreateContinuousFundResponse.typeUrl;
   },
@@ -993,7 +876,7 @@ export const MsgCreateContinuousFundResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCreateContinuousFundResponse>, I>>(_: I): MsgCreateContinuousFundResponse {
+  fromPartial(_: DeepPartial<MsgCreateContinuousFundResponse>): MsgCreateContinuousFundResponse {
     const message = createBaseMsgCreateContinuousFundResponse();
     return message;
   },
@@ -1046,9 +929,6 @@ export const MsgCancelContinuousFund = {
   is(o: any): o is MsgCancelContinuousFund {
     return o && (o.$typeUrl === MsgCancelContinuousFund.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string");
   },
-  isSDK(o: any): o is MsgCancelContinuousFundSDKType {
-    return o && (o.$typeUrl === MsgCancelContinuousFund.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string");
-  },
   isAmino(o: any): o is MsgCancelContinuousFundAmino {
     return o && (o.$typeUrl === MsgCancelContinuousFund.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string");
   },
@@ -1081,7 +961,7 @@ export const MsgCancelContinuousFund = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCancelContinuousFund>, I>>(object: I): MsgCancelContinuousFund {
+  fromPartial(object: DeepPartial<MsgCancelContinuousFund>): MsgCancelContinuousFund {
     const message = createBaseMsgCancelContinuousFund();
     message.authority = object.authority ?? "";
     message.recipient = object.recipient ?? "";
@@ -1146,9 +1026,6 @@ export const MsgCancelContinuousFundResponse = {
   is(o: any): o is MsgCancelContinuousFundResponse {
     return o && (o.$typeUrl === MsgCancelContinuousFundResponse.typeUrl || Timestamp.is(o.canceledTime) && typeof o.canceledHeight === "bigint" && typeof o.recipient === "string");
   },
-  isSDK(o: any): o is MsgCancelContinuousFundResponseSDKType {
-    return o && (o.$typeUrl === MsgCancelContinuousFundResponse.typeUrl || Timestamp.isSDK(o.canceled_time) && typeof o.canceled_height === "bigint" && typeof o.recipient === "string");
-  },
   isAmino(o: any): o is MsgCancelContinuousFundResponseAmino {
     return o && (o.$typeUrl === MsgCancelContinuousFundResponse.typeUrl || Timestamp.isAmino(o.canceled_time) && typeof o.canceled_height === "bigint" && typeof o.recipient === "string");
   },
@@ -1187,7 +1064,7 @@ export const MsgCancelContinuousFundResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCancelContinuousFundResponse>, I>>(object: I): MsgCancelContinuousFundResponse {
+  fromPartial(object: DeepPartial<MsgCancelContinuousFundResponse>): MsgCancelContinuousFundResponse {
     const message = createBaseMsgCancelContinuousFundResponse();
     message.canceledTime = object.canceledTime ?? undefined;
     message.canceledHeight = object.canceledHeight !== undefined && object.canceledHeight !== null ? BigInt(object.canceledHeight.toString()) : BigInt(0);
@@ -1255,9 +1132,6 @@ export const MsgUpdateParams = {
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.is(o.params));
   },
-  isSDK(o: any): o is MsgUpdateParamsSDKType {
-    return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isSDK(o.params));
-  },
   isAmino(o: any): o is MsgUpdateParamsAmino {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isAmino(o.params));
   },
@@ -1290,7 +1164,7 @@ export const MsgUpdateParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParams>, I>>(object: I): MsgUpdateParams {
+  fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
@@ -1356,9 +1230,6 @@ export const MsgUpdateParamsResponse = {
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateParamsResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateParamsResponseAmino {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -1379,7 +1250,7 @@ export const MsgUpdateParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParamsResponse>, I>>(_: I): MsgUpdateParamsResponse {
+  fromPartial(_: DeepPartial<MsgUpdateParamsResponse>): MsgUpdateParamsResponse {
     const message = createBaseMsgUpdateParamsResponse();
     return message;
   },

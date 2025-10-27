@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { MemberRequest, MemberRequestAmino, MemberRequestSDKType, VoteOption, ProposalExecutorResult, ThresholdDecisionPolicy, ThresholdDecisionPolicyProtoMsg, ThresholdDecisionPolicySDKType, PercentageDecisionPolicy, PercentageDecisionPolicyProtoMsg, PercentageDecisionPolicySDKType } from "./types";
-import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { MemberRequest, MemberRequestAmino, VoteOption, ProposalExecutorResult, ThresholdDecisionPolicy, ThresholdDecisionPolicyProtoMsg, PercentageDecisionPolicy, PercentageDecisionPolicyProtoMsg } from "./types";
+import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, isSet } from "../../../helpers";
+import { DeepPartial, isSet } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /** Exec defines modes of execution of a proposal on creation or on new vote. */
 export enum Exec {
@@ -21,7 +21,6 @@ export enum Exec {
   EXEC_TRY = 1,
   UNRECOGNIZED = -1,
 }
-export const ExecSDKType = Exec;
 export const ExecAmino = Exec;
 export function execFromJSON(object: any): Exec {
   switch (object) {
@@ -82,7 +81,7 @@ export interface MsgCreateGroupAmino {
   /**
    * admin is the account address of the group admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * members defines the group members.
    */
@@ -90,22 +89,11 @@ export interface MsgCreateGroupAmino {
   /**
    * metadata is any arbitrary metadata to attached to the group.
    */
-  metadata?: string;
+  metadata: string;
 }
 export interface MsgCreateGroupAminoMsg {
   type: "cosmos-sdk/MsgCreateGroup";
   value: MsgCreateGroupAmino;
-}
-/**
- * MsgCreateGroup is the Msg/CreateGroup request type.
- * @name MsgCreateGroupSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgCreateGroup
- */
-export interface MsgCreateGroupSDKType {
-  admin: string;
-  members: MemberRequestSDKType[];
-  metadata: string;
 }
 /**
  * MsgCreateGroupResponse is the Msg/CreateGroup response type.
@@ -133,20 +121,11 @@ export interface MsgCreateGroupResponseAmino {
   /**
    * group_id is the unique ID of the newly created group.
    */
-  group_id?: string;
+  group_id: string;
 }
 export interface MsgCreateGroupResponseAminoMsg {
   type: "cosmos-sdk/MsgCreateGroupResponse";
   value: MsgCreateGroupResponseAmino;
-}
-/**
- * MsgCreateGroupResponse is the Msg/CreateGroup response type.
- * @name MsgCreateGroupResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgCreateGroupResponse
- */
-export interface MsgCreateGroupResponseSDKType {
-  group_id: bigint;
 }
 /**
  * MsgUpdateGroupMembers is the Msg/UpdateGroupMembers request type.
@@ -183,11 +162,11 @@ export interface MsgUpdateGroupMembersAmino {
   /**
    * admin is the account address of the group admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
   /**
    * member_updates is the list of members to update,
    * set weight to 0 to remove a member.
@@ -197,17 +176,6 @@ export interface MsgUpdateGroupMembersAmino {
 export interface MsgUpdateGroupMembersAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupMembers";
   value: MsgUpdateGroupMembersAmino;
-}
-/**
- * MsgUpdateGroupMembers is the Msg/UpdateGroupMembers request type.
- * @name MsgUpdateGroupMembersSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupMembers
- */
-export interface MsgUpdateGroupMembersSDKType {
-  admin: string;
-  group_id: bigint;
-  member_updates: MemberRequestSDKType[];
 }
 /**
  * MsgUpdateGroupMembersResponse is the Msg/UpdateGroupMembers response type.
@@ -231,13 +199,6 @@ export interface MsgUpdateGroupMembersResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupMembersResponse";
   value: MsgUpdateGroupMembersResponseAmino;
 }
-/**
- * MsgUpdateGroupMembersResponse is the Msg/UpdateGroupMembers response type.
- * @name MsgUpdateGroupMembersResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupMembersResponse
- */
-export interface MsgUpdateGroupMembersResponseSDKType {}
 /**
  * MsgUpdateGroupAdmin is the Msg/UpdateGroupAdmin request type.
  * @name MsgUpdateGroupAdmin
@@ -272,30 +233,19 @@ export interface MsgUpdateGroupAdminAmino {
   /**
    * admin is the current account address of the group admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
   /**
    * new_admin is the group new admin account address.
    */
-  new_admin?: string;
+  new_admin: string;
 }
 export interface MsgUpdateGroupAdminAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupAdmin";
   value: MsgUpdateGroupAdminAmino;
-}
-/**
- * MsgUpdateGroupAdmin is the Msg/UpdateGroupAdmin request type.
- * @name MsgUpdateGroupAdminSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupAdmin
- */
-export interface MsgUpdateGroupAdminSDKType {
-  admin: string;
-  group_id: bigint;
-  new_admin: string;
 }
 /**
  * MsgUpdateGroupAdminResponse is the Msg/UpdateGroupAdmin response type.
@@ -319,13 +269,6 @@ export interface MsgUpdateGroupAdminResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupAdminResponse";
   value: MsgUpdateGroupAdminResponseAmino;
 }
-/**
- * MsgUpdateGroupAdminResponse is the Msg/UpdateGroupAdmin response type.
- * @name MsgUpdateGroupAdminResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupAdminResponse
- */
-export interface MsgUpdateGroupAdminResponseSDKType {}
 /**
  * MsgUpdateGroupMetadata is the Msg/UpdateGroupMetadata request type.
  * @name MsgUpdateGroupMetadata
@@ -360,30 +303,19 @@ export interface MsgUpdateGroupMetadataAmino {
   /**
    * admin is the account address of the group admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
   /**
    * metadata is the updated group's metadata.
    */
-  metadata?: string;
+  metadata: string;
 }
 export interface MsgUpdateGroupMetadataAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupMetadata";
   value: MsgUpdateGroupMetadataAmino;
-}
-/**
- * MsgUpdateGroupMetadata is the Msg/UpdateGroupMetadata request type.
- * @name MsgUpdateGroupMetadataSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupMetadata
- */
-export interface MsgUpdateGroupMetadataSDKType {
-  admin: string;
-  group_id: bigint;
-  metadata: string;
 }
 /**
  * MsgUpdateGroupMetadataResponse is the Msg/UpdateGroupMetadata response type.
@@ -407,13 +339,6 @@ export interface MsgUpdateGroupMetadataResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupMetadataResponse";
   value: MsgUpdateGroupMetadataResponseAmino;
 }
-/**
- * MsgUpdateGroupMetadataResponse is the Msg/UpdateGroupMetadata response type.
- * @name MsgUpdateGroupMetadataResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupMetadataResponse
- */
-export interface MsgUpdateGroupMetadataResponseSDKType {}
 /**
  * MsgCreateGroupPolicy is the Msg/CreateGroupPolicy request type.
  * @name MsgCreateGroupPolicy
@@ -458,15 +383,15 @@ export interface MsgCreateGroupPolicyAmino {
   /**
    * admin is the account address of the group admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
   /**
    * metadata is any arbitrary metadata attached to the group policy.
    */
-  metadata?: string;
+  metadata: string;
   /**
    * decision_policy specifies the group policy's decision policy.
    */
@@ -475,18 +400,6 @@ export interface MsgCreateGroupPolicyAmino {
 export interface MsgCreateGroupPolicyAminoMsg {
   type: "cosmos-sdk/MsgCreateGroupPolicy";
   value: MsgCreateGroupPolicyAmino;
-}
-/**
- * MsgCreateGroupPolicy is the Msg/CreateGroupPolicy request type.
- * @name MsgCreateGroupPolicySDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgCreateGroupPolicy
- */
-export interface MsgCreateGroupPolicySDKType {
-  admin: string;
-  group_id: bigint;
-  metadata: string;
-  decision_policy?: ThresholdDecisionPolicySDKType | PercentageDecisionPolicySDKType | AnySDKType | undefined;
 }
 /**
  * MsgCreateGroupPolicyResponse is the Msg/CreateGroupPolicy response type.
@@ -514,20 +427,11 @@ export interface MsgCreateGroupPolicyResponseAmino {
   /**
    * address is the account address of the newly created group policy.
    */
-  address?: string;
+  address: string;
 }
 export interface MsgCreateGroupPolicyResponseAminoMsg {
   type: "cosmos-sdk/MsgCreateGroupPolicyResponse";
   value: MsgCreateGroupPolicyResponseAmino;
-}
-/**
- * MsgCreateGroupPolicyResponse is the Msg/CreateGroupPolicy response type.
- * @name MsgCreateGroupPolicyResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgCreateGroupPolicyResponse
- */
-export interface MsgCreateGroupPolicyResponseSDKType {
-  address: string;
 }
 /**
  * MsgUpdateGroupPolicyAdmin is the Msg/UpdateGroupPolicyAdmin request type.
@@ -563,30 +467,19 @@ export interface MsgUpdateGroupPolicyAdminAmino {
   /**
    * admin is the account address of the group admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * group_policy_address is the account address of the group policy.
    */
-  group_policy_address?: string;
+  group_policy_address: string;
   /**
    * new_admin is the new group policy admin.
    */
-  new_admin?: string;
+  new_admin: string;
 }
 export interface MsgUpdateGroupPolicyAdminAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupPolicyAdmin";
   value: MsgUpdateGroupPolicyAdminAmino;
-}
-/**
- * MsgUpdateGroupPolicyAdmin is the Msg/UpdateGroupPolicyAdmin request type.
- * @name MsgUpdateGroupPolicyAdminSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupPolicyAdmin
- */
-export interface MsgUpdateGroupPolicyAdminSDKType {
-  admin: string;
-  group_policy_address: string;
-  new_admin: string;
 }
 /**
  * MsgUpdateGroupPolicyAdminResponse is the Msg/UpdateGroupPolicyAdmin response type.
@@ -610,13 +503,6 @@ export interface MsgUpdateGroupPolicyAdminResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupPolicyAdminResponse";
   value: MsgUpdateGroupPolicyAdminResponseAmino;
 }
-/**
- * MsgUpdateGroupPolicyAdminResponse is the Msg/UpdateGroupPolicyAdmin response type.
- * @name MsgUpdateGroupPolicyAdminResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupPolicyAdminResponse
- */
-export interface MsgUpdateGroupPolicyAdminResponseSDKType {}
 /**
  * MsgCreateGroupWithPolicy is the Msg/CreateGroupWithPolicy request type.
  * @name MsgCreateGroupWithPolicy
@@ -670,7 +556,7 @@ export interface MsgCreateGroupWithPolicyAmino {
   /**
    * admin is the account address of the group and group policy admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * members defines the group members.
    */
@@ -678,16 +564,16 @@ export interface MsgCreateGroupWithPolicyAmino {
   /**
    * group_metadata is any arbitrary metadata attached to the group.
    */
-  group_metadata?: string;
+  group_metadata: string;
   /**
    * group_policy_metadata is any arbitrary metadata attached to the group policy.
    */
-  group_policy_metadata?: string;
+  group_policy_metadata: string;
   /**
    * group_policy_as_admin is a boolean field, if set to true, the group policy account address will be used as group
    * and group policy admin.
    */
-  group_policy_as_admin?: boolean;
+  group_policy_as_admin: boolean;
   /**
    * decision_policy specifies the group policy's decision policy.
    */
@@ -696,20 +582,6 @@ export interface MsgCreateGroupWithPolicyAmino {
 export interface MsgCreateGroupWithPolicyAminoMsg {
   type: "cosmos-sdk/MsgCreateGroupWithPolicy";
   value: MsgCreateGroupWithPolicyAmino;
-}
-/**
- * MsgCreateGroupWithPolicy is the Msg/CreateGroupWithPolicy request type.
- * @name MsgCreateGroupWithPolicySDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgCreateGroupWithPolicy
- */
-export interface MsgCreateGroupWithPolicySDKType {
-  admin: string;
-  members: MemberRequestSDKType[];
-  group_metadata: string;
-  group_policy_metadata: string;
-  group_policy_as_admin: boolean;
-  decision_policy?: ThresholdDecisionPolicySDKType | PercentageDecisionPolicySDKType | AnySDKType | undefined;
 }
 /**
  * MsgCreateGroupWithPolicyResponse is the Msg/CreateGroupWithPolicy response type.
@@ -741,25 +613,15 @@ export interface MsgCreateGroupWithPolicyResponseAmino {
   /**
    * group_id is the unique ID of the newly created group with policy.
    */
-  group_id?: string;
+  group_id: string;
   /**
    * group_policy_address is the account address of the newly created group policy.
    */
-  group_policy_address?: string;
+  group_policy_address: string;
 }
 export interface MsgCreateGroupWithPolicyResponseAminoMsg {
   type: "cosmos-sdk/MsgCreateGroupWithPolicyResponse";
   value: MsgCreateGroupWithPolicyResponseAmino;
-}
-/**
- * MsgCreateGroupWithPolicyResponse is the Msg/CreateGroupWithPolicy response type.
- * @name MsgCreateGroupWithPolicyResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgCreateGroupWithPolicyResponse
- */
-export interface MsgCreateGroupWithPolicyResponseSDKType {
-  group_id: bigint;
-  group_policy_address: string;
 }
 /**
  * MsgUpdateGroupPolicyDecisionPolicy is the Msg/UpdateGroupPolicyDecisionPolicy request type.
@@ -801,11 +663,11 @@ export interface MsgUpdateGroupPolicyDecisionPolicyAmino {
   /**
    * admin is the account address of the group admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * group_policy_address is the account address of group policy.
    */
-  group_policy_address?: string;
+  group_policy_address: string;
   /**
    * decision_policy is the updated group policy's decision policy.
    */
@@ -814,17 +676,6 @@ export interface MsgUpdateGroupPolicyDecisionPolicyAmino {
 export interface MsgUpdateGroupPolicyDecisionPolicyAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupDecisionPolicy";
   value: MsgUpdateGroupPolicyDecisionPolicyAmino;
-}
-/**
- * MsgUpdateGroupPolicyDecisionPolicy is the Msg/UpdateGroupPolicyDecisionPolicy request type.
- * @name MsgUpdateGroupPolicyDecisionPolicySDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupPolicyDecisionPolicy
- */
-export interface MsgUpdateGroupPolicyDecisionPolicySDKType {
-  admin: string;
-  group_policy_address: string;
-  decision_policy?: ThresholdDecisionPolicySDKType | PercentageDecisionPolicySDKType | AnySDKType | undefined;
 }
 /**
  * MsgUpdateGroupPolicyDecisionPolicyResponse is the Msg/UpdateGroupPolicyDecisionPolicy response type.
@@ -848,13 +699,6 @@ export interface MsgUpdateGroupPolicyDecisionPolicyResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupPolicyDecisionPolicyResponse";
   value: MsgUpdateGroupPolicyDecisionPolicyResponseAmino;
 }
-/**
- * MsgUpdateGroupPolicyDecisionPolicyResponse is the Msg/UpdateGroupPolicyDecisionPolicy response type.
- * @name MsgUpdateGroupPolicyDecisionPolicyResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupPolicyDecisionPolicyResponse
- */
-export interface MsgUpdateGroupPolicyDecisionPolicyResponseSDKType {}
 /**
  * MsgUpdateGroupPolicyMetadata is the Msg/UpdateGroupPolicyMetadata request type.
  * @name MsgUpdateGroupPolicyMetadata
@@ -889,30 +733,19 @@ export interface MsgUpdateGroupPolicyMetadataAmino {
   /**
    * admin is the account address of the group admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * group_policy_address is the account address of group policy.
    */
-  group_policy_address?: string;
+  group_policy_address: string;
   /**
    * metadata is the group policy metadata to be updated.
    */
-  metadata?: string;
+  metadata: string;
 }
 export interface MsgUpdateGroupPolicyMetadataAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupPolicyMetadata";
   value: MsgUpdateGroupPolicyMetadataAmino;
-}
-/**
- * MsgUpdateGroupPolicyMetadata is the Msg/UpdateGroupPolicyMetadata request type.
- * @name MsgUpdateGroupPolicyMetadataSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupPolicyMetadata
- */
-export interface MsgUpdateGroupPolicyMetadataSDKType {
-  admin: string;
-  group_policy_address: string;
-  metadata: string;
 }
 /**
  * MsgUpdateGroupPolicyMetadataResponse is the Msg/UpdateGroupPolicyMetadata response type.
@@ -936,13 +769,6 @@ export interface MsgUpdateGroupPolicyMetadataResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateGroupPolicyMetadataResponse";
   value: MsgUpdateGroupPolicyMetadataResponseAmino;
 }
-/**
- * MsgUpdateGroupPolicyMetadataResponse is the Msg/UpdateGroupPolicyMetadata response type.
- * @name MsgUpdateGroupPolicyMetadataResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgUpdateGroupPolicyMetadataResponse
- */
-export interface MsgUpdateGroupPolicyMetadataResponseSDKType {}
 /**
  * MsgSubmitProposal is the Msg/SubmitProposal request type.
  * @name MsgSubmitProposal
@@ -1000,57 +826,42 @@ export interface MsgSubmitProposalAmino {
   /**
    * group_policy_address is the account address of group policy.
    */
-  group_policy_address?: string;
+  group_policy_address: string;
   /**
    * proposers are the account addresses of the proposers.
    * Proposers signatures will be counted as yes votes.
    */
-  proposers?: string[];
+  proposers: string[];
   /**
    * metadata is any arbitrary metadata attached to the proposal.
    */
-  metadata?: string;
+  metadata: string;
   /**
    * messages is a list of `sdk.Msg`s that will be executed if the proposal passes.
    */
-  messages?: AnyAmino[];
+  messages: AnyAmino[];
   /**
    * exec defines the mode of execution of the proposal,
    * whether it should be executed immediately on creation or not.
    * If so, proposers signatures are considered as Yes votes.
    */
-  exec?: Exec;
+  exec: Exec;
   /**
    * title is the title of the proposal.
    * 
    * Since: cosmos-sdk 0.47
    */
-  title?: string;
+  title: string;
   /**
    * summary is the summary of the proposal.
    * 
    * Since: cosmos-sdk 0.47
    */
-  summary?: string;
+  summary: string;
 }
 export interface MsgSubmitProposalAminoMsg {
   type: "cosmos-sdk/group/MsgSubmitProposal";
   value: MsgSubmitProposalAmino;
-}
-/**
- * MsgSubmitProposal is the Msg/SubmitProposal request type.
- * @name MsgSubmitProposalSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgSubmitProposal
- */
-export interface MsgSubmitProposalSDKType {
-  group_policy_address: string;
-  proposers: string[];
-  metadata: string;
-  messages: AnySDKType[];
-  exec: Exec;
-  title: string;
-  summary: string;
 }
 /**
  * MsgSubmitProposalResponse is the Msg/SubmitProposal response type.
@@ -1078,20 +889,11 @@ export interface MsgSubmitProposalResponseAmino {
   /**
    * proposal is the unique ID of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
 }
 export interface MsgSubmitProposalResponseAminoMsg {
   type: "cosmos-sdk/MsgSubmitProposalResponse";
   value: MsgSubmitProposalResponseAmino;
-}
-/**
- * MsgSubmitProposalResponse is the Msg/SubmitProposal response type.
- * @name MsgSubmitProposalResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgSubmitProposalResponse
- */
-export interface MsgSubmitProposalResponseSDKType {
-  proposal_id: bigint;
 }
 /**
  * MsgWithdrawProposal is the Msg/WithdrawProposal request type.
@@ -1123,25 +925,15 @@ export interface MsgWithdrawProposalAmino {
   /**
    * proposal is the unique ID of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
   /**
    * address is the admin of the group policy or one of the proposer of the proposal.
    */
-  address?: string;
+  address: string;
 }
 export interface MsgWithdrawProposalAminoMsg {
   type: "cosmos-sdk/group/MsgWithdrawProposal";
   value: MsgWithdrawProposalAmino;
-}
-/**
- * MsgWithdrawProposal is the Msg/WithdrawProposal request type.
- * @name MsgWithdrawProposalSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgWithdrawProposal
- */
-export interface MsgWithdrawProposalSDKType {
-  proposal_id: bigint;
-  address: string;
 }
 /**
  * MsgWithdrawProposalResponse is the Msg/WithdrawProposal response type.
@@ -1165,13 +957,6 @@ export interface MsgWithdrawProposalResponseAminoMsg {
   type: "cosmos-sdk/MsgWithdrawProposalResponse";
   value: MsgWithdrawProposalResponseAmino;
 }
-/**
- * MsgWithdrawProposalResponse is the Msg/WithdrawProposal response type.
- * @name MsgWithdrawProposalResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgWithdrawProposalResponse
- */
-export interface MsgWithdrawProposalResponseSDKType {}
 /**
  * MsgVote is the Msg/Vote request type.
  * @name MsgVote
@@ -1215,41 +1000,28 @@ export interface MsgVoteAmino {
   /**
    * proposal is the unique ID of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
   /**
    * voter is the voter account address.
    */
-  voter?: string;
+  voter: string;
   /**
    * option is the voter's choice on the proposal.
    */
-  option?: VoteOption;
+  option: VoteOption;
   /**
    * metadata is any arbitrary metadata attached to the vote.
    */
-  metadata?: string;
+  metadata: string;
   /**
    * exec defines whether the proposal should be executed
    * immediately after voting or not.
    */
-  exec?: Exec;
+  exec: Exec;
 }
 export interface MsgVoteAminoMsg {
   type: "cosmos-sdk/group/MsgVote";
   value: MsgVoteAmino;
-}
-/**
- * MsgVote is the Msg/Vote request type.
- * @name MsgVoteSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgVote
- */
-export interface MsgVoteSDKType {
-  proposal_id: bigint;
-  voter: string;
-  option: VoteOption;
-  metadata: string;
-  exec: Exec;
 }
 /**
  * MsgVoteResponse is the Msg/Vote response type.
@@ -1273,13 +1045,6 @@ export interface MsgVoteResponseAminoMsg {
   type: "cosmos-sdk/MsgVoteResponse";
   value: MsgVoteResponseAmino;
 }
-/**
- * MsgVoteResponse is the Msg/Vote response type.
- * @name MsgVoteResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgVoteResponse
- */
-export interface MsgVoteResponseSDKType {}
 /**
  * MsgExec is the Msg/Exec request type.
  * @name MsgExec
@@ -1310,25 +1075,15 @@ export interface MsgExecAmino {
   /**
    * proposal is the unique ID of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
   /**
    * executor is the account address used to execute the proposal.
    */
-  executor?: string;
+  executor: string;
 }
 export interface MsgExecAminoMsg {
   type: "cosmos-sdk/group/MsgExec";
   value: MsgExecAmino;
-}
-/**
- * MsgExec is the Msg/Exec request type.
- * @name MsgExecSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgExec
- */
-export interface MsgExecSDKType {
-  proposal_id: bigint;
-  executor: string;
 }
 /**
  * MsgExecResponse is the Msg/Exec request type.
@@ -1356,20 +1111,11 @@ export interface MsgExecResponseAmino {
   /**
    * result is the final result of the proposal execution.
    */
-  result?: ProposalExecutorResult;
+  result: ProposalExecutorResult;
 }
 export interface MsgExecResponseAminoMsg {
   type: "cosmos-sdk/MsgExecResponse";
   value: MsgExecResponseAmino;
-}
-/**
- * MsgExecResponse is the Msg/Exec request type.
- * @name MsgExecResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgExecResponse
- */
-export interface MsgExecResponseSDKType {
-  result: ProposalExecutorResult;
 }
 /**
  * MsgLeaveGroup is the Msg/LeaveGroup request type.
@@ -1401,25 +1147,15 @@ export interface MsgLeaveGroupAmino {
   /**
    * address is the account address of the group member.
    */
-  address?: string;
+  address: string;
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
 }
 export interface MsgLeaveGroupAminoMsg {
   type: "cosmos-sdk/group/MsgLeaveGroup";
   value: MsgLeaveGroupAmino;
-}
-/**
- * MsgLeaveGroup is the Msg/LeaveGroup request type.
- * @name MsgLeaveGroupSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgLeaveGroup
- */
-export interface MsgLeaveGroupSDKType {
-  address: string;
-  group_id: bigint;
 }
 /**
  * MsgLeaveGroupResponse is the Msg/LeaveGroup response type.
@@ -1443,13 +1179,6 @@ export interface MsgLeaveGroupResponseAminoMsg {
   type: "cosmos-sdk/MsgLeaveGroupResponse";
   value: MsgLeaveGroupResponseAmino;
 }
-/**
- * MsgLeaveGroupResponse is the Msg/LeaveGroup response type.
- * @name MsgLeaveGroupResponseSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MsgLeaveGroupResponse
- */
-export interface MsgLeaveGroupResponseSDKType {}
 function createBaseMsgCreateGroup(): MsgCreateGroup {
   return {
     admin: "",
@@ -1468,9 +1197,6 @@ export const MsgCreateGroup = {
   aminoType: "cosmos-sdk/MsgCreateGroup",
   is(o: any): o is MsgCreateGroup {
     return o && (o.$typeUrl === MsgCreateGroup.typeUrl || typeof o.admin === "string" && Array.isArray(o.members) && (!o.members.length || MemberRequest.is(o.members[0])) && typeof o.metadata === "string");
-  },
-  isSDK(o: any): o is MsgCreateGroupSDKType {
-    return o && (o.$typeUrl === MsgCreateGroup.typeUrl || typeof o.admin === "string" && Array.isArray(o.members) && (!o.members.length || MemberRequest.isSDK(o.members[0])) && typeof o.metadata === "string");
   },
   isAmino(o: any): o is MsgCreateGroupAmino {
     return o && (o.$typeUrl === MsgCreateGroup.typeUrl || typeof o.admin === "string" && Array.isArray(o.members) && (!o.members.length || MemberRequest.isAmino(o.members[0])) && typeof o.metadata === "string");
@@ -1510,7 +1236,7 @@ export const MsgCreateGroup = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCreateGroup>, I>>(object: I): MsgCreateGroup {
+  fromPartial(object: DeepPartial<MsgCreateGroup>): MsgCreateGroup {
     const message = createBaseMsgCreateGroup();
     message.admin = object.admin ?? "";
     message.members = object.members?.map(e => MemberRequest.fromPartial(e)) || [];
@@ -1584,9 +1310,6 @@ export const MsgCreateGroupResponse = {
   is(o: any): o is MsgCreateGroupResponse {
     return o && (o.$typeUrl === MsgCreateGroupResponse.typeUrl || typeof o.groupId === "bigint");
   },
-  isSDK(o: any): o is MsgCreateGroupResponseSDKType {
-    return o && (o.$typeUrl === MsgCreateGroupResponse.typeUrl || typeof o.group_id === "bigint");
-  },
   isAmino(o: any): o is MsgCreateGroupResponseAmino {
     return o && (o.$typeUrl === MsgCreateGroupResponse.typeUrl || typeof o.group_id === "bigint");
   },
@@ -1613,7 +1336,7 @@ export const MsgCreateGroupResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCreateGroupResponse>, I>>(object: I): MsgCreateGroupResponse {
+  fromPartial(object: DeepPartial<MsgCreateGroupResponse>): MsgCreateGroupResponse {
     const message = createBaseMsgCreateGroupResponse();
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
     return message;
@@ -1672,9 +1395,6 @@ export const MsgUpdateGroupMembers = {
   is(o: any): o is MsgUpdateGroupMembers {
     return o && (o.$typeUrl === MsgUpdateGroupMembers.typeUrl || typeof o.admin === "string" && typeof o.groupId === "bigint" && Array.isArray(o.memberUpdates) && (!o.memberUpdates.length || MemberRequest.is(o.memberUpdates[0])));
   },
-  isSDK(o: any): o is MsgUpdateGroupMembersSDKType {
-    return o && (o.$typeUrl === MsgUpdateGroupMembers.typeUrl || typeof o.admin === "string" && typeof o.group_id === "bigint" && Array.isArray(o.member_updates) && (!o.member_updates.length || MemberRequest.isSDK(o.member_updates[0])));
-  },
   isAmino(o: any): o is MsgUpdateGroupMembersAmino {
     return o && (o.$typeUrl === MsgUpdateGroupMembers.typeUrl || typeof o.admin === "string" && typeof o.group_id === "bigint" && Array.isArray(o.member_updates) && (!o.member_updates.length || MemberRequest.isAmino(o.member_updates[0])));
   },
@@ -1713,7 +1433,7 @@ export const MsgUpdateGroupMembers = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupMembers>, I>>(object: I): MsgUpdateGroupMembers {
+  fromPartial(object: DeepPartial<MsgUpdateGroupMembers>): MsgUpdateGroupMembers {
     const message = createBaseMsgUpdateGroupMembers();
     message.admin = object.admin ?? "";
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
@@ -1785,9 +1505,6 @@ export const MsgUpdateGroupMembersResponse = {
   is(o: any): o is MsgUpdateGroupMembersResponse {
     return o && o.$typeUrl === MsgUpdateGroupMembersResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateGroupMembersResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateGroupMembersResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateGroupMembersResponseAmino {
     return o && o.$typeUrl === MsgUpdateGroupMembersResponse.typeUrl;
   },
@@ -1808,7 +1525,7 @@ export const MsgUpdateGroupMembersResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupMembersResponse>, I>>(_: I): MsgUpdateGroupMembersResponse {
+  fromPartial(_: DeepPartial<MsgUpdateGroupMembersResponse>): MsgUpdateGroupMembersResponse {
     const message = createBaseMsgUpdateGroupMembersResponse();
     return message;
   },
@@ -1862,9 +1579,6 @@ export const MsgUpdateGroupAdmin = {
   is(o: any): o is MsgUpdateGroupAdmin {
     return o && (o.$typeUrl === MsgUpdateGroupAdmin.typeUrl || typeof o.admin === "string" && typeof o.groupId === "bigint" && typeof o.newAdmin === "string");
   },
-  isSDK(o: any): o is MsgUpdateGroupAdminSDKType {
-    return o && (o.$typeUrl === MsgUpdateGroupAdmin.typeUrl || typeof o.admin === "string" && typeof o.group_id === "bigint" && typeof o.new_admin === "string");
-  },
   isAmino(o: any): o is MsgUpdateGroupAdminAmino {
     return o && (o.$typeUrl === MsgUpdateGroupAdmin.typeUrl || typeof o.admin === "string" && typeof o.group_id === "bigint" && typeof o.new_admin === "string");
   },
@@ -1903,7 +1617,7 @@ export const MsgUpdateGroupAdmin = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupAdmin>, I>>(object: I): MsgUpdateGroupAdmin {
+  fromPartial(object: DeepPartial<MsgUpdateGroupAdmin>): MsgUpdateGroupAdmin {
     const message = createBaseMsgUpdateGroupAdmin();
     message.admin = object.admin ?? "";
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
@@ -1968,9 +1682,6 @@ export const MsgUpdateGroupAdminResponse = {
   is(o: any): o is MsgUpdateGroupAdminResponse {
     return o && o.$typeUrl === MsgUpdateGroupAdminResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateGroupAdminResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateGroupAdminResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateGroupAdminResponseAmino {
     return o && o.$typeUrl === MsgUpdateGroupAdminResponse.typeUrl;
   },
@@ -1991,7 +1702,7 @@ export const MsgUpdateGroupAdminResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupAdminResponse>, I>>(_: I): MsgUpdateGroupAdminResponse {
+  fromPartial(_: DeepPartial<MsgUpdateGroupAdminResponse>): MsgUpdateGroupAdminResponse {
     const message = createBaseMsgUpdateGroupAdminResponse();
     return message;
   },
@@ -2045,9 +1756,6 @@ export const MsgUpdateGroupMetadata = {
   is(o: any): o is MsgUpdateGroupMetadata {
     return o && (o.$typeUrl === MsgUpdateGroupMetadata.typeUrl || typeof o.admin === "string" && typeof o.groupId === "bigint" && typeof o.metadata === "string");
   },
-  isSDK(o: any): o is MsgUpdateGroupMetadataSDKType {
-    return o && (o.$typeUrl === MsgUpdateGroupMetadata.typeUrl || typeof o.admin === "string" && typeof o.group_id === "bigint" && typeof o.metadata === "string");
-  },
   isAmino(o: any): o is MsgUpdateGroupMetadataAmino {
     return o && (o.$typeUrl === MsgUpdateGroupMetadata.typeUrl || typeof o.admin === "string" && typeof o.group_id === "bigint" && typeof o.metadata === "string");
   },
@@ -2086,7 +1794,7 @@ export const MsgUpdateGroupMetadata = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupMetadata>, I>>(object: I): MsgUpdateGroupMetadata {
+  fromPartial(object: DeepPartial<MsgUpdateGroupMetadata>): MsgUpdateGroupMetadata {
     const message = createBaseMsgUpdateGroupMetadata();
     message.admin = object.admin ?? "";
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
@@ -2151,9 +1859,6 @@ export const MsgUpdateGroupMetadataResponse = {
   is(o: any): o is MsgUpdateGroupMetadataResponse {
     return o && o.$typeUrl === MsgUpdateGroupMetadataResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateGroupMetadataResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateGroupMetadataResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateGroupMetadataResponseAmino {
     return o && o.$typeUrl === MsgUpdateGroupMetadataResponse.typeUrl;
   },
@@ -2174,7 +1879,7 @@ export const MsgUpdateGroupMetadataResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupMetadataResponse>, I>>(_: I): MsgUpdateGroupMetadataResponse {
+  fromPartial(_: DeepPartial<MsgUpdateGroupMetadataResponse>): MsgUpdateGroupMetadataResponse {
     const message = createBaseMsgUpdateGroupMetadataResponse();
     return message;
   },
@@ -2229,9 +1934,6 @@ export const MsgCreateGroupPolicy = {
   is(o: any): o is MsgCreateGroupPolicy {
     return o && (o.$typeUrl === MsgCreateGroupPolicy.typeUrl || typeof o.admin === "string" && typeof o.groupId === "bigint" && typeof o.metadata === "string");
   },
-  isSDK(o: any): o is MsgCreateGroupPolicySDKType {
-    return o && (o.$typeUrl === MsgCreateGroupPolicy.typeUrl || typeof o.admin === "string" && typeof o.group_id === "bigint" && typeof o.metadata === "string");
-  },
   isAmino(o: any): o is MsgCreateGroupPolicyAmino {
     return o && (o.$typeUrl === MsgCreateGroupPolicy.typeUrl || typeof o.admin === "string" && typeof o.group_id === "bigint" && typeof o.metadata === "string");
   },
@@ -2276,7 +1978,7 @@ export const MsgCreateGroupPolicy = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCreateGroupPolicy>, I>>(object: I): MsgCreateGroupPolicy {
+  fromPartial(object: DeepPartial<MsgCreateGroupPolicy>): MsgCreateGroupPolicy {
     const message = createBaseMsgCreateGroupPolicy();
     message.admin = object.admin ?? "";
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
@@ -2354,9 +2056,6 @@ export const MsgCreateGroupPolicyResponse = {
   is(o: any): o is MsgCreateGroupPolicyResponse {
     return o && (o.$typeUrl === MsgCreateGroupPolicyResponse.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is MsgCreateGroupPolicyResponseSDKType {
-    return o && (o.$typeUrl === MsgCreateGroupPolicyResponse.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is MsgCreateGroupPolicyResponseAmino {
     return o && (o.$typeUrl === MsgCreateGroupPolicyResponse.typeUrl || typeof o.address === "string");
   },
@@ -2383,7 +2082,7 @@ export const MsgCreateGroupPolicyResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCreateGroupPolicyResponse>, I>>(object: I): MsgCreateGroupPolicyResponse {
+  fromPartial(object: DeepPartial<MsgCreateGroupPolicyResponse>): MsgCreateGroupPolicyResponse {
     const message = createBaseMsgCreateGroupPolicyResponse();
     message.address = object.address ?? "";
     return message;
@@ -2442,9 +2141,6 @@ export const MsgUpdateGroupPolicyAdmin = {
   is(o: any): o is MsgUpdateGroupPolicyAdmin {
     return o && (o.$typeUrl === MsgUpdateGroupPolicyAdmin.typeUrl || typeof o.admin === "string" && typeof o.groupPolicyAddress === "string" && typeof o.newAdmin === "string");
   },
-  isSDK(o: any): o is MsgUpdateGroupPolicyAdminSDKType {
-    return o && (o.$typeUrl === MsgUpdateGroupPolicyAdmin.typeUrl || typeof o.admin === "string" && typeof o.group_policy_address === "string" && typeof o.new_admin === "string");
-  },
   isAmino(o: any): o is MsgUpdateGroupPolicyAdminAmino {
     return o && (o.$typeUrl === MsgUpdateGroupPolicyAdmin.typeUrl || typeof o.admin === "string" && typeof o.group_policy_address === "string" && typeof o.new_admin === "string");
   },
@@ -2483,7 +2179,7 @@ export const MsgUpdateGroupPolicyAdmin = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupPolicyAdmin>, I>>(object: I): MsgUpdateGroupPolicyAdmin {
+  fromPartial(object: DeepPartial<MsgUpdateGroupPolicyAdmin>): MsgUpdateGroupPolicyAdmin {
     const message = createBaseMsgUpdateGroupPolicyAdmin();
     message.admin = object.admin ?? "";
     message.groupPolicyAddress = object.groupPolicyAddress ?? "";
@@ -2548,9 +2244,6 @@ export const MsgUpdateGroupPolicyAdminResponse = {
   is(o: any): o is MsgUpdateGroupPolicyAdminResponse {
     return o && o.$typeUrl === MsgUpdateGroupPolicyAdminResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateGroupPolicyAdminResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateGroupPolicyAdminResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateGroupPolicyAdminResponseAmino {
     return o && o.$typeUrl === MsgUpdateGroupPolicyAdminResponse.typeUrl;
   },
@@ -2571,7 +2264,7 @@ export const MsgUpdateGroupPolicyAdminResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupPolicyAdminResponse>, I>>(_: I): MsgUpdateGroupPolicyAdminResponse {
+  fromPartial(_: DeepPartial<MsgUpdateGroupPolicyAdminResponse>): MsgUpdateGroupPolicyAdminResponse {
     const message = createBaseMsgUpdateGroupPolicyAdminResponse();
     return message;
   },
@@ -2627,9 +2320,6 @@ export const MsgCreateGroupWithPolicy = {
   aminoType: "cosmos-sdk/MsgCreateGroupWithPolicy",
   is(o: any): o is MsgCreateGroupWithPolicy {
     return o && (o.$typeUrl === MsgCreateGroupWithPolicy.typeUrl || typeof o.admin === "string" && Array.isArray(o.members) && (!o.members.length || MemberRequest.is(o.members[0])) && typeof o.groupMetadata === "string" && typeof o.groupPolicyMetadata === "string" && typeof o.groupPolicyAsAdmin === "boolean");
-  },
-  isSDK(o: any): o is MsgCreateGroupWithPolicySDKType {
-    return o && (o.$typeUrl === MsgCreateGroupWithPolicy.typeUrl || typeof o.admin === "string" && Array.isArray(o.members) && (!o.members.length || MemberRequest.isSDK(o.members[0])) && typeof o.group_metadata === "string" && typeof o.group_policy_metadata === "string" && typeof o.group_policy_as_admin === "boolean");
   },
   isAmino(o: any): o is MsgCreateGroupWithPolicyAmino {
     return o && (o.$typeUrl === MsgCreateGroupWithPolicy.typeUrl || typeof o.admin === "string" && Array.isArray(o.members) && (!o.members.length || MemberRequest.isAmino(o.members[0])) && typeof o.group_metadata === "string" && typeof o.group_policy_metadata === "string" && typeof o.group_policy_as_admin === "boolean");
@@ -2687,7 +2377,7 @@ export const MsgCreateGroupWithPolicy = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCreateGroupWithPolicy>, I>>(object: I): MsgCreateGroupWithPolicy {
+  fromPartial(object: DeepPartial<MsgCreateGroupWithPolicy>): MsgCreateGroupWithPolicy {
     const message = createBaseMsgCreateGroupWithPolicy();
     message.admin = object.admin ?? "";
     message.members = object.members?.map(e => MemberRequest.fromPartial(e)) || [];
@@ -2778,9 +2468,6 @@ export const MsgCreateGroupWithPolicyResponse = {
   is(o: any): o is MsgCreateGroupWithPolicyResponse {
     return o && (o.$typeUrl === MsgCreateGroupWithPolicyResponse.typeUrl || typeof o.groupId === "bigint" && typeof o.groupPolicyAddress === "string");
   },
-  isSDK(o: any): o is MsgCreateGroupWithPolicyResponseSDKType {
-    return o && (o.$typeUrl === MsgCreateGroupWithPolicyResponse.typeUrl || typeof o.group_id === "bigint" && typeof o.group_policy_address === "string");
-  },
   isAmino(o: any): o is MsgCreateGroupWithPolicyResponseAmino {
     return o && (o.$typeUrl === MsgCreateGroupWithPolicyResponse.typeUrl || typeof o.group_id === "bigint" && typeof o.group_policy_address === "string");
   },
@@ -2813,7 +2500,7 @@ export const MsgCreateGroupWithPolicyResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCreateGroupWithPolicyResponse>, I>>(object: I): MsgCreateGroupWithPolicyResponse {
+  fromPartial(object: DeepPartial<MsgCreateGroupWithPolicyResponse>): MsgCreateGroupWithPolicyResponse {
     const message = createBaseMsgCreateGroupWithPolicyResponse();
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
     message.groupPolicyAddress = object.groupPolicyAddress ?? "";
@@ -2877,9 +2564,6 @@ export const MsgUpdateGroupPolicyDecisionPolicy = {
   is(o: any): o is MsgUpdateGroupPolicyDecisionPolicy {
     return o && (o.$typeUrl === MsgUpdateGroupPolicyDecisionPolicy.typeUrl || typeof o.admin === "string" && typeof o.groupPolicyAddress === "string");
   },
-  isSDK(o: any): o is MsgUpdateGroupPolicyDecisionPolicySDKType {
-    return o && (o.$typeUrl === MsgUpdateGroupPolicyDecisionPolicy.typeUrl || typeof o.admin === "string" && typeof o.group_policy_address === "string");
-  },
   isAmino(o: any): o is MsgUpdateGroupPolicyDecisionPolicyAmino {
     return o && (o.$typeUrl === MsgUpdateGroupPolicyDecisionPolicy.typeUrl || typeof o.admin === "string" && typeof o.group_policy_address === "string");
   },
@@ -2918,7 +2602,7 @@ export const MsgUpdateGroupPolicyDecisionPolicy = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupPolicyDecisionPolicy>, I>>(object: I): MsgUpdateGroupPolicyDecisionPolicy {
+  fromPartial(object: DeepPartial<MsgUpdateGroupPolicyDecisionPolicy>): MsgUpdateGroupPolicyDecisionPolicy {
     const message = createBaseMsgUpdateGroupPolicyDecisionPolicy();
     message.admin = object.admin ?? "";
     message.groupPolicyAddress = object.groupPolicyAddress ?? "";
@@ -2989,9 +2673,6 @@ export const MsgUpdateGroupPolicyDecisionPolicyResponse = {
   is(o: any): o is MsgUpdateGroupPolicyDecisionPolicyResponse {
     return o && o.$typeUrl === MsgUpdateGroupPolicyDecisionPolicyResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateGroupPolicyDecisionPolicyResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateGroupPolicyDecisionPolicyResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateGroupPolicyDecisionPolicyResponseAmino {
     return o && o.$typeUrl === MsgUpdateGroupPolicyDecisionPolicyResponse.typeUrl;
   },
@@ -3012,7 +2693,7 @@ export const MsgUpdateGroupPolicyDecisionPolicyResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupPolicyDecisionPolicyResponse>, I>>(_: I): MsgUpdateGroupPolicyDecisionPolicyResponse {
+  fromPartial(_: DeepPartial<MsgUpdateGroupPolicyDecisionPolicyResponse>): MsgUpdateGroupPolicyDecisionPolicyResponse {
     const message = createBaseMsgUpdateGroupPolicyDecisionPolicyResponse();
     return message;
   },
@@ -3066,9 +2747,6 @@ export const MsgUpdateGroupPolicyMetadata = {
   is(o: any): o is MsgUpdateGroupPolicyMetadata {
     return o && (o.$typeUrl === MsgUpdateGroupPolicyMetadata.typeUrl || typeof o.admin === "string" && typeof o.groupPolicyAddress === "string" && typeof o.metadata === "string");
   },
-  isSDK(o: any): o is MsgUpdateGroupPolicyMetadataSDKType {
-    return o && (o.$typeUrl === MsgUpdateGroupPolicyMetadata.typeUrl || typeof o.admin === "string" && typeof o.group_policy_address === "string" && typeof o.metadata === "string");
-  },
   isAmino(o: any): o is MsgUpdateGroupPolicyMetadataAmino {
     return o && (o.$typeUrl === MsgUpdateGroupPolicyMetadata.typeUrl || typeof o.admin === "string" && typeof o.group_policy_address === "string" && typeof o.metadata === "string");
   },
@@ -3107,7 +2785,7 @@ export const MsgUpdateGroupPolicyMetadata = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupPolicyMetadata>, I>>(object: I): MsgUpdateGroupPolicyMetadata {
+  fromPartial(object: DeepPartial<MsgUpdateGroupPolicyMetadata>): MsgUpdateGroupPolicyMetadata {
     const message = createBaseMsgUpdateGroupPolicyMetadata();
     message.admin = object.admin ?? "";
     message.groupPolicyAddress = object.groupPolicyAddress ?? "";
@@ -3172,9 +2850,6 @@ export const MsgUpdateGroupPolicyMetadataResponse = {
   is(o: any): o is MsgUpdateGroupPolicyMetadataResponse {
     return o && o.$typeUrl === MsgUpdateGroupPolicyMetadataResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateGroupPolicyMetadataResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateGroupPolicyMetadataResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateGroupPolicyMetadataResponseAmino {
     return o && o.$typeUrl === MsgUpdateGroupPolicyMetadataResponse.typeUrl;
   },
@@ -3195,7 +2870,7 @@ export const MsgUpdateGroupPolicyMetadataResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateGroupPolicyMetadataResponse>, I>>(_: I): MsgUpdateGroupPolicyMetadataResponse {
+  fromPartial(_: DeepPartial<MsgUpdateGroupPolicyMetadataResponse>): MsgUpdateGroupPolicyMetadataResponse {
     const message = createBaseMsgUpdateGroupPolicyMetadataResponse();
     return message;
   },
@@ -3252,9 +2927,6 @@ export const MsgSubmitProposal = {
   aminoType: "cosmos-sdk/group/MsgSubmitProposal",
   is(o: any): o is MsgSubmitProposal {
     return o && (o.$typeUrl === MsgSubmitProposal.typeUrl || typeof o.groupPolicyAddress === "string" && Array.isArray(o.proposers) && (!o.proposers.length || typeof o.proposers[0] === "string") && typeof o.metadata === "string" && Array.isArray(o.messages) && (!o.messages.length || Any.is(o.messages[0])) && isSet(o.exec) && typeof o.title === "string" && typeof o.summary === "string");
-  },
-  isSDK(o: any): o is MsgSubmitProposalSDKType {
-    return o && (o.$typeUrl === MsgSubmitProposal.typeUrl || typeof o.group_policy_address === "string" && Array.isArray(o.proposers) && (!o.proposers.length || typeof o.proposers[0] === "string") && typeof o.metadata === "string" && Array.isArray(o.messages) && (!o.messages.length || Any.isSDK(o.messages[0])) && isSet(o.exec) && typeof o.title === "string" && typeof o.summary === "string");
   },
   isAmino(o: any): o is MsgSubmitProposalAmino {
     return o && (o.$typeUrl === MsgSubmitProposal.typeUrl || typeof o.group_policy_address === "string" && Array.isArray(o.proposers) && (!o.proposers.length || typeof o.proposers[0] === "string") && typeof o.metadata === "string" && Array.isArray(o.messages) && (!o.messages.length || Any.isAmino(o.messages[0])) && isSet(o.exec) && typeof o.title === "string" && typeof o.summary === "string");
@@ -3318,7 +2990,7 @@ export const MsgSubmitProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSubmitProposal>, I>>(object: I): MsgSubmitProposal {
+  fromPartial(object: DeepPartial<MsgSubmitProposal>): MsgSubmitProposal {
     const message = createBaseMsgSubmitProposal();
     message.groupPolicyAddress = object.groupPolicyAddress ?? "";
     message.proposers = object.proposers?.map(e => e) || [];
@@ -3409,9 +3081,6 @@ export const MsgSubmitProposalResponse = {
   is(o: any): o is MsgSubmitProposalResponse {
     return o && (o.$typeUrl === MsgSubmitProposalResponse.typeUrl || typeof o.proposalId === "bigint");
   },
-  isSDK(o: any): o is MsgSubmitProposalResponseSDKType {
-    return o && (o.$typeUrl === MsgSubmitProposalResponse.typeUrl || typeof o.proposal_id === "bigint");
-  },
   isAmino(o: any): o is MsgSubmitProposalResponseAmino {
     return o && (o.$typeUrl === MsgSubmitProposalResponse.typeUrl || typeof o.proposal_id === "bigint");
   },
@@ -3438,7 +3107,7 @@ export const MsgSubmitProposalResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSubmitProposalResponse>, I>>(object: I): MsgSubmitProposalResponse {
+  fromPartial(object: DeepPartial<MsgSubmitProposalResponse>): MsgSubmitProposalResponse {
     const message = createBaseMsgSubmitProposalResponse();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     return message;
@@ -3496,9 +3165,6 @@ export const MsgWithdrawProposal = {
   is(o: any): o is MsgWithdrawProposal {
     return o && (o.$typeUrl === MsgWithdrawProposal.typeUrl || typeof o.proposalId === "bigint" && typeof o.address === "string");
   },
-  isSDK(o: any): o is MsgWithdrawProposalSDKType {
-    return o && (o.$typeUrl === MsgWithdrawProposal.typeUrl || typeof o.proposal_id === "bigint" && typeof o.address === "string");
-  },
   isAmino(o: any): o is MsgWithdrawProposalAmino {
     return o && (o.$typeUrl === MsgWithdrawProposal.typeUrl || typeof o.proposal_id === "bigint" && typeof o.address === "string");
   },
@@ -3531,7 +3197,7 @@ export const MsgWithdrawProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgWithdrawProposal>, I>>(object: I): MsgWithdrawProposal {
+  fromPartial(object: DeepPartial<MsgWithdrawProposal>): MsgWithdrawProposal {
     const message = createBaseMsgWithdrawProposal();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.address = object.address ?? "";
@@ -3591,9 +3257,6 @@ export const MsgWithdrawProposalResponse = {
   is(o: any): o is MsgWithdrawProposalResponse {
     return o && o.$typeUrl === MsgWithdrawProposalResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgWithdrawProposalResponseSDKType {
-    return o && o.$typeUrl === MsgWithdrawProposalResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgWithdrawProposalResponseAmino {
     return o && o.$typeUrl === MsgWithdrawProposalResponse.typeUrl;
   },
@@ -3614,7 +3277,7 @@ export const MsgWithdrawProposalResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgWithdrawProposalResponse>, I>>(_: I): MsgWithdrawProposalResponse {
+  fromPartial(_: DeepPartial<MsgWithdrawProposalResponse>): MsgWithdrawProposalResponse {
     const message = createBaseMsgWithdrawProposalResponse();
     return message;
   },
@@ -3670,9 +3333,6 @@ export const MsgVote = {
   is(o: any): o is MsgVote {
     return o && (o.$typeUrl === MsgVote.typeUrl || typeof o.proposalId === "bigint" && typeof o.voter === "string" && isSet(o.option) && typeof o.metadata === "string" && isSet(o.exec));
   },
-  isSDK(o: any): o is MsgVoteSDKType {
-    return o && (o.$typeUrl === MsgVote.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string" && isSet(o.option) && typeof o.metadata === "string" && isSet(o.exec));
-  },
   isAmino(o: any): o is MsgVoteAmino {
     return o && (o.$typeUrl === MsgVote.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string" && isSet(o.option) && typeof o.metadata === "string" && isSet(o.exec));
   },
@@ -3723,7 +3383,7 @@ export const MsgVote = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgVote>, I>>(object: I): MsgVote {
+  fromPartial(object: DeepPartial<MsgVote>): MsgVote {
     const message = createBaseMsgVote();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.voter = object.voter ?? "";
@@ -3798,9 +3458,6 @@ export const MsgVoteResponse = {
   is(o: any): o is MsgVoteResponse {
     return o && o.$typeUrl === MsgVoteResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgVoteResponseSDKType {
-    return o && o.$typeUrl === MsgVoteResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgVoteResponseAmino {
     return o && o.$typeUrl === MsgVoteResponse.typeUrl;
   },
@@ -3821,7 +3478,7 @@ export const MsgVoteResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgVoteResponse>, I>>(_: I): MsgVoteResponse {
+  fromPartial(_: DeepPartial<MsgVoteResponse>): MsgVoteResponse {
     const message = createBaseMsgVoteResponse();
     return message;
   },
@@ -3874,9 +3531,6 @@ export const MsgExec = {
   is(o: any): o is MsgExec {
     return o && (o.$typeUrl === MsgExec.typeUrl || typeof o.proposalId === "bigint" && typeof o.executor === "string");
   },
-  isSDK(o: any): o is MsgExecSDKType {
-    return o && (o.$typeUrl === MsgExec.typeUrl || typeof o.proposal_id === "bigint" && typeof o.executor === "string");
-  },
   isAmino(o: any): o is MsgExecAmino {
     return o && (o.$typeUrl === MsgExec.typeUrl || typeof o.proposal_id === "bigint" && typeof o.executor === "string");
   },
@@ -3909,7 +3563,7 @@ export const MsgExec = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgExec>, I>>(object: I): MsgExec {
+  fromPartial(object: DeepPartial<MsgExec>): MsgExec {
     const message = createBaseMsgExec();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.executor = object.executor ?? "";
@@ -3971,9 +3625,6 @@ export const MsgExecResponse = {
   is(o: any): o is MsgExecResponse {
     return o && (o.$typeUrl === MsgExecResponse.typeUrl || isSet(o.result));
   },
-  isSDK(o: any): o is MsgExecResponseSDKType {
-    return o && (o.$typeUrl === MsgExecResponse.typeUrl || isSet(o.result));
-  },
   isAmino(o: any): o is MsgExecResponseAmino {
     return o && (o.$typeUrl === MsgExecResponse.typeUrl || isSet(o.result));
   },
@@ -4000,7 +3651,7 @@ export const MsgExecResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgExecResponse>, I>>(object: I): MsgExecResponse {
+  fromPartial(object: DeepPartial<MsgExecResponse>): MsgExecResponse {
     const message = createBaseMsgExecResponse();
     message.result = object.result ?? 0;
     return message;
@@ -4058,9 +3709,6 @@ export const MsgLeaveGroup = {
   is(o: any): o is MsgLeaveGroup {
     return o && (o.$typeUrl === MsgLeaveGroup.typeUrl || typeof o.address === "string" && typeof o.groupId === "bigint");
   },
-  isSDK(o: any): o is MsgLeaveGroupSDKType {
-    return o && (o.$typeUrl === MsgLeaveGroup.typeUrl || typeof o.address === "string" && typeof o.group_id === "bigint");
-  },
   isAmino(o: any): o is MsgLeaveGroupAmino {
     return o && (o.$typeUrl === MsgLeaveGroup.typeUrl || typeof o.address === "string" && typeof o.group_id === "bigint");
   },
@@ -4093,7 +3741,7 @@ export const MsgLeaveGroup = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgLeaveGroup>, I>>(object: I): MsgLeaveGroup {
+  fromPartial(object: DeepPartial<MsgLeaveGroup>): MsgLeaveGroup {
     const message = createBaseMsgLeaveGroup();
     message.address = object.address ?? "";
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
@@ -4153,9 +3801,6 @@ export const MsgLeaveGroupResponse = {
   is(o: any): o is MsgLeaveGroupResponse {
     return o && o.$typeUrl === MsgLeaveGroupResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgLeaveGroupResponseSDKType {
-    return o && o.$typeUrl === MsgLeaveGroupResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgLeaveGroupResponseAmino {
     return o && o.$typeUrl === MsgLeaveGroupResponse.typeUrl;
   },
@@ -4176,7 +3821,7 @@ export const MsgLeaveGroupResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgLeaveGroupResponse>, I>>(_: I): MsgLeaveGroupResponse {
+  fromPartial(_: DeepPartial<MsgLeaveGroupResponse>): MsgLeaveGroupResponse {
     const message = createBaseMsgLeaveGroupResponse();
     return message;
   },

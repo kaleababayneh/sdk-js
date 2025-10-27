@@ -1,11 +1,11 @@
 // @ts-nocheck
 /* eslint-disable */
 import { NullValue } from "../../../protobuf/struct";
-import { Duration, DurationAmino, DurationSDKType } from "../../../protobuf/duration";
+import { Duration, DurationAmino } from "../../../protobuf/duration";
 import { Timestamp } from "../../../protobuf/timestamp";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes, isSet } from "../../../../helpers";
+import { DeepPartial, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes, isSet } from "../../../../helpers";
 /** CEL component specifier. */
 export enum SourceInfo_Extension_Component {
   /** COMPONENT_UNSPECIFIED - Unspecified, default. */
@@ -24,7 +24,6 @@ export enum SourceInfo_Extension_Component {
   COMPONENT_RUNTIME = 3,
   UNRECOGNIZED = -1,
 }
-export const SourceInfo_Extension_ComponentSDKType = SourceInfo_Extension_Component;
 export const SourceInfo_Extension_ComponentAmino = SourceInfo_Extension_Component;
 export function sourceInfo_Extension_ComponentFromJSON(object: any): SourceInfo_Extension_Component {
   switch (object) {
@@ -100,16 +99,6 @@ export interface ParsedExprAmino {
 export interface ParsedExprAminoMsg {
   type: "/google.api.expr.v1alpha1.ParsedExpr";
   value: ParsedExprAmino;
-}
-/**
- * An expression together with source information as returned by the parser.
- * @name ParsedExprSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.ParsedExpr
- */
-export interface ParsedExprSDKType {
-  expr?: ExprSDKType;
-  source_info?: SourceInfoSDKType;
 }
 /**
  * An abstract representation of a common expression.
@@ -201,7 +190,7 @@ export interface ExprAmino {
    * given expression tree. This is used to associate type information and other
    * attributes to a node in the parse tree.
    */
-  id?: string;
+  id: string;
   /**
    * A literal expression.
    */
@@ -234,38 +223,6 @@ export interface ExprAmino {
 export interface ExprAminoMsg {
   type: "/google.api.expr.v1alpha1.Expr";
   value: ExprAmino;
-}
-/**
- * An abstract representation of a common expression.
- * 
- * Expressions are abstractly represented as a collection of identifiers,
- * select statements, function calls, literals, and comprehensions. All
- * operators with the exception of the '.' operator are modelled as function
- * calls. This makes it easy to represent new operators into the existing AST.
- * 
- * All references within expressions must resolve to a
- * [Decl][google.api.expr.v1alpha1.Decl] provided at type-check for an
- * expression to be valid. A reference may either be a bare identifier `name` or
- * a qualified identifier `google.api.name`. References may either refer to a
- * value or a function declaration.
- * 
- * For example, the expression `google.api.name.startsWith('expr')` references
- * the declaration `google.api.name` within a
- * [Expr.Select][google.api.expr.v1alpha1.Expr.Select] expression, and the
- * function declaration `startsWith`.
- * @name ExprSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Expr
- */
-export interface ExprSDKType {
-  id: bigint;
-  const_expr?: ConstantSDKType;
-  ident_expr?: Expr_IdentSDKType;
-  select_expr?: Expr_SelectSDKType;
-  call_expr?: Expr_CallSDKType;
-  list_expr?: Expr_CreateListSDKType;
-  struct_expr?: Expr_CreateStructSDKType;
-  comprehension_expr?: Expr_ComprehensionSDKType;
 }
 /**
  * An identifier expression. e.g. `request`.
@@ -301,20 +258,11 @@ export interface Expr_IdentAmino {
    * Qualified names are represented by the
    * [Expr.Select][google.api.expr.v1alpha1.Expr.Select] expression.
    */
-  name?: string;
+  name: string;
 }
 export interface Expr_IdentAminoMsg {
   type: "/google.api.expr.v1alpha1.Ident";
   value: Expr_IdentAmino;
-}
-/**
- * An identifier expression. e.g. `request`.
- * @name Expr_IdentSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Ident
- */
-export interface Expr_IdentSDKType {
-  name: string;
 }
 /**
  * A field selection expression. e.g. `request.auth`.
@@ -368,28 +316,17 @@ export interface Expr_SelectAmino {
    * For example, in the select expression `request.auth`, the `auth` portion
    * of the expression would be the `field`.
    */
-  field?: string;
+  field: string;
   /**
    * Whether the select is to be interpreted as a field presence test.
    * 
    * This results from the macro `has(request.auth)`.
    */
-  test_only?: boolean;
+  test_only: boolean;
 }
 export interface Expr_SelectAminoMsg {
   type: "/google.api.expr.v1alpha1.Select";
   value: Expr_SelectAmino;
-}
-/**
- * A field selection expression. e.g. `request.auth`.
- * @name Expr_SelectSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Select
- */
-export interface Expr_SelectSDKType {
-  operand?: ExprSDKType;
-  field: string;
-  test_only: boolean;
 }
 /**
  * A call expression, including calls to predefined functions and operators.
@@ -435,28 +372,15 @@ export interface Expr_CallAmino {
   /**
    * Required. The name of the function or method being called.
    */
-  function?: string;
+  function: string;
   /**
    * The arguments.
    */
-  args?: ExprAmino[];
+  args: ExprAmino[];
 }
 export interface Expr_CallAminoMsg {
   type: "/google.api.expr.v1alpha1.Call";
   value: Expr_CallAmino;
-}
-/**
- * A call expression, including calls to predefined functions and operators.
- * 
- * For example, `value == 10`, `size(map_value)`.
- * @name Expr_CallSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Call
- */
-export interface Expr_CallSDKType {
-  target?: ExprSDKType;
-  function: string;
-  args: ExprSDKType[];
 }
 /**
  * A list creation expression.
@@ -499,7 +423,7 @@ export interface Expr_CreateListAmino {
   /**
    * The elements part of the list.
    */
-  elements?: ExprAmino[];
+  elements: ExprAmino[];
   /**
    * The indices within the elements list which are marked as optional
    * elements.
@@ -508,24 +432,11 @@ export interface Expr_CreateListAmino {
    * is included in the list. If the optional-typed value is absent, the list
    * element is omitted from the CreateList result.
    */
-  optional_indices?: number[];
+  optional_indices: number[];
 }
 export interface Expr_CreateListAminoMsg {
   type: "/google.api.expr.v1alpha1.CreateList";
   value: Expr_CreateListAmino;
-}
-/**
- * A list creation expression.
- * 
- * Lists may either be homogenous, e.g. `[1, 2, 3]`, or heterogeneous, e.g.
- * `dyn([1, 'hello', 2.0])`
- * @name Expr_CreateListSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.CreateList
- */
-export interface Expr_CreateListSDKType {
-  elements: ExprSDKType[];
-  optional_indices: number[];
 }
 /**
  * A map or message creation expression.
@@ -567,29 +478,15 @@ export interface Expr_CreateStructAmino {
    * The type name of the message to be created, empty when creating map
    * literals.
    */
-  message_name?: string;
+  message_name: string;
   /**
    * The entries in the creation expression.
    */
-  entries?: Expr_CreateStruct_EntryAmino[];
+  entries: Expr_CreateStruct_EntryAmino[];
 }
 export interface Expr_CreateStructAminoMsg {
   type: "/google.api.expr.v1alpha1.CreateStruct";
   value: Expr_CreateStructAmino;
-}
-/**
- * A map or message creation expression.
- * 
- * Maps are constructed as `{'key_name': 'value'}`. Message construction is
- * similar, but prefixed with a type name and composed of field ids:
- * `types.MyType{field_id: 'value'}`.
- * @name Expr_CreateStructSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.CreateStruct
- */
-export interface Expr_CreateStructSDKType {
-  message_name: string;
-  entries: Expr_CreateStruct_EntrySDKType[];
 }
 /**
  * Represents an entry.
@@ -641,7 +538,7 @@ export interface Expr_CreateStruct_EntryAmino {
    * in a given expression tree. This is used to associate type
    * information and other attributes to the node.
    */
-  id?: string;
+  id: string;
   /**
    * The field key for a message creator statement.
    */
@@ -661,24 +558,11 @@ export interface Expr_CreateStruct_EntryAmino {
   /**
    * Whether the key-value pair is optional.
    */
-  optional_entry?: boolean;
+  optional_entry: boolean;
 }
 export interface Expr_CreateStruct_EntryAminoMsg {
   type: "/google.api.expr.v1alpha1.Entry";
   value: Expr_CreateStruct_EntryAmino;
-}
-/**
- * Represents an entry.
- * @name Expr_CreateStruct_EntrySDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Entry
- */
-export interface Expr_CreateStruct_EntrySDKType {
-  id: bigint;
-  field_key?: string;
-  map_key?: ExprSDKType;
-  value?: ExprSDKType;
-  optional_entry: boolean;
 }
 /**
  * A comprehension expression applied to a list or map.
@@ -858,14 +742,14 @@ export interface Expr_ComprehensionAmino {
    * When the iter_range is a list, this variable is the list element.
    * When the iter_range is a map, this variable is the map entry key.
    */
-  iter_var?: string;
+  iter_var: string;
   /**
    * The name of the second iteration variable, empty if not set.
    * When the iter_range is a list, this variable is the integer index.
    * When the iter_range is a map, this variable is the map entry value.
    * This field is only set for comprehension v2 macros.
    */
-  iter_var2?: string;
+  iter_var2: string;
   /**
    * The range over which the comprehension iterates.
    */
@@ -873,7 +757,7 @@ export interface Expr_ComprehensionAmino {
   /**
    * The name of the variable used for accumulation of the result.
    */
-  accu_var?: string;
+  accu_var: string;
   /**
    * The initial value of the accumulator.
    */
@@ -901,77 +785,6 @@ export interface Expr_ComprehensionAmino {
 export interface Expr_ComprehensionAminoMsg {
   type: "/google.api.expr.v1alpha1.Comprehension";
   value: Expr_ComprehensionAmino;
-}
-/**
- * A comprehension expression applied to a list or map.
- * 
- * Comprehensions are not part of the core syntax, but enabled with macros.
- * A macro matches a specific call signature within a parsed AST and replaces
- * the call with an alternate AST block. Macro expansion happens at parse
- * time.
- * 
- * The following macros are supported within CEL:
- * 
- * Aggregate type macros may be applied to all elements in a list or all keys
- * in a map:
- * 
- * *  `all`, `exists`, `exists_one` -  test a predicate expression against
- *    the inputs and return `true` if the predicate is satisfied for all,
- *    any, or only one value `list.all(x, x < 10)`.
- * *  `filter` - test a predicate expression against the inputs and return
- *    the subset of elements which satisfy the predicate:
- *    `payments.filter(p, p > 1000)`.
- * *  `map` - apply an expression to all elements in the input and return the
- *    output aggregate type: `[1, 2, 3].map(i, i * i)`.
- * 
- * The `has(m.x)` macro tests whether the property `x` is present in struct
- * `m`. The semantics of this macro depend on the type of `m`. For proto2
- * messages `has(m.x)` is defined as 'defined, but not set`. For proto3, the
- * macro tests whether the property is set to its default. For map and struct
- * types, the macro tests whether the property `x` is defined on `m`.
- * 
- * Comprehensions for the standard environment macros evaluation can be best
- * visualized as the following pseudocode:
- * 
- * ```
- * let `accu_var` = `accu_init`
- * for (let `iter_var` in `iter_range`) {
- *   if (!`loop_condition`) {
- *     break
- *   }
- *   `accu_var` = `loop_step`
- * }
- * return `result`
- * ```
- * 
- * Comprehensions for the optional V2 macros which support map-to-map
- * translation differ slightly from the standard environment macros in that
- * they expose both the key or index in addition to the value for each list
- * or map entry:
- * 
- * ```
- * let `accu_var` = `accu_init`
- * for (let `iter_var`, `iter_var2` in `iter_range`) {
- *   if (!`loop_condition`) {
- *     break
- *   }
- *   `accu_var` = `loop_step`
- * }
- * return `result`
- * ```
- * @name Expr_ComprehensionSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Comprehension
- */
-export interface Expr_ComprehensionSDKType {
-  iter_var: string;
-  iter_var2: string;
-  iter_range?: ExprSDKType;
-  accu_var: string;
-  accu_init?: ExprSDKType;
-  loop_condition?: ExprSDKType;
-  loop_step?: ExprSDKType;
-  result?: ExprSDKType;
 }
 /**
  * Represents a primitive literal.
@@ -1108,42 +921,6 @@ export interface ConstantAminoMsg {
   value: ConstantAmino;
 }
 /**
- * Represents a primitive literal.
- * 
- * Named 'Constant' here for backwards compatibility.
- * 
- * This is similar as the primitives supported in the well-known type
- * `google.protobuf.Value`, but richer so it can represent CEL's full range of
- * primitives.
- * 
- * Lists and structs are not included as constants as these aggregate types may
- * contain [Expr][google.api.expr.v1alpha1.Expr] elements which require
- * evaluation and are thus not constant.
- * 
- * Examples of literals include: `"hello"`, `b'bytes'`, `1u`, `4.2`, `-2`,
- * `true`, `null`.
- * @name ConstantSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Constant
- */
-export interface ConstantSDKType {
-  null_value?: NullValue;
-  bool_value?: boolean;
-  int64_value?: bigint;
-  uint64_value?: bigint;
-  double_value?: number;
-  string_value?: string;
-  bytes_value?: Uint8Array;
-  /**
-   * @deprecated
-   */
-  duration_value?: DurationSDKType;
-  /**
-   * @deprecated
-   */
-  timestamp_value?: Date;
-}
-/**
  * @name SourceInfo_PositionsEntry
  * @package google.api.expr.v1alpha1
  * @see proto type: google.api.expr.v1alpha1.undefined
@@ -1162,21 +939,12 @@ export interface SourceInfo_PositionsEntryProtoMsg {
  * @see proto type: google.api.expr.v1alpha1.SourceInfo_PositionsEntry
  */
 export interface SourceInfo_PositionsEntryAmino {
-  key?: string;
-  value?: number;
+  key: string;
+  value: number;
 }
 export interface SourceInfo_PositionsEntryAminoMsg {
   type: string;
   value: SourceInfo_PositionsEntryAmino;
-}
-/**
- * @name SourceInfo_PositionsEntrySDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.undefined
- */
-export interface SourceInfo_PositionsEntrySDKType {
-  key: bigint;
-  value: number;
 }
 /**
  * @name SourceInfo_MacroCallsEntry
@@ -1197,21 +965,12 @@ export interface SourceInfo_MacroCallsEntryProtoMsg {
  * @see proto type: google.api.expr.v1alpha1.SourceInfo_MacroCallsEntry
  */
 export interface SourceInfo_MacroCallsEntryAmino {
-  key?: string;
+  key: string;
   value?: ExprAmino;
 }
 export interface SourceInfo_MacroCallsEntryAminoMsg {
   type: string;
   value: SourceInfo_MacroCallsEntryAmino;
-}
-/**
- * @name SourceInfo_MacroCallsEntrySDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.undefined
- */
-export interface SourceInfo_MacroCallsEntrySDKType {
-  key: bigint;
-  value?: ExprSDKType;
 }
 /**
  * Source information collected at parse time.
@@ -1286,7 +1045,7 @@ export interface SourceInfoAmino {
   /**
    * The syntax version of the source, e.g. `cel1`.
    */
-  syntax_version?: string;
+  syntax_version: string;
   /**
    * The location name. All position information attached to an expression is
    * relative to this location.
@@ -1294,7 +1053,7 @@ export interface SourceInfoAmino {
    * The location could be a file, UI element, or similar. For example,
    * `acme/app/AnvilPolicy.cel`.
    */
-  location?: string;
+  location: string;
   /**
    * Monotonically increasing list of code point offsets where newlines
    * `\n` appear.
@@ -1303,12 +1062,12 @@ export interface SourceInfoAmino {
    * `id` the `line_offsets[i] < id_positions[id] < line_offsets[i+1]`. The
    * column may be derivd from `id_positions[id] - line_offsets[i]`.
    */
-  line_offsets?: number[];
+  line_offsets: number[];
   /**
    * A map from the parse node id (e.g. `Expr.id`) to the code point offset
    * within the source.
    */
-  positions?: {
+  positions: {
     [key: string]: number;
   };
   /**
@@ -1321,7 +1080,7 @@ export interface SourceInfoAmino {
    * in the map corresponds to the expression id of the expanded macro, and the
    * value is the call `Expr` that was replaced.
    */
-  macro_calls?: {
+  macro_calls: {
     [key: string]: ExprAmino;
   };
   /**
@@ -1333,29 +1092,11 @@ export interface SourceInfoAmino {
    * implementations. This can be used to either skip redundant work or
    * report an error if the extension is unsupported.
    */
-  extensions?: SourceInfo_ExtensionAmino[];
+  extensions: SourceInfo_ExtensionAmino[];
 }
 export interface SourceInfoAminoMsg {
   type: "/google.api.expr.v1alpha1.SourceInfo";
   value: SourceInfoAmino;
-}
-/**
- * Source information collected at parse time.
- * @name SourceInfoSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.SourceInfo
- */
-export interface SourceInfoSDKType {
-  syntax_version: string;
-  location: string;
-  line_offsets: number[];
-  positions: {
-    [key: bigint]: number;
-  };
-  macro_calls: {
-    [key: bigint]: ExprSDKType;
-  };
-  extensions: SourceInfo_ExtensionSDKType[];
 }
 /**
  * An extension that was requested for the source expression.
@@ -1395,14 +1136,14 @@ export interface SourceInfo_ExtensionAmino {
   /**
    * Identifier for the extension. Example: constant_folding
    */
-  id?: string;
+  id: string;
   /**
    * If set, the listed components must understand the extension for the
    * expression to evaluate correctly.
    * 
    * This field has set semantics, repeated values should be deduplicated.
    */
-  affected_components?: SourceInfo_Extension_Component[];
+  affected_components: SourceInfo_Extension_Component[];
   /**
    * Version info. May be skipped if it isn't meaningful for the extension.
    * (for example constant_folding might always be v0.0).
@@ -1412,17 +1153,6 @@ export interface SourceInfo_ExtensionAmino {
 export interface SourceInfo_ExtensionAminoMsg {
   type: "/google.api.expr.v1alpha1.Extension";
   value: SourceInfo_ExtensionAmino;
-}
-/**
- * An extension that was requested for the source expression.
- * @name SourceInfo_ExtensionSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Extension
- */
-export interface SourceInfo_ExtensionSDKType {
-  id: string;
-  affected_components: SourceInfo_Extension_Component[];
-  version?: SourceInfo_Extension_VersionSDKType;
 }
 /**
  * Version
@@ -1457,26 +1187,16 @@ export interface SourceInfo_Extension_VersionAmino {
    * Major version changes indicate different required support level from
    * the required components.
    */
-  major?: string;
+  major: string;
   /**
    * Minor version changes must not change the observed behavior from
    * existing implementations, but may be provided informationally.
    */
-  minor?: string;
+  minor: string;
 }
 export interface SourceInfo_Extension_VersionAminoMsg {
   type: "/google.api.expr.v1alpha1.Version";
   value: SourceInfo_Extension_VersionAmino;
-}
-/**
- * Version
- * @name SourceInfo_Extension_VersionSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Version
- */
-export interface SourceInfo_Extension_VersionSDKType {
-  major: bigint;
-  minor: bigint;
 }
 /**
  * A specific position in source.
@@ -1518,37 +1238,25 @@ export interface SourcePositionAmino {
   /**
    * The soucre location name (e.g. file name).
    */
-  location?: string;
+  location: string;
   /**
    * The UTF-8 code unit offset.
    */
-  offset?: number;
+  offset: number;
   /**
    * The 1-based index of the starting line in the source text
    * where the issue occurs, or 0 if unknown.
    */
-  line?: number;
+  line: number;
   /**
    * The 0-based index of the starting position within the line of source text
    * where the issue occurs.  Only meaningful if line is nonzero.
    */
-  column?: number;
+  column: number;
 }
 export interface SourcePositionAminoMsg {
   type: "/google.api.expr.v1alpha1.SourcePosition";
   value: SourcePositionAmino;
-}
-/**
- * A specific position in source.
- * @name SourcePositionSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.SourcePosition
- */
-export interface SourcePositionSDKType {
-  location: string;
-  offset: number;
-  line: number;
-  column: number;
 }
 function createBaseParsedExpr(): ParsedExpr {
   return {
@@ -1565,9 +1273,6 @@ function createBaseParsedExpr(): ParsedExpr {
 export const ParsedExpr = {
   typeUrl: "/google.api.expr.v1alpha1.ParsedExpr",
   is(o: any): o is ParsedExpr {
-    return o && o.$typeUrl === ParsedExpr.typeUrl;
-  },
-  isSDK(o: any): o is ParsedExprSDKType {
     return o && o.$typeUrl === ParsedExpr.typeUrl;
   },
   isAmino(o: any): o is ParsedExprAmino {
@@ -1602,7 +1307,7 @@ export const ParsedExpr = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ParsedExpr>, I>>(object: I): ParsedExpr {
+  fromPartial(object: DeepPartial<ParsedExpr>): ParsedExpr {
     const message = createBaseParsedExpr();
     message.expr = object.expr !== undefined && object.expr !== null ? Expr.fromPartial(object.expr) : undefined;
     message.sourceInfo = object.sourceInfo !== undefined && object.sourceInfo !== null ? SourceInfo.fromPartial(object.sourceInfo) : undefined;
@@ -1686,9 +1391,6 @@ export const Expr = {
   is(o: any): o is Expr {
     return o && (o.$typeUrl === Expr.typeUrl || typeof o.id === "bigint");
   },
-  isSDK(o: any): o is ExprSDKType {
-    return o && (o.$typeUrl === Expr.typeUrl || typeof o.id === "bigint");
-  },
   isAmino(o: any): o is ExprAmino {
     return o && (o.$typeUrl === Expr.typeUrl || typeof o.id === "bigint");
   },
@@ -1757,7 +1459,7 @@ export const Expr = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Expr>, I>>(object: I): Expr {
+  fromPartial(object: DeepPartial<Expr>): Expr {
     const message = createBaseExpr();
     message.id = object.id !== undefined && object.id !== null ? BigInt(object.id.toString()) : BigInt(0);
     message.constExpr = object.constExpr !== undefined && object.constExpr !== null ? Constant.fromPartial(object.constExpr) : undefined;
@@ -1853,9 +1555,6 @@ export const Expr_Ident = {
   is(o: any): o is Expr_Ident {
     return o && (o.$typeUrl === Expr_Ident.typeUrl || typeof o.name === "string");
   },
-  isSDK(o: any): o is Expr_IdentSDKType {
-    return o && (o.$typeUrl === Expr_Ident.typeUrl || typeof o.name === "string");
-  },
   isAmino(o: any): o is Expr_IdentAmino {
     return o && (o.$typeUrl === Expr_Ident.typeUrl || typeof o.name === "string");
   },
@@ -1882,7 +1581,7 @@ export const Expr_Ident = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Expr_Ident>, I>>(object: I): Expr_Ident {
+  fromPartial(object: DeepPartial<Expr_Ident>): Expr_Ident {
     const message = createBaseExpr_Ident();
     message.name = object.name ?? "";
     return message;
@@ -1934,9 +1633,6 @@ export const Expr_Select = {
   is(o: any): o is Expr_Select {
     return o && (o.$typeUrl === Expr_Select.typeUrl || typeof o.field === "string" && typeof o.testOnly === "boolean");
   },
-  isSDK(o: any): o is Expr_SelectSDKType {
-    return o && (o.$typeUrl === Expr_Select.typeUrl || typeof o.field === "string" && typeof o.test_only === "boolean");
-  },
   isAmino(o: any): o is Expr_SelectAmino {
     return o && (o.$typeUrl === Expr_Select.typeUrl || typeof o.field === "string" && typeof o.test_only === "boolean");
   },
@@ -1975,7 +1671,7 @@ export const Expr_Select = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Expr_Select>, I>>(object: I): Expr_Select {
+  fromPartial(object: DeepPartial<Expr_Select>): Expr_Select {
     const message = createBaseExpr_Select();
     message.operand = object.operand !== undefined && object.operand !== null ? Expr.fromPartial(object.operand) : undefined;
     message.field = object.field ?? "";
@@ -2044,9 +1740,6 @@ export const Expr_Call = {
   is(o: any): o is Expr_Call {
     return o && (o.$typeUrl === Expr_Call.typeUrl || typeof o.function === "string" && Array.isArray(o.args) && (!o.args.length || Expr.is(o.args[0])));
   },
-  isSDK(o: any): o is Expr_CallSDKType {
-    return o && (o.$typeUrl === Expr_Call.typeUrl || typeof o.function === "string" && Array.isArray(o.args) && (!o.args.length || Expr.isSDK(o.args[0])));
-  },
   isAmino(o: any): o is Expr_CallAmino {
     return o && (o.$typeUrl === Expr_Call.typeUrl || typeof o.function === "string" && Array.isArray(o.args) && (!o.args.length || Expr.isAmino(o.args[0])));
   },
@@ -2085,7 +1778,7 @@ export const Expr_Call = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Expr_Call>, I>>(object: I): Expr_Call {
+  fromPartial(object: DeepPartial<Expr_Call>): Expr_Call {
     const message = createBaseExpr_Call();
     message.target = object.target !== undefined && object.target !== null ? Expr.fromPartial(object.target) : undefined;
     message.function = object.function ?? "";
@@ -2156,9 +1849,6 @@ export const Expr_CreateList = {
   is(o: any): o is Expr_CreateList {
     return o && (o.$typeUrl === Expr_CreateList.typeUrl || Array.isArray(o.elements) && (!o.elements.length || Expr.is(o.elements[0])) && Array.isArray(o.optionalIndices) && (!o.optionalIndices.length || typeof o.optionalIndices[0] === "number"));
   },
-  isSDK(o: any): o is Expr_CreateListSDKType {
-    return o && (o.$typeUrl === Expr_CreateList.typeUrl || Array.isArray(o.elements) && (!o.elements.length || Expr.isSDK(o.elements[0])) && Array.isArray(o.optional_indices) && (!o.optional_indices.length || typeof o.optional_indices[0] === "number"));
-  },
   isAmino(o: any): o is Expr_CreateListAmino {
     return o && (o.$typeUrl === Expr_CreateList.typeUrl || Array.isArray(o.elements) && (!o.elements.length || Expr.isAmino(o.elements[0])) && Array.isArray(o.optional_indices) && (!o.optional_indices.length || typeof o.optional_indices[0] === "number"));
   },
@@ -2200,7 +1890,7 @@ export const Expr_CreateList = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Expr_CreateList>, I>>(object: I): Expr_CreateList {
+  fromPartial(object: DeepPartial<Expr_CreateList>): Expr_CreateList {
     const message = createBaseExpr_CreateList();
     message.elements = object.elements?.map(e => Expr.fromPartial(e)) || [];
     message.optionalIndices = object.optionalIndices?.map(e => e) || [];
@@ -2269,9 +1959,6 @@ export const Expr_CreateStruct = {
   is(o: any): o is Expr_CreateStruct {
     return o && (o.$typeUrl === Expr_CreateStruct.typeUrl || typeof o.messageName === "string" && Array.isArray(o.entries) && (!o.entries.length || Expr_CreateStruct_Entry.is(o.entries[0])));
   },
-  isSDK(o: any): o is Expr_CreateStructSDKType {
-    return o && (o.$typeUrl === Expr_CreateStruct.typeUrl || typeof o.message_name === "string" && Array.isArray(o.entries) && (!o.entries.length || Expr_CreateStruct_Entry.isSDK(o.entries[0])));
-  },
   isAmino(o: any): o is Expr_CreateStructAmino {
     return o && (o.$typeUrl === Expr_CreateStruct.typeUrl || typeof o.message_name === "string" && Array.isArray(o.entries) && (!o.entries.length || Expr_CreateStruct_Entry.isAmino(o.entries[0])));
   },
@@ -2304,7 +1991,7 @@ export const Expr_CreateStruct = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Expr_CreateStruct>, I>>(object: I): Expr_CreateStruct {
+  fromPartial(object: DeepPartial<Expr_CreateStruct>): Expr_CreateStruct {
     const message = createBaseExpr_CreateStruct();
     message.messageName = object.messageName ?? "";
     message.entries = object.entries?.map(e => Expr_CreateStruct_Entry.fromPartial(e)) || [];
@@ -2370,9 +2057,6 @@ export const Expr_CreateStruct_Entry = {
   is(o: any): o is Expr_CreateStruct_Entry {
     return o && (o.$typeUrl === Expr_CreateStruct_Entry.typeUrl || typeof o.id === "bigint" && typeof o.optionalEntry === "boolean");
   },
-  isSDK(o: any): o is Expr_CreateStruct_EntrySDKType {
-    return o && (o.$typeUrl === Expr_CreateStruct_Entry.typeUrl || typeof o.id === "bigint" && typeof o.optional_entry === "boolean");
-  },
   isAmino(o: any): o is Expr_CreateStruct_EntryAmino {
     return o && (o.$typeUrl === Expr_CreateStruct_Entry.typeUrl || typeof o.id === "bigint" && typeof o.optional_entry === "boolean");
   },
@@ -2423,7 +2107,7 @@ export const Expr_CreateStruct_Entry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Expr_CreateStruct_Entry>, I>>(object: I): Expr_CreateStruct_Entry {
+  fromPartial(object: DeepPartial<Expr_CreateStruct_Entry>): Expr_CreateStruct_Entry {
     const message = createBaseExpr_CreateStruct_Entry();
     message.id = object.id !== undefined && object.id !== null ? BigInt(object.id.toString()) : BigInt(0);
     message.fieldKey = object.fieldKey ?? undefined;
@@ -2560,9 +2244,6 @@ export const Expr_Comprehension = {
   is(o: any): o is Expr_Comprehension {
     return o && (o.$typeUrl === Expr_Comprehension.typeUrl || typeof o.iterVar === "string" && typeof o.iterVar2 === "string" && typeof o.accuVar === "string");
   },
-  isSDK(o: any): o is Expr_ComprehensionSDKType {
-    return o && (o.$typeUrl === Expr_Comprehension.typeUrl || typeof o.iter_var === "string" && typeof o.iter_var2 === "string" && typeof o.accu_var === "string");
-  },
   isAmino(o: any): o is Expr_ComprehensionAmino {
     return o && (o.$typeUrl === Expr_Comprehension.typeUrl || typeof o.iter_var === "string" && typeof o.iter_var2 === "string" && typeof o.accu_var === "string");
   },
@@ -2631,7 +2312,7 @@ export const Expr_Comprehension = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Expr_Comprehension>, I>>(object: I): Expr_Comprehension {
+  fromPartial(object: DeepPartial<Expr_Comprehension>): Expr_Comprehension {
     const message = createBaseExpr_Comprehension();
     message.iterVar = object.iterVar ?? "";
     message.iterVar2 = object.iterVar2 ?? "";
@@ -2742,9 +2423,6 @@ export const Constant = {
   is(o: any): o is Constant {
     return o && o.$typeUrl === Constant.typeUrl;
   },
-  isSDK(o: any): o is ConstantSDKType {
-    return o && o.$typeUrl === Constant.typeUrl;
-  },
   isAmino(o: any): o is ConstantAmino {
     return o && o.$typeUrl === Constant.typeUrl;
   },
@@ -2819,7 +2497,7 @@ export const Constant = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Constant>, I>>(object: I): Constant {
+  fromPartial(object: DeepPartial<Constant>): Constant {
     const message = createBaseConstant();
     message.nullValue = object.nullValue ?? undefined;
     message.boolValue = object.boolValue ?? undefined;
@@ -2934,7 +2612,7 @@ export const SourceInfo_PositionsEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SourceInfo_PositionsEntry>, I>>(object: I): SourceInfo_PositionsEntry {
+  fromPartial(object: DeepPartial<SourceInfo_PositionsEntry>): SourceInfo_PositionsEntry {
     const message = createBaseSourceInfo_PositionsEntry();
     message.key = object.key !== undefined && object.key !== null ? BigInt(object.key.toString()) : BigInt(0);
     message.value = object.value ?? 0;
@@ -3008,7 +2686,7 @@ export const SourceInfo_MacroCallsEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SourceInfo_MacroCallsEntry>, I>>(object: I): SourceInfo_MacroCallsEntry {
+  fromPartial(object: DeepPartial<SourceInfo_MacroCallsEntry>): SourceInfo_MacroCallsEntry {
     const message = createBaseSourceInfo_MacroCallsEntry();
     message.key = object.key !== undefined && object.key !== null ? BigInt(object.key.toString()) : BigInt(0);
     message.value = object.value !== undefined && object.value !== null ? Expr.fromPartial(object.value) : undefined;
@@ -3063,9 +2741,6 @@ export const SourceInfo = {
   typeUrl: "/google.api.expr.v1alpha1.SourceInfo",
   is(o: any): o is SourceInfo {
     return o && (o.$typeUrl === SourceInfo.typeUrl || typeof o.syntaxVersion === "string" && typeof o.location === "string" && Array.isArray(o.lineOffsets) && (!o.lineOffsets.length || typeof o.lineOffsets[0] === "number") && isSet(o.positions) && isSet(o.macroCalls) && Array.isArray(o.extensions) && (!o.extensions.length || SourceInfo_Extension.is(o.extensions[0])));
-  },
-  isSDK(o: any): o is SourceInfoSDKType {
-    return o && (o.$typeUrl === SourceInfo.typeUrl || typeof o.syntax_version === "string" && typeof o.location === "string" && Array.isArray(o.line_offsets) && (!o.line_offsets.length || typeof o.line_offsets[0] === "number") && isSet(o.positions) && isSet(o.macro_calls) && Array.isArray(o.extensions) && (!o.extensions.length || SourceInfo_Extension.isSDK(o.extensions[0])));
   },
   isAmino(o: any): o is SourceInfoAmino {
     return o && (o.$typeUrl === SourceInfo.typeUrl || typeof o.syntax_version === "string" && typeof o.location === "string" && Array.isArray(o.line_offsets) && (!o.line_offsets.length || typeof o.line_offsets[0] === "number") && isSet(o.positions) && isSet(o.macro_calls) && Array.isArray(o.extensions) && (!o.extensions.length || SourceInfo_Extension.isAmino(o.extensions[0])));
@@ -3144,7 +2819,7 @@ export const SourceInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SourceInfo>, I>>(object: I): SourceInfo {
+  fromPartial(object: DeepPartial<SourceInfo>): SourceInfo {
     const message = createBaseSourceInfo();
     message.syntaxVersion = object.syntaxVersion ?? "";
     message.location = object.location ?? "";
@@ -3265,9 +2940,6 @@ export const SourceInfo_Extension = {
   is(o: any): o is SourceInfo_Extension {
     return o && (o.$typeUrl === SourceInfo_Extension.typeUrl || typeof o.id === "string" && Array.isArray(o.affectedComponents));
   },
-  isSDK(o: any): o is SourceInfo_ExtensionSDKType {
-    return o && (o.$typeUrl === SourceInfo_Extension.typeUrl || typeof o.id === "string" && Array.isArray(o.affected_components));
-  },
   isAmino(o: any): o is SourceInfo_ExtensionAmino {
     return o && (o.$typeUrl === SourceInfo_Extension.typeUrl || typeof o.id === "string" && Array.isArray(o.affected_components));
   },
@@ -3315,7 +2987,7 @@ export const SourceInfo_Extension = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SourceInfo_Extension>, I>>(object: I): SourceInfo_Extension {
+  fromPartial(object: DeepPartial<SourceInfo_Extension>): SourceInfo_Extension {
     const message = createBaseSourceInfo_Extension();
     message.id = object.id ?? "";
     message.affectedComponents = object.affectedComponents?.map(e => e) || [];
@@ -3383,9 +3055,6 @@ export const SourceInfo_Extension_Version = {
   is(o: any): o is SourceInfo_Extension_Version {
     return o && (o.$typeUrl === SourceInfo_Extension_Version.typeUrl || typeof o.major === "bigint" && typeof o.minor === "bigint");
   },
-  isSDK(o: any): o is SourceInfo_Extension_VersionSDKType {
-    return o && (o.$typeUrl === SourceInfo_Extension_Version.typeUrl || typeof o.major === "bigint" && typeof o.minor === "bigint");
-  },
   isAmino(o: any): o is SourceInfo_Extension_VersionAmino {
     return o && (o.$typeUrl === SourceInfo_Extension_Version.typeUrl || typeof o.major === "bigint" && typeof o.minor === "bigint");
   },
@@ -3418,7 +3087,7 @@ export const SourceInfo_Extension_Version = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SourceInfo_Extension_Version>, I>>(object: I): SourceInfo_Extension_Version {
+  fromPartial(object: DeepPartial<SourceInfo_Extension_Version>): SourceInfo_Extension_Version {
     const message = createBaseSourceInfo_Extension_Version();
     message.major = object.major !== undefined && object.major !== null ? BigInt(object.major.toString()) : BigInt(0);
     message.minor = object.minor !== undefined && object.minor !== null ? BigInt(object.minor.toString()) : BigInt(0);
@@ -3476,9 +3145,6 @@ export const SourcePosition = {
   is(o: any): o is SourcePosition {
     return o && (o.$typeUrl === SourcePosition.typeUrl || typeof o.location === "string" && typeof o.offset === "number" && typeof o.line === "number" && typeof o.column === "number");
   },
-  isSDK(o: any): o is SourcePositionSDKType {
-    return o && (o.$typeUrl === SourcePosition.typeUrl || typeof o.location === "string" && typeof o.offset === "number" && typeof o.line === "number" && typeof o.column === "number");
-  },
   isAmino(o: any): o is SourcePositionAmino {
     return o && (o.$typeUrl === SourcePosition.typeUrl || typeof o.location === "string" && typeof o.offset === "number" && typeof o.line === "number" && typeof o.column === "number");
   },
@@ -3523,7 +3189,7 @@ export const SourcePosition = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SourcePosition>, I>>(object: I): SourcePosition {
+  fromPartial(object: DeepPartial<SourcePosition>): SourcePosition {
     const message = createBaseSourcePosition();
     message.location = object.location ?? "";
     message.offset = object.offset ?? 0;

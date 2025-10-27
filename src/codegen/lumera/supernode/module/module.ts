@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * Module is the config object for the module.
  * @name Module
@@ -28,20 +28,11 @@ export interface ModuleAmino {
   /**
    * authority defines the custom module authority. If not set, defaults to the governance module.
    */
-  authority?: string;
+  authority: string;
 }
 export interface ModuleAminoMsg {
   type: "/lumera.supernode.module.Module";
   value: ModuleAmino;
-}
-/**
- * Module is the config object for the module.
- * @name ModuleSDKType
- * @package lumera.supernode.module
- * @see proto type: lumera.supernode.module.Module
- */
-export interface ModuleSDKType {
-  authority: string;
 }
 function createBaseModule(): Module {
   return {
@@ -57,9 +48,6 @@ function createBaseModule(): Module {
 export const Module = {
   typeUrl: "/lumera.supernode.module.Module",
   is(o: any): o is Module {
-    return o && (o.$typeUrl === Module.typeUrl || typeof o.authority === "string");
-  },
-  isSDK(o: any): o is ModuleSDKType {
     return o && (o.$typeUrl === Module.typeUrl || typeof o.authority === "string");
   },
   isAmino(o: any): o is ModuleAmino {
@@ -88,7 +76,7 @@ export const Module = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Module>, I>>(object: I): Module {
+  fromPartial(object: DeepPartial<Module>): Module {
     const message = createBaseModule();
     message.authority = object.authority ?? "";
     return message;

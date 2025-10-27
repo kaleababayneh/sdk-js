@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { GroupInfo, GroupInfoAmino, GroupInfoSDKType, GroupMember, GroupMemberAmino, GroupMemberSDKType, GroupPolicyInfo, GroupPolicyInfoAmino, GroupPolicyInfoSDKType, Proposal, ProposalAmino, ProposalSDKType, Vote, VoteAmino, VoteSDKType } from "./types";
+import { GroupInfo, GroupInfoAmino, GroupMember, GroupMemberAmino, GroupPolicyInfo, GroupPolicyInfoAmino, Proposal, ProposalAmino, Vote, VoteAmino } from "./types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * GenesisState defines the group module's genesis state.
@@ -62,57 +62,41 @@ export interface GenesisStateAmino {
    * group_seq is the group table orm.Sequence,
    * it is used to get the next group ID.
    */
-  group_seq?: string;
+  group_seq: string;
   /**
    * groups is the list of groups info.
    */
-  groups?: GroupInfoAmino[];
+  groups: GroupInfoAmino[];
   /**
    * group_members is the list of groups members.
    */
-  group_members?: GroupMemberAmino[];
+  group_members: GroupMemberAmino[];
   /**
    * group_policy_seq is the group policy table orm.Sequence,
    * it is used to generate the next group policy account address.
    */
-  group_policy_seq?: string;
+  group_policy_seq: string;
   /**
    * group_policies is the list of group policies info.
    */
-  group_policies?: GroupPolicyInfoAmino[];
+  group_policies: GroupPolicyInfoAmino[];
   /**
    * proposal_seq is the proposal table orm.Sequence,
    * it is used to get the next proposal ID.
    */
-  proposal_seq?: string;
+  proposal_seq: string;
   /**
    * proposals is the list of proposals.
    */
-  proposals?: ProposalAmino[];
+  proposals: ProposalAmino[];
   /**
    * votes is the list of votes.
    */
-  votes?: VoteAmino[];
+  votes: VoteAmino[];
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
-}
-/**
- * GenesisState defines the group module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.GenesisState
- */
-export interface GenesisStateSDKType {
-  group_seq: bigint;
-  groups: GroupInfoSDKType[];
-  group_members: GroupMemberSDKType[];
-  group_policy_seq: bigint;
-  group_policies: GroupPolicyInfoSDKType[];
-  proposal_seq: bigint;
-  proposals: ProposalSDKType[];
-  votes: VoteSDKType[];
 }
 function createBaseGenesisState(): GenesisState {
   return {
@@ -137,9 +121,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || typeof o.groupSeq === "bigint" && Array.isArray(o.groups) && (!o.groups.length || GroupInfo.is(o.groups[0])) && Array.isArray(o.groupMembers) && (!o.groupMembers.length || GroupMember.is(o.groupMembers[0])) && typeof o.groupPolicySeq === "bigint" && Array.isArray(o.groupPolicies) && (!o.groupPolicies.length || GroupPolicyInfo.is(o.groupPolicies[0])) && typeof o.proposalSeq === "bigint" && Array.isArray(o.proposals) && (!o.proposals.length || Proposal.is(o.proposals[0])) && Array.isArray(o.votes) && (!o.votes.length || Vote.is(o.votes[0])));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || typeof o.group_seq === "bigint" && Array.isArray(o.groups) && (!o.groups.length || GroupInfo.isSDK(o.groups[0])) && Array.isArray(o.group_members) && (!o.group_members.length || GroupMember.isSDK(o.group_members[0])) && typeof o.group_policy_seq === "bigint" && Array.isArray(o.group_policies) && (!o.group_policies.length || GroupPolicyInfo.isSDK(o.group_policies[0])) && typeof o.proposal_seq === "bigint" && Array.isArray(o.proposals) && (!o.proposals.length || Proposal.isSDK(o.proposals[0])) && Array.isArray(o.votes) && (!o.votes.length || Vote.isSDK(o.votes[0])));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || typeof o.group_seq === "bigint" && Array.isArray(o.groups) && (!o.groups.length || GroupInfo.isAmino(o.groups[0])) && Array.isArray(o.group_members) && (!o.group_members.length || GroupMember.isAmino(o.group_members[0])) && typeof o.group_policy_seq === "bigint" && Array.isArray(o.group_policies) && (!o.group_policies.length || GroupPolicyInfo.isAmino(o.group_policies[0])) && typeof o.proposal_seq === "bigint" && Array.isArray(o.proposals) && (!o.proposals.length || Proposal.isAmino(o.proposals[0])) && Array.isArray(o.votes) && (!o.votes.length || Vote.isAmino(o.votes[0])));
@@ -209,7 +190,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.groupSeq = object.groupSeq !== undefined && object.groupSeq !== null ? BigInt(object.groupSeq.toString()) : BigInt(0);
     message.groups = object.groups?.map(e => GroupInfo.fromPartial(e)) || [];

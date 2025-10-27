@@ -14,13 +14,13 @@ export class QueryClientImpl implements Query {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.appOptions = this.appOptions.bind(this);
   }
-  appOptions(request: AppOptionsRequest = {}): Promise<AppOptionsResponse> {
+  /* AppOptions returns the autocli options for all of the modules in an app. */
+  appOptions = async (request: AppOptionsRequest = {}): Promise<AppOptionsResponse> => {
     const data = AppOptionsRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.autocli.v1.Query", "AppOptions", data);
     return promise.then(data => AppOptionsResponse.decode(new BinaryReader(data)));
-  }
+  };
 }
 export const createRpcQueryExtension = (base: QueryClient) => {
   const rpc = createProtobufRpcClient(base);

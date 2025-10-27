@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * App includes the protocol and software version for the application.
  * This information is included in ResponseInfo. The App.Protocol can be
@@ -27,24 +27,12 @@ export interface AppProtoMsg {
  * @see proto type: tendermint.version.App
  */
 export interface AppAmino {
-  protocol?: string;
-  software?: string;
+  protocol: string;
+  software: string;
 }
 export interface AppAminoMsg {
   type: "/tendermint.version.App";
   value: AppAmino;
-}
-/**
- * App includes the protocol and software version for the application.
- * This information is included in ResponseInfo. The App.Protocol can be
- * updated in ResponseEndBlock.
- * @name AppSDKType
- * @package tendermint.version
- * @see proto type: tendermint.version.App
- */
-export interface AppSDKType {
-  protocol: bigint;
-  software: string;
 }
 /**
  * Consensus captures the consensus rules for processing a block in the blockchain,
@@ -71,24 +59,12 @@ export interface ConsensusProtoMsg {
  * @see proto type: tendermint.version.Consensus
  */
 export interface ConsensusAmino {
-  block?: string;
-  app?: string;
+  block: string;
+  app: string;
 }
 export interface ConsensusAminoMsg {
   type: "/tendermint.version.Consensus";
   value: ConsensusAmino;
-}
-/**
- * Consensus captures the consensus rules for processing a block in the blockchain,
- * including all blockchain data structures and the rules of the application's
- * state transition machine.
- * @name ConsensusSDKType
- * @package tendermint.version
- * @see proto type: tendermint.version.Consensus
- */
-export interface ConsensusSDKType {
-  block: bigint;
-  app: bigint;
 }
 function createBaseApp(): App {
   return {
@@ -107,9 +83,6 @@ function createBaseApp(): App {
 export const App = {
   typeUrl: "/tendermint.version.App",
   is(o: any): o is App {
-    return o && (o.$typeUrl === App.typeUrl || typeof o.protocol === "bigint" && typeof o.software === "string");
-  },
-  isSDK(o: any): o is AppSDKType {
     return o && (o.$typeUrl === App.typeUrl || typeof o.protocol === "bigint" && typeof o.software === "string");
   },
   isAmino(o: any): o is AppAmino {
@@ -144,7 +117,7 @@ export const App = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<App>, I>>(object: I): App {
+  fromPartial(object: DeepPartial<App>): App {
     const message = createBaseApp();
     message.protocol = object.protocol !== undefined && object.protocol !== null ? BigInt(object.protocol.toString()) : BigInt(0);
     message.software = object.software ?? "";
@@ -202,9 +175,6 @@ export const Consensus = {
   is(o: any): o is Consensus {
     return o && (o.$typeUrl === Consensus.typeUrl || typeof o.block === "bigint" && typeof o.app === "bigint");
   },
-  isSDK(o: any): o is ConsensusSDKType {
-    return o && (o.$typeUrl === Consensus.typeUrl || typeof o.block === "bigint" && typeof o.app === "bigint");
-  },
   isAmino(o: any): o is ConsensusAmino {
     return o && (o.$typeUrl === Consensus.typeUrl || typeof o.block === "bigint" && typeof o.app === "bigint");
   },
@@ -237,7 +207,7 @@ export const Consensus = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Consensus>, I>>(object: I): Consensus {
+  fromPartial(object: DeepPartial<Consensus>): Consensus {
     const message = createBaseConsensus();
     message.block = object.block !== undefined && object.block !== null ? BigInt(object.block.toString()) : BigInt(0);
     message.app = object.app !== undefined && object.app !== null ? BigInt(object.app.toString()) : BigInt(0);

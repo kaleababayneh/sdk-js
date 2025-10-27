@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PublicKey, PublicKeyAmino, PublicKeySDKType } from "../crypto/keys";
+import { PublicKey, PublicKeyAmino } from "../crypto/keys";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../helpers";
 /** BlockIdFlag indicates which BlockID the signature is for */
 export enum BlockIDFlag {
   /** BLOCK_ID_FLAG_UNKNOWN - indicates an error condition */
@@ -15,7 +15,6 @@ export enum BlockIDFlag {
   BLOCK_ID_FLAG_NIL = 3,
   UNRECOGNIZED = -1,
 }
-export const BlockIDFlagSDKType = BlockIDFlag;
 export const BlockIDFlagAmino = BlockIDFlag;
 export function blockIDFlagFromJSON(object: any): BlockIDFlag {
   switch (object) {
@@ -72,23 +71,13 @@ export interface ValidatorSetProtoMsg {
  * @see proto type: tendermint.types.ValidatorSet
  */
 export interface ValidatorSetAmino {
-  validators?: ValidatorAmino[];
+  validators: ValidatorAmino[];
   proposer?: ValidatorAmino;
-  total_voting_power?: string;
+  total_voting_power: string;
 }
 export interface ValidatorSetAminoMsg {
   type: "/tendermint.types.ValidatorSet";
   value: ValidatorSetAmino;
-}
-/**
- * @name ValidatorSetSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.ValidatorSet
- */
-export interface ValidatorSetSDKType {
-  validators: ValidatorSDKType[];
-  proposer?: ValidatorSDKType;
-  total_voting_power: bigint;
 }
 /**
  * @name Validator
@@ -111,25 +100,14 @@ export interface ValidatorProtoMsg {
  * @see proto type: tendermint.types.Validator
  */
 export interface ValidatorAmino {
-  address?: string;
-  pub_key?: PublicKeyAmino;
-  voting_power?: string;
-  proposer_priority?: string;
+  address: string;
+  pub_key: PublicKeyAmino;
+  voting_power: string;
+  proposer_priority: string;
 }
 export interface ValidatorAminoMsg {
   type: "/tendermint.types.Validator";
   value: ValidatorAmino;
-}
-/**
- * @name ValidatorSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.Validator
- */
-export interface ValidatorSDKType {
-  address: Uint8Array;
-  pub_key: PublicKeySDKType;
-  voting_power: bigint;
-  proposer_priority: bigint;
 }
 /**
  * @name SimpleValidator
@@ -151,20 +129,11 @@ export interface SimpleValidatorProtoMsg {
  */
 export interface SimpleValidatorAmino {
   pub_key?: PublicKeyAmino;
-  voting_power?: string;
+  voting_power: string;
 }
 export interface SimpleValidatorAminoMsg {
   type: "/tendermint.types.SimpleValidator";
   value: SimpleValidatorAmino;
-}
-/**
- * @name SimpleValidatorSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.SimpleValidator
- */
-export interface SimpleValidatorSDKType {
-  pub_key?: PublicKeySDKType;
-  voting_power: bigint;
 }
 function createBaseValidatorSet(): ValidatorSet {
   return {
@@ -182,9 +151,6 @@ export const ValidatorSet = {
   typeUrl: "/tendermint.types.ValidatorSet",
   is(o: any): o is ValidatorSet {
     return o && (o.$typeUrl === ValidatorSet.typeUrl || Array.isArray(o.validators) && (!o.validators.length || Validator.is(o.validators[0])) && typeof o.totalVotingPower === "bigint");
-  },
-  isSDK(o: any): o is ValidatorSetSDKType {
-    return o && (o.$typeUrl === ValidatorSet.typeUrl || Array.isArray(o.validators) && (!o.validators.length || Validator.isSDK(o.validators[0])) && typeof o.total_voting_power === "bigint");
   },
   isAmino(o: any): o is ValidatorSetAmino {
     return o && (o.$typeUrl === ValidatorSet.typeUrl || Array.isArray(o.validators) && (!o.validators.length || Validator.isAmino(o.validators[0])) && typeof o.total_voting_power === "bigint");
@@ -224,7 +190,7 @@ export const ValidatorSet = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorSet>, I>>(object: I): ValidatorSet {
+  fromPartial(object: DeepPartial<ValidatorSet>): ValidatorSet {
     const message = createBaseValidatorSet();
     message.validators = object.validators?.map(e => Validator.fromPartial(e)) || [];
     message.proposer = object.proposer !== undefined && object.proposer !== null ? Validator.fromPartial(object.proposer) : undefined;
@@ -293,9 +259,6 @@ export const Validator = {
   is(o: any): o is Validator {
     return o && (o.$typeUrl === Validator.typeUrl || (o.address instanceof Uint8Array || typeof o.address === "string") && PublicKey.is(o.pubKey) && typeof o.votingPower === "bigint" && typeof o.proposerPriority === "bigint");
   },
-  isSDK(o: any): o is ValidatorSDKType {
-    return o && (o.$typeUrl === Validator.typeUrl || (o.address instanceof Uint8Array || typeof o.address === "string") && PublicKey.isSDK(o.pub_key) && typeof o.voting_power === "bigint" && typeof o.proposer_priority === "bigint");
-  },
   isAmino(o: any): o is ValidatorAmino {
     return o && (o.$typeUrl === Validator.typeUrl || (o.address instanceof Uint8Array || typeof o.address === "string") && PublicKey.isAmino(o.pub_key) && typeof o.voting_power === "bigint" && typeof o.proposer_priority === "bigint");
   },
@@ -340,7 +303,7 @@ export const Validator = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Validator>, I>>(object: I): Validator {
+  fromPartial(object: DeepPartial<Validator>): Validator {
     const message = createBaseValidator();
     message.address = object.address ?? new Uint8Array();
     message.pubKey = object.pubKey !== undefined && object.pubKey !== null ? PublicKey.fromPartial(object.pubKey) : undefined;
@@ -410,9 +373,6 @@ export const SimpleValidator = {
   is(o: any): o is SimpleValidator {
     return o && (o.$typeUrl === SimpleValidator.typeUrl || typeof o.votingPower === "bigint");
   },
-  isSDK(o: any): o is SimpleValidatorSDKType {
-    return o && (o.$typeUrl === SimpleValidator.typeUrl || typeof o.voting_power === "bigint");
-  },
   isAmino(o: any): o is SimpleValidatorAmino {
     return o && (o.$typeUrl === SimpleValidator.typeUrl || typeof o.voting_power === "bigint");
   },
@@ -445,7 +405,7 @@ export const SimpleValidator = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SimpleValidator>, I>>(object: I): SimpleValidator {
+  fromPartial(object: DeepPartial<SimpleValidator>): SimpleValidator {
     const message = createBaseSimpleValidator();
     message.pubKey = object.pubKey !== undefined && object.pubKey !== null ? PublicKey.fromPartial(object.pubKey) : undefined;
     message.votingPower = object.votingPower !== undefined && object.votingPower !== null ? BigInt(object.votingPower.toString()) : BigInt(0);

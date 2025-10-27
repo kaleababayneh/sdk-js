@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * Module is the config object of the benchmark module.
  * @name Module
@@ -28,15 +28,6 @@ export interface ModuleAmino {
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
   value: ModuleAmino;
-}
-/**
- * Module is the config object of the benchmark module.
- * @name ModuleSDKType
- * @package cosmos.benchmark.module.v1
- * @see proto type: cosmos.benchmark.module.v1.Module
- */
-export interface ModuleSDKType {
-  genesis_params?: GeneratorParamsSDKType;
 }
 /**
  * GenesisParams defines the genesis parameters for the benchmark module.
@@ -104,70 +95,51 @@ export interface GeneratorParamsAmino {
   /**
    * seed is the seed for the random number generator.
    */
-  seed?: string;
+  seed: string;
   /**
    * bucket_count is the number of store keys to uniformly distribute genesis_count keys across.
    */
-  bucket_count?: string;
+  bucket_count: string;
   /**
    * key_mean is the mean size (in normal distribution) of keys in each bucket.
    */
-  key_mean?: string;
+  key_mean: string;
   /**
    * key_std_dev is the standard deviation of key sizes in each bucket.
    */
-  key_std_dev?: string;
+  key_std_dev: string;
   /**
    * value_mean is the mean size (in normal distribution) of values in each bucket.
    */
-  value_mean?: string;
+  value_mean: string;
   /**
    * value_std_dev is the standard deviation of value sizes in each bucket.
    */
-  value_std_dev?: string;
+  value_std_dev: string;
   /**
    * genesis_count is the number of keys to insert in the store, distributed across all buckets.
    */
-  genesis_count?: string;
+  genesis_count: string;
   /**
    * insert_weight is the weight of insert operations.
    */
-  insert_weight?: number;
+  insert_weight: number;
   /**
    * update_weight is the weight of update operations.
    */
-  update_weight?: number;
+  update_weight: number;
   /**
    * get_weight is the weight of get operations.
    */
-  get_weight?: number;
+  get_weight: number;
   /**
    * delete_weight is the weight of delete operations.
    */
-  delete_weight?: number;
+  delete_weight: number;
 }
 export interface GeneratorParamsAminoMsg {
   type: "cosmos-sdk/GeneratorParams";
   value: GeneratorParamsAmino;
-}
-/**
- * GenesisParams defines the genesis parameters for the benchmark module.
- * @name GeneratorParamsSDKType
- * @package cosmos.benchmark.module.v1
- * @see proto type: cosmos.benchmark.module.v1.GeneratorParams
- */
-export interface GeneratorParamsSDKType {
-  seed: bigint;
-  bucket_count: bigint;
-  key_mean: bigint;
-  key_std_dev: bigint;
-  value_mean: bigint;
-  value_std_dev: bigint;
-  genesis_count: bigint;
-  insert_weight: number;
-  update_weight: number;
-  get_weight: number;
-  delete_weight: number;
 }
 function createBaseModule(): Module {
   return {
@@ -184,9 +156,6 @@ export const Module = {
   typeUrl: "/cosmos.benchmark.module.v1.Module",
   aminoType: "cosmos-sdk/Module",
   is(o: any): o is Module {
-    return o && o.$typeUrl === Module.typeUrl;
-  },
-  isSDK(o: any): o is ModuleSDKType {
     return o && o.$typeUrl === Module.typeUrl;
   },
   isAmino(o: any): o is ModuleAmino {
@@ -215,7 +184,7 @@ export const Module = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Module>, I>>(object: I): Module {
+  fromPartial(object: DeepPartial<Module>): Module {
     const message = createBaseModule();
     message.genesisParams = object.genesisParams !== undefined && object.genesisParams !== null ? GeneratorParams.fromPartial(object.genesisParams) : undefined;
     return message;
@@ -286,9 +255,6 @@ export const GeneratorParams = {
   aminoType: "cosmos-sdk/GeneratorParams",
   is(o: any): o is GeneratorParams {
     return o && (o.$typeUrl === GeneratorParams.typeUrl || typeof o.seed === "bigint" && typeof o.bucketCount === "bigint" && typeof o.keyMean === "bigint" && typeof o.keyStdDev === "bigint" && typeof o.valueMean === "bigint" && typeof o.valueStdDev === "bigint" && typeof o.genesisCount === "bigint" && typeof o.insertWeight === "number" && typeof o.updateWeight === "number" && typeof o.getWeight === "number" && typeof o.deleteWeight === "number");
-  },
-  isSDK(o: any): o is GeneratorParamsSDKType {
-    return o && (o.$typeUrl === GeneratorParams.typeUrl || typeof o.seed === "bigint" && typeof o.bucket_count === "bigint" && typeof o.key_mean === "bigint" && typeof o.key_std_dev === "bigint" && typeof o.value_mean === "bigint" && typeof o.value_std_dev === "bigint" && typeof o.genesis_count === "bigint" && typeof o.insert_weight === "number" && typeof o.update_weight === "number" && typeof o.get_weight === "number" && typeof o.delete_weight === "number");
   },
   isAmino(o: any): o is GeneratorParamsAmino {
     return o && (o.$typeUrl === GeneratorParams.typeUrl || typeof o.seed === "bigint" && typeof o.bucket_count === "bigint" && typeof o.key_mean === "bigint" && typeof o.key_std_dev === "bigint" && typeof o.value_mean === "bigint" && typeof o.value_std_dev === "bigint" && typeof o.genesis_count === "bigint" && typeof o.insert_weight === "number" && typeof o.update_weight === "number" && typeof o.get_weight === "number" && typeof o.delete_weight === "number");
@@ -376,7 +342,7 @@ export const GeneratorParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GeneratorParams>, I>>(object: I): GeneratorParams {
+  fromPartial(object: DeepPartial<GeneratorParams>): GeneratorParams {
     const message = createBaseGeneratorParams();
     message.seed = object.seed !== undefined && object.seed !== null ? BigInt(object.seed.toString()) : BigInt(0);
     message.bucketCount = object.bucketCount !== undefined && object.bucketCount !== null ? BigInt(object.bucketCount.toString()) : BigInt(0);

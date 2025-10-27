@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * ListAllInterfacesRequest is the request type of the ListAllInterfaces RPC.
  * @name ListAllInterfacesRequest
@@ -24,13 +24,6 @@ export interface ListAllInterfacesRequestAminoMsg {
   type: "cosmos-sdk/ListAllInterfacesRequest";
   value: ListAllInterfacesRequestAmino;
 }
-/**
- * ListAllInterfacesRequest is the request type of the ListAllInterfaces RPC.
- * @name ListAllInterfacesRequestSDKType
- * @package cosmos.base.reflection.v1beta1
- * @see proto type: cosmos.base.reflection.v1beta1.ListAllInterfacesRequest
- */
-export interface ListAllInterfacesRequestSDKType {}
 /**
  * ListAllInterfacesResponse is the response type of the ListAllInterfaces RPC.
  * @name ListAllInterfacesResponse
@@ -57,20 +50,11 @@ export interface ListAllInterfacesResponseAmino {
   /**
    * interface_names is an array of all the registered interfaces.
    */
-  interface_names?: string[];
+  interface_names: string[];
 }
 export interface ListAllInterfacesResponseAminoMsg {
   type: "cosmos-sdk/ListAllInterfacesResponse";
   value: ListAllInterfacesResponseAmino;
-}
-/**
- * ListAllInterfacesResponse is the response type of the ListAllInterfaces RPC.
- * @name ListAllInterfacesResponseSDKType
- * @package cosmos.base.reflection.v1beta1
- * @see proto type: cosmos.base.reflection.v1beta1.ListAllInterfacesResponse
- */
-export interface ListAllInterfacesResponseSDKType {
-  interface_names: string[];
 }
 /**
  * ListImplementationsRequest is the request type of the ListImplementations
@@ -100,21 +84,11 @@ export interface ListImplementationsRequestAmino {
   /**
    * interface_name defines the interface to query the implementations for.
    */
-  interface_name?: string;
+  interface_name: string;
 }
 export interface ListImplementationsRequestAminoMsg {
   type: "cosmos-sdk/ListImplementationsRequest";
   value: ListImplementationsRequestAmino;
-}
-/**
- * ListImplementationsRequest is the request type of the ListImplementations
- * RPC.
- * @name ListImplementationsRequestSDKType
- * @package cosmos.base.reflection.v1beta1
- * @see proto type: cosmos.base.reflection.v1beta1.ListImplementationsRequest
- */
-export interface ListImplementationsRequestSDKType {
-  interface_name: string;
 }
 /**
  * ListImplementationsResponse is the response type of the ListImplementations
@@ -138,21 +112,11 @@ export interface ListImplementationsResponseProtoMsg {
  * @see proto type: cosmos.base.reflection.v1beta1.ListImplementationsResponse
  */
 export interface ListImplementationsResponseAmino {
-  implementation_message_names?: string[];
+  implementation_message_names: string[];
 }
 export interface ListImplementationsResponseAminoMsg {
   type: "cosmos-sdk/ListImplementationsResponse";
   value: ListImplementationsResponseAmino;
-}
-/**
- * ListImplementationsResponse is the response type of the ListImplementations
- * RPC.
- * @name ListImplementationsResponseSDKType
- * @package cosmos.base.reflection.v1beta1
- * @see proto type: cosmos.base.reflection.v1beta1.ListImplementationsResponse
- */
-export interface ListImplementationsResponseSDKType {
-  implementation_message_names: string[];
 }
 function createBaseListAllInterfacesRequest(): ListAllInterfacesRequest {
   return {};
@@ -167,9 +131,6 @@ export const ListAllInterfacesRequest = {
   typeUrl: "/cosmos.base.reflection.v1beta1.ListAllInterfacesRequest",
   aminoType: "cosmos-sdk/ListAllInterfacesRequest",
   is(o: any): o is ListAllInterfacesRequest {
-    return o && o.$typeUrl === ListAllInterfacesRequest.typeUrl;
-  },
-  isSDK(o: any): o is ListAllInterfacesRequestSDKType {
     return o && o.$typeUrl === ListAllInterfacesRequest.typeUrl;
   },
   isAmino(o: any): o is ListAllInterfacesRequestAmino {
@@ -192,7 +153,7 @@ export const ListAllInterfacesRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListAllInterfacesRequest>, I>>(_: I): ListAllInterfacesRequest {
+  fromPartial(_: DeepPartial<ListAllInterfacesRequest>): ListAllInterfacesRequest {
     const message = createBaseListAllInterfacesRequest();
     return message;
   },
@@ -244,9 +205,6 @@ export const ListAllInterfacesResponse = {
   is(o: any): o is ListAllInterfacesResponse {
     return o && (o.$typeUrl === ListAllInterfacesResponse.typeUrl || Array.isArray(o.interfaceNames) && (!o.interfaceNames.length || typeof o.interfaceNames[0] === "string"));
   },
-  isSDK(o: any): o is ListAllInterfacesResponseSDKType {
-    return o && (o.$typeUrl === ListAllInterfacesResponse.typeUrl || Array.isArray(o.interface_names) && (!o.interface_names.length || typeof o.interface_names[0] === "string"));
-  },
   isAmino(o: any): o is ListAllInterfacesResponseAmino {
     return o && (o.$typeUrl === ListAllInterfacesResponse.typeUrl || Array.isArray(o.interface_names) && (!o.interface_names.length || typeof o.interface_names[0] === "string"));
   },
@@ -273,7 +231,7 @@ export const ListAllInterfacesResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListAllInterfacesResponse>, I>>(object: I): ListAllInterfacesResponse {
+  fromPartial(object: DeepPartial<ListAllInterfacesResponse>): ListAllInterfacesResponse {
     const message = createBaseListAllInterfacesResponse();
     message.interfaceNames = object.interfaceNames?.map(e => e) || [];
     return message;
@@ -333,9 +291,6 @@ export const ListImplementationsRequest = {
   is(o: any): o is ListImplementationsRequest {
     return o && (o.$typeUrl === ListImplementationsRequest.typeUrl || typeof o.interfaceName === "string");
   },
-  isSDK(o: any): o is ListImplementationsRequestSDKType {
-    return o && (o.$typeUrl === ListImplementationsRequest.typeUrl || typeof o.interface_name === "string");
-  },
   isAmino(o: any): o is ListImplementationsRequestAmino {
     return o && (o.$typeUrl === ListImplementationsRequest.typeUrl || typeof o.interface_name === "string");
   },
@@ -362,7 +317,7 @@ export const ListImplementationsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListImplementationsRequest>, I>>(object: I): ListImplementationsRequest {
+  fromPartial(object: DeepPartial<ListImplementationsRequest>): ListImplementationsRequest {
     const message = createBaseListImplementationsRequest();
     message.interfaceName = object.interfaceName ?? "";
     return message;
@@ -420,9 +375,6 @@ export const ListImplementationsResponse = {
   is(o: any): o is ListImplementationsResponse {
     return o && (o.$typeUrl === ListImplementationsResponse.typeUrl || Array.isArray(o.implementationMessageNames) && (!o.implementationMessageNames.length || typeof o.implementationMessageNames[0] === "string"));
   },
-  isSDK(o: any): o is ListImplementationsResponseSDKType {
-    return o && (o.$typeUrl === ListImplementationsResponse.typeUrl || Array.isArray(o.implementation_message_names) && (!o.implementation_message_names.length || typeof o.implementation_message_names[0] === "string"));
-  },
   isAmino(o: any): o is ListImplementationsResponseAmino {
     return o && (o.$typeUrl === ListImplementationsResponse.typeUrl || Array.isArray(o.implementation_message_names) && (!o.implementation_message_names.length || typeof o.implementation_message_names[0] === "string"));
   },
@@ -449,7 +401,7 @@ export const ListImplementationsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListImplementationsResponse>, I>>(object: I): ListImplementationsResponse {
+  fromPartial(object: DeepPartial<ListImplementationsResponse>): ListImplementationsResponse {
     const message = createBaseListImplementationsResponse();
     message.implementationMessageNames = object.implementationMessageNames?.map(e => e) || [];
     return message;

@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../cosmos/base/v1beta1/coin";
+import { Coin, CoinAmino } from "../../cosmos/base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Params defines the parameters for the module.
  * @name Params
@@ -31,31 +31,16 @@ export interface ParamsProtoMsg {
  */
 export interface ParamsAmino {
   minimum_stake_for_sn: CoinAmino;
-  reporting_threshold?: string;
-  slashing_threshold?: string;
-  metrics_thresholds?: string;
-  evidence_retention_period?: string;
-  slashing_fraction?: string;
-  inactivity_penalty_period?: string;
-}
-export interface ParamsAminoMsg {
-  type: "lumera/x/supernode/v1/Params";
-  value: ParamsAmino;
-}
-/**
- * Params defines the parameters for the module.
- * @name ParamsSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.Params
- */
-export interface ParamsSDKType {
-  minimum_stake_for_sn: CoinSDKType;
-  reporting_threshold: bigint;
-  slashing_threshold: bigint;
+  reporting_threshold: string;
+  slashing_threshold: string;
   metrics_thresholds: string;
   evidence_retention_period: string;
   slashing_fraction: string;
   inactivity_penalty_period: string;
+}
+export interface ParamsAminoMsg {
+  type: "lumera/x/supernode/v1/Params";
+  value: ParamsAmino;
 }
 function createBaseParams(): Params {
   return {
@@ -79,9 +64,6 @@ export const Params = {
   aminoType: "lumera/x/supernode/v1/Params",
   is(o: any): o is Params {
     return o && (o.$typeUrl === Params.typeUrl || Coin.is(o.minimumStakeForSn) && typeof o.reportingThreshold === "bigint" && typeof o.slashingThreshold === "bigint" && typeof o.metricsThresholds === "string" && typeof o.evidenceRetentionPeriod === "string" && typeof o.slashingFraction === "string" && typeof o.inactivityPenaltyPeriod === "string");
-  },
-  isSDK(o: any): o is ParamsSDKType {
-    return o && (o.$typeUrl === Params.typeUrl || Coin.isSDK(o.minimum_stake_for_sn) && typeof o.reporting_threshold === "bigint" && typeof o.slashing_threshold === "bigint" && typeof o.metrics_thresholds === "string" && typeof o.evidence_retention_period === "string" && typeof o.slashing_fraction === "string" && typeof o.inactivity_penalty_period === "string");
   },
   isAmino(o: any): o is ParamsAmino {
     return o && (o.$typeUrl === Params.typeUrl || Coin.isAmino(o.minimum_stake_for_sn) && typeof o.reporting_threshold === "bigint" && typeof o.slashing_threshold === "bigint" && typeof o.metrics_thresholds === "string" && typeof o.evidence_retention_period === "string" && typeof o.slashing_fraction === "string" && typeof o.inactivity_penalty_period === "string");
@@ -145,7 +127,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(object: I): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.minimumStakeForSn = object.minimumStakeForSn !== undefined && object.minimumStakeForSn !== null ? Coin.fromPartial(object.minimumStakeForSn) : undefined;
     message.reportingThreshold = object.reportingThreshold !== undefined && object.reportingThreshold !== null ? BigInt(object.reportingThreshold.toString()) : BigInt(0);

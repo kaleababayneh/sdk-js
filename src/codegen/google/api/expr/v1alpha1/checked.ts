@@ -1,11 +1,11 @@
 // @ts-nocheck
 /* eslint-disable */
-import { SourceInfo, SourceInfoAmino, SourceInfoSDKType, Expr, ExprAmino, ExprSDKType, Constant, ConstantAmino, ConstantSDKType } from "./syntax";
-import { Empty, EmptyAmino, EmptySDKType } from "../../../protobuf/empty";
+import { SourceInfo, SourceInfoAmino, Expr, ExprAmino, Constant, ConstantAmino } from "./syntax";
+import { Empty, EmptyAmino } from "../../../protobuf/empty";
 import { NullValue } from "../../../protobuf/struct";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact, isSet } from "../../../../helpers";
+import { DeepPartial, isSet } from "../../../../helpers";
 /** CEL primitive types. */
 export enum Type_PrimitiveType {
   /** PRIMITIVE_TYPE_UNSPECIFIED - Unspecified type. */
@@ -36,7 +36,6 @@ export enum Type_PrimitiveType {
   BYTES = 6,
   UNRECOGNIZED = -1,
 }
-export const Type_PrimitiveTypeSDKType = Type_PrimitiveType;
 export const Type_PrimitiveTypeAmino = Type_PrimitiveType;
 export function type_PrimitiveTypeFromJSON(object: any): Type_PrimitiveType {
   switch (object) {
@@ -106,7 +105,6 @@ export enum Type_WellKnownType {
   DURATION = 3,
   UNRECOGNIZED = -1,
 }
-export const Type_WellKnownTypeSDKType = Type_WellKnownType;
 export const Type_WellKnownTypeAmino = Type_WellKnownType;
 export function type_WellKnownTypeFromJSON(object: any): Type_WellKnownType {
   switch (object) {
@@ -162,21 +160,12 @@ export interface CheckedExpr_ReferenceMapEntryProtoMsg {
  * @see proto type: google.api.expr.v1alpha1.CheckedExpr_ReferenceMapEntry
  */
 export interface CheckedExpr_ReferenceMapEntryAmino {
-  key?: string;
+  key: string;
   value?: ReferenceAmino;
 }
 export interface CheckedExpr_ReferenceMapEntryAminoMsg {
   type: string;
   value: CheckedExpr_ReferenceMapEntryAmino;
-}
-/**
- * @name CheckedExpr_ReferenceMapEntrySDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.undefined
- */
-export interface CheckedExpr_ReferenceMapEntrySDKType {
-  key: bigint;
-  value?: ReferenceSDKType;
 }
 /**
  * @name CheckedExpr_TypeMapEntry
@@ -197,21 +186,12 @@ export interface CheckedExpr_TypeMapEntryProtoMsg {
  * @see proto type: google.api.expr.v1alpha1.CheckedExpr_TypeMapEntry
  */
 export interface CheckedExpr_TypeMapEntryAmino {
-  key?: string;
+  key: string;
   value?: TypeAmino;
 }
 export interface CheckedExpr_TypeMapEntryAminoMsg {
   type: string;
   value: CheckedExpr_TypeMapEntryAmino;
-}
-/**
- * @name CheckedExpr_TypeMapEntrySDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.undefined
- */
-export interface CheckedExpr_TypeMapEntrySDKType {
-  key: bigint;
-  value?: TypeSDKType;
 }
 /**
  * A CEL expression which has been successfully type checked.
@@ -299,7 +279,7 @@ export interface CheckedExprAmino {
    * - Every CreateStruct expression for a message has an entry, identifying
    *   the message.
    */
-  reference_map?: {
+  reference_map: {
     [key: string]: ReferenceAmino;
   };
   /**
@@ -309,7 +289,7 @@ export interface CheckedExprAmino {
    * here. If an expression has type DYN, it is omitted from this map to save
    * space.
    */
-  type_map?: {
+  type_map: {
     [key: string]: TypeAmino;
   };
   /**
@@ -326,7 +306,7 @@ export interface CheckedExprAmino {
    * analysis. In some cases, this will save the runtime the work of applying
    * the same or similar transformations prior to evaluation.
    */
-  expr_version?: string;
+  expr_version: string;
   /**
    * The checked expression. Semantically equivalent to the parsed `expr`, but
    * may have structural differences.
@@ -336,23 +316,6 @@ export interface CheckedExprAmino {
 export interface CheckedExprAminoMsg {
   type: "/google.api.expr.v1alpha1.CheckedExpr";
   value: CheckedExprAmino;
-}
-/**
- * A CEL expression which has been successfully type checked.
- * @name CheckedExprSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.CheckedExpr
- */
-export interface CheckedExprSDKType {
-  reference_map: {
-    [key: bigint]: ReferenceSDKType;
-  };
-  type_map: {
-    [key: bigint]: TypeSDKType;
-  };
-  source_info?: SourceInfoSDKType;
-  expr_version: string;
-  expr?: ExprSDKType;
 }
 /**
  * Represents a CEL type.
@@ -511,27 +474,6 @@ export interface TypeAminoMsg {
   value: TypeAmino;
 }
 /**
- * Represents a CEL type.
- * @name TypeSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Type
- */
-export interface TypeSDKType {
-  dyn?: EmptySDKType;
-  null?: NullValue;
-  primitive?: Type_PrimitiveType;
-  wrapper?: Type_PrimitiveType;
-  well_known?: Type_WellKnownType;
-  list_type?: Type_ListTypeSDKType;
-  map_type?: Type_MapTypeSDKType;
-  function?: Type_FunctionTypeSDKType;
-  message_type?: string;
-  type_param?: string;
-  type?: TypeSDKType;
-  error?: EmptySDKType;
-  abstract_type?: Type_AbstractTypeSDKType;
-}
-/**
  * List type with typed elements, e.g. `list<example.proto.MyMessage>`.
  * @name Type_ListType
  * @package google.api.expr.v1alpha1
@@ -562,15 +504,6 @@ export interface Type_ListTypeAmino {
 export interface Type_ListTypeAminoMsg {
   type: "/google.api.expr.v1alpha1.ListType";
   value: Type_ListTypeAmino;
-}
-/**
- * List type with typed elements, e.g. `list<example.proto.MyMessage>`.
- * @name Type_ListTypeSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.ListType
- */
-export interface Type_ListTypeSDKType {
-  elem_type?: TypeSDKType;
 }
 /**
  * Map type with parameterized key and value types, e.g. `map<string, int>`.
@@ -613,16 +546,6 @@ export interface Type_MapTypeAminoMsg {
   value: Type_MapTypeAmino;
 }
 /**
- * Map type with parameterized key and value types, e.g. `map<string, int>`.
- * @name Type_MapTypeSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.MapType
- */
-export interface Type_MapTypeSDKType {
-  key_type?: TypeSDKType;
-  value_type?: TypeSDKType;
-}
-/**
  * Function type with result and arg types.
  * @name Type_FunctionType
  * @package google.api.expr.v1alpha1
@@ -656,21 +579,11 @@ export interface Type_FunctionTypeAmino {
   /**
    * Argument types of the function.
    */
-  arg_types?: TypeAmino[];
+  arg_types: TypeAmino[];
 }
 export interface Type_FunctionTypeAminoMsg {
   type: "/google.api.expr.v1alpha1.FunctionType";
   value: Type_FunctionTypeAmino;
-}
-/**
- * Function type with result and arg types.
- * @name Type_FunctionTypeSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.FunctionType
- */
-export interface Type_FunctionTypeSDKType {
-  result_type?: TypeSDKType;
-  arg_types: TypeSDKType[];
 }
 /**
  * Application defined abstract type.
@@ -702,25 +615,15 @@ export interface Type_AbstractTypeAmino {
   /**
    * The fully qualified name of this abstract type.
    */
-  name?: string;
+  name: string;
   /**
    * Parameter types for this abstract type.
    */
-  parameter_types?: TypeAmino[];
+  parameter_types: TypeAmino[];
 }
 export interface Type_AbstractTypeAminoMsg {
   type: "/google.api.expr.v1alpha1.AbstractType";
   value: Type_AbstractTypeAmino;
-}
-/**
- * Application defined abstract type.
- * @name Type_AbstractTypeSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.AbstractType
- */
-export interface Type_AbstractTypeSDKType {
-  name: string;
-  parameter_types: TypeSDKType[];
 }
 /**
  * Represents a declaration of a named value or function.
@@ -780,7 +683,7 @@ export interface DeclAmino {
    * function declaration or a function definition containing a result
    * [Expr][google.api.expr.v1alpha1.Expr].
    */
-  name?: string;
+  name: string;
   /**
    * Identifier declaration.
    */
@@ -793,20 +696,6 @@ export interface DeclAmino {
 export interface DeclAminoMsg {
   type: "/google.api.expr.v1alpha1.Decl";
   value: DeclAmino;
-}
-/**
- * Represents a declaration of a named value or function.
- * 
- * A declaration is part of the contract between the expression, the agent
- * evaluating that expression, and the caller requesting evaluation.
- * @name DeclSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Decl
- */
-export interface DeclSDKType {
-  name: string;
-  ident?: Decl_IdentDeclSDKType;
-  function?: Decl_FunctionDeclSDKType;
 }
 /**
  * Identifier declaration which specifies its type and optional `Expr` value.
@@ -862,27 +751,11 @@ export interface Decl_IdentDeclAmino {
   /**
    * Documentation string for the identifier.
    */
-  doc?: string;
+  doc: string;
 }
 export interface Decl_IdentDeclAminoMsg {
   type: "/google.api.expr.v1alpha1.IdentDecl";
   value: Decl_IdentDeclAmino;
-}
-/**
- * Identifier declaration which specifies its type and optional `Expr` value.
- * 
- * An identifier without a value is a declaration that must be provided at
- * evaluation time. An identifier with a value should resolve to a constant,
- * but may be used in conjunction with other identifiers bound at evaluation
- * time.
- * @name Decl_IdentDeclSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.IdentDecl
- */
-export interface Decl_IdentDeclSDKType {
-  type?: TypeSDKType;
-  value?: ConstantSDKType;
-  doc: string;
 }
 /**
  * Function declaration specifies one or more overloads which indicate the
@@ -918,24 +791,11 @@ export interface Decl_FunctionDeclAmino {
   /**
    * Required. List of function overloads, must contain at least one overload.
    */
-  overloads?: Decl_FunctionDecl_OverloadAmino[];
+  overloads: Decl_FunctionDecl_OverloadAmino[];
 }
 export interface Decl_FunctionDeclAminoMsg {
   type: "/google.api.expr.v1alpha1.FunctionDecl";
   value: Decl_FunctionDeclAmino;
-}
-/**
- * Function declaration specifies one or more overloads which indicate the
- * function's parameter types and return type.
- * 
- * Functions have no observable side-effects (there may be side-effects like
- * logging which are not observable from CEL).
- * @name Decl_FunctionDeclSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.FunctionDecl
- */
-export interface Decl_FunctionDeclSDKType {
-  overloads: Decl_FunctionDecl_OverloadSDKType[];
 }
 /**
  * An overload indicates a function's parameter types and return type, and
@@ -1029,7 +889,7 @@ export interface Decl_FunctionDecl_OverloadAmino {
    * to indicate the `overload_id` that was resolved for the function
    * `name`.
    */
-  overload_id?: string;
+  overload_id: string;
   /**
    * List of function parameter [Type][google.api.expr.v1alpha1.Type]
    * values.
@@ -1043,14 +903,14 @@ export interface Decl_FunctionDecl_OverloadAmino {
    * When the `result_type` of a function is a generic type param, the
    * type param name also appears as the `type` of on at least one params.
    */
-  params?: TypeAmino[];
+  params: TypeAmino[];
   /**
    * The type param names associated with the function declaration.
    * 
    * For example, `function ex<K,V>(K key, map<K, V> map) : V` would yield
    * the type params of `K, V`.
    */
-  type_params?: string[];
+  type_params: string[];
   /**
    * Required. The result type of the function. For example, the operator
    * `string.isEmpty()` would have `result_type` of `kind: BOOL`.
@@ -1063,38 +923,15 @@ export interface Decl_FunctionDecl_OverloadAmino {
    * For methods, the first parameter declaration, `params[0]` is the
    * expected type of the target receiver.
    */
-  is_instance_function?: boolean;
+  is_instance_function: boolean;
   /**
    * Documentation string for the overload.
    */
-  doc?: string;
+  doc: string;
 }
 export interface Decl_FunctionDecl_OverloadAminoMsg {
   type: "/google.api.expr.v1alpha1.Overload";
   value: Decl_FunctionDecl_OverloadAmino;
-}
-/**
- * An overload indicates a function's parameter types and return type, and
- * may optionally include a function body described in terms of
- * [Expr][google.api.expr.v1alpha1.Expr] values.
- * 
- * Functions overloads are declared in either a function or method
- * call-style. For methods, the `params[0]` is the expected type of the
- * target receiver.
- * 
- * Overloads must have non-overlapping argument types after erasure of all
- * parameterized type variables (similar as type erasure in Java).
- * @name Decl_FunctionDecl_OverloadSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Overload
- */
-export interface Decl_FunctionDecl_OverloadSDKType {
-  overload_id: string;
-  params: TypeSDKType[];
-  type_params: string[];
-  result_type?: TypeSDKType;
-  is_instance_function: boolean;
-  doc: string;
 }
 /**
  * Describes a resolved reference to a declaration.
@@ -1139,7 +976,7 @@ export interface ReferenceAmino {
   /**
    * The fully qualified name of the declaration.
    */
-  name?: string;
+  name: string;
   /**
    * For references to functions, this is a list of `Overload.overload_id`
    * values which match according to typing rules.
@@ -1151,7 +988,7 @@ export interface ReferenceAmino {
    * Empty if this is not a reference to a
    * [Decl.FunctionDecl][google.api.expr.v1alpha1.Decl.FunctionDecl].
    */
-  overload_id?: string[];
+  overload_id: string[];
   /**
    * For references to constants, this may contain the value of the
    * constant if known at compile time.
@@ -1161,17 +998,6 @@ export interface ReferenceAmino {
 export interface ReferenceAminoMsg {
   type: "/google.api.expr.v1alpha1.Reference";
   value: ReferenceAmino;
-}
-/**
- * Describes a resolved reference to a declaration.
- * @name ReferenceSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Reference
- */
-export interface ReferenceSDKType {
-  name: string;
-  overload_id: string[];
-  value?: ConstantSDKType;
 }
 function createBaseCheckedExpr_ReferenceMapEntry(): CheckedExpr_ReferenceMapEntry {
   return {
@@ -1214,7 +1040,7 @@ export const CheckedExpr_ReferenceMapEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CheckedExpr_ReferenceMapEntry>, I>>(object: I): CheckedExpr_ReferenceMapEntry {
+  fromPartial(object: DeepPartial<CheckedExpr_ReferenceMapEntry>): CheckedExpr_ReferenceMapEntry {
     const message = createBaseCheckedExpr_ReferenceMapEntry();
     message.key = object.key !== undefined && object.key !== null ? BigInt(object.key.toString()) : BigInt(0);
     message.value = object.value !== undefined && object.value !== null ? Reference.fromPartial(object.value) : undefined;
@@ -1290,7 +1116,7 @@ export const CheckedExpr_TypeMapEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CheckedExpr_TypeMapEntry>, I>>(object: I): CheckedExpr_TypeMapEntry {
+  fromPartial(object: DeepPartial<CheckedExpr_TypeMapEntry>): CheckedExpr_TypeMapEntry {
     const message = createBaseCheckedExpr_TypeMapEntry();
     message.key = object.key !== undefined && object.key !== null ? BigInt(object.key.toString()) : BigInt(0);
     message.value = object.value !== undefined && object.value !== null ? Type.fromPartial(object.value) : undefined;
@@ -1344,9 +1170,6 @@ export const CheckedExpr = {
   typeUrl: "/google.api.expr.v1alpha1.CheckedExpr",
   is(o: any): o is CheckedExpr {
     return o && (o.$typeUrl === CheckedExpr.typeUrl || isSet(o.referenceMap) && isSet(o.typeMap) && typeof o.exprVersion === "string");
-  },
-  isSDK(o: any): o is CheckedExprSDKType {
-    return o && (o.$typeUrl === CheckedExpr.typeUrl || isSet(o.reference_map) && isSet(o.type_map) && typeof o.expr_version === "string");
   },
   isAmino(o: any): o is CheckedExprAmino {
     return o && (o.$typeUrl === CheckedExpr.typeUrl || isSet(o.reference_map) && isSet(o.type_map) && typeof o.expr_version === "string");
@@ -1410,7 +1233,7 @@ export const CheckedExpr = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CheckedExpr>, I>>(object: I): CheckedExpr {
+  fromPartial(object: DeepPartial<CheckedExpr>): CheckedExpr {
     const message = createBaseCheckedExpr();
     message.referenceMap = Object.entries(object.referenceMap ?? {}).reduce<{
       [key: bigint]: Reference;
@@ -1534,9 +1357,6 @@ export const Type = {
   is(o: any): o is Type {
     return o && o.$typeUrl === Type.typeUrl;
   },
-  isSDK(o: any): o is TypeSDKType {
-    return o && o.$typeUrl === Type.typeUrl;
-  },
   isAmino(o: any): o is TypeAmino {
     return o && o.$typeUrl === Type.typeUrl;
   },
@@ -1635,7 +1455,7 @@ export const Type = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Type>, I>>(object: I): Type {
+  fromPartial(object: DeepPartial<Type>): Type {
     const message = createBaseType();
     message.dyn = object.dyn !== undefined && object.dyn !== null ? Empty.fromPartial(object.dyn) : undefined;
     message.null = object.null ?? undefined;
@@ -1755,9 +1575,6 @@ export const Type_ListType = {
   is(o: any): o is Type_ListType {
     return o && o.$typeUrl === Type_ListType.typeUrl;
   },
-  isSDK(o: any): o is Type_ListTypeSDKType {
-    return o && o.$typeUrl === Type_ListType.typeUrl;
-  },
   isAmino(o: any): o is Type_ListTypeAmino {
     return o && o.$typeUrl === Type_ListType.typeUrl;
   },
@@ -1784,7 +1601,7 @@ export const Type_ListType = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Type_ListType>, I>>(object: I): Type_ListType {
+  fromPartial(object: DeepPartial<Type_ListType>): Type_ListType {
     const message = createBaseType_ListType();
     message.elemType = object.elemType !== undefined && object.elemType !== null ? Type.fromPartial(object.elemType) : undefined;
     return message;
@@ -1840,9 +1657,6 @@ export const Type_MapType = {
   is(o: any): o is Type_MapType {
     return o && o.$typeUrl === Type_MapType.typeUrl;
   },
-  isSDK(o: any): o is Type_MapTypeSDKType {
-    return o && o.$typeUrl === Type_MapType.typeUrl;
-  },
   isAmino(o: any): o is Type_MapTypeAmino {
     return o && o.$typeUrl === Type_MapType.typeUrl;
   },
@@ -1875,7 +1689,7 @@ export const Type_MapType = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Type_MapType>, I>>(object: I): Type_MapType {
+  fromPartial(object: DeepPartial<Type_MapType>): Type_MapType {
     const message = createBaseType_MapType();
     message.keyType = object.keyType !== undefined && object.keyType !== null ? Type.fromPartial(object.keyType) : undefined;
     message.valueType = object.valueType !== undefined && object.valueType !== null ? Type.fromPartial(object.valueType) : undefined;
@@ -1936,9 +1750,6 @@ export const Type_FunctionType = {
   is(o: any): o is Type_FunctionType {
     return o && (o.$typeUrl === Type_FunctionType.typeUrl || Array.isArray(o.argTypes) && (!o.argTypes.length || Type.is(o.argTypes[0])));
   },
-  isSDK(o: any): o is Type_FunctionTypeSDKType {
-    return o && (o.$typeUrl === Type_FunctionType.typeUrl || Array.isArray(o.arg_types) && (!o.arg_types.length || Type.isSDK(o.arg_types[0])));
-  },
   isAmino(o: any): o is Type_FunctionTypeAmino {
     return o && (o.$typeUrl === Type_FunctionType.typeUrl || Array.isArray(o.arg_types) && (!o.arg_types.length || Type.isAmino(o.arg_types[0])));
   },
@@ -1971,7 +1782,7 @@ export const Type_FunctionType = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Type_FunctionType>, I>>(object: I): Type_FunctionType {
+  fromPartial(object: DeepPartial<Type_FunctionType>): Type_FunctionType {
     const message = createBaseType_FunctionType();
     message.resultType = object.resultType !== undefined && object.resultType !== null ? Type.fromPartial(object.resultType) : undefined;
     message.argTypes = object.argTypes?.map(e => Type.fromPartial(e)) || [];
@@ -2034,9 +1845,6 @@ export const Type_AbstractType = {
   is(o: any): o is Type_AbstractType {
     return o && (o.$typeUrl === Type_AbstractType.typeUrl || typeof o.name === "string" && Array.isArray(o.parameterTypes) && (!o.parameterTypes.length || Type.is(o.parameterTypes[0])));
   },
-  isSDK(o: any): o is Type_AbstractTypeSDKType {
-    return o && (o.$typeUrl === Type_AbstractType.typeUrl || typeof o.name === "string" && Array.isArray(o.parameter_types) && (!o.parameter_types.length || Type.isSDK(o.parameter_types[0])));
-  },
   isAmino(o: any): o is Type_AbstractTypeAmino {
     return o && (o.$typeUrl === Type_AbstractType.typeUrl || typeof o.name === "string" && Array.isArray(o.parameter_types) && (!o.parameter_types.length || Type.isAmino(o.parameter_types[0])));
   },
@@ -2069,7 +1877,7 @@ export const Type_AbstractType = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Type_AbstractType>, I>>(object: I): Type_AbstractType {
+  fromPartial(object: DeepPartial<Type_AbstractType>): Type_AbstractType {
     const message = createBaseType_AbstractType();
     message.name = object.name ?? "";
     message.parameterTypes = object.parameterTypes?.map(e => Type.fromPartial(e)) || [];
@@ -2136,9 +1944,6 @@ export const Decl = {
   is(o: any): o is Decl {
     return o && (o.$typeUrl === Decl.typeUrl || typeof o.name === "string");
   },
-  isSDK(o: any): o is DeclSDKType {
-    return o && (o.$typeUrl === Decl.typeUrl || typeof o.name === "string");
-  },
   isAmino(o: any): o is DeclAmino {
     return o && (o.$typeUrl === Decl.typeUrl || typeof o.name === "string");
   },
@@ -2177,7 +1982,7 @@ export const Decl = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Decl>, I>>(object: I): Decl {
+  fromPartial(object: DeepPartial<Decl>): Decl {
     const message = createBaseDecl();
     message.name = object.name ?? "";
     message.ident = object.ident !== undefined && object.ident !== null ? Decl_IdentDecl.fromPartial(object.ident) : undefined;
@@ -2250,9 +2055,6 @@ export const Decl_IdentDecl = {
   is(o: any): o is Decl_IdentDecl {
     return o && (o.$typeUrl === Decl_IdentDecl.typeUrl || typeof o.doc === "string");
   },
-  isSDK(o: any): o is Decl_IdentDeclSDKType {
-    return o && (o.$typeUrl === Decl_IdentDecl.typeUrl || typeof o.doc === "string");
-  },
   isAmino(o: any): o is Decl_IdentDeclAmino {
     return o && (o.$typeUrl === Decl_IdentDecl.typeUrl || typeof o.doc === "string");
   },
@@ -2291,7 +2093,7 @@ export const Decl_IdentDecl = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Decl_IdentDecl>, I>>(object: I): Decl_IdentDecl {
+  fromPartial(object: DeepPartial<Decl_IdentDecl>): Decl_IdentDecl {
     const message = createBaseDecl_IdentDecl();
     message.type = object.type !== undefined && object.type !== null ? Type.fromPartial(object.type) : undefined;
     message.value = object.value !== undefined && object.value !== null ? Constant.fromPartial(object.value) : undefined;
@@ -2361,9 +2163,6 @@ export const Decl_FunctionDecl = {
   is(o: any): o is Decl_FunctionDecl {
     return o && (o.$typeUrl === Decl_FunctionDecl.typeUrl || Array.isArray(o.overloads) && (!o.overloads.length || Decl_FunctionDecl_Overload.is(o.overloads[0])));
   },
-  isSDK(o: any): o is Decl_FunctionDeclSDKType {
-    return o && (o.$typeUrl === Decl_FunctionDecl.typeUrl || Array.isArray(o.overloads) && (!o.overloads.length || Decl_FunctionDecl_Overload.isSDK(o.overloads[0])));
-  },
   isAmino(o: any): o is Decl_FunctionDeclAmino {
     return o && (o.$typeUrl === Decl_FunctionDecl.typeUrl || Array.isArray(o.overloads) && (!o.overloads.length || Decl_FunctionDecl_Overload.isAmino(o.overloads[0])));
   },
@@ -2390,7 +2189,7 @@ export const Decl_FunctionDecl = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Decl_FunctionDecl>, I>>(object: I): Decl_FunctionDecl {
+  fromPartial(object: DeepPartial<Decl_FunctionDecl>): Decl_FunctionDecl {
     const message = createBaseDecl_FunctionDecl();
     message.overloads = object.overloads?.map(e => Decl_FunctionDecl_Overload.fromPartial(e)) || [];
     return message;
@@ -2461,9 +2260,6 @@ export const Decl_FunctionDecl_Overload = {
   is(o: any): o is Decl_FunctionDecl_Overload {
     return o && (o.$typeUrl === Decl_FunctionDecl_Overload.typeUrl || typeof o.overloadId === "string" && Array.isArray(o.params) && (!o.params.length || Type.is(o.params[0])) && Array.isArray(o.typeParams) && (!o.typeParams.length || typeof o.typeParams[0] === "string") && typeof o.isInstanceFunction === "boolean" && typeof o.doc === "string");
   },
-  isSDK(o: any): o is Decl_FunctionDecl_OverloadSDKType {
-    return o && (o.$typeUrl === Decl_FunctionDecl_Overload.typeUrl || typeof o.overload_id === "string" && Array.isArray(o.params) && (!o.params.length || Type.isSDK(o.params[0])) && Array.isArray(o.type_params) && (!o.type_params.length || typeof o.type_params[0] === "string") && typeof o.is_instance_function === "boolean" && typeof o.doc === "string");
-  },
   isAmino(o: any): o is Decl_FunctionDecl_OverloadAmino {
     return o && (o.$typeUrl === Decl_FunctionDecl_Overload.typeUrl || typeof o.overload_id === "string" && Array.isArray(o.params) && (!o.params.length || Type.isAmino(o.params[0])) && Array.isArray(o.type_params) && (!o.type_params.length || typeof o.type_params[0] === "string") && typeof o.is_instance_function === "boolean" && typeof o.doc === "string");
   },
@@ -2520,7 +2316,7 @@ export const Decl_FunctionDecl_Overload = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Decl_FunctionDecl_Overload>, I>>(object: I): Decl_FunctionDecl_Overload {
+  fromPartial(object: DeepPartial<Decl_FunctionDecl_Overload>): Decl_FunctionDecl_Overload {
     const message = createBaseDecl_FunctionDecl_Overload();
     message.overloadId = object.overloadId ?? "";
     message.params = object.params?.map(e => Type.fromPartial(e)) || [];
@@ -2606,9 +2402,6 @@ export const Reference = {
   is(o: any): o is Reference {
     return o && (o.$typeUrl === Reference.typeUrl || typeof o.name === "string" && Array.isArray(o.overloadId) && (!o.overloadId.length || typeof o.overloadId[0] === "string"));
   },
-  isSDK(o: any): o is ReferenceSDKType {
-    return o && (o.$typeUrl === Reference.typeUrl || typeof o.name === "string" && Array.isArray(o.overload_id) && (!o.overload_id.length || typeof o.overload_id[0] === "string"));
-  },
   isAmino(o: any): o is ReferenceAmino {
     return o && (o.$typeUrl === Reference.typeUrl || typeof o.name === "string" && Array.isArray(o.overload_id) && (!o.overload_id.length || typeof o.overload_id[0] === "string"));
   },
@@ -2647,7 +2440,7 @@ export const Reference = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Reference>, I>>(object: I): Reference {
+  fromPartial(object: DeepPartial<Reference>): Reference {
     const message = createBaseReference();
     message.name = object.name ?? "";
     message.overloadId = object.overloadId?.map(e => e) || [];

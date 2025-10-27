@@ -19,19 +19,22 @@ export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.verifyInvariant = this.verifyInvariant.bind(this);
-    this.updateParams = this.updateParams.bind(this);
   }
-  verifyInvariant(request: MsgVerifyInvariant): Promise<MsgVerifyInvariantResponse> {
+  /* VerifyInvariant defines a method to verify a particular invariant. */
+  verifyInvariant = async (request: MsgVerifyInvariant): Promise<MsgVerifyInvariantResponse> => {
     const data = MsgVerifyInvariant.encode(request).finish();
     const promise = this.rpc.request("cosmos.crisis.v1beta1.Msg", "VerifyInvariant", data);
     return promise.then(data => MsgVerifyInvariantResponse.decode(new BinaryReader(data)));
-  }
-  updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> {
+  };
+  /* UpdateParams defines a governance operation for updating the x/crisis module
+   parameters. The authority is defined in the keeper.
+  
+   Since: cosmos-sdk 0.47 */
+  updateParams = async (request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> => {
     const data = MsgUpdateParams.encode(request).finish();
     const promise = this.rpc.request("cosmos.crisis.v1beta1.Msg", "UpdateParams", data);
     return promise.then(data => MsgUpdateParamsResponse.decode(new BinaryReader(data)));
-  }
+  };
 }
 export const createClientImpl = (rpc: TxRpc) => {
   return new MsgClientImpl(rpc);

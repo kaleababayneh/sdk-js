@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { CompactBitArray, CompactBitArrayAmino, CompactBitArraySDKType } from "../../../crypto/multisig/v1beta1/multisig";
-import { Any, AnyAmino, AnySDKType } from "../../../../google/protobuf/any";
+import { CompactBitArray, CompactBitArrayAmino } from "../../../crypto/multisig/v1beta1/multisig";
+import { Any, AnyAmino } from "../../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact, isSet, bytesFromBase64, base64FromBytes } from "../../../../helpers";
+import { DeepPartial, isSet, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 import { GlobalDecoderRegistry } from "../../../../registry";
 /**
  * SignMode represents a signing mode with its own security guarantees.
@@ -62,7 +62,6 @@ export enum SignMode {
   SIGN_MODE_EIP_191 = 191,
   UNRECOGNIZED = -1,
 }
-export const SignModeSDKType = SignMode;
 export const SignModeAmino = SignMode;
 export function signModeFromJSON(object: any): SignMode {
   switch (object) {
@@ -135,20 +134,11 @@ export interface SignatureDescriptorsAmino {
   /**
    * signatures are the signature descriptors
    */
-  signatures?: SignatureDescriptorAmino[];
+  signatures: SignatureDescriptorAmino[];
 }
 export interface SignatureDescriptorsAminoMsg {
   type: "cosmos-sdk/SignatureDescriptors";
   value: SignatureDescriptorsAmino;
-}
-/**
- * SignatureDescriptors wraps multiple SignatureDescriptor's.
- * @name SignatureDescriptorsSDKType
- * @package cosmos.tx.signing.v1beta1
- * @see proto type: cosmos.tx.signing.v1beta1.SignatureDescriptors
- */
-export interface SignatureDescriptorsSDKType {
-  signatures: SignatureDescriptorSDKType[];
 }
 /**
  * SignatureDescriptor is a convenience type which represents the full data for
@@ -196,25 +186,11 @@ export interface SignatureDescriptorAmino {
    * number of committed transactions signed by a given address. It is used to prevent
    * replay attacks.
    */
-  sequence?: string;
+  sequence: string;
 }
 export interface SignatureDescriptorAminoMsg {
   type: "cosmos-sdk/SignatureDescriptor";
   value: SignatureDescriptorAmino;
-}
-/**
- * SignatureDescriptor is a convenience type which represents the full data for
- * a signature including the public key of the signer, signing modes and the
- * signature itself. It is primarily used for coordinating signatures between
- * clients.
- * @name SignatureDescriptorSDKType
- * @package cosmos.tx.signing.v1beta1
- * @see proto type: cosmos.tx.signing.v1beta1.SignatureDescriptor
- */
-export interface SignatureDescriptorSDKType {
-  public_key?: AnySDKType;
-  data?: SignatureDescriptor_DataSDKType;
-  sequence: bigint;
 }
 /**
  * Data represents signature data
@@ -257,16 +233,6 @@ export interface SignatureDescriptor_DataAminoMsg {
   value: SignatureDescriptor_DataAmino;
 }
 /**
- * Data represents signature data
- * @name SignatureDescriptor_DataSDKType
- * @package cosmos.tx.signing.v1beta1
- * @see proto type: cosmos.tx.signing.v1beta1.Data
- */
-export interface SignatureDescriptor_DataSDKType {
-  single?: SignatureDescriptor_Data_SingleSDKType;
-  multi?: SignatureDescriptor_Data_MultiSDKType;
-}
-/**
  * Single is the signature data for a single signer
  * @name SignatureDescriptor_Data_Single
  * @package cosmos.tx.signing.v1beta1
@@ -296,25 +262,15 @@ export interface SignatureDescriptor_Data_SingleAmino {
   /**
    * mode is the signing mode of the single signer
    */
-  mode?: SignMode;
+  mode: SignMode;
   /**
    * signature is the raw signature bytes
    */
-  signature?: string;
+  signature: string;
 }
 export interface SignatureDescriptor_Data_SingleAminoMsg {
   type: "cosmos-sdk/Single";
   value: SignatureDescriptor_Data_SingleAmino;
-}
-/**
- * Single is the signature data for a single signer
- * @name SignatureDescriptor_Data_SingleSDKType
- * @package cosmos.tx.signing.v1beta1
- * @see proto type: cosmos.tx.signing.v1beta1.Single
- */
-export interface SignatureDescriptor_Data_SingleSDKType {
-  mode: SignMode;
-  signature: Uint8Array;
 }
 /**
  * Multi is the signature data for a multisig public key
@@ -350,21 +306,11 @@ export interface SignatureDescriptor_Data_MultiAmino {
   /**
    * signatures is the signatures of the multi-signature
    */
-  signatures?: SignatureDescriptor_DataAmino[];
+  signatures: SignatureDescriptor_DataAmino[];
 }
 export interface SignatureDescriptor_Data_MultiAminoMsg {
   type: "cosmos-sdk/Multi";
   value: SignatureDescriptor_Data_MultiAmino;
-}
-/**
- * Multi is the signature data for a multisig public key
- * @name SignatureDescriptor_Data_MultiSDKType
- * @package cosmos.tx.signing.v1beta1
- * @see proto type: cosmos.tx.signing.v1beta1.Multi
- */
-export interface SignatureDescriptor_Data_MultiSDKType {
-  bitarray?: CompactBitArraySDKType;
-  signatures: SignatureDescriptor_DataSDKType[];
 }
 function createBaseSignatureDescriptors(): SignatureDescriptors {
   return {
@@ -382,9 +328,6 @@ export const SignatureDescriptors = {
   aminoType: "cosmos-sdk/SignatureDescriptors",
   is(o: any): o is SignatureDescriptors {
     return o && (o.$typeUrl === SignatureDescriptors.typeUrl || Array.isArray(o.signatures) && (!o.signatures.length || SignatureDescriptor.is(o.signatures[0])));
-  },
-  isSDK(o: any): o is SignatureDescriptorsSDKType {
-    return o && (o.$typeUrl === SignatureDescriptors.typeUrl || Array.isArray(o.signatures) && (!o.signatures.length || SignatureDescriptor.isSDK(o.signatures[0])));
   },
   isAmino(o: any): o is SignatureDescriptorsAmino {
     return o && (o.$typeUrl === SignatureDescriptors.typeUrl || Array.isArray(o.signatures) && (!o.signatures.length || SignatureDescriptor.isAmino(o.signatures[0])));
@@ -412,7 +355,7 @@ export const SignatureDescriptors = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SignatureDescriptors>, I>>(object: I): SignatureDescriptors {
+  fromPartial(object: DeepPartial<SignatureDescriptors>): SignatureDescriptors {
     const message = createBaseSignatureDescriptors();
     message.signatures = object.signatures?.map(e => SignatureDescriptor.fromPartial(e)) || [];
     return message;
@@ -481,9 +424,6 @@ export const SignatureDescriptor = {
   is(o: any): o is SignatureDescriptor {
     return o && (o.$typeUrl === SignatureDescriptor.typeUrl || typeof o.sequence === "bigint");
   },
-  isSDK(o: any): o is SignatureDescriptorSDKType {
-    return o && (o.$typeUrl === SignatureDescriptor.typeUrl || typeof o.sequence === "bigint");
-  },
   isAmino(o: any): o is SignatureDescriptorAmino {
     return o && (o.$typeUrl === SignatureDescriptor.typeUrl || typeof o.sequence === "bigint");
   },
@@ -522,7 +462,7 @@ export const SignatureDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SignatureDescriptor>, I>>(object: I): SignatureDescriptor {
+  fromPartial(object: DeepPartial<SignatureDescriptor>): SignatureDescriptor {
     const message = createBaseSignatureDescriptor();
     message.publicKey = object.publicKey !== undefined && object.publicKey !== null ? Any.fromPartial(object.publicKey) : undefined;
     message.data = object.data !== undefined && object.data !== null ? SignatureDescriptor_Data.fromPartial(object.data) : undefined;
@@ -595,9 +535,6 @@ export const SignatureDescriptor_Data = {
   is(o: any): o is SignatureDescriptor_Data {
     return o && o.$typeUrl === SignatureDescriptor_Data.typeUrl;
   },
-  isSDK(o: any): o is SignatureDescriptor_DataSDKType {
-    return o && o.$typeUrl === SignatureDescriptor_Data.typeUrl;
-  },
   isAmino(o: any): o is SignatureDescriptor_DataAmino {
     return o && o.$typeUrl === SignatureDescriptor_Data.typeUrl;
   },
@@ -630,7 +567,7 @@ export const SignatureDescriptor_Data = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SignatureDescriptor_Data>, I>>(object: I): SignatureDescriptor_Data {
+  fromPartial(object: DeepPartial<SignatureDescriptor_Data>): SignatureDescriptor_Data {
     const message = createBaseSignatureDescriptor_Data();
     message.single = object.single !== undefined && object.single !== null ? SignatureDescriptor_Data_Single.fromPartial(object.single) : undefined;
     message.multi = object.multi !== undefined && object.multi !== null ? SignatureDescriptor_Data_Multi.fromPartial(object.multi) : undefined;
@@ -699,9 +636,6 @@ export const SignatureDescriptor_Data_Single = {
   is(o: any): o is SignatureDescriptor_Data_Single {
     return o && (o.$typeUrl === SignatureDescriptor_Data_Single.typeUrl || isSet(o.mode) && (o.signature instanceof Uint8Array || typeof o.signature === "string"));
   },
-  isSDK(o: any): o is SignatureDescriptor_Data_SingleSDKType {
-    return o && (o.$typeUrl === SignatureDescriptor_Data_Single.typeUrl || isSet(o.mode) && (o.signature instanceof Uint8Array || typeof o.signature === "string"));
-  },
   isAmino(o: any): o is SignatureDescriptor_Data_SingleAmino {
     return o && (o.$typeUrl === SignatureDescriptor_Data_Single.typeUrl || isSet(o.mode) && (o.signature instanceof Uint8Array || typeof o.signature === "string"));
   },
@@ -734,7 +668,7 @@ export const SignatureDescriptor_Data_Single = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SignatureDescriptor_Data_Single>, I>>(object: I): SignatureDescriptor_Data_Single {
+  fromPartial(object: DeepPartial<SignatureDescriptor_Data_Single>): SignatureDescriptor_Data_Single {
     const message = createBaseSignatureDescriptor_Data_Single();
     message.mode = object.mode ?? 0;
     message.signature = object.signature ?? new Uint8Array();
@@ -797,9 +731,6 @@ export const SignatureDescriptor_Data_Multi = {
   is(o: any): o is SignatureDescriptor_Data_Multi {
     return o && (o.$typeUrl === SignatureDescriptor_Data_Multi.typeUrl || Array.isArray(o.signatures) && (!o.signatures.length || SignatureDescriptor_Data.is(o.signatures[0])));
   },
-  isSDK(o: any): o is SignatureDescriptor_Data_MultiSDKType {
-    return o && (o.$typeUrl === SignatureDescriptor_Data_Multi.typeUrl || Array.isArray(o.signatures) && (!o.signatures.length || SignatureDescriptor_Data.isSDK(o.signatures[0])));
-  },
   isAmino(o: any): o is SignatureDescriptor_Data_MultiAmino {
     return o && (o.$typeUrl === SignatureDescriptor_Data_Multi.typeUrl || Array.isArray(o.signatures) && (!o.signatures.length || SignatureDescriptor_Data.isAmino(o.signatures[0])));
   },
@@ -832,7 +763,7 @@ export const SignatureDescriptor_Data_Multi = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SignatureDescriptor_Data_Multi>, I>>(object: I): SignatureDescriptor_Data_Multi {
+  fromPartial(object: DeepPartial<SignatureDescriptor_Data_Multi>): SignatureDescriptor_Data_Multi {
     const message = createBaseSignatureDescriptor_Data_Multi();
     message.bitarray = object.bitarray !== undefined && object.bitarray !== null ? CompactBitArray.fromPartial(object.bitarray) : undefined;
     message.signatures = object.signatures?.map(e => SignatureDescriptor_Data.fromPartial(e)) || [];

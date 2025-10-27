@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * MsgSend represents a message to send a nft from one account to another account.
  * @name MsgSend
@@ -40,35 +40,23 @@ export interface MsgSendAmino {
   /**
    * class_id defines the unique identifier of the nft classification, similar to the contract address of ERC721
    */
-  class_id?: string;
+  class_id: string;
   /**
    * id defines the unique identification of nft
    */
-  id?: string;
+  id: string;
   /**
    * sender is the address of the owner of nft
    */
-  sender?: string;
+  sender: string;
   /**
    * receiver is the receiver address of nft
    */
-  receiver?: string;
+  receiver: string;
 }
 export interface MsgSendAminoMsg {
   type: "cosmos-sdk/MsgNFTSend";
   value: MsgSendAmino;
-}
-/**
- * MsgSend represents a message to send a nft from one account to another account.
- * @name MsgSendSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.MsgSend
- */
-export interface MsgSendSDKType {
-  class_id: string;
-  id: string;
-  sender: string;
-  receiver: string;
 }
 /**
  * MsgSendResponse defines the Msg/Send response type.
@@ -92,13 +80,6 @@ export interface MsgSendResponseAminoMsg {
   type: "cosmos-sdk/MsgSendResponse";
   value: MsgSendResponseAmino;
 }
-/**
- * MsgSendResponse defines the Msg/Send response type.
- * @name MsgSendResponseSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.MsgSendResponse
- */
-export interface MsgSendResponseSDKType {}
 function createBaseMsgSend(): MsgSend {
   return {
     classId: "",
@@ -118,9 +99,6 @@ export const MsgSend = {
   aminoType: "cosmos-sdk/MsgNFTSend",
   is(o: any): o is MsgSend {
     return o && (o.$typeUrl === MsgSend.typeUrl || typeof o.classId === "string" && typeof o.id === "string" && typeof o.sender === "string" && typeof o.receiver === "string");
-  },
-  isSDK(o: any): o is MsgSendSDKType {
-    return o && (o.$typeUrl === MsgSend.typeUrl || typeof o.class_id === "string" && typeof o.id === "string" && typeof o.sender === "string" && typeof o.receiver === "string");
   },
   isAmino(o: any): o is MsgSendAmino {
     return o && (o.$typeUrl === MsgSend.typeUrl || typeof o.class_id === "string" && typeof o.id === "string" && typeof o.sender === "string" && typeof o.receiver === "string");
@@ -166,7 +144,7 @@ export const MsgSend = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSend>, I>>(object: I): MsgSend {
+  fromPartial(object: DeepPartial<MsgSend>): MsgSend {
     const message = createBaseMsgSend();
     message.classId = object.classId ?? "";
     message.id = object.id ?? "";
@@ -236,9 +214,6 @@ export const MsgSendResponse = {
   is(o: any): o is MsgSendResponse {
     return o && o.$typeUrl === MsgSendResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgSendResponseSDKType {
-    return o && o.$typeUrl === MsgSendResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgSendResponseAmino {
     return o && o.$typeUrl === MsgSendResponse.typeUrl;
   },
@@ -259,7 +234,7 @@ export const MsgSendResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSendResponse>, I>>(_: I): MsgSendResponse {
+  fromPartial(_: DeepPartial<MsgSendResponse>): MsgSendResponse {
     const message = createBaseMsgSendResponse();
     return message;
   },

@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * Config is the config object of the x/auth/tx package.
  * @name Config
@@ -35,26 +35,16 @@ export interface ConfigAmino {
    * skip_ante_handler defines whether the ante handler registration should be skipped in case an app wants to override
    * this functionality.
    */
-  skip_ante_handler?: boolean;
+  skip_ante_handler: boolean;
   /**
    * skip_post_handler defines whether the post handler registration should be skipped in case an app wants to override
    * this functionality.
    */
-  skip_post_handler?: boolean;
+  skip_post_handler: boolean;
 }
 export interface ConfigAminoMsg {
   type: "cosmos-sdk/Config";
   value: ConfigAmino;
-}
-/**
- * Config is the config object of the x/auth/tx package.
- * @name ConfigSDKType
- * @package cosmos.tx.config.v1
- * @see proto type: cosmos.tx.config.v1.Config
- */
-export interface ConfigSDKType {
-  skip_ante_handler: boolean;
-  skip_post_handler: boolean;
 }
 function createBaseConfig(): Config {
   return {
@@ -73,9 +63,6 @@ export const Config = {
   aminoType: "cosmos-sdk/Config",
   is(o: any): o is Config {
     return o && (o.$typeUrl === Config.typeUrl || typeof o.skipAnteHandler === "boolean" && typeof o.skipPostHandler === "boolean");
-  },
-  isSDK(o: any): o is ConfigSDKType {
-    return o && (o.$typeUrl === Config.typeUrl || typeof o.skip_ante_handler === "boolean" && typeof o.skip_post_handler === "boolean");
   },
   isAmino(o: any): o is ConfigAmino {
     return o && (o.$typeUrl === Config.typeUrl || typeof o.skip_ante_handler === "boolean" && typeof o.skip_post_handler === "boolean");
@@ -109,7 +96,7 @@ export const Config = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Config>, I>>(object: I): Config {
+  fromPartial(object: DeepPartial<Config>): Config {
     const message = createBaseConfig();
     message.skipAnteHandler = object.skipAnteHandler ?? false;
     message.skipPostHandler = object.skipPostHandler ?? false;

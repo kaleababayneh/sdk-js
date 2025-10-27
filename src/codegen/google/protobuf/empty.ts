@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * A generic empty message that you can re-use to avoid defining duplicated
  * empty messages in your APIs. A typical example is to use it as the request
@@ -40,21 +40,6 @@ export interface EmptyAminoMsg {
   type: "/google.protobuf.Empty";
   value: EmptyAmino;
 }
-/**
- * A generic empty message that you can re-use to avoid defining duplicated
- * empty messages in your APIs. A typical example is to use it as the request
- * or the response type of an API method. For instance:
- * 
- *     service Foo {
- *       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
- *     }
- * 
- * The JSON representation for `Empty` is empty JSON object `{}`.
- * @name EmptySDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.Empty
- */
-export interface EmptySDKType {}
 function createBaseEmpty(): Empty {
   return {};
 }
@@ -77,9 +62,6 @@ export const Empty = {
   is(o: any): o is Empty {
     return o && o.$typeUrl === Empty.typeUrl;
   },
-  isSDK(o: any): o is EmptySDKType {
-    return o && o.$typeUrl === Empty.typeUrl;
-  },
   isAmino(o: any): o is EmptyAmino {
     return o && o.$typeUrl === Empty.typeUrl;
   },
@@ -100,7 +82,7 @@ export const Empty = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Empty>, I>>(_: I): Empty {
+  fromPartial(_: DeepPartial<Empty>): Empty {
     const message = createBaseEmpty();
     return message;
   },

@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import { isSet, Exact } from "../../helpers";
+import { isSet, DeepPartial } from "../../helpers";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
@@ -41,7 +41,6 @@ export enum FieldInfo_Format {
   IPV4_OR_IPV6 = 4,
   UNRECOGNIZED = -1,
 }
-export const FieldInfo_FormatSDKType = FieldInfo_Format;
 export const FieldInfo_FormatAmino = FieldInfo_Format;
 export function fieldInfo_FormatFromJSON(object: any): FieldInfo_Format {
   switch (object) {
@@ -120,28 +119,18 @@ export interface FieldInfoAmino {
    * any API consumer, just documents the API's format for the field it is
    * applied to.
    */
-  format?: FieldInfo_Format;
+  format: FieldInfo_Format;
   /**
    * The type(s) that the annotated, generic field may represent.
    * 
    * Currently, this must only be used on fields of type `google.protobuf.Any`.
    * Supporting other generic types may be considered in the future.
    */
-  referenced_types?: TypeReferenceAmino[];
+  referenced_types: TypeReferenceAmino[];
 }
 export interface FieldInfoAminoMsg {
   type: "/google.api.FieldInfo";
   value: FieldInfoAmino;
-}
-/**
- * Rich semantic information of an API field beyond basic typing.
- * @name FieldInfoSDKType
- * @package google.api
- * @see proto type: google.api.FieldInfo
- */
-export interface FieldInfoSDKType {
-  format: FieldInfo_Format;
-  referenced_types: TypeReferenceSDKType[];
 }
 /**
  * A reference to a message type, for use in [FieldInfo][google.api.FieldInfo].
@@ -185,20 +174,11 @@ export interface TypeReferenceAmino {
    * 
    * See [AIP-202](https://google.aip.dev/202#type-references) for more details.
    */
-  type_name?: string;
+  type_name: string;
 }
 export interface TypeReferenceAminoMsg {
   type: "/google.api.TypeReference";
   value: TypeReferenceAmino;
-}
-/**
- * A reference to a message type, for use in [FieldInfo][google.api.FieldInfo].
- * @name TypeReferenceSDKType
- * @package google.api
- * @see proto type: google.api.TypeReference
- */
-export interface TypeReferenceSDKType {
-  type_name: string;
 }
 function createBaseFieldInfo(): FieldInfo {
   return {
@@ -216,9 +196,6 @@ export const FieldInfo = {
   typeUrl: "/google.api.FieldInfo",
   is(o: any): o is FieldInfo {
     return o && (o.$typeUrl === FieldInfo.typeUrl || isSet(o.format) && Array.isArray(o.referencedTypes) && (!o.referencedTypes.length || TypeReference.is(o.referencedTypes[0])));
-  },
-  isSDK(o: any): o is FieldInfoSDKType {
-    return o && (o.$typeUrl === FieldInfo.typeUrl || isSet(o.format) && Array.isArray(o.referenced_types) && (!o.referenced_types.length || TypeReference.isSDK(o.referenced_types[0])));
   },
   isAmino(o: any): o is FieldInfoAmino {
     return o && (o.$typeUrl === FieldInfo.typeUrl || isSet(o.format) && Array.isArray(o.referenced_types) && (!o.referenced_types.length || TypeReference.isAmino(o.referenced_types[0])));
@@ -252,7 +229,7 @@ export const FieldInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FieldInfo>, I>>(object: I): FieldInfo {
+  fromPartial(object: DeepPartial<FieldInfo>): FieldInfo {
     const message = createBaseFieldInfo();
     message.format = object.format ?? 0;
     message.referencedTypes = object.referencedTypes?.map(e => TypeReference.fromPartial(e)) || [];
@@ -314,9 +291,6 @@ export const TypeReference = {
   is(o: any): o is TypeReference {
     return o && (o.$typeUrl === TypeReference.typeUrl || typeof o.typeName === "string");
   },
-  isSDK(o: any): o is TypeReferenceSDKType {
-    return o && (o.$typeUrl === TypeReference.typeUrl || typeof o.type_name === "string");
-  },
   isAmino(o: any): o is TypeReferenceAmino {
     return o && (o.$typeUrl === TypeReference.typeUrl || typeof o.type_name === "string");
   },
@@ -343,7 +317,7 @@ export const TypeReference = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TypeReference>, I>>(object: I): TypeReference {
+  fromPartial(object: DeepPartial<TypeReference>): TypeReference {
     const message = createBaseTypeReference();
     message.typeName = object.typeName ?? "";
     return message;

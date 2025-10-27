@@ -2,11 +2,11 @@
 /* eslint-disable */
 import { ActionType } from "./action_type";
 import { ActionState } from "./action_state";
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../cosmos/base/query/v1beta1/pagination";
-import { Params, ParamsAmino, ParamsSDKType } from "./params";
-import { Action, ActionAmino, ActionSDKType } from "./action";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../cosmos/base/query/v1beta1/pagination";
+import { Params, ParamsAmino } from "./params";
+import { Action, ActionAmino } from "./action";
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, isSet } from "../../helpers";
+import { DeepPartial, isSet } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
  * QueryParamsRequest is request type for the Query/Params RPC method.
@@ -30,13 +30,6 @@ export interface QueryParamsRequestAminoMsg {
   type: "/lumera.action.QueryParamsRequest";
   value: QueryParamsRequestAmino;
 }
-/**
- * QueryParamsRequest is request type for the Query/Params RPC method.
- * @name QueryParamsRequestSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {}
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
  * @name QueryParamsResponse
@@ -70,15 +63,6 @@ export interface QueryParamsResponseAminoMsg {
   value: QueryParamsResponseAmino;
 }
 /**
- * QueryParamsResponse is response type for the Query/Params RPC method.
- * @name QueryParamsResponseSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  params: ParamsSDKType;
-}
-/**
  * Request type for GetAction
  * @name QueryGetActionRequest
  * @package lumera.action
@@ -104,20 +88,11 @@ export interface QueryGetActionRequestAmino {
   /**
    * The ID of the action to query
    */
-  actionID?: string;
+  actionID: string;
 }
 export interface QueryGetActionRequestAminoMsg {
   type: "/lumera.action.QueryGetActionRequest";
   value: QueryGetActionRequestAmino;
-}
-/**
- * Request type for GetAction
- * @name QueryGetActionRequestSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryGetActionRequest
- */
-export interface QueryGetActionRequestSDKType {
-  actionID: string;
 }
 /**
  * Response type for GetAction
@@ -146,15 +121,6 @@ export interface QueryGetActionResponseAminoMsg {
   value: QueryGetActionResponseAmino;
 }
 /**
- * Response type for GetAction
- * @name QueryGetActionResponseSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryGetActionResponse
- */
-export interface QueryGetActionResponseSDKType {
-  action?: ActionSDKType;
-}
-/**
  * @name QueryGetActionFeeRequest
  * @package lumera.action
  * @see proto type: lumera.action.QueryGetActionFeeRequest
@@ -172,19 +138,11 @@ export interface QueryGetActionFeeRequestProtoMsg {
  * @see proto type: lumera.action.QueryGetActionFeeRequest
  */
 export interface QueryGetActionFeeRequestAmino {
-  dataSize?: string;
+  dataSize: string;
 }
 export interface QueryGetActionFeeRequestAminoMsg {
   type: "/lumera.action.QueryGetActionFeeRequest";
   value: QueryGetActionFeeRequestAmino;
-}
-/**
- * @name QueryGetActionFeeRequestSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryGetActionFeeRequest
- */
-export interface QueryGetActionFeeRequestSDKType {
-  dataSize: string;
 }
 /**
  * @name QueryGetActionFeeResponse
@@ -204,19 +162,11 @@ export interface QueryGetActionFeeResponseProtoMsg {
  * @see proto type: lumera.action.QueryGetActionFeeResponse
  */
 export interface QueryGetActionFeeResponseAmino {
-  amount?: string;
+  amount: string;
 }
 export interface QueryGetActionFeeResponseAminoMsg {
   type: "/lumera.action.QueryGetActionFeeResponse";
   value: QueryGetActionFeeResponseAmino;
-}
-/**
- * @name QueryGetActionFeeResponseSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryGetActionFeeResponse
- */
-export interface QueryGetActionFeeResponseSDKType {
-  amount: string;
 }
 /**
  * List actions with optional type and state filters
@@ -240,24 +190,13 @@ export interface QueryListActionsRequestProtoMsg {
  * @see proto type: lumera.action.QueryListActionsRequest
  */
 export interface QueryListActionsRequestAmino {
-  actionType?: ActionType;
-  actionState?: ActionState;
+  actionType: ActionType;
+  actionState: ActionState;
   pagination?: PageRequestAmino;
 }
 export interface QueryListActionsRequestAminoMsg {
   type: "/lumera.action.QueryListActionsRequest";
   value: QueryListActionsRequestAmino;
-}
-/**
- * List actions with optional type and state filters
- * @name QueryListActionsRequestSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryListActionsRequest
- */
-export interface QueryListActionsRequestSDKType {
-  actionType: ActionType;
-  actionState: ActionState;
-  pagination?: PageRequestSDKType;
 }
 /**
  * @name QueryListActionsResponse
@@ -279,23 +218,13 @@ export interface QueryListActionsResponseProtoMsg {
  * @see proto type: lumera.action.QueryListActionsResponse
  */
 export interface QueryListActionsResponseAmino {
-  actions?: ActionAmino[];
+  actions: ActionAmino[];
   pagination?: PageResponseAmino;
-  total?: string;
+  total: string;
 }
 export interface QueryListActionsResponseAminoMsg {
   type: "/lumera.action.QueryListActionsResponse";
   value: QueryListActionsResponseAmino;
-}
-/**
- * @name QueryListActionsResponseSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryListActionsResponse
- */
-export interface QueryListActionsResponseSDKType {
-  actions: ActionSDKType[];
-  pagination?: PageResponseSDKType;
-  total: bigint;
 }
 /**
  * List actions for a specific supernode
@@ -318,22 +247,12 @@ export interface QueryListActionsBySuperNodeRequestProtoMsg {
  * @see proto type: lumera.action.QueryListActionsBySuperNodeRequest
  */
 export interface QueryListActionsBySuperNodeRequestAmino {
-  superNodeAddress?: string;
+  superNodeAddress: string;
   pagination?: PageRequestAmino;
 }
 export interface QueryListActionsBySuperNodeRequestAminoMsg {
   type: "/lumera.action.QueryListActionsBySuperNodeRequest";
   value: QueryListActionsBySuperNodeRequestAmino;
-}
-/**
- * List actions for a specific supernode
- * @name QueryListActionsBySuperNodeRequestSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryListActionsBySuperNodeRequest
- */
-export interface QueryListActionsBySuperNodeRequestSDKType {
-  superNodeAddress: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * List actions by block height
@@ -356,22 +275,12 @@ export interface QueryListActionsByBlockHeightRequestProtoMsg {
  * @see proto type: lumera.action.QueryListActionsByBlockHeightRequest
  */
 export interface QueryListActionsByBlockHeightRequestAmino {
-  blockHeight?: string;
+  blockHeight: string;
   pagination?: PageRequestAmino;
 }
 export interface QueryListActionsByBlockHeightRequestAminoMsg {
   type: "/lumera.action.QueryListActionsByBlockHeightRequest";
   value: QueryListActionsByBlockHeightRequestAmino;
-}
-/**
- * List actions by block height
- * @name QueryListActionsByBlockHeightRequestSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryListActionsByBlockHeightRequest
- */
-export interface QueryListActionsByBlockHeightRequestSDKType {
-  blockHeight: bigint;
-  pagination?: PageRequestSDKType;
 }
 /**
  * List expired actions
@@ -400,15 +309,6 @@ export interface QueryListExpiredActionsRequestAminoMsg {
   value: QueryListExpiredActionsRequestAmino;
 }
 /**
- * List expired actions
- * @name QueryListExpiredActionsRequestSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryListExpiredActionsRequest
- */
-export interface QueryListExpiredActionsRequestSDKType {
-  pagination?: PageRequestSDKType;
-}
-/**
  * Query actions by metadata field
  * @name QueryActionByMetadataRequest
  * @package lumera.action
@@ -433,27 +333,16 @@ export interface QueryActionByMetadataRequestProtoMsg {
  * @see proto type: lumera.action.QueryActionByMetadataRequest
  */
 export interface QueryActionByMetadataRequestAmino {
-  actionType?: ActionType;
+  actionType: ActionType;
   /**
    * e.g., "field=value"
    */
-  metadataQuery?: string;
+  metadataQuery: string;
   pagination?: PageRequestAmino;
 }
 export interface QueryActionByMetadataRequestAminoMsg {
   type: "/lumera.action.QueryActionByMetadataRequest";
   value: QueryActionByMetadataRequestAmino;
-}
-/**
- * Query actions by metadata field
- * @name QueryActionByMetadataRequestSDKType
- * @package lumera.action
- * @see proto type: lumera.action.QueryActionByMetadataRequest
- */
-export interface QueryActionByMetadataRequestSDKType {
-  actionType: ActionType;
-  metadataQuery: string;
-  pagination?: PageRequestSDKType;
 }
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
@@ -467,9 +356,6 @@ function createBaseQueryParamsRequest(): QueryParamsRequest {
 export const QueryParamsRequest = {
   typeUrl: "/lumera.action.QueryParamsRequest",
   is(o: any): o is QueryParamsRequest {
-    return o && o.$typeUrl === QueryParamsRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
   isAmino(o: any): o is QueryParamsRequestAmino {
@@ -492,7 +378,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(_: I): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -537,9 +423,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.is(o.params));
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isSDK(o.params));
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isAmino(o.params));
   },
@@ -566,7 +449,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;
@@ -621,9 +504,6 @@ export const QueryGetActionRequest = {
   is(o: any): o is QueryGetActionRequest {
     return o && (o.$typeUrl === QueryGetActionRequest.typeUrl || typeof o.actionID === "string");
   },
-  isSDK(o: any): o is QueryGetActionRequestSDKType {
-    return o && (o.$typeUrl === QueryGetActionRequest.typeUrl || typeof o.actionID === "string");
-  },
   isAmino(o: any): o is QueryGetActionRequestAmino {
     return o && (o.$typeUrl === QueryGetActionRequest.typeUrl || typeof o.actionID === "string");
   },
@@ -650,7 +530,7 @@ export const QueryGetActionRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetActionRequest>, I>>(object: I): QueryGetActionRequest {
+  fromPartial(object: DeepPartial<QueryGetActionRequest>): QueryGetActionRequest {
     const message = createBaseQueryGetActionRequest();
     message.actionID = object.actionID ?? "";
     return message;
@@ -700,9 +580,6 @@ export const QueryGetActionResponse = {
   is(o: any): o is QueryGetActionResponse {
     return o && o.$typeUrl === QueryGetActionResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryGetActionResponseSDKType {
-    return o && o.$typeUrl === QueryGetActionResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryGetActionResponseAmino {
     return o && o.$typeUrl === QueryGetActionResponse.typeUrl;
   },
@@ -729,7 +606,7 @@ export const QueryGetActionResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetActionResponse>, I>>(object: I): QueryGetActionResponse {
+  fromPartial(object: DeepPartial<QueryGetActionResponse>): QueryGetActionResponse {
     const message = createBaseQueryGetActionResponse();
     message.action = object.action !== undefined && object.action !== null ? Action.fromPartial(object.action) : undefined;
     return message;
@@ -783,9 +660,6 @@ export const QueryGetActionFeeRequest = {
   is(o: any): o is QueryGetActionFeeRequest {
     return o && (o.$typeUrl === QueryGetActionFeeRequest.typeUrl || typeof o.dataSize === "string");
   },
-  isSDK(o: any): o is QueryGetActionFeeRequestSDKType {
-    return o && (o.$typeUrl === QueryGetActionFeeRequest.typeUrl || typeof o.dataSize === "string");
-  },
   isAmino(o: any): o is QueryGetActionFeeRequestAmino {
     return o && (o.$typeUrl === QueryGetActionFeeRequest.typeUrl || typeof o.dataSize === "string");
   },
@@ -812,7 +686,7 @@ export const QueryGetActionFeeRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetActionFeeRequest>, I>>(object: I): QueryGetActionFeeRequest {
+  fromPartial(object: DeepPartial<QueryGetActionFeeRequest>): QueryGetActionFeeRequest {
     const message = createBaseQueryGetActionFeeRequest();
     message.dataSize = object.dataSize ?? "";
     return message;
@@ -861,9 +735,6 @@ export const QueryGetActionFeeResponse = {
   is(o: any): o is QueryGetActionFeeResponse {
     return o && (o.$typeUrl === QueryGetActionFeeResponse.typeUrl || typeof o.amount === "string");
   },
-  isSDK(o: any): o is QueryGetActionFeeResponseSDKType {
-    return o && (o.$typeUrl === QueryGetActionFeeResponse.typeUrl || typeof o.amount === "string");
-  },
   isAmino(o: any): o is QueryGetActionFeeResponseAmino {
     return o && (o.$typeUrl === QueryGetActionFeeResponse.typeUrl || typeof o.amount === "string");
   },
@@ -890,7 +761,7 @@ export const QueryGetActionFeeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetActionFeeResponse>, I>>(object: I): QueryGetActionFeeResponse {
+  fromPartial(object: DeepPartial<QueryGetActionFeeResponse>): QueryGetActionFeeResponse {
     const message = createBaseQueryGetActionFeeResponse();
     message.amount = object.amount ?? "";
     return message;
@@ -942,9 +813,6 @@ export const QueryListActionsRequest = {
   is(o: any): o is QueryListActionsRequest {
     return o && (o.$typeUrl === QueryListActionsRequest.typeUrl || isSet(o.actionType) && isSet(o.actionState));
   },
-  isSDK(o: any): o is QueryListActionsRequestSDKType {
-    return o && (o.$typeUrl === QueryListActionsRequest.typeUrl || isSet(o.actionType) && isSet(o.actionState));
-  },
   isAmino(o: any): o is QueryListActionsRequestAmino {
     return o && (o.$typeUrl === QueryListActionsRequest.typeUrl || isSet(o.actionType) && isSet(o.actionState));
   },
@@ -983,7 +851,7 @@ export const QueryListActionsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryListActionsRequest>, I>>(object: I): QueryListActionsRequest {
+  fromPartial(object: DeepPartial<QueryListActionsRequest>): QueryListActionsRequest {
     const message = createBaseQueryListActionsRequest();
     message.actionType = object.actionType ?? 0;
     message.actionState = object.actionState ?? 0;
@@ -1049,9 +917,6 @@ export const QueryListActionsResponse = {
   is(o: any): o is QueryListActionsResponse {
     return o && (o.$typeUrl === QueryListActionsResponse.typeUrl || Array.isArray(o.actions) && (!o.actions.length || Action.is(o.actions[0])) && typeof o.total === "bigint");
   },
-  isSDK(o: any): o is QueryListActionsResponseSDKType {
-    return o && (o.$typeUrl === QueryListActionsResponse.typeUrl || Array.isArray(o.actions) && (!o.actions.length || Action.isSDK(o.actions[0])) && typeof o.total === "bigint");
-  },
   isAmino(o: any): o is QueryListActionsResponseAmino {
     return o && (o.$typeUrl === QueryListActionsResponse.typeUrl || Array.isArray(o.actions) && (!o.actions.length || Action.isAmino(o.actions[0])) && typeof o.total === "bigint");
   },
@@ -1090,7 +955,7 @@ export const QueryListActionsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryListActionsResponse>, I>>(object: I): QueryListActionsResponse {
+  fromPartial(object: DeepPartial<QueryListActionsResponse>): QueryListActionsResponse {
     const message = createBaseQueryListActionsResponse();
     message.actions = object.actions?.map(e => Action.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -1159,9 +1024,6 @@ export const QueryListActionsBySuperNodeRequest = {
   is(o: any): o is QueryListActionsBySuperNodeRequest {
     return o && (o.$typeUrl === QueryListActionsBySuperNodeRequest.typeUrl || typeof o.superNodeAddress === "string");
   },
-  isSDK(o: any): o is QueryListActionsBySuperNodeRequestSDKType {
-    return o && (o.$typeUrl === QueryListActionsBySuperNodeRequest.typeUrl || typeof o.superNodeAddress === "string");
-  },
   isAmino(o: any): o is QueryListActionsBySuperNodeRequestAmino {
     return o && (o.$typeUrl === QueryListActionsBySuperNodeRequest.typeUrl || typeof o.superNodeAddress === "string");
   },
@@ -1194,7 +1056,7 @@ export const QueryListActionsBySuperNodeRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryListActionsBySuperNodeRequest>, I>>(object: I): QueryListActionsBySuperNodeRequest {
+  fromPartial(object: DeepPartial<QueryListActionsBySuperNodeRequest>): QueryListActionsBySuperNodeRequest {
     const message = createBaseQueryListActionsBySuperNodeRequest();
     message.superNodeAddress = object.superNodeAddress ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -1255,9 +1117,6 @@ export const QueryListActionsByBlockHeightRequest = {
   is(o: any): o is QueryListActionsByBlockHeightRequest {
     return o && (o.$typeUrl === QueryListActionsByBlockHeightRequest.typeUrl || typeof o.blockHeight === "bigint");
   },
-  isSDK(o: any): o is QueryListActionsByBlockHeightRequestSDKType {
-    return o && (o.$typeUrl === QueryListActionsByBlockHeightRequest.typeUrl || typeof o.blockHeight === "bigint");
-  },
   isAmino(o: any): o is QueryListActionsByBlockHeightRequestAmino {
     return o && (o.$typeUrl === QueryListActionsByBlockHeightRequest.typeUrl || typeof o.blockHeight === "bigint");
   },
@@ -1290,7 +1149,7 @@ export const QueryListActionsByBlockHeightRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryListActionsByBlockHeightRequest>, I>>(object: I): QueryListActionsByBlockHeightRequest {
+  fromPartial(object: DeepPartial<QueryListActionsByBlockHeightRequest>): QueryListActionsByBlockHeightRequest {
     const message = createBaseQueryListActionsByBlockHeightRequest();
     message.blockHeight = object.blockHeight !== undefined && object.blockHeight !== null ? BigInt(object.blockHeight.toString()) : BigInt(0);
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -1350,9 +1209,6 @@ export const QueryListExpiredActionsRequest = {
   is(o: any): o is QueryListExpiredActionsRequest {
     return o && o.$typeUrl === QueryListExpiredActionsRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryListExpiredActionsRequestSDKType {
-    return o && o.$typeUrl === QueryListExpiredActionsRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryListExpiredActionsRequestAmino {
     return o && o.$typeUrl === QueryListExpiredActionsRequest.typeUrl;
   },
@@ -1379,7 +1235,7 @@ export const QueryListExpiredActionsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryListExpiredActionsRequest>, I>>(object: I): QueryListExpiredActionsRequest {
+  fromPartial(object: DeepPartial<QueryListExpiredActionsRequest>): QueryListExpiredActionsRequest {
     const message = createBaseQueryListExpiredActionsRequest();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -1436,9 +1292,6 @@ export const QueryActionByMetadataRequest = {
   is(o: any): o is QueryActionByMetadataRequest {
     return o && (o.$typeUrl === QueryActionByMetadataRequest.typeUrl || isSet(o.actionType) && typeof o.metadataQuery === "string");
   },
-  isSDK(o: any): o is QueryActionByMetadataRequestSDKType {
-    return o && (o.$typeUrl === QueryActionByMetadataRequest.typeUrl || isSet(o.actionType) && typeof o.metadataQuery === "string");
-  },
   isAmino(o: any): o is QueryActionByMetadataRequestAmino {
     return o && (o.$typeUrl === QueryActionByMetadataRequest.typeUrl || isSet(o.actionType) && typeof o.metadataQuery === "string");
   },
@@ -1477,7 +1330,7 @@ export const QueryActionByMetadataRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryActionByMetadataRequest>, I>>(object: I): QueryActionByMetadataRequest {
+  fromPartial(object: DeepPartial<QueryActionByMetadataRequest>): QueryActionByMetadataRequest {
     const message = createBaseQueryActionByMetadataRequest();
     message.actionType = object.actionType ?? 0;
     message.metadataQuery = object.metadataQuery ?? "";

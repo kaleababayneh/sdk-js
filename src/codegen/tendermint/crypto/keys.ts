@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../helpers";
 /**
  * PublicKey defines the keys available for use with Validators
  * @name PublicKey
@@ -30,16 +30,6 @@ export interface PublicKeyAminoMsg {
   type: "/tendermint.crypto.PublicKey";
   value: PublicKeyAmino;
 }
-/**
- * PublicKey defines the keys available for use with Validators
- * @name PublicKeySDKType
- * @package tendermint.crypto
- * @see proto type: tendermint.crypto.PublicKey
- */
-export interface PublicKeySDKType {
-  ed25519?: Uint8Array;
-  secp256k1?: Uint8Array;
-}
 function createBasePublicKey(): PublicKey {
   return {
     ed25519: undefined,
@@ -55,9 +45,6 @@ function createBasePublicKey(): PublicKey {
 export const PublicKey = {
   typeUrl: "/tendermint.crypto.PublicKey",
   is(o: any): o is PublicKey {
-    return o && o.$typeUrl === PublicKey.typeUrl;
-  },
-  isSDK(o: any): o is PublicKeySDKType {
     return o && o.$typeUrl === PublicKey.typeUrl;
   },
   isAmino(o: any): o is PublicKeyAmino {
@@ -92,7 +79,7 @@ export const PublicKey = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PublicKey>, I>>(object: I): PublicKey {
+  fromPartial(object: DeepPartial<PublicKey>): PublicKey {
     const message = createBasePublicKey();
     message.ed25519 = object.ed25519 ?? undefined;
     message.secp256k1 = object.secp256k1 ?? undefined;

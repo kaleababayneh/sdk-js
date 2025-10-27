@@ -1,19 +1,18 @@
 // @ts-nocheck
 /* eslint-disable */
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { ConsensusParams, ConsensusParamsAmino, ConsensusParamsSDKType } from "../types/params";
-import { ProofOps, ProofOpsAmino, ProofOpsSDKType } from "../crypto/proof";
-import { PublicKey, PublicKeyAmino, PublicKeySDKType } from "../crypto/keys";
+import { ConsensusParams, ConsensusParamsAmino } from "../types/params";
+import { ProofOps, ProofOpsAmino } from "../crypto/proof";
+import { PublicKey, PublicKeyAmino } from "../crypto/keys";
 import { BlockIDFlag } from "../types/validator";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes, isSet } from "../../helpers";
+import { DeepPartial, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes, isSet } from "../../helpers";
 export enum CheckTxType {
   NEW = 0,
   RECHECK = 1,
   UNRECOGNIZED = -1,
 }
-export const CheckTxTypeSDKType = CheckTxType;
 export const CheckTxTypeAmino = CheckTxType;
 export function checkTxTypeFromJSON(object: any): CheckTxType {
   switch (object) {
@@ -55,7 +54,6 @@ export enum ResponseOfferSnapshot_Result {
   REJECT_SENDER = 5,
   UNRECOGNIZED = -1,
 }
-export const ResponseOfferSnapshot_ResultSDKType = ResponseOfferSnapshot_Result;
 export const ResponseOfferSnapshot_ResultAmino = ResponseOfferSnapshot_Result;
 export function responseOfferSnapshot_ResultFromJSON(object: any): ResponseOfferSnapshot_Result {
   switch (object) {
@@ -117,7 +115,6 @@ export enum ResponseApplySnapshotChunk_Result {
   REJECT_SNAPSHOT = 5,
   UNRECOGNIZED = -1,
 }
-export const ResponseApplySnapshotChunk_ResultSDKType = ResponseApplySnapshotChunk_Result;
 export const ResponseApplySnapshotChunk_ResultAmino = ResponseApplySnapshotChunk_Result;
 export function responseApplySnapshotChunk_ResultFromJSON(object: any): ResponseApplySnapshotChunk_Result {
   switch (object) {
@@ -170,7 +167,6 @@ export enum ResponseProcessProposal_ProposalStatus {
   REJECT = 2,
   UNRECOGNIZED = -1,
 }
-export const ResponseProcessProposal_ProposalStatusSDKType = ResponseProcessProposal_ProposalStatus;
 export const ResponseProcessProposal_ProposalStatusAmino = ResponseProcessProposal_ProposalStatus;
 export function responseProcessProposal_ProposalStatusFromJSON(object: any): ResponseProcessProposal_ProposalStatus {
   switch (object) {
@@ -214,7 +210,6 @@ export enum ResponseVerifyVoteExtension_VerifyStatus {
   REJECT = 2,
   UNRECOGNIZED = -1,
 }
-export const ResponseVerifyVoteExtension_VerifyStatusSDKType = ResponseVerifyVoteExtension_VerifyStatus;
 export const ResponseVerifyVoteExtension_VerifyStatusAmino = ResponseVerifyVoteExtension_VerifyStatus;
 export function responseVerifyVoteExtension_VerifyStatusFromJSON(object: any): ResponseVerifyVoteExtension_VerifyStatus {
   switch (object) {
@@ -252,7 +247,6 @@ export enum MisbehaviorType {
   LIGHT_CLIENT_ATTACK = 2,
   UNRECOGNIZED = -1,
 }
-export const MisbehaviorTypeSDKType = MisbehaviorType;
 export const MisbehaviorTypeAmino = MisbehaviorType;
 export function misbehaviorTypeFromJSON(object: any): MisbehaviorType {
   switch (object) {
@@ -339,29 +333,6 @@ export interface RequestAminoMsg {
   value: RequestAmino;
 }
 /**
- * @name RequestSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.Request
- */
-export interface RequestSDKType {
-  echo?: RequestEchoSDKType;
-  flush?: RequestFlushSDKType;
-  info?: RequestInfoSDKType;
-  init_chain?: RequestInitChainSDKType;
-  query?: RequestQuerySDKType;
-  check_tx?: RequestCheckTxSDKType;
-  commit?: RequestCommitSDKType;
-  list_snapshots?: RequestListSnapshotsSDKType;
-  offer_snapshot?: RequestOfferSnapshotSDKType;
-  load_snapshot_chunk?: RequestLoadSnapshotChunkSDKType;
-  apply_snapshot_chunk?: RequestApplySnapshotChunkSDKType;
-  prepare_proposal?: RequestPrepareProposalSDKType;
-  process_proposal?: RequestProcessProposalSDKType;
-  extend_vote?: RequestExtendVoteSDKType;
-  verify_vote_extension?: RequestVerifyVoteExtensionSDKType;
-  finalize_block?: RequestFinalizeBlockSDKType;
-}
-/**
  * @name RequestEcho
  * @package tendermint.abci
  * @see proto type: tendermint.abci.RequestEcho
@@ -379,19 +350,11 @@ export interface RequestEchoProtoMsg {
  * @see proto type: tendermint.abci.RequestEcho
  */
 export interface RequestEchoAmino {
-  message?: string;
+  message: string;
 }
 export interface RequestEchoAminoMsg {
   type: "/tendermint.abci.RequestEcho";
   value: RequestEchoAmino;
-}
-/**
- * @name RequestEchoSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestEcho
- */
-export interface RequestEchoSDKType {
-  message: string;
 }
 /**
  * @name RequestFlush
@@ -414,12 +377,6 @@ export interface RequestFlushAminoMsg {
   value: RequestFlushAmino;
 }
 /**
- * @name RequestFlushSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestFlush
- */
-export interface RequestFlushSDKType {}
-/**
  * @name RequestInfo
  * @package tendermint.abci
  * @see proto type: tendermint.abci.RequestInfo
@@ -440,25 +397,14 @@ export interface RequestInfoProtoMsg {
  * @see proto type: tendermint.abci.RequestInfo
  */
 export interface RequestInfoAmino {
-  version?: string;
-  block_version?: string;
-  p2p_version?: string;
-  abci_version?: string;
+  version: string;
+  block_version: string;
+  p2p_version: string;
+  abci_version: string;
 }
 export interface RequestInfoAminoMsg {
   type: "/tendermint.abci.RequestInfo";
   value: RequestInfoAmino;
-}
-/**
- * @name RequestInfoSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestInfo
- */
-export interface RequestInfoSDKType {
-  version: string;
-  block_version: bigint;
-  p2p_version: bigint;
-  abci_version: string;
 }
 /**
  * @name RequestInitChain
@@ -483,29 +429,16 @@ export interface RequestInitChainProtoMsg {
  * @see proto type: tendermint.abci.RequestInitChain
  */
 export interface RequestInitChainAmino {
-  time?: string;
-  chain_id?: string;
+  time: string;
+  chain_id: string;
   consensus_params?: ConsensusParamsAmino;
-  validators?: ValidatorUpdateAmino[];
-  app_state_bytes?: string;
-  initial_height?: string;
+  validators: ValidatorUpdateAmino[];
+  app_state_bytes: string;
+  initial_height: string;
 }
 export interface RequestInitChainAminoMsg {
   type: "/tendermint.abci.RequestInitChain";
   value: RequestInitChainAmino;
-}
-/**
- * @name RequestInitChainSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestInitChain
- */
-export interface RequestInitChainSDKType {
-  time: Date;
-  chain_id: string;
-  consensus_params?: ConsensusParamsSDKType;
-  validators: ValidatorUpdateSDKType[];
-  app_state_bytes: Uint8Array;
-  initial_height: bigint;
 }
 /**
  * @name RequestQuery
@@ -528,25 +461,14 @@ export interface RequestQueryProtoMsg {
  * @see proto type: tendermint.abci.RequestQuery
  */
 export interface RequestQueryAmino {
-  data?: string;
-  path?: string;
-  height?: string;
-  prove?: boolean;
+  data: string;
+  path: string;
+  height: string;
+  prove: boolean;
 }
 export interface RequestQueryAminoMsg {
   type: "/tendermint.abci.RequestQuery";
   value: RequestQueryAmino;
-}
-/**
- * @name RequestQuerySDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestQuery
- */
-export interface RequestQuerySDKType {
-  data: Uint8Array;
-  path: string;
-  height: bigint;
-  prove: boolean;
 }
 /**
  * @name RequestCheckTx
@@ -567,21 +489,12 @@ export interface RequestCheckTxProtoMsg {
  * @see proto type: tendermint.abci.RequestCheckTx
  */
 export interface RequestCheckTxAmino {
-  tx?: string;
-  type?: CheckTxType;
+  tx: string;
+  type: CheckTxType;
 }
 export interface RequestCheckTxAminoMsg {
   type: "/tendermint.abci.RequestCheckTx";
   value: RequestCheckTxAmino;
-}
-/**
- * @name RequestCheckTxSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestCheckTx
- */
-export interface RequestCheckTxSDKType {
-  tx: Uint8Array;
-  type: CheckTxType;
 }
 /**
  * @name RequestCommit
@@ -604,12 +517,6 @@ export interface RequestCommitAminoMsg {
   value: RequestCommitAmino;
 }
 /**
- * @name RequestCommitSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestCommit
- */
-export interface RequestCommitSDKType {}
-/**
  * lists available snapshots
  * @name RequestListSnapshots
  * @package tendermint.abci
@@ -631,13 +538,6 @@ export interface RequestListSnapshotsAminoMsg {
   type: "/tendermint.abci.RequestListSnapshots";
   value: RequestListSnapshotsAmino;
 }
-/**
- * lists available snapshots
- * @name RequestListSnapshotsSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestListSnapshots
- */
-export interface RequestListSnapshotsSDKType {}
 /**
  * offers a snapshot to the application
  * @name RequestOfferSnapshot
@@ -672,21 +572,11 @@ export interface RequestOfferSnapshotAmino {
   /**
    * light client-verified app hash for snapshot height
    */
-  app_hash?: string;
+  app_hash: string;
 }
 export interface RequestOfferSnapshotAminoMsg {
   type: "/tendermint.abci.RequestOfferSnapshot";
   value: RequestOfferSnapshotAmino;
-}
-/**
- * offers a snapshot to the application
- * @name RequestOfferSnapshotSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestOfferSnapshot
- */
-export interface RequestOfferSnapshotSDKType {
-  snapshot?: SnapshotSDKType;
-  app_hash: Uint8Array;
 }
 /**
  * loads a snapshot chunk
@@ -710,24 +600,13 @@ export interface RequestLoadSnapshotChunkProtoMsg {
  * @see proto type: tendermint.abci.RequestLoadSnapshotChunk
  */
 export interface RequestLoadSnapshotChunkAmino {
-  height?: string;
-  format?: number;
-  chunk?: number;
+  height: string;
+  format: number;
+  chunk: number;
 }
 export interface RequestLoadSnapshotChunkAminoMsg {
   type: "/tendermint.abci.RequestLoadSnapshotChunk";
   value: RequestLoadSnapshotChunkAmino;
-}
-/**
- * loads a snapshot chunk
- * @name RequestLoadSnapshotChunkSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestLoadSnapshotChunk
- */
-export interface RequestLoadSnapshotChunkSDKType {
-  height: bigint;
-  format: number;
-  chunk: number;
 }
 /**
  * Applies a snapshot chunk
@@ -751,24 +630,13 @@ export interface RequestApplySnapshotChunkProtoMsg {
  * @see proto type: tendermint.abci.RequestApplySnapshotChunk
  */
 export interface RequestApplySnapshotChunkAmino {
-  index?: number;
-  chunk?: string;
-  sender?: string;
+  index: number;
+  chunk: string;
+  sender: string;
 }
 export interface RequestApplySnapshotChunkAminoMsg {
   type: "/tendermint.abci.RequestApplySnapshotChunk";
   value: RequestApplySnapshotChunkAmino;
-}
-/**
- * Applies a snapshot chunk
- * @name RequestApplySnapshotChunkSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestApplySnapshotChunk
- */
-export interface RequestApplySnapshotChunkSDKType {
-  index: number;
-  chunk: Uint8Array;
-  sender: string;
 }
 /**
  * @name RequestPrepareProposal
@@ -808,40 +676,25 @@ export interface RequestPrepareProposalAmino {
   /**
    * the modified transactions cannot exceed this size.
    */
-  max_tx_bytes?: string;
+  max_tx_bytes: string;
   /**
    * txs is an array of transactions that will be included in a block,
    * sent to the app for possible modifications.
    */
-  txs?: string[];
-  local_last_commit?: ExtendedCommitInfoAmino;
-  misbehavior?: MisbehaviorAmino[];
-  height?: string;
-  time?: string;
-  next_validators_hash?: string;
+  txs: string[];
+  local_last_commit: ExtendedCommitInfoAmino;
+  misbehavior: MisbehaviorAmino[];
+  height: string;
+  time: string;
+  next_validators_hash: string;
   /**
    * address of the public key of the validator proposing the block.
    */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface RequestPrepareProposalAminoMsg {
   type: "/tendermint.abci.RequestPrepareProposal";
   value: RequestPrepareProposalAmino;
-}
-/**
- * @name RequestPrepareProposalSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestPrepareProposal
- */
-export interface RequestPrepareProposalSDKType {
-  max_tx_bytes: bigint;
-  txs: Uint8Array[];
-  local_last_commit: ExtendedCommitInfoSDKType;
-  misbehavior: MisbehaviorSDKType[];
-  height: bigint;
-  time: Date;
-  next_validators_hash: Uint8Array;
-  proposer_address: Uint8Array;
 }
 /**
  * @name RequestProcessProposal
@@ -874,39 +727,24 @@ export interface RequestProcessProposalProtoMsg {
  * @see proto type: tendermint.abci.RequestProcessProposal
  */
 export interface RequestProcessProposalAmino {
-  txs?: string[];
-  proposed_last_commit?: CommitInfoAmino;
-  misbehavior?: MisbehaviorAmino[];
+  txs: string[];
+  proposed_last_commit: CommitInfoAmino;
+  misbehavior: MisbehaviorAmino[];
   /**
    * hash is the merkle root hash of the fields of the proposed block.
    */
-  hash?: string;
-  height?: string;
-  time?: string;
-  next_validators_hash?: string;
+  hash: string;
+  height: string;
+  time: string;
+  next_validators_hash: string;
   /**
    * address of the public key of the original proposer of the block.
    */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface RequestProcessProposalAminoMsg {
   type: "/tendermint.abci.RequestProcessProposal";
   value: RequestProcessProposalAmino;
-}
-/**
- * @name RequestProcessProposalSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestProcessProposal
- */
-export interface RequestProcessProposalSDKType {
-  txs: Uint8Array[];
-  proposed_last_commit: CommitInfoSDKType;
-  misbehavior: MisbehaviorSDKType[];
-  hash: Uint8Array;
-  height: bigint;
-  time: Date;
-  next_validators_hash: Uint8Array;
-  proposer_address: Uint8Array;
 }
 /**
  * Extends a vote with application-injected data
@@ -950,43 +788,27 @@ export interface RequestExtendVoteAmino {
   /**
    * the hash of the block that this vote may be referring to
    */
-  hash?: string;
+  hash: string;
   /**
    * the height of the extended vote
    */
-  height?: string;
+  height: string;
   /**
    * info of the block that this vote may be referring to
    */
-  time?: string;
-  txs?: string[];
-  proposed_last_commit?: CommitInfoAmino;
-  misbehavior?: MisbehaviorAmino[];
-  next_validators_hash?: string;
+  time: string;
+  txs: string[];
+  proposed_last_commit: CommitInfoAmino;
+  misbehavior: MisbehaviorAmino[];
+  next_validators_hash: string;
   /**
    * address of the public key of the original proposer of the block.
    */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface RequestExtendVoteAminoMsg {
   type: "/tendermint.abci.RequestExtendVote";
   value: RequestExtendVoteAmino;
-}
-/**
- * Extends a vote with application-injected data
- * @name RequestExtendVoteSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestExtendVote
- */
-export interface RequestExtendVoteSDKType {
-  hash: Uint8Array;
-  height: bigint;
-  time: Date;
-  txs: Uint8Array[];
-  proposed_last_commit: CommitInfoSDKType;
-  misbehavior: MisbehaviorSDKType[];
-  next_validators_hash: Uint8Array;
-  proposer_address: Uint8Array;
 }
 /**
  * Verify the vote extension
@@ -1020,29 +842,17 @@ export interface RequestVerifyVoteExtensionAmino {
   /**
    * the hash of the block that this received vote corresponds to
    */
-  hash?: string;
+  hash: string;
   /**
    * the validator that signed the vote extension
    */
-  validator_address?: string;
-  height?: string;
-  vote_extension?: string;
+  validator_address: string;
+  height: string;
+  vote_extension: string;
 }
 export interface RequestVerifyVoteExtensionAminoMsg {
   type: "/tendermint.abci.RequestVerifyVoteExtension";
   value: RequestVerifyVoteExtensionAmino;
-}
-/**
- * Verify the vote extension
- * @name RequestVerifyVoteExtensionSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestVerifyVoteExtension
- */
-export interface RequestVerifyVoteExtensionSDKType {
-  hash: Uint8Array;
-  validator_address: Uint8Array;
-  height: bigint;
-  vote_extension: Uint8Array;
 }
 /**
  * @name RequestFinalizeBlock
@@ -1075,39 +885,24 @@ export interface RequestFinalizeBlockProtoMsg {
  * @see proto type: tendermint.abci.RequestFinalizeBlock
  */
 export interface RequestFinalizeBlockAmino {
-  txs?: string[];
-  decided_last_commit?: CommitInfoAmino;
-  misbehavior?: MisbehaviorAmino[];
+  txs: string[];
+  decided_last_commit: CommitInfoAmino;
+  misbehavior: MisbehaviorAmino[];
   /**
    * hash is the merkle root hash of the fields of the decided block.
    */
-  hash?: string;
-  height?: string;
-  time?: string;
-  next_validators_hash?: string;
+  hash: string;
+  height: string;
+  time: string;
+  next_validators_hash: string;
   /**
    * proposer_address is the address of the public key of the original proposer of the block.
    */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface RequestFinalizeBlockAminoMsg {
   type: "/tendermint.abci.RequestFinalizeBlock";
   value: RequestFinalizeBlockAmino;
-}
-/**
- * @name RequestFinalizeBlockSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.RequestFinalizeBlock
- */
-export interface RequestFinalizeBlockSDKType {
-  txs: Uint8Array[];
-  decided_last_commit: CommitInfoSDKType;
-  misbehavior: MisbehaviorSDKType[];
-  hash: Uint8Array;
-  height: bigint;
-  time: Date;
-  next_validators_hash: Uint8Array;
-  proposer_address: Uint8Array;
 }
 /**
  * @name Response
@@ -1166,30 +961,6 @@ export interface ResponseAminoMsg {
   value: ResponseAmino;
 }
 /**
- * @name ResponseSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.Response
- */
-export interface ResponseSDKType {
-  exception?: ResponseExceptionSDKType;
-  echo?: ResponseEchoSDKType;
-  flush?: ResponseFlushSDKType;
-  info?: ResponseInfoSDKType;
-  init_chain?: ResponseInitChainSDKType;
-  query?: ResponseQuerySDKType;
-  check_tx?: ResponseCheckTxSDKType;
-  commit?: ResponseCommitSDKType;
-  list_snapshots?: ResponseListSnapshotsSDKType;
-  offer_snapshot?: ResponseOfferSnapshotSDKType;
-  load_snapshot_chunk?: ResponseLoadSnapshotChunkSDKType;
-  apply_snapshot_chunk?: ResponseApplySnapshotChunkSDKType;
-  prepare_proposal?: ResponsePrepareProposalSDKType;
-  process_proposal?: ResponseProcessProposalSDKType;
-  extend_vote?: ResponseExtendVoteSDKType;
-  verify_vote_extension?: ResponseVerifyVoteExtensionSDKType;
-  finalize_block?: ResponseFinalizeBlockSDKType;
-}
-/**
  * nondeterministic
  * @name ResponseException
  * @package tendermint.abci
@@ -1209,20 +980,11 @@ export interface ResponseExceptionProtoMsg {
  * @see proto type: tendermint.abci.ResponseException
  */
 export interface ResponseExceptionAmino {
-  error?: string;
+  error: string;
 }
 export interface ResponseExceptionAminoMsg {
   type: "/tendermint.abci.ResponseException";
   value: ResponseExceptionAmino;
-}
-/**
- * nondeterministic
- * @name ResponseExceptionSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseException
- */
-export interface ResponseExceptionSDKType {
-  error: string;
 }
 /**
  * @name ResponseEcho
@@ -1242,19 +1004,11 @@ export interface ResponseEchoProtoMsg {
  * @see proto type: tendermint.abci.ResponseEcho
  */
 export interface ResponseEchoAmino {
-  message?: string;
+  message: string;
 }
 export interface ResponseEchoAminoMsg {
   type: "/tendermint.abci.ResponseEcho";
   value: ResponseEchoAmino;
-}
-/**
- * @name ResponseEchoSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseEcho
- */
-export interface ResponseEchoSDKType {
-  message: string;
 }
 /**
  * @name ResponseFlush
@@ -1277,12 +1031,6 @@ export interface ResponseFlushAminoMsg {
   value: ResponseFlushAmino;
 }
 /**
- * @name ResponseFlushSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseFlush
- */
-export interface ResponseFlushSDKType {}
-/**
  * @name ResponseInfo
  * @package tendermint.abci
  * @see proto type: tendermint.abci.ResponseInfo
@@ -1304,27 +1052,15 @@ export interface ResponseInfoProtoMsg {
  * @see proto type: tendermint.abci.ResponseInfo
  */
 export interface ResponseInfoAmino {
-  data?: string;
-  version?: string;
-  app_version?: string;
-  last_block_height?: string;
-  last_block_app_hash?: string;
+  data: string;
+  version: string;
+  app_version: string;
+  last_block_height: string;
+  last_block_app_hash: string;
 }
 export interface ResponseInfoAminoMsg {
   type: "/tendermint.abci.ResponseInfo";
   value: ResponseInfoAmino;
-}
-/**
- * @name ResponseInfoSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseInfo
- */
-export interface ResponseInfoSDKType {
-  data: string;
-  version: string;
-  app_version: bigint;
-  last_block_height: bigint;
-  last_block_app_hash: Uint8Array;
 }
 /**
  * @name ResponseInitChain
@@ -1347,22 +1083,12 @@ export interface ResponseInitChainProtoMsg {
  */
 export interface ResponseInitChainAmino {
   consensus_params?: ConsensusParamsAmino;
-  validators?: ValidatorUpdateAmino[];
-  app_hash?: string;
+  validators: ValidatorUpdateAmino[];
+  app_hash: string;
 }
 export interface ResponseInitChainAminoMsg {
   type: "/tendermint.abci.ResponseInitChain";
   value: ResponseInitChainAmino;
-}
-/**
- * @name ResponseInitChainSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseInitChain
- */
-export interface ResponseInitChainSDKType {
-  consensus_params?: ConsensusParamsSDKType;
-  validators: ValidatorUpdateSDKType[];
-  app_hash: Uint8Array;
 }
 /**
  * @name ResponseQuery
@@ -1396,41 +1122,25 @@ export interface ResponseQueryProtoMsg {
  * @see proto type: tendermint.abci.ResponseQuery
  */
 export interface ResponseQueryAmino {
-  code?: number;
+  code: number;
   /**
    * bytes data = 2; // use "value" instead.
    */
-  log?: string;
+  log: string;
   /**
    * nondeterministic
    */
-  info?: string;
-  index?: string;
-  key?: string;
-  value?: string;
+  info: string;
+  index: string;
+  key: string;
+  value: string;
   proof_ops?: ProofOpsAmino;
-  height?: string;
-  codespace?: string;
+  height: string;
+  codespace: string;
 }
 export interface ResponseQueryAminoMsg {
   type: "/tendermint.abci.ResponseQuery";
   value: ResponseQueryAmino;
-}
-/**
- * @name ResponseQuerySDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseQuery
- */
-export interface ResponseQuerySDKType {
-  code: number;
-  log: string;
-  info: string;
-  index: bigint;
-  key: Uint8Array;
-  value: Uint8Array;
-  proof_ops?: ProofOpsSDKType;
-  height: bigint;
-  codespace: string;
 }
 /**
  * @name ResponseCheckTx
@@ -1463,39 +1173,24 @@ export interface ResponseCheckTxProtoMsg {
  * @see proto type: tendermint.abci.ResponseCheckTx
  */
 export interface ResponseCheckTxAmino {
-  code?: number;
-  data?: string;
+  code: number;
+  data: string;
   /**
    * nondeterministic
    */
-  log?: string;
+  log: string;
   /**
    * nondeterministic
    */
-  info?: string;
-  gas_wanted?: string;
-  gas_used?: string;
-  events?: EventAmino[];
-  codespace?: string;
+  info: string;
+  gas_wanted: string;
+  gas_used: string;
+  events: EventAmino[];
+  codespace: string;
 }
 export interface ResponseCheckTxAminoMsg {
   type: "/tendermint.abci.ResponseCheckTx";
   value: ResponseCheckTxAmino;
-}
-/**
- * @name ResponseCheckTxSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseCheckTx
- */
-export interface ResponseCheckTxSDKType {
-  code: number;
-  data: Uint8Array;
-  log: string;
-  info: string;
-  gas_wanted: bigint;
-  gas_used: bigint;
-  events: EventSDKType[];
-  codespace: string;
 }
 /**
  * @name ResponseCommit
@@ -1515,19 +1210,11 @@ export interface ResponseCommitProtoMsg {
  * @see proto type: tendermint.abci.ResponseCommit
  */
 export interface ResponseCommitAmino {
-  retain_height?: string;
+  retain_height: string;
 }
 export interface ResponseCommitAminoMsg {
   type: "/tendermint.abci.ResponseCommit";
   value: ResponseCommitAmino;
-}
-/**
- * @name ResponseCommitSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseCommit
- */
-export interface ResponseCommitSDKType {
-  retain_height: bigint;
 }
 /**
  * @name ResponseListSnapshots
@@ -1547,19 +1234,11 @@ export interface ResponseListSnapshotsProtoMsg {
  * @see proto type: tendermint.abci.ResponseListSnapshots
  */
 export interface ResponseListSnapshotsAmino {
-  snapshots?: SnapshotAmino[];
+  snapshots: SnapshotAmino[];
 }
 export interface ResponseListSnapshotsAminoMsg {
   type: "/tendermint.abci.ResponseListSnapshots";
   value: ResponseListSnapshotsAmino;
-}
-/**
- * @name ResponseListSnapshotsSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseListSnapshots
- */
-export interface ResponseListSnapshotsSDKType {
-  snapshots: SnapshotSDKType[];
 }
 /**
  * @name ResponseOfferSnapshot
@@ -1579,19 +1258,11 @@ export interface ResponseOfferSnapshotProtoMsg {
  * @see proto type: tendermint.abci.ResponseOfferSnapshot
  */
 export interface ResponseOfferSnapshotAmino {
-  result?: ResponseOfferSnapshot_Result;
+  result: ResponseOfferSnapshot_Result;
 }
 export interface ResponseOfferSnapshotAminoMsg {
   type: "/tendermint.abci.ResponseOfferSnapshot";
   value: ResponseOfferSnapshotAmino;
-}
-/**
- * @name ResponseOfferSnapshotSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseOfferSnapshot
- */
-export interface ResponseOfferSnapshotSDKType {
-  result: ResponseOfferSnapshot_Result;
 }
 /**
  * @name ResponseLoadSnapshotChunk
@@ -1611,19 +1282,11 @@ export interface ResponseLoadSnapshotChunkProtoMsg {
  * @see proto type: tendermint.abci.ResponseLoadSnapshotChunk
  */
 export interface ResponseLoadSnapshotChunkAmino {
-  chunk?: string;
+  chunk: string;
 }
 export interface ResponseLoadSnapshotChunkAminoMsg {
   type: "/tendermint.abci.ResponseLoadSnapshotChunk";
   value: ResponseLoadSnapshotChunkAmino;
-}
-/**
- * @name ResponseLoadSnapshotChunkSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseLoadSnapshotChunk
- */
-export interface ResponseLoadSnapshotChunkSDKType {
-  chunk: Uint8Array;
 }
 /**
  * @name ResponseApplySnapshotChunk
@@ -1651,29 +1314,19 @@ export interface ResponseApplySnapshotChunkProtoMsg {
  * @see proto type: tendermint.abci.ResponseApplySnapshotChunk
  */
 export interface ResponseApplySnapshotChunkAmino {
-  result?: ResponseApplySnapshotChunk_Result;
+  result: ResponseApplySnapshotChunk_Result;
   /**
    * Chunks to refetch and reapply
    */
-  refetch_chunks?: number[];
+  refetch_chunks: number[];
   /**
    * Chunk senders to reject and ban
    */
-  reject_senders?: string[];
+  reject_senders: string[];
 }
 export interface ResponseApplySnapshotChunkAminoMsg {
   type: "/tendermint.abci.ResponseApplySnapshotChunk";
   value: ResponseApplySnapshotChunkAmino;
-}
-/**
- * @name ResponseApplySnapshotChunkSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseApplySnapshotChunk
- */
-export interface ResponseApplySnapshotChunkSDKType {
-  result: ResponseApplySnapshotChunk_Result;
-  refetch_chunks: number[];
-  reject_senders: string[];
 }
 /**
  * @name ResponsePrepareProposal
@@ -1693,19 +1346,11 @@ export interface ResponsePrepareProposalProtoMsg {
  * @see proto type: tendermint.abci.ResponsePrepareProposal
  */
 export interface ResponsePrepareProposalAmino {
-  txs?: string[];
+  txs: string[];
 }
 export interface ResponsePrepareProposalAminoMsg {
   type: "/tendermint.abci.ResponsePrepareProposal";
   value: ResponsePrepareProposalAmino;
-}
-/**
- * @name ResponsePrepareProposalSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponsePrepareProposal
- */
-export interface ResponsePrepareProposalSDKType {
-  txs: Uint8Array[];
 }
 /**
  * @name ResponseProcessProposal
@@ -1725,19 +1370,11 @@ export interface ResponseProcessProposalProtoMsg {
  * @see proto type: tendermint.abci.ResponseProcessProposal
  */
 export interface ResponseProcessProposalAmino {
-  status?: ResponseProcessProposal_ProposalStatus;
+  status: ResponseProcessProposal_ProposalStatus;
 }
 export interface ResponseProcessProposalAminoMsg {
   type: "/tendermint.abci.ResponseProcessProposal";
   value: ResponseProcessProposalAmino;
-}
-/**
- * @name ResponseProcessProposalSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseProcessProposal
- */
-export interface ResponseProcessProposalSDKType {
-  status: ResponseProcessProposal_ProposalStatus;
 }
 /**
  * @name ResponseExtendVote
@@ -1757,19 +1394,11 @@ export interface ResponseExtendVoteProtoMsg {
  * @see proto type: tendermint.abci.ResponseExtendVote
  */
 export interface ResponseExtendVoteAmino {
-  vote_extension?: string;
+  vote_extension: string;
 }
 export interface ResponseExtendVoteAminoMsg {
   type: "/tendermint.abci.ResponseExtendVote";
   value: ResponseExtendVoteAmino;
-}
-/**
- * @name ResponseExtendVoteSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseExtendVote
- */
-export interface ResponseExtendVoteSDKType {
-  vote_extension: Uint8Array;
 }
 /**
  * @name ResponseVerifyVoteExtension
@@ -1789,19 +1418,11 @@ export interface ResponseVerifyVoteExtensionProtoMsg {
  * @see proto type: tendermint.abci.ResponseVerifyVoteExtension
  */
 export interface ResponseVerifyVoteExtensionAmino {
-  status?: ResponseVerifyVoteExtension_VerifyStatus;
+  status: ResponseVerifyVoteExtension_VerifyStatus;
 }
 export interface ResponseVerifyVoteExtensionAminoMsg {
   type: "/tendermint.abci.ResponseVerifyVoteExtension";
   value: ResponseVerifyVoteExtensionAmino;
-}
-/**
- * @name ResponseVerifyVoteExtensionSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseVerifyVoteExtension
- */
-export interface ResponseVerifyVoteExtensionSDKType {
-  status: ResponseVerifyVoteExtension_VerifyStatus;
 }
 /**
  * @name ResponseFinalizeBlock
@@ -1846,17 +1467,17 @@ export interface ResponseFinalizeBlockAmino {
   /**
    * set of block events emmitted as part of executing the block
    */
-  events?: EventAmino[];
+  events: EventAmino[];
   /**
    * the result of executing each transaction including the events
    * the particular transction emitted. This should match the order
    * of the transactions delivered in the block itself
    */
-  tx_results?: ExecTxResultAmino[];
+  tx_results: ExecTxResultAmino[];
   /**
    * a list of updates to the validator set. These will reflect the validator set at current height + 2.
    */
-  validator_updates?: ValidatorUpdateAmino[];
+  validator_updates: ValidatorUpdateAmino[];
   /**
    * updates to the consensus params, if any.
    */
@@ -1865,23 +1486,11 @@ export interface ResponseFinalizeBlockAmino {
    * app_hash is the hash of the applications' state which is used to confirm that execution of the transactions was
    * deterministic. It is up to the application to decide which algorithm to use.
    */
-  app_hash?: string;
+  app_hash: string;
 }
 export interface ResponseFinalizeBlockAminoMsg {
   type: "/tendermint.abci.ResponseFinalizeBlock";
   value: ResponseFinalizeBlockAmino;
-}
-/**
- * @name ResponseFinalizeBlockSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ResponseFinalizeBlock
- */
-export interface ResponseFinalizeBlockSDKType {
-  events: EventSDKType[];
-  tx_results: ExecTxResultSDKType[];
-  validator_updates: ValidatorUpdateSDKType[];
-  consensus_param_updates?: ConsensusParamsSDKType;
-  app_hash: Uint8Array;
 }
 /**
  * @name CommitInfo
@@ -1902,21 +1511,12 @@ export interface CommitInfoProtoMsg {
  * @see proto type: tendermint.abci.CommitInfo
  */
 export interface CommitInfoAmino {
-  round?: number;
-  votes?: VoteInfoAmino[];
+  round: number;
+  votes: VoteInfoAmino[];
 }
 export interface CommitInfoAminoMsg {
   type: "/tendermint.abci.CommitInfo";
   value: CommitInfoAmino;
-}
-/**
- * @name CommitInfoSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.CommitInfo
- */
-export interface CommitInfoSDKType {
-  round: number;
-  votes: VoteInfoSDKType[];
 }
 /**
  * ExtendedCommitInfo is similar to CommitInfo except that it is only used in
@@ -1953,28 +1553,16 @@ export interface ExtendedCommitInfoAmino {
   /**
    * The round at which the block proposer decided in the previous height.
    */
-  round?: number;
+  round: number;
   /**
    * List of validators' addresses in the last validator set with their voting
    * information, including vote extensions.
    */
-  votes?: ExtendedVoteInfoAmino[];
+  votes: ExtendedVoteInfoAmino[];
 }
 export interface ExtendedCommitInfoAminoMsg {
   type: "/tendermint.abci.ExtendedCommitInfo";
   value: ExtendedCommitInfoAmino;
-}
-/**
- * ExtendedCommitInfo is similar to CommitInfo except that it is only used in
- * the PrepareProposal request such that CometBFT can provide vote extensions
- * to the application.
- * @name ExtendedCommitInfoSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ExtendedCommitInfo
- */
-export interface ExtendedCommitInfoSDKType {
-  round: number;
-  votes: ExtendedVoteInfoSDKType[];
 }
 /**
  * Event allows application developers to attach additional information to
@@ -2001,24 +1589,12 @@ export interface EventProtoMsg {
  * @see proto type: tendermint.abci.Event
  */
 export interface EventAmino {
-  type?: string;
-  attributes?: EventAttributeAmino[];
+  type: string;
+  attributes: EventAttributeAmino[];
 }
 export interface EventAminoMsg {
   type: "/tendermint.abci.Event";
   value: EventAmino;
-}
-/**
- * Event allows application developers to attach additional information to
- * ResponseFinalizeBlock and ResponseCheckTx.
- * Later, transactions may be queried using these events.
- * @name EventSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.Event
- */
-export interface EventSDKType {
-  type: string;
-  attributes: EventAttributeSDKType[];
 }
 /**
  * EventAttribute is a single key-value pair, associated with an event.
@@ -2045,27 +1621,16 @@ export interface EventAttributeProtoMsg {
  * @see proto type: tendermint.abci.EventAttribute
  */
 export interface EventAttributeAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
   /**
    * nondeterministic
    */
-  index?: boolean;
+  index: boolean;
 }
 export interface EventAttributeAminoMsg {
   type: "/tendermint.abci.EventAttribute";
   value: EventAttributeAmino;
-}
-/**
- * EventAttribute is a single key-value pair, associated with an event.
- * @name EventAttributeSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.EventAttribute
- */
-export interface EventAttributeSDKType {
-  key: string;
-  value: string;
-  index: boolean;
 }
 /**
  * ExecTxResult contains results of executing one individual transaction.
@@ -2104,42 +1669,24 @@ export interface ExecTxResultProtoMsg {
  * @see proto type: tendermint.abci.ExecTxResult
  */
 export interface ExecTxResultAmino {
-  code?: number;
-  data?: string;
+  code: number;
+  data: string;
   /**
    * nondeterministic
    */
-  log?: string;
+  log: string;
   /**
    * nondeterministic
    */
-  info?: string;
-  gas_wanted?: string;
-  gas_used?: string;
-  events?: EventAmino[];
-  codespace?: string;
+  info: string;
+  gas_wanted: string;
+  gas_used: string;
+  events: EventAmino[];
+  codespace: string;
 }
 export interface ExecTxResultAminoMsg {
   type: "/tendermint.abci.ExecTxResult";
   value: ExecTxResultAmino;
-}
-/**
- * ExecTxResult contains results of executing one individual transaction.
- * 
- * * Its structure is equivalent to #ResponseDeliverTx which will be deprecated/deleted
- * @name ExecTxResultSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ExecTxResult
- */
-export interface ExecTxResultSDKType {
-  code: number;
-  data: Uint8Array;
-  log: string;
-  info: string;
-  gas_wanted: bigint;
-  gas_used: bigint;
-  events: EventSDKType[];
-  codespace: string;
 }
 /**
  * TxResult contains results of executing the transaction.
@@ -2168,28 +1715,14 @@ export interface TxResultProtoMsg {
  * @see proto type: tendermint.abci.TxResult
  */
 export interface TxResultAmino {
-  height?: string;
-  index?: number;
-  tx?: string;
-  result?: ExecTxResultAmino;
+  height: string;
+  index: number;
+  tx: string;
+  result: ExecTxResultAmino;
 }
 export interface TxResultAminoMsg {
   type: "/tendermint.abci.TxResult";
   value: TxResultAmino;
-}
-/**
- * TxResult contains results of executing the transaction.
- * 
- * One usage is indexing transaction results.
- * @name TxResultSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.TxResult
- */
-export interface TxResultSDKType {
-  height: bigint;
-  index: number;
-  tx: Uint8Array;
-  result: ExecTxResultSDKType;
 }
 /**
  * @name Validator
@@ -2219,24 +1752,15 @@ export interface ValidatorAmino {
   /**
    * The first 20 bytes of SHA256(public key)
    */
-  address?: string;
+  address: string;
   /**
    * PubKey pub_key = 2 [(gogoproto.nullable)=false];
    */
-  power?: string;
+  power: string;
 }
 export interface ValidatorAminoMsg {
   type: "/tendermint.abci.Validator";
   value: ValidatorAmino;
-}
-/**
- * @name ValidatorSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.Validator
- */
-export interface ValidatorSDKType {
-  address: Uint8Array;
-  power: bigint;
 }
 /**
  * @name ValidatorUpdate
@@ -2257,21 +1781,12 @@ export interface ValidatorUpdateProtoMsg {
  * @see proto type: tendermint.abci.ValidatorUpdate
  */
 export interface ValidatorUpdateAmino {
-  pub_key?: PublicKeyAmino;
-  power?: string;
+  pub_key: PublicKeyAmino;
+  power: string;
 }
 export interface ValidatorUpdateAminoMsg {
   type: "/tendermint.abci.ValidatorUpdate";
   value: ValidatorUpdateAmino;
-}
-/**
- * @name ValidatorUpdateSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ValidatorUpdate
- */
-export interface ValidatorUpdateSDKType {
-  pub_key: PublicKeySDKType;
-  power: bigint;
 }
 /**
  * @name VoteInfo
@@ -2292,21 +1807,12 @@ export interface VoteInfoProtoMsg {
  * @see proto type: tendermint.abci.VoteInfo
  */
 export interface VoteInfoAmino {
-  validator?: ValidatorAmino;
-  block_id_flag?: BlockIDFlag;
+  validator: ValidatorAmino;
+  block_id_flag: BlockIDFlag;
 }
 export interface VoteInfoAminoMsg {
   type: "/tendermint.abci.VoteInfo";
   value: VoteInfoAmino;
-}
-/**
- * @name VoteInfoSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.VoteInfo
- */
-export interface VoteInfoSDKType {
-  validator: ValidatorSDKType;
-  block_id_flag: BlockIDFlag;
 }
 /**
  * @name ExtendedVoteInfo
@@ -2344,34 +1850,23 @@ export interface ExtendedVoteInfoAmino {
   /**
    * The validator that sent the vote.
    */
-  validator?: ValidatorAmino;
+  validator: ValidatorAmino;
   /**
    * Non-deterministic extension provided by the sending validator's application.
    */
-  vote_extension?: string;
+  vote_extension: string;
   /**
    * Vote extension signature created by CometBFT
    */
-  extension_signature?: string;
+  extension_signature: string;
   /**
    * block_id_flag indicates whether the validator voted for a block, nil, or did not vote at all
    */
-  block_id_flag?: BlockIDFlag;
+  block_id_flag: BlockIDFlag;
 }
 export interface ExtendedVoteInfoAminoMsg {
   type: "/tendermint.abci.ExtendedVoteInfo";
   value: ExtendedVoteInfoAmino;
-}
-/**
- * @name ExtendedVoteInfoSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.ExtendedVoteInfo
- */
-export interface ExtendedVoteInfoSDKType {
-  validator: ValidatorSDKType;
-  vote_extension: Uint8Array;
-  extension_signature: Uint8Array;
-  block_id_flag: BlockIDFlag;
 }
 /**
  * @name Misbehavior
@@ -2409,41 +1904,29 @@ export interface MisbehaviorProtoMsg {
  * @see proto type: tendermint.abci.Misbehavior
  */
 export interface MisbehaviorAmino {
-  type?: MisbehaviorType;
+  type: MisbehaviorType;
   /**
    * The offending validator
    */
-  validator?: ValidatorAmino;
+  validator: ValidatorAmino;
   /**
    * The height when the offense occurred
    */
-  height?: string;
+  height: string;
   /**
    * The corresponding time where the offense occurred
    */
-  time?: string;
+  time: string;
   /**
    * Total voting power of the validator set in case the ABCI application does
    * not store historical validators.
    * https://github.com/tendermint/tendermint/issues/4581
    */
-  total_voting_power?: string;
+  total_voting_power: string;
 }
 export interface MisbehaviorAminoMsg {
   type: "/tendermint.abci.Misbehavior";
   value: MisbehaviorAmino;
-}
-/**
- * @name MisbehaviorSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.Misbehavior
- */
-export interface MisbehaviorSDKType {
-  type: MisbehaviorType;
-  validator: ValidatorSDKType;
-  height: bigint;
-  time: Date;
-  total_voting_power: bigint;
 }
 /**
  * @name Snapshot
@@ -2485,39 +1968,27 @@ export interface SnapshotAmino {
   /**
    * The height at which the snapshot was taken
    */
-  height?: string;
+  height: string;
   /**
    * The application-specific snapshot format
    */
-  format?: number;
+  format: number;
   /**
    * Number of chunks in the snapshot
    */
-  chunks?: number;
+  chunks: number;
   /**
    * Arbitrary snapshot hash, equal only if identical
    */
-  hash?: string;
+  hash: string;
   /**
    * Arbitrary application metadata
    */
-  metadata?: string;
+  metadata: string;
 }
 export interface SnapshotAminoMsg {
   type: "/tendermint.abci.Snapshot";
   value: SnapshotAmino;
-}
-/**
- * @name SnapshotSDKType
- * @package tendermint.abci
- * @see proto type: tendermint.abci.Snapshot
- */
-export interface SnapshotSDKType {
-  height: bigint;
-  format: number;
-  chunks: number;
-  hash: Uint8Array;
-  metadata: Uint8Array;
 }
 function createBaseRequest(): Request {
   return {
@@ -2547,9 +2018,6 @@ function createBaseRequest(): Request {
 export const Request = {
   typeUrl: "/tendermint.abci.Request",
   is(o: any): o is Request {
-    return o && o.$typeUrl === Request.typeUrl;
-  },
-  isSDK(o: any): o is RequestSDKType {
     return o && o.$typeUrl === Request.typeUrl;
   },
   isAmino(o: any): o is RequestAmino {
@@ -2668,7 +2136,7 @@ export const Request = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Request>, I>>(object: I): Request {
+  fromPartial(object: DeepPartial<Request>): Request {
     const message = createBaseRequest();
     message.echo = object.echo !== undefined && object.echo !== null ? RequestEcho.fromPartial(object.echo) : undefined;
     message.flush = object.flush !== undefined && object.flush !== null ? RequestFlush.fromPartial(object.flush) : undefined;
@@ -2812,9 +2280,6 @@ export const RequestEcho = {
   is(o: any): o is RequestEcho {
     return o && (o.$typeUrl === RequestEcho.typeUrl || typeof o.message === "string");
   },
-  isSDK(o: any): o is RequestEchoSDKType {
-    return o && (o.$typeUrl === RequestEcho.typeUrl || typeof o.message === "string");
-  },
   isAmino(o: any): o is RequestEchoAmino {
     return o && (o.$typeUrl === RequestEcho.typeUrl || typeof o.message === "string");
   },
@@ -2841,7 +2306,7 @@ export const RequestEcho = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestEcho>, I>>(object: I): RequestEcho {
+  fromPartial(object: DeepPartial<RequestEcho>): RequestEcho {
     const message = createBaseRequestEcho();
     message.message = object.message ?? "";
     return message;
@@ -2888,9 +2353,6 @@ export const RequestFlush = {
   is(o: any): o is RequestFlush {
     return o && o.$typeUrl === RequestFlush.typeUrl;
   },
-  isSDK(o: any): o is RequestFlushSDKType {
-    return o && o.$typeUrl === RequestFlush.typeUrl;
-  },
   isAmino(o: any): o is RequestFlushAmino {
     return o && o.$typeUrl === RequestFlush.typeUrl;
   },
@@ -2911,7 +2373,7 @@ export const RequestFlush = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestFlush>, I>>(_: I): RequestFlush {
+  fromPartial(_: DeepPartial<RequestFlush>): RequestFlush {
     const message = createBaseRequestFlush();
     return message;
   },
@@ -2958,9 +2420,6 @@ export const RequestInfo = {
   is(o: any): o is RequestInfo {
     return o && (o.$typeUrl === RequestInfo.typeUrl || typeof o.version === "string" && typeof o.blockVersion === "bigint" && typeof o.p2pVersion === "bigint" && typeof o.abciVersion === "string");
   },
-  isSDK(o: any): o is RequestInfoSDKType {
-    return o && (o.$typeUrl === RequestInfo.typeUrl || typeof o.version === "string" && typeof o.block_version === "bigint" && typeof o.p2p_version === "bigint" && typeof o.abci_version === "string");
-  },
   isAmino(o: any): o is RequestInfoAmino {
     return o && (o.$typeUrl === RequestInfo.typeUrl || typeof o.version === "string" && typeof o.block_version === "bigint" && typeof o.p2p_version === "bigint" && typeof o.abci_version === "string");
   },
@@ -3005,7 +2464,7 @@ export const RequestInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestInfo>, I>>(object: I): RequestInfo {
+  fromPartial(object: DeepPartial<RequestInfo>): RequestInfo {
     const message = createBaseRequestInfo();
     message.version = object.version ?? "";
     message.blockVersion = object.blockVersion !== undefined && object.blockVersion !== null ? BigInt(object.blockVersion.toString()) : BigInt(0);
@@ -3074,9 +2533,6 @@ export const RequestInitChain = {
   is(o: any): o is RequestInitChain {
     return o && (o.$typeUrl === RequestInitChain.typeUrl || Timestamp.is(o.time) && typeof o.chainId === "string" && Array.isArray(o.validators) && (!o.validators.length || ValidatorUpdate.is(o.validators[0])) && (o.appStateBytes instanceof Uint8Array || typeof o.appStateBytes === "string") && typeof o.initialHeight === "bigint");
   },
-  isSDK(o: any): o is RequestInitChainSDKType {
-    return o && (o.$typeUrl === RequestInitChain.typeUrl || Timestamp.isSDK(o.time) && typeof o.chain_id === "string" && Array.isArray(o.validators) && (!o.validators.length || ValidatorUpdate.isSDK(o.validators[0])) && (o.app_state_bytes instanceof Uint8Array || typeof o.app_state_bytes === "string") && typeof o.initial_height === "bigint");
-  },
   isAmino(o: any): o is RequestInitChainAmino {
     return o && (o.$typeUrl === RequestInitChain.typeUrl || Timestamp.isAmino(o.time) && typeof o.chain_id === "string" && Array.isArray(o.validators) && (!o.validators.length || ValidatorUpdate.isAmino(o.validators[0])) && (o.app_state_bytes instanceof Uint8Array || typeof o.app_state_bytes === "string") && typeof o.initial_height === "bigint");
   },
@@ -3133,7 +2589,7 @@ export const RequestInitChain = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestInitChain>, I>>(object: I): RequestInitChain {
+  fromPartial(object: DeepPartial<RequestInitChain>): RequestInitChain {
     const message = createBaseRequestInitChain();
     message.time = object.time ?? undefined;
     message.chainId = object.chainId ?? "";
@@ -3218,9 +2674,6 @@ export const RequestQuery = {
   is(o: any): o is RequestQuery {
     return o && (o.$typeUrl === RequestQuery.typeUrl || (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.path === "string" && typeof o.height === "bigint" && typeof o.prove === "boolean");
   },
-  isSDK(o: any): o is RequestQuerySDKType {
-    return o && (o.$typeUrl === RequestQuery.typeUrl || (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.path === "string" && typeof o.height === "bigint" && typeof o.prove === "boolean");
-  },
   isAmino(o: any): o is RequestQueryAmino {
     return o && (o.$typeUrl === RequestQuery.typeUrl || (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.path === "string" && typeof o.height === "bigint" && typeof o.prove === "boolean");
   },
@@ -3265,7 +2718,7 @@ export const RequestQuery = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestQuery>, I>>(object: I): RequestQuery {
+  fromPartial(object: DeepPartial<RequestQuery>): RequestQuery {
     const message = createBaseRequestQuery();
     message.data = object.data ?? new Uint8Array();
     message.path = object.path ?? "";
@@ -3330,9 +2783,6 @@ export const RequestCheckTx = {
   is(o: any): o is RequestCheckTx {
     return o && (o.$typeUrl === RequestCheckTx.typeUrl || (o.tx instanceof Uint8Array || typeof o.tx === "string") && isSet(o.type));
   },
-  isSDK(o: any): o is RequestCheckTxSDKType {
-    return o && (o.$typeUrl === RequestCheckTx.typeUrl || (o.tx instanceof Uint8Array || typeof o.tx === "string") && isSet(o.type));
-  },
   isAmino(o: any): o is RequestCheckTxAmino {
     return o && (o.$typeUrl === RequestCheckTx.typeUrl || (o.tx instanceof Uint8Array || typeof o.tx === "string") && isSet(o.type));
   },
@@ -3365,7 +2815,7 @@ export const RequestCheckTx = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestCheckTx>, I>>(object: I): RequestCheckTx {
+  fromPartial(object: DeepPartial<RequestCheckTx>): RequestCheckTx {
     const message = createBaseRequestCheckTx();
     message.tx = object.tx ?? new Uint8Array();
     message.type = object.type ?? 0;
@@ -3417,9 +2867,6 @@ export const RequestCommit = {
   is(o: any): o is RequestCommit {
     return o && o.$typeUrl === RequestCommit.typeUrl;
   },
-  isSDK(o: any): o is RequestCommitSDKType {
-    return o && o.$typeUrl === RequestCommit.typeUrl;
-  },
   isAmino(o: any): o is RequestCommitAmino {
     return o && o.$typeUrl === RequestCommit.typeUrl;
   },
@@ -3440,7 +2887,7 @@ export const RequestCommit = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestCommit>, I>>(_: I): RequestCommit {
+  fromPartial(_: DeepPartial<RequestCommit>): RequestCommit {
     const message = createBaseRequestCommit();
     return message;
   },
@@ -3483,9 +2930,6 @@ export const RequestListSnapshots = {
   is(o: any): o is RequestListSnapshots {
     return o && o.$typeUrl === RequestListSnapshots.typeUrl;
   },
-  isSDK(o: any): o is RequestListSnapshotsSDKType {
-    return o && o.$typeUrl === RequestListSnapshots.typeUrl;
-  },
   isAmino(o: any): o is RequestListSnapshotsAmino {
     return o && o.$typeUrl === RequestListSnapshots.typeUrl;
   },
@@ -3506,7 +2950,7 @@ export const RequestListSnapshots = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestListSnapshots>, I>>(_: I): RequestListSnapshots {
+  fromPartial(_: DeepPartial<RequestListSnapshots>): RequestListSnapshots {
     const message = createBaseRequestListSnapshots();
     return message;
   },
@@ -3552,9 +2996,6 @@ export const RequestOfferSnapshot = {
   is(o: any): o is RequestOfferSnapshot {
     return o && (o.$typeUrl === RequestOfferSnapshot.typeUrl || o.appHash instanceof Uint8Array || typeof o.appHash === "string");
   },
-  isSDK(o: any): o is RequestOfferSnapshotSDKType {
-    return o && (o.$typeUrl === RequestOfferSnapshot.typeUrl || o.app_hash instanceof Uint8Array || typeof o.app_hash === "string");
-  },
   isAmino(o: any): o is RequestOfferSnapshotAmino {
     return o && (o.$typeUrl === RequestOfferSnapshot.typeUrl || o.app_hash instanceof Uint8Array || typeof o.app_hash === "string");
   },
@@ -3587,7 +3028,7 @@ export const RequestOfferSnapshot = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestOfferSnapshot>, I>>(object: I): RequestOfferSnapshot {
+  fromPartial(object: DeepPartial<RequestOfferSnapshot>): RequestOfferSnapshot {
     const message = createBaseRequestOfferSnapshot();
     message.snapshot = object.snapshot !== undefined && object.snapshot !== null ? Snapshot.fromPartial(object.snapshot) : undefined;
     message.appHash = object.appHash ?? new Uint8Array();
@@ -3649,9 +3090,6 @@ export const RequestLoadSnapshotChunk = {
   is(o: any): o is RequestLoadSnapshotChunk {
     return o && (o.$typeUrl === RequestLoadSnapshotChunk.typeUrl || typeof o.height === "bigint" && typeof o.format === "number" && typeof o.chunk === "number");
   },
-  isSDK(o: any): o is RequestLoadSnapshotChunkSDKType {
-    return o && (o.$typeUrl === RequestLoadSnapshotChunk.typeUrl || typeof o.height === "bigint" && typeof o.format === "number" && typeof o.chunk === "number");
-  },
   isAmino(o: any): o is RequestLoadSnapshotChunkAmino {
     return o && (o.$typeUrl === RequestLoadSnapshotChunk.typeUrl || typeof o.height === "bigint" && typeof o.format === "number" && typeof o.chunk === "number");
   },
@@ -3690,7 +3128,7 @@ export const RequestLoadSnapshotChunk = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestLoadSnapshotChunk>, I>>(object: I): RequestLoadSnapshotChunk {
+  fromPartial(object: DeepPartial<RequestLoadSnapshotChunk>): RequestLoadSnapshotChunk {
     const message = createBaseRequestLoadSnapshotChunk();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     message.format = object.format ?? 0;
@@ -3752,9 +3190,6 @@ export const RequestApplySnapshotChunk = {
   is(o: any): o is RequestApplySnapshotChunk {
     return o && (o.$typeUrl === RequestApplySnapshotChunk.typeUrl || typeof o.index === "number" && (o.chunk instanceof Uint8Array || typeof o.chunk === "string") && typeof o.sender === "string");
   },
-  isSDK(o: any): o is RequestApplySnapshotChunkSDKType {
-    return o && (o.$typeUrl === RequestApplySnapshotChunk.typeUrl || typeof o.index === "number" && (o.chunk instanceof Uint8Array || typeof o.chunk === "string") && typeof o.sender === "string");
-  },
   isAmino(o: any): o is RequestApplySnapshotChunkAmino {
     return o && (o.$typeUrl === RequestApplySnapshotChunk.typeUrl || typeof o.index === "number" && (o.chunk instanceof Uint8Array || typeof o.chunk === "string") && typeof o.sender === "string");
   },
@@ -3793,7 +3228,7 @@ export const RequestApplySnapshotChunk = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestApplySnapshotChunk>, I>>(object: I): RequestApplySnapshotChunk {
+  fromPartial(object: DeepPartial<RequestApplySnapshotChunk>): RequestApplySnapshotChunk {
     const message = createBaseRequestApplySnapshotChunk();
     message.index = object.index ?? 0;
     message.chunk = object.chunk ?? new Uint8Array();
@@ -3858,9 +3293,6 @@ export const RequestPrepareProposal = {
   typeUrl: "/tendermint.abci.RequestPrepareProposal",
   is(o: any): o is RequestPrepareProposal {
     return o && (o.$typeUrl === RequestPrepareProposal.typeUrl || typeof o.maxTxBytes === "bigint" && Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && ExtendedCommitInfo.is(o.localLastCommit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.is(o.misbehavior[0])) && typeof o.height === "bigint" && Timestamp.is(o.time) && (o.nextValidatorsHash instanceof Uint8Array || typeof o.nextValidatorsHash === "string") && (o.proposerAddress instanceof Uint8Array || typeof o.proposerAddress === "string"));
-  },
-  isSDK(o: any): o is RequestPrepareProposalSDKType {
-    return o && (o.$typeUrl === RequestPrepareProposal.typeUrl || typeof o.max_tx_bytes === "bigint" && Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && ExtendedCommitInfo.isSDK(o.local_last_commit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.isSDK(o.misbehavior[0])) && typeof o.height === "bigint" && Timestamp.isSDK(o.time) && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.proposer_address instanceof Uint8Array || typeof o.proposer_address === "string"));
   },
   isAmino(o: any): o is RequestPrepareProposalAmino {
     return o && (o.$typeUrl === RequestPrepareProposal.typeUrl || typeof o.max_tx_bytes === "bigint" && Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && ExtendedCommitInfo.isAmino(o.local_last_commit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.isAmino(o.misbehavior[0])) && typeof o.height === "bigint" && Timestamp.isAmino(o.time) && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.proposer_address instanceof Uint8Array || typeof o.proposer_address === "string"));
@@ -3930,7 +3362,7 @@ export const RequestPrepareProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestPrepareProposal>, I>>(object: I): RequestPrepareProposal {
+  fromPartial(object: DeepPartial<RequestPrepareProposal>): RequestPrepareProposal {
     const message = createBaseRequestPrepareProposal();
     message.maxTxBytes = object.maxTxBytes !== undefined && object.maxTxBytes !== null ? BigInt(object.maxTxBytes.toString()) : BigInt(0);
     message.txs = object.txs?.map(e => e) || [];
@@ -4031,9 +3463,6 @@ export const RequestProcessProposal = {
   is(o: any): o is RequestProcessProposal {
     return o && (o.$typeUrl === RequestProcessProposal.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && CommitInfo.is(o.proposedLastCommit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.is(o.misbehavior[0])) && (o.hash instanceof Uint8Array || typeof o.hash === "string") && typeof o.height === "bigint" && Timestamp.is(o.time) && (o.nextValidatorsHash instanceof Uint8Array || typeof o.nextValidatorsHash === "string") && (o.proposerAddress instanceof Uint8Array || typeof o.proposerAddress === "string"));
   },
-  isSDK(o: any): o is RequestProcessProposalSDKType {
-    return o && (o.$typeUrl === RequestProcessProposal.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && CommitInfo.isSDK(o.proposed_last_commit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.isSDK(o.misbehavior[0])) && (o.hash instanceof Uint8Array || typeof o.hash === "string") && typeof o.height === "bigint" && Timestamp.isSDK(o.time) && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.proposer_address instanceof Uint8Array || typeof o.proposer_address === "string"));
-  },
   isAmino(o: any): o is RequestProcessProposalAmino {
     return o && (o.$typeUrl === RequestProcessProposal.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && CommitInfo.isAmino(o.proposed_last_commit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.isAmino(o.misbehavior[0])) && (o.hash instanceof Uint8Array || typeof o.hash === "string") && typeof o.height === "bigint" && Timestamp.isAmino(o.time) && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.proposer_address instanceof Uint8Array || typeof o.proposer_address === "string"));
   },
@@ -4102,7 +3531,7 @@ export const RequestProcessProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestProcessProposal>, I>>(object: I): RequestProcessProposal {
+  fromPartial(object: DeepPartial<RequestProcessProposal>): RequestProcessProposal {
     const message = createBaseRequestProcessProposal();
     message.txs = object.txs?.map(e => e) || [];
     message.proposedLastCommit = object.proposedLastCommit !== undefined && object.proposedLastCommit !== null ? CommitInfo.fromPartial(object.proposedLastCommit) : undefined;
@@ -4204,9 +3633,6 @@ export const RequestExtendVote = {
   is(o: any): o is RequestExtendVote {
     return o && (o.$typeUrl === RequestExtendVote.typeUrl || (o.hash instanceof Uint8Array || typeof o.hash === "string") && typeof o.height === "bigint" && Timestamp.is(o.time) && Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && CommitInfo.is(o.proposedLastCommit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.is(o.misbehavior[0])) && (o.nextValidatorsHash instanceof Uint8Array || typeof o.nextValidatorsHash === "string") && (o.proposerAddress instanceof Uint8Array || typeof o.proposerAddress === "string"));
   },
-  isSDK(o: any): o is RequestExtendVoteSDKType {
-    return o && (o.$typeUrl === RequestExtendVote.typeUrl || (o.hash instanceof Uint8Array || typeof o.hash === "string") && typeof o.height === "bigint" && Timestamp.isSDK(o.time) && Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && CommitInfo.isSDK(o.proposed_last_commit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.isSDK(o.misbehavior[0])) && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.proposer_address instanceof Uint8Array || typeof o.proposer_address === "string"));
-  },
   isAmino(o: any): o is RequestExtendVoteAmino {
     return o && (o.$typeUrl === RequestExtendVote.typeUrl || (o.hash instanceof Uint8Array || typeof o.hash === "string") && typeof o.height === "bigint" && Timestamp.isAmino(o.time) && Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && CommitInfo.isAmino(o.proposed_last_commit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.isAmino(o.misbehavior[0])) && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.proposer_address instanceof Uint8Array || typeof o.proposer_address === "string"));
   },
@@ -4275,7 +3701,7 @@ export const RequestExtendVote = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestExtendVote>, I>>(object: I): RequestExtendVote {
+  fromPartial(object: DeepPartial<RequestExtendVote>): RequestExtendVote {
     const message = createBaseRequestExtendVote();
     message.hash = object.hash ?? new Uint8Array();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
@@ -4373,9 +3799,6 @@ export const RequestVerifyVoteExtension = {
   is(o: any): o is RequestVerifyVoteExtension {
     return o && (o.$typeUrl === RequestVerifyVoteExtension.typeUrl || (o.hash instanceof Uint8Array || typeof o.hash === "string") && (o.validatorAddress instanceof Uint8Array || typeof o.validatorAddress === "string") && typeof o.height === "bigint" && (o.voteExtension instanceof Uint8Array || typeof o.voteExtension === "string"));
   },
-  isSDK(o: any): o is RequestVerifyVoteExtensionSDKType {
-    return o && (o.$typeUrl === RequestVerifyVoteExtension.typeUrl || (o.hash instanceof Uint8Array || typeof o.hash === "string") && (o.validator_address instanceof Uint8Array || typeof o.validator_address === "string") && typeof o.height === "bigint" && (o.vote_extension instanceof Uint8Array || typeof o.vote_extension === "string"));
-  },
   isAmino(o: any): o is RequestVerifyVoteExtensionAmino {
     return o && (o.$typeUrl === RequestVerifyVoteExtension.typeUrl || (o.hash instanceof Uint8Array || typeof o.hash === "string") && (o.validator_address instanceof Uint8Array || typeof o.validator_address === "string") && typeof o.height === "bigint" && (o.vote_extension instanceof Uint8Array || typeof o.vote_extension === "string"));
   },
@@ -4420,7 +3843,7 @@ export const RequestVerifyVoteExtension = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestVerifyVoteExtension>, I>>(object: I): RequestVerifyVoteExtension {
+  fromPartial(object: DeepPartial<RequestVerifyVoteExtension>): RequestVerifyVoteExtension {
     const message = createBaseRequestVerifyVoteExtension();
     message.hash = object.hash ?? new Uint8Array();
     message.validatorAddress = object.validatorAddress ?? new Uint8Array();
@@ -4491,9 +3914,6 @@ export const RequestFinalizeBlock = {
   is(o: any): o is RequestFinalizeBlock {
     return o && (o.$typeUrl === RequestFinalizeBlock.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && CommitInfo.is(o.decidedLastCommit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.is(o.misbehavior[0])) && (o.hash instanceof Uint8Array || typeof o.hash === "string") && typeof o.height === "bigint" && Timestamp.is(o.time) && (o.nextValidatorsHash instanceof Uint8Array || typeof o.nextValidatorsHash === "string") && (o.proposerAddress instanceof Uint8Array || typeof o.proposerAddress === "string"));
   },
-  isSDK(o: any): o is RequestFinalizeBlockSDKType {
-    return o && (o.$typeUrl === RequestFinalizeBlock.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && CommitInfo.isSDK(o.decided_last_commit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.isSDK(o.misbehavior[0])) && (o.hash instanceof Uint8Array || typeof o.hash === "string") && typeof o.height === "bigint" && Timestamp.isSDK(o.time) && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.proposer_address instanceof Uint8Array || typeof o.proposer_address === "string"));
-  },
   isAmino(o: any): o is RequestFinalizeBlockAmino {
     return o && (o.$typeUrl === RequestFinalizeBlock.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string") && CommitInfo.isAmino(o.decided_last_commit) && Array.isArray(o.misbehavior) && (!o.misbehavior.length || Misbehavior.isAmino(o.misbehavior[0])) && (o.hash instanceof Uint8Array || typeof o.hash === "string") && typeof o.height === "bigint" && Timestamp.isAmino(o.time) && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.proposer_address instanceof Uint8Array || typeof o.proposer_address === "string"));
   },
@@ -4562,7 +3982,7 @@ export const RequestFinalizeBlock = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestFinalizeBlock>, I>>(object: I): RequestFinalizeBlock {
+  fromPartial(object: DeepPartial<RequestFinalizeBlock>): RequestFinalizeBlock {
     const message = createBaseRequestFinalizeBlock();
     message.txs = object.txs?.map(e => e) || [];
     message.decidedLastCommit = object.decidedLastCommit !== undefined && object.decidedLastCommit !== null ? CommitInfo.fromPartial(object.decidedLastCommit) : undefined;
@@ -4670,9 +4090,6 @@ function createBaseResponse(): Response {
 export const Response = {
   typeUrl: "/tendermint.abci.Response",
   is(o: any): o is Response {
-    return o && o.$typeUrl === Response.typeUrl;
-  },
-  isSDK(o: any): o is ResponseSDKType {
     return o && o.$typeUrl === Response.typeUrl;
   },
   isAmino(o: any): o is ResponseAmino {
@@ -4797,7 +4214,7 @@ export const Response = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Response>, I>>(object: I): Response {
+  fromPartial(object: DeepPartial<Response>): Response {
     const message = createBaseResponse();
     message.exception = object.exception !== undefined && object.exception !== null ? ResponseException.fromPartial(object.exception) : undefined;
     message.echo = object.echo !== undefined && object.echo !== null ? ResponseEcho.fromPartial(object.echo) : undefined;
@@ -4948,9 +4365,6 @@ export const ResponseException = {
   is(o: any): o is ResponseException {
     return o && (o.$typeUrl === ResponseException.typeUrl || typeof o.error === "string");
   },
-  isSDK(o: any): o is ResponseExceptionSDKType {
-    return o && (o.$typeUrl === ResponseException.typeUrl || typeof o.error === "string");
-  },
   isAmino(o: any): o is ResponseExceptionAmino {
     return o && (o.$typeUrl === ResponseException.typeUrl || typeof o.error === "string");
   },
@@ -4977,7 +4391,7 @@ export const ResponseException = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseException>, I>>(object: I): ResponseException {
+  fromPartial(object: DeepPartial<ResponseException>): ResponseException {
     const message = createBaseResponseException();
     message.error = object.error ?? "";
     return message;
@@ -5026,9 +4440,6 @@ export const ResponseEcho = {
   is(o: any): o is ResponseEcho {
     return o && (o.$typeUrl === ResponseEcho.typeUrl || typeof o.message === "string");
   },
-  isSDK(o: any): o is ResponseEchoSDKType {
-    return o && (o.$typeUrl === ResponseEcho.typeUrl || typeof o.message === "string");
-  },
   isAmino(o: any): o is ResponseEchoAmino {
     return o && (o.$typeUrl === ResponseEcho.typeUrl || typeof o.message === "string");
   },
@@ -5055,7 +4466,7 @@ export const ResponseEcho = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseEcho>, I>>(object: I): ResponseEcho {
+  fromPartial(object: DeepPartial<ResponseEcho>): ResponseEcho {
     const message = createBaseResponseEcho();
     message.message = object.message ?? "";
     return message;
@@ -5102,9 +4513,6 @@ export const ResponseFlush = {
   is(o: any): o is ResponseFlush {
     return o && o.$typeUrl === ResponseFlush.typeUrl;
   },
-  isSDK(o: any): o is ResponseFlushSDKType {
-    return o && o.$typeUrl === ResponseFlush.typeUrl;
-  },
   isAmino(o: any): o is ResponseFlushAmino {
     return o && o.$typeUrl === ResponseFlush.typeUrl;
   },
@@ -5125,7 +4533,7 @@ export const ResponseFlush = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseFlush>, I>>(_: I): ResponseFlush {
+  fromPartial(_: DeepPartial<ResponseFlush>): ResponseFlush {
     const message = createBaseResponseFlush();
     return message;
   },
@@ -5172,9 +4580,6 @@ export const ResponseInfo = {
   typeUrl: "/tendermint.abci.ResponseInfo",
   is(o: any): o is ResponseInfo {
     return o && (o.$typeUrl === ResponseInfo.typeUrl || typeof o.data === "string" && typeof o.version === "string" && typeof o.appVersion === "bigint" && typeof o.lastBlockHeight === "bigint" && (o.lastBlockAppHash instanceof Uint8Array || typeof o.lastBlockAppHash === "string"));
-  },
-  isSDK(o: any): o is ResponseInfoSDKType {
-    return o && (o.$typeUrl === ResponseInfo.typeUrl || typeof o.data === "string" && typeof o.version === "string" && typeof o.app_version === "bigint" && typeof o.last_block_height === "bigint" && (o.last_block_app_hash instanceof Uint8Array || typeof o.last_block_app_hash === "string"));
   },
   isAmino(o: any): o is ResponseInfoAmino {
     return o && (o.$typeUrl === ResponseInfo.typeUrl || typeof o.data === "string" && typeof o.version === "string" && typeof o.app_version === "bigint" && typeof o.last_block_height === "bigint" && (o.last_block_app_hash instanceof Uint8Array || typeof o.last_block_app_hash === "string"));
@@ -5226,7 +4631,7 @@ export const ResponseInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseInfo>, I>>(object: I): ResponseInfo {
+  fromPartial(object: DeepPartial<ResponseInfo>): ResponseInfo {
     const message = createBaseResponseInfo();
     message.data = object.data ?? "";
     message.version = object.version ?? "";
@@ -5297,9 +4702,6 @@ export const ResponseInitChain = {
   is(o: any): o is ResponseInitChain {
     return o && (o.$typeUrl === ResponseInitChain.typeUrl || Array.isArray(o.validators) && (!o.validators.length || ValidatorUpdate.is(o.validators[0])) && (o.appHash instanceof Uint8Array || typeof o.appHash === "string"));
   },
-  isSDK(o: any): o is ResponseInitChainSDKType {
-    return o && (o.$typeUrl === ResponseInitChain.typeUrl || Array.isArray(o.validators) && (!o.validators.length || ValidatorUpdate.isSDK(o.validators[0])) && (o.app_hash instanceof Uint8Array || typeof o.app_hash === "string"));
-  },
   isAmino(o: any): o is ResponseInitChainAmino {
     return o && (o.$typeUrl === ResponseInitChain.typeUrl || Array.isArray(o.validators) && (!o.validators.length || ValidatorUpdate.isAmino(o.validators[0])) && (o.app_hash instanceof Uint8Array || typeof o.app_hash === "string"));
   },
@@ -5338,7 +4740,7 @@ export const ResponseInitChain = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseInitChain>, I>>(object: I): ResponseInitChain {
+  fromPartial(object: DeepPartial<ResponseInitChain>): ResponseInitChain {
     const message = createBaseResponseInitChain();
     message.consensusParams = object.consensusParams !== undefined && object.consensusParams !== null ? ConsensusParams.fromPartial(object.consensusParams) : undefined;
     message.validators = object.validators?.map(e => ValidatorUpdate.fromPartial(e)) || [];
@@ -5411,9 +4813,6 @@ function createBaseResponseQuery(): ResponseQuery {
 export const ResponseQuery = {
   typeUrl: "/tendermint.abci.ResponseQuery",
   is(o: any): o is ResponseQuery {
-    return o && (o.$typeUrl === ResponseQuery.typeUrl || typeof o.code === "number" && typeof o.log === "string" && typeof o.info === "string" && typeof o.index === "bigint" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string") && typeof o.height === "bigint" && typeof o.codespace === "string");
-  },
-  isSDK(o: any): o is ResponseQuerySDKType {
     return o && (o.$typeUrl === ResponseQuery.typeUrl || typeof o.code === "number" && typeof o.log === "string" && typeof o.info === "string" && typeof o.index === "bigint" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string") && typeof o.height === "bigint" && typeof o.codespace === "string");
   },
   isAmino(o: any): o is ResponseQueryAmino {
@@ -5490,7 +4889,7 @@ export const ResponseQuery = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseQuery>, I>>(object: I): ResponseQuery {
+  fromPartial(object: DeepPartial<ResponseQuery>): ResponseQuery {
     const message = createBaseResponseQuery();
     message.code = object.code ?? 0;
     message.log = object.log ?? "";
@@ -5591,9 +4990,6 @@ export const ResponseCheckTx = {
   is(o: any): o is ResponseCheckTx {
     return o && (o.$typeUrl === ResponseCheckTx.typeUrl || typeof o.code === "number" && (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.log === "string" && typeof o.info === "string" && typeof o.gasWanted === "bigint" && typeof o.gasUsed === "bigint" && Array.isArray(o.events) && (!o.events.length || Event.is(o.events[0])) && typeof o.codespace === "string");
   },
-  isSDK(o: any): o is ResponseCheckTxSDKType {
-    return o && (o.$typeUrl === ResponseCheckTx.typeUrl || typeof o.code === "number" && (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.log === "string" && typeof o.info === "string" && typeof o.gas_wanted === "bigint" && typeof o.gas_used === "bigint" && Array.isArray(o.events) && (!o.events.length || Event.isSDK(o.events[0])) && typeof o.codespace === "string");
-  },
   isAmino(o: any): o is ResponseCheckTxAmino {
     return o && (o.$typeUrl === ResponseCheckTx.typeUrl || typeof o.code === "number" && (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.log === "string" && typeof o.info === "string" && typeof o.gas_wanted === "bigint" && typeof o.gas_used === "bigint" && Array.isArray(o.events) && (!o.events.length || Event.isAmino(o.events[0])) && typeof o.codespace === "string");
   },
@@ -5662,7 +5058,7 @@ export const ResponseCheckTx = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseCheckTx>, I>>(object: I): ResponseCheckTx {
+  fromPartial(object: DeepPartial<ResponseCheckTx>): ResponseCheckTx {
     const message = createBaseResponseCheckTx();
     message.code = object.code ?? 0;
     message.data = object.data ?? new Uint8Array();
@@ -5753,9 +5149,6 @@ export const ResponseCommit = {
   is(o: any): o is ResponseCommit {
     return o && (o.$typeUrl === ResponseCommit.typeUrl || typeof o.retainHeight === "bigint");
   },
-  isSDK(o: any): o is ResponseCommitSDKType {
-    return o && (o.$typeUrl === ResponseCommit.typeUrl || typeof o.retain_height === "bigint");
-  },
   isAmino(o: any): o is ResponseCommitAmino {
     return o && (o.$typeUrl === ResponseCommit.typeUrl || typeof o.retain_height === "bigint");
   },
@@ -5782,7 +5175,7 @@ export const ResponseCommit = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseCommit>, I>>(object: I): ResponseCommit {
+  fromPartial(object: DeepPartial<ResponseCommit>): ResponseCommit {
     const message = createBaseResponseCommit();
     message.retainHeight = object.retainHeight !== undefined && object.retainHeight !== null ? BigInt(object.retainHeight.toString()) : BigInt(0);
     return message;
@@ -5831,9 +5224,6 @@ export const ResponseListSnapshots = {
   is(o: any): o is ResponseListSnapshots {
     return o && (o.$typeUrl === ResponseListSnapshots.typeUrl || Array.isArray(o.snapshots) && (!o.snapshots.length || Snapshot.is(o.snapshots[0])));
   },
-  isSDK(o: any): o is ResponseListSnapshotsSDKType {
-    return o && (o.$typeUrl === ResponseListSnapshots.typeUrl || Array.isArray(o.snapshots) && (!o.snapshots.length || Snapshot.isSDK(o.snapshots[0])));
-  },
   isAmino(o: any): o is ResponseListSnapshotsAmino {
     return o && (o.$typeUrl === ResponseListSnapshots.typeUrl || Array.isArray(o.snapshots) && (!o.snapshots.length || Snapshot.isAmino(o.snapshots[0])));
   },
@@ -5860,7 +5250,7 @@ export const ResponseListSnapshots = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseListSnapshots>, I>>(object: I): ResponseListSnapshots {
+  fromPartial(object: DeepPartial<ResponseListSnapshots>): ResponseListSnapshots {
     const message = createBaseResponseListSnapshots();
     message.snapshots = object.snapshots?.map(e => Snapshot.fromPartial(e)) || [];
     return message;
@@ -5916,9 +5306,6 @@ export const ResponseOfferSnapshot = {
   is(o: any): o is ResponseOfferSnapshot {
     return o && (o.$typeUrl === ResponseOfferSnapshot.typeUrl || isSet(o.result));
   },
-  isSDK(o: any): o is ResponseOfferSnapshotSDKType {
-    return o && (o.$typeUrl === ResponseOfferSnapshot.typeUrl || isSet(o.result));
-  },
   isAmino(o: any): o is ResponseOfferSnapshotAmino {
     return o && (o.$typeUrl === ResponseOfferSnapshot.typeUrl || isSet(o.result));
   },
@@ -5945,7 +5332,7 @@ export const ResponseOfferSnapshot = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseOfferSnapshot>, I>>(object: I): ResponseOfferSnapshot {
+  fromPartial(object: DeepPartial<ResponseOfferSnapshot>): ResponseOfferSnapshot {
     const message = createBaseResponseOfferSnapshot();
     message.result = object.result ?? 0;
     return message;
@@ -5994,9 +5381,6 @@ export const ResponseLoadSnapshotChunk = {
   is(o: any): o is ResponseLoadSnapshotChunk {
     return o && (o.$typeUrl === ResponseLoadSnapshotChunk.typeUrl || o.chunk instanceof Uint8Array || typeof o.chunk === "string");
   },
-  isSDK(o: any): o is ResponseLoadSnapshotChunkSDKType {
-    return o && (o.$typeUrl === ResponseLoadSnapshotChunk.typeUrl || o.chunk instanceof Uint8Array || typeof o.chunk === "string");
-  },
   isAmino(o: any): o is ResponseLoadSnapshotChunkAmino {
     return o && (o.$typeUrl === ResponseLoadSnapshotChunk.typeUrl || o.chunk instanceof Uint8Array || typeof o.chunk === "string");
   },
@@ -6023,7 +5407,7 @@ export const ResponseLoadSnapshotChunk = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseLoadSnapshotChunk>, I>>(object: I): ResponseLoadSnapshotChunk {
+  fromPartial(object: DeepPartial<ResponseLoadSnapshotChunk>): ResponseLoadSnapshotChunk {
     const message = createBaseResponseLoadSnapshotChunk();
     message.chunk = object.chunk ?? new Uint8Array();
     return message;
@@ -6074,9 +5458,6 @@ export const ResponseApplySnapshotChunk = {
   is(o: any): o is ResponseApplySnapshotChunk {
     return o && (o.$typeUrl === ResponseApplySnapshotChunk.typeUrl || isSet(o.result) && Array.isArray(o.refetchChunks) && (!o.refetchChunks.length || typeof o.refetchChunks[0] === "number") && Array.isArray(o.rejectSenders) && (!o.rejectSenders.length || typeof o.rejectSenders[0] === "string"));
   },
-  isSDK(o: any): o is ResponseApplySnapshotChunkSDKType {
-    return o && (o.$typeUrl === ResponseApplySnapshotChunk.typeUrl || isSet(o.result) && Array.isArray(o.refetch_chunks) && (!o.refetch_chunks.length || typeof o.refetch_chunks[0] === "number") && Array.isArray(o.reject_senders) && (!o.reject_senders.length || typeof o.reject_senders[0] === "string"));
-  },
   isAmino(o: any): o is ResponseApplySnapshotChunkAmino {
     return o && (o.$typeUrl === ResponseApplySnapshotChunk.typeUrl || isSet(o.result) && Array.isArray(o.refetch_chunks) && (!o.refetch_chunks.length || typeof o.refetch_chunks[0] === "number") && Array.isArray(o.reject_senders) && (!o.reject_senders.length || typeof o.reject_senders[0] === "string"));
   },
@@ -6124,7 +5505,7 @@ export const ResponseApplySnapshotChunk = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseApplySnapshotChunk>, I>>(object: I): ResponseApplySnapshotChunk {
+  fromPartial(object: DeepPartial<ResponseApplySnapshotChunk>): ResponseApplySnapshotChunk {
     const message = createBaseResponseApplySnapshotChunk();
     message.result = object.result ?? 0;
     message.refetchChunks = object.refetchChunks?.map(e => e) || [];
@@ -6187,9 +5568,6 @@ export const ResponsePrepareProposal = {
   is(o: any): o is ResponsePrepareProposal {
     return o && (o.$typeUrl === ResponsePrepareProposal.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string"));
   },
-  isSDK(o: any): o is ResponsePrepareProposalSDKType {
-    return o && (o.$typeUrl === ResponsePrepareProposal.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string"));
-  },
   isAmino(o: any): o is ResponsePrepareProposalAmino {
     return o && (o.$typeUrl === ResponsePrepareProposal.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string"));
   },
@@ -6216,7 +5594,7 @@ export const ResponsePrepareProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponsePrepareProposal>, I>>(object: I): ResponsePrepareProposal {
+  fromPartial(object: DeepPartial<ResponsePrepareProposal>): ResponsePrepareProposal {
     const message = createBaseResponsePrepareProposal();
     message.txs = object.txs?.map(e => e) || [];
     return message;
@@ -6267,9 +5645,6 @@ export const ResponseProcessProposal = {
   is(o: any): o is ResponseProcessProposal {
     return o && (o.$typeUrl === ResponseProcessProposal.typeUrl || isSet(o.status));
   },
-  isSDK(o: any): o is ResponseProcessProposalSDKType {
-    return o && (o.$typeUrl === ResponseProcessProposal.typeUrl || isSet(o.status));
-  },
   isAmino(o: any): o is ResponseProcessProposalAmino {
     return o && (o.$typeUrl === ResponseProcessProposal.typeUrl || isSet(o.status));
   },
@@ -6296,7 +5671,7 @@ export const ResponseProcessProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseProcessProposal>, I>>(object: I): ResponseProcessProposal {
+  fromPartial(object: DeepPartial<ResponseProcessProposal>): ResponseProcessProposal {
     const message = createBaseResponseProcessProposal();
     message.status = object.status ?? 0;
     return message;
@@ -6345,9 +5720,6 @@ export const ResponseExtendVote = {
   is(o: any): o is ResponseExtendVote {
     return o && (o.$typeUrl === ResponseExtendVote.typeUrl || o.voteExtension instanceof Uint8Array || typeof o.voteExtension === "string");
   },
-  isSDK(o: any): o is ResponseExtendVoteSDKType {
-    return o && (o.$typeUrl === ResponseExtendVote.typeUrl || o.vote_extension instanceof Uint8Array || typeof o.vote_extension === "string");
-  },
   isAmino(o: any): o is ResponseExtendVoteAmino {
     return o && (o.$typeUrl === ResponseExtendVote.typeUrl || o.vote_extension instanceof Uint8Array || typeof o.vote_extension === "string");
   },
@@ -6374,7 +5746,7 @@ export const ResponseExtendVote = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseExtendVote>, I>>(object: I): ResponseExtendVote {
+  fromPartial(object: DeepPartial<ResponseExtendVote>): ResponseExtendVote {
     const message = createBaseResponseExtendVote();
     message.voteExtension = object.voteExtension ?? new Uint8Array();
     return message;
@@ -6423,9 +5795,6 @@ export const ResponseVerifyVoteExtension = {
   is(o: any): o is ResponseVerifyVoteExtension {
     return o && (o.$typeUrl === ResponseVerifyVoteExtension.typeUrl || isSet(o.status));
   },
-  isSDK(o: any): o is ResponseVerifyVoteExtensionSDKType {
-    return o && (o.$typeUrl === ResponseVerifyVoteExtension.typeUrl || isSet(o.status));
-  },
   isAmino(o: any): o is ResponseVerifyVoteExtensionAmino {
     return o && (o.$typeUrl === ResponseVerifyVoteExtension.typeUrl || isSet(o.status));
   },
@@ -6452,7 +5821,7 @@ export const ResponseVerifyVoteExtension = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseVerifyVoteExtension>, I>>(object: I): ResponseVerifyVoteExtension {
+  fromPartial(object: DeepPartial<ResponseVerifyVoteExtension>): ResponseVerifyVoteExtension {
     const message = createBaseResponseVerifyVoteExtension();
     message.status = object.status ?? 0;
     return message;
@@ -6505,9 +5874,6 @@ export const ResponseFinalizeBlock = {
   is(o: any): o is ResponseFinalizeBlock {
     return o && (o.$typeUrl === ResponseFinalizeBlock.typeUrl || Array.isArray(o.events) && (!o.events.length || Event.is(o.events[0])) && Array.isArray(o.txResults) && (!o.txResults.length || ExecTxResult.is(o.txResults[0])) && Array.isArray(o.validatorUpdates) && (!o.validatorUpdates.length || ValidatorUpdate.is(o.validatorUpdates[0])) && (o.appHash instanceof Uint8Array || typeof o.appHash === "string"));
   },
-  isSDK(o: any): o is ResponseFinalizeBlockSDKType {
-    return o && (o.$typeUrl === ResponseFinalizeBlock.typeUrl || Array.isArray(o.events) && (!o.events.length || Event.isSDK(o.events[0])) && Array.isArray(o.tx_results) && (!o.tx_results.length || ExecTxResult.isSDK(o.tx_results[0])) && Array.isArray(o.validator_updates) && (!o.validator_updates.length || ValidatorUpdate.isSDK(o.validator_updates[0])) && (o.app_hash instanceof Uint8Array || typeof o.app_hash === "string"));
-  },
   isAmino(o: any): o is ResponseFinalizeBlockAmino {
     return o && (o.$typeUrl === ResponseFinalizeBlock.typeUrl || Array.isArray(o.events) && (!o.events.length || Event.isAmino(o.events[0])) && Array.isArray(o.tx_results) && (!o.tx_results.length || ExecTxResult.isAmino(o.tx_results[0])) && Array.isArray(o.validator_updates) && (!o.validator_updates.length || ValidatorUpdate.isAmino(o.validator_updates[0])) && (o.app_hash instanceof Uint8Array || typeof o.app_hash === "string"));
   },
@@ -6558,7 +5924,7 @@ export const ResponseFinalizeBlock = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResponseFinalizeBlock>, I>>(object: I): ResponseFinalizeBlock {
+  fromPartial(object: DeepPartial<ResponseFinalizeBlock>): ResponseFinalizeBlock {
     const message = createBaseResponseFinalizeBlock();
     message.events = object.events?.map(e => Event.fromPartial(e)) || [];
     message.txResults = object.txResults?.map(e => ExecTxResult.fromPartial(e)) || [];
@@ -6642,9 +6008,6 @@ export const CommitInfo = {
   is(o: any): o is CommitInfo {
     return o && (o.$typeUrl === CommitInfo.typeUrl || typeof o.round === "number" && Array.isArray(o.votes) && (!o.votes.length || VoteInfo.is(o.votes[0])));
   },
-  isSDK(o: any): o is CommitInfoSDKType {
-    return o && (o.$typeUrl === CommitInfo.typeUrl || typeof o.round === "number" && Array.isArray(o.votes) && (!o.votes.length || VoteInfo.isSDK(o.votes[0])));
-  },
   isAmino(o: any): o is CommitInfoAmino {
     return o && (o.$typeUrl === CommitInfo.typeUrl || typeof o.round === "number" && Array.isArray(o.votes) && (!o.votes.length || VoteInfo.isAmino(o.votes[0])));
   },
@@ -6677,7 +6040,7 @@ export const CommitInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CommitInfo>, I>>(object: I): CommitInfo {
+  fromPartial(object: DeepPartial<CommitInfo>): CommitInfo {
     const message = createBaseCommitInfo();
     message.round = object.round ?? 0;
     message.votes = object.votes?.map(e => VoteInfo.fromPartial(e)) || [];
@@ -6742,9 +6105,6 @@ export const ExtendedCommitInfo = {
   is(o: any): o is ExtendedCommitInfo {
     return o && (o.$typeUrl === ExtendedCommitInfo.typeUrl || typeof o.round === "number" && Array.isArray(o.votes) && (!o.votes.length || ExtendedVoteInfo.is(o.votes[0])));
   },
-  isSDK(o: any): o is ExtendedCommitInfoSDKType {
-    return o && (o.$typeUrl === ExtendedCommitInfo.typeUrl || typeof o.round === "number" && Array.isArray(o.votes) && (!o.votes.length || ExtendedVoteInfo.isSDK(o.votes[0])));
-  },
   isAmino(o: any): o is ExtendedCommitInfoAmino {
     return o && (o.$typeUrl === ExtendedCommitInfo.typeUrl || typeof o.round === "number" && Array.isArray(o.votes) && (!o.votes.length || ExtendedVoteInfo.isAmino(o.votes[0])));
   },
@@ -6777,7 +6137,7 @@ export const ExtendedCommitInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ExtendedCommitInfo>, I>>(object: I): ExtendedCommitInfo {
+  fromPartial(object: DeepPartial<ExtendedCommitInfo>): ExtendedCommitInfo {
     const message = createBaseExtendedCommitInfo();
     message.round = object.round ?? 0;
     message.votes = object.votes?.map(e => ExtendedVoteInfo.fromPartial(e)) || [];
@@ -6842,9 +6202,6 @@ export const Event = {
   is(o: any): o is Event {
     return o && (o.$typeUrl === Event.typeUrl || typeof o.type === "string" && Array.isArray(o.attributes) && (!o.attributes.length || EventAttribute.is(o.attributes[0])));
   },
-  isSDK(o: any): o is EventSDKType {
-    return o && (o.$typeUrl === Event.typeUrl || typeof o.type === "string" && Array.isArray(o.attributes) && (!o.attributes.length || EventAttribute.isSDK(o.attributes[0])));
-  },
   isAmino(o: any): o is EventAmino {
     return o && (o.$typeUrl === Event.typeUrl || typeof o.type === "string" && Array.isArray(o.attributes) && (!o.attributes.length || EventAttribute.isAmino(o.attributes[0])));
   },
@@ -6877,7 +6234,7 @@ export const Event = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Event>, I>>(object: I): Event {
+  fromPartial(object: DeepPartial<Event>): Event {
     const message = createBaseEvent();
     message.type = object.type ?? "";
     message.attributes = object.attributes?.map(e => EventAttribute.fromPartial(e)) || [];
@@ -6941,9 +6298,6 @@ export const EventAttribute = {
   is(o: any): o is EventAttribute {
     return o && (o.$typeUrl === EventAttribute.typeUrl || typeof o.key === "string" && typeof o.value === "string" && typeof o.index === "boolean");
   },
-  isSDK(o: any): o is EventAttributeSDKType {
-    return o && (o.$typeUrl === EventAttribute.typeUrl || typeof o.key === "string" && typeof o.value === "string" && typeof o.index === "boolean");
-  },
   isAmino(o: any): o is EventAttributeAmino {
     return o && (o.$typeUrl === EventAttribute.typeUrl || typeof o.key === "string" && typeof o.value === "string" && typeof o.index === "boolean");
   },
@@ -6982,7 +6336,7 @@ export const EventAttribute = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventAttribute>, I>>(object: I): EventAttribute {
+  fromPartial(object: DeepPartial<EventAttribute>): EventAttribute {
     const message = createBaseEventAttribute();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
@@ -7050,9 +6404,6 @@ export const ExecTxResult = {
   typeUrl: "/tendermint.abci.ExecTxResult",
   is(o: any): o is ExecTxResult {
     return o && (o.$typeUrl === ExecTxResult.typeUrl || typeof o.code === "number" && (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.log === "string" && typeof o.info === "string" && typeof o.gasWanted === "bigint" && typeof o.gasUsed === "bigint" && Array.isArray(o.events) && (!o.events.length || Event.is(o.events[0])) && typeof o.codespace === "string");
-  },
-  isSDK(o: any): o is ExecTxResultSDKType {
-    return o && (o.$typeUrl === ExecTxResult.typeUrl || typeof o.code === "number" && (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.log === "string" && typeof o.info === "string" && typeof o.gas_wanted === "bigint" && typeof o.gas_used === "bigint" && Array.isArray(o.events) && (!o.events.length || Event.isSDK(o.events[0])) && typeof o.codespace === "string");
   },
   isAmino(o: any): o is ExecTxResultAmino {
     return o && (o.$typeUrl === ExecTxResult.typeUrl || typeof o.code === "number" && (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.log === "string" && typeof o.info === "string" && typeof o.gas_wanted === "bigint" && typeof o.gas_used === "bigint" && Array.isArray(o.events) && (!o.events.length || Event.isAmino(o.events[0])) && typeof o.codespace === "string");
@@ -7122,7 +6473,7 @@ export const ExecTxResult = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ExecTxResult>, I>>(object: I): ExecTxResult {
+  fromPartial(object: DeepPartial<ExecTxResult>): ExecTxResult {
     const message = createBaseExecTxResult();
     message.code = object.code ?? 0;
     message.data = object.data ?? new Uint8Array();
@@ -7219,9 +6570,6 @@ export const TxResult = {
   is(o: any): o is TxResult {
     return o && (o.$typeUrl === TxResult.typeUrl || typeof o.height === "bigint" && typeof o.index === "number" && (o.tx instanceof Uint8Array || typeof o.tx === "string") && ExecTxResult.is(o.result));
   },
-  isSDK(o: any): o is TxResultSDKType {
-    return o && (o.$typeUrl === TxResult.typeUrl || typeof o.height === "bigint" && typeof o.index === "number" && (o.tx instanceof Uint8Array || typeof o.tx === "string") && ExecTxResult.isSDK(o.result));
-  },
   isAmino(o: any): o is TxResultAmino {
     return o && (o.$typeUrl === TxResult.typeUrl || typeof o.height === "bigint" && typeof o.index === "number" && (o.tx instanceof Uint8Array || typeof o.tx === "string") && ExecTxResult.isAmino(o.result));
   },
@@ -7266,7 +6614,7 @@ export const TxResult = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxResult>, I>>(object: I): TxResult {
+  fromPartial(object: DeepPartial<TxResult>): TxResult {
     const message = createBaseTxResult();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     message.index = object.index ?? 0;
@@ -7336,9 +6684,6 @@ export const Validator = {
   is(o: any): o is Validator {
     return o && (o.$typeUrl === Validator.typeUrl || (o.address instanceof Uint8Array || typeof o.address === "string") && typeof o.power === "bigint");
   },
-  isSDK(o: any): o is ValidatorSDKType {
-    return o && (o.$typeUrl === Validator.typeUrl || (o.address instanceof Uint8Array || typeof o.address === "string") && typeof o.power === "bigint");
-  },
   isAmino(o: any): o is ValidatorAmino {
     return o && (o.$typeUrl === Validator.typeUrl || (o.address instanceof Uint8Array || typeof o.address === "string") && typeof o.power === "bigint");
   },
@@ -7371,7 +6716,7 @@ export const Validator = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Validator>, I>>(object: I): Validator {
+  fromPartial(object: DeepPartial<Validator>): Validator {
     const message = createBaseValidator();
     message.address = object.address ?? new Uint8Array();
     message.power = object.power !== undefined && object.power !== null ? BigInt(object.power.toString()) : BigInt(0);
@@ -7426,9 +6771,6 @@ export const ValidatorUpdate = {
   is(o: any): o is ValidatorUpdate {
     return o && (o.$typeUrl === ValidatorUpdate.typeUrl || PublicKey.is(o.pubKey) && typeof o.power === "bigint");
   },
-  isSDK(o: any): o is ValidatorUpdateSDKType {
-    return o && (o.$typeUrl === ValidatorUpdate.typeUrl || PublicKey.isSDK(o.pub_key) && typeof o.power === "bigint");
-  },
   isAmino(o: any): o is ValidatorUpdateAmino {
     return o && (o.$typeUrl === ValidatorUpdate.typeUrl || PublicKey.isAmino(o.pub_key) && typeof o.power === "bigint");
   },
@@ -7461,7 +6803,7 @@ export const ValidatorUpdate = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorUpdate>, I>>(object: I): ValidatorUpdate {
+  fromPartial(object: DeepPartial<ValidatorUpdate>): ValidatorUpdate {
     const message = createBaseValidatorUpdate();
     message.pubKey = object.pubKey !== undefined && object.pubKey !== null ? PublicKey.fromPartial(object.pubKey) : undefined;
     message.power = object.power !== undefined && object.power !== null ? BigInt(object.power.toString()) : BigInt(0);
@@ -7521,9 +6863,6 @@ export const VoteInfo = {
   is(o: any): o is VoteInfo {
     return o && (o.$typeUrl === VoteInfo.typeUrl || Validator.is(o.validator) && isSet(o.blockIdFlag));
   },
-  isSDK(o: any): o is VoteInfoSDKType {
-    return o && (o.$typeUrl === VoteInfo.typeUrl || Validator.isSDK(o.validator) && isSet(o.block_id_flag));
-  },
   isAmino(o: any): o is VoteInfoAmino {
     return o && (o.$typeUrl === VoteInfo.typeUrl || Validator.isAmino(o.validator) && isSet(o.block_id_flag));
   },
@@ -7556,7 +6895,7 @@ export const VoteInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<VoteInfo>, I>>(object: I): VoteInfo {
+  fromPartial(object: DeepPartial<VoteInfo>): VoteInfo {
     const message = createBaseVoteInfo();
     message.validator = object.validator !== undefined && object.validator !== null ? Validator.fromPartial(object.validator) : undefined;
     message.blockIdFlag = object.blockIdFlag ?? 0;
@@ -7618,9 +6957,6 @@ export const ExtendedVoteInfo = {
   is(o: any): o is ExtendedVoteInfo {
     return o && (o.$typeUrl === ExtendedVoteInfo.typeUrl || Validator.is(o.validator) && (o.voteExtension instanceof Uint8Array || typeof o.voteExtension === "string") && (o.extensionSignature instanceof Uint8Array || typeof o.extensionSignature === "string") && isSet(o.blockIdFlag));
   },
-  isSDK(o: any): o is ExtendedVoteInfoSDKType {
-    return o && (o.$typeUrl === ExtendedVoteInfo.typeUrl || Validator.isSDK(o.validator) && (o.vote_extension instanceof Uint8Array || typeof o.vote_extension === "string") && (o.extension_signature instanceof Uint8Array || typeof o.extension_signature === "string") && isSet(o.block_id_flag));
-  },
   isAmino(o: any): o is ExtendedVoteInfoAmino {
     return o && (o.$typeUrl === ExtendedVoteInfo.typeUrl || Validator.isAmino(o.validator) && (o.vote_extension instanceof Uint8Array || typeof o.vote_extension === "string") && (o.extension_signature instanceof Uint8Array || typeof o.extension_signature === "string") && isSet(o.block_id_flag));
   },
@@ -7665,7 +7001,7 @@ export const ExtendedVoteInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ExtendedVoteInfo>, I>>(object: I): ExtendedVoteInfo {
+  fromPartial(object: DeepPartial<ExtendedVoteInfo>): ExtendedVoteInfo {
     const message = createBaseExtendedVoteInfo();
     message.validator = object.validator !== undefined && object.validator !== null ? Validator.fromPartial(object.validator) : undefined;
     message.voteExtension = object.voteExtension ?? new Uint8Array();
@@ -7738,9 +7074,6 @@ export const Misbehavior = {
   is(o: any): o is Misbehavior {
     return o && (o.$typeUrl === Misbehavior.typeUrl || isSet(o.type) && Validator.is(o.validator) && typeof o.height === "bigint" && Timestamp.is(o.time) && typeof o.totalVotingPower === "bigint");
   },
-  isSDK(o: any): o is MisbehaviorSDKType {
-    return o && (o.$typeUrl === Misbehavior.typeUrl || isSet(o.type) && Validator.isSDK(o.validator) && typeof o.height === "bigint" && Timestamp.isSDK(o.time) && typeof o.total_voting_power === "bigint");
-  },
   isAmino(o: any): o is MisbehaviorAmino {
     return o && (o.$typeUrl === Misbehavior.typeUrl || isSet(o.type) && Validator.isAmino(o.validator) && typeof o.height === "bigint" && Timestamp.isAmino(o.time) && typeof o.total_voting_power === "bigint");
   },
@@ -7791,7 +7124,7 @@ export const Misbehavior = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Misbehavior>, I>>(object: I): Misbehavior {
+  fromPartial(object: DeepPartial<Misbehavior>): Misbehavior {
     const message = createBaseMisbehavior();
     message.type = object.type ?? 0;
     message.validator = object.validator !== undefined && object.validator !== null ? Validator.fromPartial(object.validator) : undefined;
@@ -7869,9 +7202,6 @@ export const Snapshot = {
   is(o: any): o is Snapshot {
     return o && (o.$typeUrl === Snapshot.typeUrl || typeof o.height === "bigint" && typeof o.format === "number" && typeof o.chunks === "number" && (o.hash instanceof Uint8Array || typeof o.hash === "string") && (o.metadata instanceof Uint8Array || typeof o.metadata === "string"));
   },
-  isSDK(o: any): o is SnapshotSDKType {
-    return o && (o.$typeUrl === Snapshot.typeUrl || typeof o.height === "bigint" && typeof o.format === "number" && typeof o.chunks === "number" && (o.hash instanceof Uint8Array || typeof o.hash === "string") && (o.metadata instanceof Uint8Array || typeof o.metadata === "string"));
-  },
   isAmino(o: any): o is SnapshotAmino {
     return o && (o.$typeUrl === Snapshot.typeUrl || typeof o.height === "bigint" && typeof o.format === "number" && typeof o.chunks === "number" && (o.hash instanceof Uint8Array || typeof o.hash === "string") && (o.metadata instanceof Uint8Array || typeof o.metadata === "string"));
   },
@@ -7922,7 +7252,7 @@ export const Snapshot = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Snapshot>, I>>(object: I): Snapshot {
+  fromPartial(object: DeepPartial<Snapshot>): Snapshot {
     const message = createBaseSnapshot();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     message.format = object.format ?? 0;

@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { LatLng, LatLngAmino, LatLngSDKType } from "../../type/latlng";
+import { LatLng, LatLngAmino } from "../../type/latlng";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * A latitude-longitude viewport, represented as two diagonally opposite `low`
  * and `high` points. A viewport is considered a closed region, i.e. it includes
@@ -112,50 +112,6 @@ export interface ViewportAminoMsg {
   type: "/google.geo.type.Viewport";
   value: ViewportAmino;
 }
-/**
- * A latitude-longitude viewport, represented as two diagonally opposite `low`
- * and `high` points. A viewport is considered a closed region, i.e. it includes
- * its boundary. The latitude bounds must range between -90 to 90 degrees
- * inclusive, and the longitude bounds must range between -180 to 180 degrees
- * inclusive. Various cases include:
- * 
- *  - If `low` = `high`, the viewport consists of that single point.
- * 
- *  - If `low.longitude` > `high.longitude`, the longitude range is inverted
- *    (the viewport crosses the 180 degree longitude line).
- * 
- *  - If `low.longitude` = -180 degrees and `high.longitude` = 180 degrees,
- *    the viewport includes all longitudes.
- * 
- *  - If `low.longitude` = 180 degrees and `high.longitude` = -180 degrees,
- *    the longitude range is empty.
- * 
- *  - If `low.latitude` > `high.latitude`, the latitude range is empty.
- * 
- * Both `low` and `high` must be populated, and the represented box cannot be
- * empty (as specified by the definitions above). An empty viewport will result
- * in an error.
- * 
- * For example, this viewport fully encloses New York City:
- * 
- * {
- *     "low": {
- *         "latitude": 40.477398,
- *         "longitude": -74.259087
- *     },
- *     "high": {
- *         "latitude": 40.91618,
- *         "longitude": -73.70018
- *     }
- * }
- * @name ViewportSDKType
- * @package google.geo.type
- * @see proto type: google.geo.type.Viewport
- */
-export interface ViewportSDKType {
-  low?: LatLngSDKType;
-  high?: LatLngSDKType;
-}
 function createBaseViewport(): Viewport {
   return {
     low: undefined,
@@ -207,9 +163,6 @@ export const Viewport = {
   is(o: any): o is Viewport {
     return o && o.$typeUrl === Viewport.typeUrl;
   },
-  isSDK(o: any): o is ViewportSDKType {
-    return o && o.$typeUrl === Viewport.typeUrl;
-  },
   isAmino(o: any): o is ViewportAmino {
     return o && o.$typeUrl === Viewport.typeUrl;
   },
@@ -242,7 +195,7 @@ export const Viewport = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Viewport>, I>>(object: I): Viewport {
+  fromPartial(object: DeepPartial<Viewport>): Viewport {
     const message = createBaseViewport();
     message.low = object.low !== undefined && object.low !== null ? LatLng.fromPartial(object.low) : undefined;
     message.high = object.high !== undefined && object.high !== null ? LatLng.fromPartial(object.high) : undefined;

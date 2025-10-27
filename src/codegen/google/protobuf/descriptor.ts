@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, isSet, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { DeepPartial, isSet, bytesFromBase64, base64FromBytes } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /** The full set of known editions. */
 export enum Edition {
@@ -44,7 +44,6 @@ export enum Edition {
   EDITION_MAX = 2147483647,
   UNRECOGNIZED = -1,
 }
-export const EditionSDKType = Edition;
 export const EditionAmino = Edition;
 export function editionFromJSON(object: any): Edition {
   switch (object) {
@@ -128,7 +127,6 @@ export enum ExtensionRangeOptions_VerificationState {
   UNVERIFIED = 1,
   UNRECOGNIZED = -1,
 }
-export const ExtensionRangeOptions_VerificationStateSDKType = ExtensionRangeOptions_VerificationState;
 export const ExtensionRangeOptions_VerificationStateAmino = ExtensionRangeOptions_VerificationState;
 export function extensionRangeOptions_VerificationStateFromJSON(object: any): ExtensionRangeOptions_VerificationState {
   switch (object) {
@@ -199,7 +197,6 @@ export enum FieldDescriptorProto_Type {
   TYPE_SINT64 = 18,
   UNRECOGNIZED = -1,
 }
-export const FieldDescriptorProto_TypeSDKType = FieldDescriptorProto_Type;
 export const FieldDescriptorProto_TypeAmino = FieldDescriptorProto_Type;
 export function fieldDescriptorProto_TypeFromJSON(object: any): FieldDescriptorProto_Type {
   switch (object) {
@@ -318,7 +315,6 @@ export enum FieldDescriptorProto_Label {
   LABEL_REQUIRED = 2,
   UNRECOGNIZED = -1,
 }
-export const FieldDescriptorProto_LabelSDKType = FieldDescriptorProto_Label;
 export const FieldDescriptorProto_LabelAmino = FieldDescriptorProto_Label;
 export function fieldDescriptorProto_LabelFromJSON(object: any): FieldDescriptorProto_Label {
   switch (object) {
@@ -360,7 +356,6 @@ export enum FileOptions_OptimizeMode {
   LITE_RUNTIME = 3,
   UNRECOGNIZED = -1,
 }
-export const FileOptions_OptimizeModeSDKType = FileOptions_OptimizeMode;
 export const FileOptions_OptimizeModeAmino = FileOptions_OptimizeMode;
 export function fileOptions_OptimizeModeFromJSON(object: any): FileOptions_OptimizeMode {
   switch (object) {
@@ -407,7 +402,6 @@ export enum FieldOptions_CType {
   STRING_PIECE = 2,
   UNRECOGNIZED = -1,
 }
-export const FieldOptions_CTypeSDKType = FieldOptions_CType;
 export const FieldOptions_CTypeAmino = FieldOptions_CType;
 export function fieldOptions_CTypeFromJSON(object: any): FieldOptions_CType {
   switch (object) {
@@ -448,7 +442,6 @@ export enum FieldOptions_JSType {
   JS_NUMBER = 2,
   UNRECOGNIZED = -1,
 }
-export const FieldOptions_JSTypeSDKType = FieldOptions_JSType;
 export const FieldOptions_JSTypeAmino = FieldOptions_JSType;
 export function fieldOptions_JSTypeFromJSON(object: any): FieldOptions_JSType {
   switch (object) {
@@ -487,7 +480,6 @@ export enum FieldOptions_OptionRetention {
   RETENTION_SOURCE = 2,
   UNRECOGNIZED = -1,
 }
-export const FieldOptions_OptionRetentionSDKType = FieldOptions_OptionRetention;
 export const FieldOptions_OptionRetentionAmino = FieldOptions_OptionRetention;
 export function fieldOptions_OptionRetentionFromJSON(object: any): FieldOptions_OptionRetention {
   switch (object) {
@@ -537,7 +529,6 @@ export enum FieldOptions_OptionTargetType {
   TARGET_TYPE_METHOD = 9,
   UNRECOGNIZED = -1,
 }
-export const FieldOptions_OptionTargetTypeSDKType = FieldOptions_OptionTargetType;
 export const FieldOptions_OptionTargetTypeAmino = FieldOptions_OptionTargetType;
 export function fieldOptions_OptionTargetTypeFromJSON(object: any): FieldOptions_OptionTargetType {
   switch (object) {
@@ -617,7 +608,6 @@ export enum MethodOptions_IdempotencyLevel {
   IDEMPOTENT = 2,
   UNRECOGNIZED = -1,
 }
-export const MethodOptions_IdempotencyLevelSDKType = MethodOptions_IdempotencyLevel;
 export const MethodOptions_IdempotencyLevelAmino = MethodOptions_IdempotencyLevel;
 export function methodOptions_IdempotencyLevelFromJSON(object: any): MethodOptions_IdempotencyLevel {
   switch (object) {
@@ -656,7 +646,6 @@ export enum FeatureSet_FieldPresence {
   LEGACY_REQUIRED = 3,
   UNRECOGNIZED = -1,
 }
-export const FeatureSet_FieldPresenceSDKType = FeatureSet_FieldPresence;
 export const FeatureSet_FieldPresenceAmino = FeatureSet_FieldPresence;
 export function featureSet_FieldPresenceFromJSON(object: any): FeatureSet_FieldPresence {
   switch (object) {
@@ -699,7 +688,6 @@ export enum FeatureSet_EnumType {
   CLOSED = 2,
   UNRECOGNIZED = -1,
 }
-export const FeatureSet_EnumTypeSDKType = FeatureSet_EnumType;
 export const FeatureSet_EnumTypeAmino = FeatureSet_EnumType;
 export function featureSet_EnumTypeFromJSON(object: any): FeatureSet_EnumType {
   switch (object) {
@@ -737,7 +725,6 @@ export enum FeatureSet_RepeatedFieldEncoding {
   EXPANDED = 2,
   UNRECOGNIZED = -1,
 }
-export const FeatureSet_RepeatedFieldEncodingSDKType = FeatureSet_RepeatedFieldEncoding;
 export const FeatureSet_RepeatedFieldEncodingAmino = FeatureSet_RepeatedFieldEncoding;
 export function featureSet_RepeatedFieldEncodingFromJSON(object: any): FeatureSet_RepeatedFieldEncoding {
   switch (object) {
@@ -775,7 +762,6 @@ export enum FeatureSet_Utf8Validation {
   NONE = 3,
   UNRECOGNIZED = -1,
 }
-export const FeatureSet_Utf8ValidationSDKType = FeatureSet_Utf8Validation;
 export const FeatureSet_Utf8ValidationAmino = FeatureSet_Utf8Validation;
 export function featureSet_Utf8ValidationFromJSON(object: any): FeatureSet_Utf8Validation {
   switch (object) {
@@ -813,7 +799,6 @@ export enum FeatureSet_MessageEncoding {
   DELIMITED = 2,
   UNRECOGNIZED = -1,
 }
-export const FeatureSet_MessageEncodingSDKType = FeatureSet_MessageEncoding;
 export const FeatureSet_MessageEncodingAmino = FeatureSet_MessageEncoding;
 export function featureSet_MessageEncodingFromJSON(object: any): FeatureSet_MessageEncoding {
   switch (object) {
@@ -851,7 +836,6 @@ export enum FeatureSet_JsonFormat {
   LEGACY_BEST_EFFORT = 2,
   UNRECOGNIZED = -1,
 }
-export const FeatureSet_JsonFormatSDKType = FeatureSet_JsonFormat;
 export const FeatureSet_JsonFormatAmino = FeatureSet_JsonFormat;
 export function featureSet_JsonFormatFromJSON(object: any): FeatureSet_JsonFormat {
   switch (object) {
@@ -889,7 +873,6 @@ export enum FeatureSet_EnforceNamingStyle {
   STYLE_LEGACY = 2,
   UNRECOGNIZED = -1,
 }
-export const FeatureSet_EnforceNamingStyleSDKType = FeatureSet_EnforceNamingStyle;
 export const FeatureSet_EnforceNamingStyleAmino = FeatureSet_EnforceNamingStyle;
 export function featureSet_EnforceNamingStyleFromJSON(object: any): FeatureSet_EnforceNamingStyle {
   switch (object) {
@@ -937,7 +920,6 @@ export enum FeatureSet_VisibilityFeature_DefaultSymbolVisibility {
   STRICT = 4,
   UNRECOGNIZED = -1,
 }
-export const FeatureSet_VisibilityFeature_DefaultSymbolVisibilitySDKType = FeatureSet_VisibilityFeature_DefaultSymbolVisibility;
 export const FeatureSet_VisibilityFeature_DefaultSymbolVisibilityAmino = FeatureSet_VisibilityFeature_DefaultSymbolVisibility;
 export function featureSet_VisibilityFeature_DefaultSymbolVisibilityFromJSON(object: any): FeatureSet_VisibilityFeature_DefaultSymbolVisibility {
   switch (object) {
@@ -992,7 +974,6 @@ export enum GeneratedCodeInfo_Annotation_Semantic {
   ALIAS = 2,
   UNRECOGNIZED = -1,
 }
-export const GeneratedCodeInfo_Annotation_SemanticSDKType = GeneratedCodeInfo_Annotation_Semantic;
 export const GeneratedCodeInfo_Annotation_SemanticAmino = GeneratedCodeInfo_Annotation_Semantic;
 export function generatedCodeInfo_Annotation_SemanticFromJSON(object: any): GeneratedCodeInfo_Annotation_Semantic {
   switch (object) {
@@ -1037,7 +1018,6 @@ export enum SymbolVisibility {
   VISIBILITY_EXPORT = 2,
   UNRECOGNIZED = -1,
 }
-export const SymbolVisibilitySDKType = SymbolVisibility;
 export const SymbolVisibilityAmino = SymbolVisibility;
 export function symbolVisibilityFromJSON(object: any): SymbolVisibility {
   switch (object) {
@@ -1091,21 +1071,11 @@ export interface FileDescriptorSetProtoMsg {
  * @see proto type: google.protobuf.FileDescriptorSet
  */
 export interface FileDescriptorSetAmino {
-  file?: FileDescriptorProtoAmino[];
+  file: FileDescriptorProtoAmino[];
 }
 export interface FileDescriptorSetAminoMsg {
   type: "/google.protobuf.FileDescriptorSet";
   value: FileDescriptorSetAmino;
-}
-/**
- * The protocol compiler can output a FileDescriptorSet containing the .proto
- * files it parses.
- * @name FileDescriptorSetSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.FileDescriptorSet
- */
-export interface FileDescriptorSetSDKType {
-  file: FileDescriptorProtoSDKType[];
 }
 /**
  * Describes a complete .proto file.
@@ -1187,36 +1157,36 @@ export interface FileDescriptorProtoAmino {
   /**
    * file name, relative to root of source tree
    */
-  name?: string;
+  name: string;
   /**
    * e.g. "foo", "foo.bar", etc.
    */
-  package?: string;
+  package: string;
   /**
    * Names of files imported by this file.
    */
-  dependency?: string[];
+  dependency: string[];
   /**
    * Indexes of the public imported files in the dependency list above.
    */
-  public_dependency?: number[];
+  public_dependency: number[];
   /**
    * Indexes of the weak imported files in the dependency list.
    * For Google-internal migration only. Do not use.
    */
-  weak_dependency?: number[];
+  weak_dependency: number[];
   /**
    * Names of files imported by this file purely for the purpose of providing
    * option extensions. These are excluded from the dependency list above.
    */
-  option_dependency?: string[];
+  option_dependency: string[];
   /**
    * All top-level definitions in this file.
    */
-  message_type?: DescriptorProtoAmino[];
-  enum_type?: EnumDescriptorProtoAmino[];
-  service?: ServiceDescriptorProtoAmino[];
-  extension?: FieldDescriptorProtoAmino[];
+  message_type: DescriptorProtoAmino[];
+  enum_type: EnumDescriptorProtoAmino[];
+  service: ServiceDescriptorProtoAmino[];
+  extension: FieldDescriptorProtoAmino[];
   options?: FileOptionsAmino;
   /**
    * This field contains optional information about the original source code.
@@ -1234,40 +1204,18 @@ export interface FileDescriptorProtoAmino {
    * cases like the proto compiler. Other uses are discouraged and
    * developers should rely on the protoreflect APIs for their client language.
    */
-  syntax?: string;
+  syntax: string;
   /**
    * The edition of the proto file.
    * WARNING: This field should only be used by protobuf plugins or special
    * cases like the proto compiler. Other uses are discouraged and
    * developers should rely on the protoreflect APIs for their client language.
    */
-  edition?: Edition;
+  edition: Edition;
 }
 export interface FileDescriptorProtoAminoMsg {
   type: "/google.protobuf.FileDescriptorProto";
   value: FileDescriptorProtoAmino;
-}
-/**
- * Describes a complete .proto file.
- * @name FileDescriptorProtoSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.FileDescriptorProto
- */
-export interface FileDescriptorProtoSDKType {
-  name: string;
-  package: string;
-  dependency: string[];
-  public_dependency: number[];
-  weak_dependency: number[];
-  option_dependency: string[];
-  message_type: DescriptorProtoSDKType[];
-  enum_type: EnumDescriptorProtoSDKType[];
-  service: ServiceDescriptorProtoSDKType[];
-  extension: FieldDescriptorProtoSDKType[];
-  options?: FileOptionsSDKType;
-  source_code_info?: SourceCodeInfoSDKType;
-  syntax: string;
-  edition: Edition;
 }
 /**
  * Describes a message type.
@@ -1306,47 +1254,28 @@ export interface DescriptorProtoProtoMsg {
  * @see proto type: google.protobuf.DescriptorProto
  */
 export interface DescriptorProtoAmino {
-  name?: string;
-  field?: FieldDescriptorProtoAmino[];
-  extension?: FieldDescriptorProtoAmino[];
-  nested_type?: DescriptorProtoAmino[];
-  enum_type?: EnumDescriptorProtoAmino[];
-  extension_range?: DescriptorProto_ExtensionRangeAmino[];
-  oneof_decl?: OneofDescriptorProtoAmino[];
+  name: string;
+  field: FieldDescriptorProtoAmino[];
+  extension: FieldDescriptorProtoAmino[];
+  nested_type: DescriptorProtoAmino[];
+  enum_type: EnumDescriptorProtoAmino[];
+  extension_range: DescriptorProto_ExtensionRangeAmino[];
+  oneof_decl: OneofDescriptorProtoAmino[];
   options?: MessageOptionsAmino;
-  reserved_range?: DescriptorProto_ReservedRangeAmino[];
+  reserved_range: DescriptorProto_ReservedRangeAmino[];
   /**
    * Reserved field names, which may not be used by fields in the same message.
    * A given name may only be reserved once.
    */
-  reserved_name?: string[];
+  reserved_name: string[];
   /**
    * Support for `export` and `local` keywords on enums.
    */
-  visibility?: SymbolVisibility;
+  visibility: SymbolVisibility;
 }
 export interface DescriptorProtoAminoMsg {
   type: "/google.protobuf.DescriptorProto";
   value: DescriptorProtoAmino;
-}
-/**
- * Describes a message type.
- * @name DescriptorProtoSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.DescriptorProto
- */
-export interface DescriptorProtoSDKType {
-  name: string;
-  field: FieldDescriptorProtoSDKType[];
-  extension: FieldDescriptorProtoSDKType[];
-  nested_type: DescriptorProtoSDKType[];
-  enum_type: EnumDescriptorProtoSDKType[];
-  extension_range: DescriptorProto_ExtensionRangeSDKType[];
-  oneof_decl: OneofDescriptorProtoSDKType[];
-  options?: MessageOptionsSDKType;
-  reserved_range: DescriptorProto_ReservedRangeSDKType[];
-  reserved_name: string[];
-  visibility: SymbolVisibility;
 }
 /**
  * @name DescriptorProto_ExtensionRange
@@ -1377,26 +1306,16 @@ export interface DescriptorProto_ExtensionRangeAmino {
   /**
    * Inclusive.
    */
-  start?: number;
+  start: number;
   /**
    * Exclusive.
    */
-  end?: number;
+  end: number;
   options?: ExtensionRangeOptionsAmino;
 }
 export interface DescriptorProto_ExtensionRangeAminoMsg {
   type: "/google.protobuf.ExtensionRange";
   value: DescriptorProto_ExtensionRangeAmino;
-}
-/**
- * @name DescriptorProto_ExtensionRangeSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.ExtensionRange
- */
-export interface DescriptorProto_ExtensionRangeSDKType {
-  start: number;
-  end: number;
-  options?: ExtensionRangeOptionsSDKType;
 }
 /**
  * Range of reserved tag numbers. Reserved tag numbers may not be used by
@@ -1432,27 +1351,15 @@ export interface DescriptorProto_ReservedRangeAmino {
   /**
    * Inclusive.
    */
-  start?: number;
+  start: number;
   /**
    * Exclusive.
    */
-  end?: number;
+  end: number;
 }
 export interface DescriptorProto_ReservedRangeAminoMsg {
   type: "/google.protobuf.ReservedRange";
   value: DescriptorProto_ReservedRangeAmino;
-}
-/**
- * Range of reserved tag numbers. Reserved tag numbers may not be used by
- * fields or extension ranges in the same message. Reserved ranges may
- * not overlap.
- * @name DescriptorProto_ReservedRangeSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.ReservedRange
- */
-export interface DescriptorProto_ReservedRangeSDKType {
-  start: number;
-  end: number;
 }
 /**
  * @name ExtensionRangeOptions
@@ -1494,13 +1401,13 @@ export interface ExtensionRangeOptionsAmino {
   /**
    * The parser stores options it doesn't recognize here. See above.
    */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
   /**
    * For external users: DO NOT USE. We are in the process of open sourcing
    * extension declaration and executing internal cleanups before it can be
    * used externally.
    */
-  declaration?: ExtensionRangeOptions_DeclarationAmino[];
+  declaration: ExtensionRangeOptions_DeclarationAmino[];
   /**
    * Any features defined in the specific edition.
    */
@@ -1510,22 +1417,11 @@ export interface ExtensionRangeOptionsAmino {
    * TODO: flip the default to DECLARATION once all empty ranges
    * are marked as UNVERIFIED.
    */
-  verification?: ExtensionRangeOptions_VerificationState;
+  verification: ExtensionRangeOptions_VerificationState;
 }
 export interface ExtensionRangeOptionsAminoMsg {
   type: "/google.protobuf.ExtensionRangeOptions";
   value: ExtensionRangeOptionsAmino;
-}
-/**
- * @name ExtensionRangeOptionsSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.ExtensionRangeOptions
- */
-export interface ExtensionRangeOptionsSDKType {
-  uninterpreted_option: UninterpretedOptionSDKType[];
-  declaration: ExtensionRangeOptions_DeclarationSDKType[];
-  features?: FeatureSetSDKType;
-  verification: ExtensionRangeOptions_VerificationState;
 }
 /**
  * @name ExtensionRangeOptions_Declaration
@@ -1573,45 +1469,33 @@ export interface ExtensionRangeOptions_DeclarationAmino {
   /**
    * The extension number declared within the extension range.
    */
-  number?: number;
+  number: number;
   /**
    * The fully-qualified name of the extension field. There must be a leading
    * dot in front of the full name.
    */
-  full_name?: string;
+  full_name: string;
   /**
    * The fully-qualified type name of the extension field. Unlike
    * Metadata.type, Declaration.type must have a leading dot for messages
    * and enums.
    */
-  type?: string;
+  type: string;
   /**
    * If true, indicates that the number is reserved in the extension range,
    * and any extension field with the number will fail to compile. Set this
    * when a declared extension field is deleted.
    */
-  reserved?: boolean;
+  reserved: boolean;
   /**
    * If true, indicates that the extension must be defined as repeated.
    * Otherwise the extension must be defined as optional.
    */
-  repeated?: boolean;
+  repeated: boolean;
 }
 export interface ExtensionRangeOptions_DeclarationAminoMsg {
   type: "/google.protobuf.Declaration";
   value: ExtensionRangeOptions_DeclarationAmino;
-}
-/**
- * @name ExtensionRangeOptions_DeclarationSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.Declaration
- */
-export interface ExtensionRangeOptions_DeclarationSDKType {
-  number: number;
-  full_name: string;
-  type: string;
-  reserved: boolean;
-  repeated: boolean;
 }
 /**
  * Describes a field within a message.
@@ -1697,14 +1581,14 @@ export interface FieldDescriptorProtoProtoMsg {
  * @see proto type: google.protobuf.FieldDescriptorProto
  */
 export interface FieldDescriptorProtoAmino {
-  name?: string;
-  number?: number;
-  label?: FieldDescriptorProto_Label;
+  name: string;
+  number: number;
+  label: FieldDescriptorProto_Label;
   /**
    * If type_name is set, this need not be set.  If both this and type_name
    * are set, this must be one of TYPE_ENUM, TYPE_MESSAGE or TYPE_GROUP.
    */
-  type?: FieldDescriptorProto_Type;
+  type: FieldDescriptorProto_Type;
   /**
    * For message and enum types, this is the name of the type.  If the name
    * starts with a '.', it is fully-qualified.  Otherwise, C++-like scoping
@@ -1712,31 +1596,31 @@ export interface FieldDescriptorProtoAmino {
    * message are searched, then within the parent, on up to the root
    * namespace).
    */
-  type_name?: string;
+  type_name: string;
   /**
    * For extensions, this is the name of the type being extended.  It is
    * resolved in the same manner as type_name.
    */
-  extendee?: string;
+  extendee: string;
   /**
    * For numeric types, contains the original text representation of the value.
    * For booleans, "true" or "false".
    * For strings, contains the default text contents (not escaped in any way).
    * For bytes, contains the C escaped value.  All bytes >= 128 are escaped.
    */
-  default_value?: string;
+  default_value: string;
   /**
    * If set, gives the index of a oneof in the containing type's oneof_decl
    * list.  This field is a member of that oneof.
    */
-  oneof_index?: number;
+  oneof_index: number;
   /**
    * JSON name of this field. The value is set by protocol compiler. If the
    * user has set a "json_name" option on this field, that option's value
    * will be used. Otherwise, it's deduced from the field's name by converting
    * it to camelCase.
    */
-  json_name?: string;
+  json_name: string;
   options?: FieldOptionsAmino;
   /**
    * If true, this is a proto3 "optional". When a proto3 field is optional, it
@@ -1761,30 +1645,11 @@ export interface FieldDescriptorProtoAmino {
    * Proto2 optional fields do not set this flag, because they already indicate
    * optional with `LABEL_OPTIONAL`.
    */
-  proto3_optional?: boolean;
+  proto3_optional: boolean;
 }
 export interface FieldDescriptorProtoAminoMsg {
   type: "/google.protobuf.FieldDescriptorProto";
   value: FieldDescriptorProtoAmino;
-}
-/**
- * Describes a field within a message.
- * @name FieldDescriptorProtoSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.FieldDescriptorProto
- */
-export interface FieldDescriptorProtoSDKType {
-  name: string;
-  number: number;
-  label: FieldDescriptorProto_Label;
-  type: FieldDescriptorProto_Type;
-  type_name: string;
-  extendee: string;
-  default_value: string;
-  oneof_index: number;
-  json_name: string;
-  options?: FieldOptionsSDKType;
-  proto3_optional: boolean;
 }
 /**
  * Describes a oneof.
@@ -1807,22 +1672,12 @@ export interface OneofDescriptorProtoProtoMsg {
  * @see proto type: google.protobuf.OneofDescriptorProto
  */
 export interface OneofDescriptorProtoAmino {
-  name?: string;
+  name: string;
   options?: OneofOptionsAmino;
 }
 export interface OneofDescriptorProtoAminoMsg {
   type: "/google.protobuf.OneofDescriptorProto";
   value: OneofDescriptorProtoAmino;
-}
-/**
- * Describes a oneof.
- * @name OneofDescriptorProtoSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.OneofDescriptorProto
- */
-export interface OneofDescriptorProtoSDKType {
-  name: string;
-  options?: OneofOptionsSDKType;
 }
 /**
  * Describes an enum type.
@@ -1861,42 +1716,28 @@ export interface EnumDescriptorProtoProtoMsg {
  * @see proto type: google.protobuf.EnumDescriptorProto
  */
 export interface EnumDescriptorProtoAmino {
-  name?: string;
-  value?: EnumValueDescriptorProtoAmino[];
+  name: string;
+  value: EnumValueDescriptorProtoAmino[];
   options?: EnumOptionsAmino;
   /**
    * Range of reserved numeric values. Reserved numeric values may not be used
    * by enum values in the same enum declaration. Reserved ranges may not
    * overlap.
    */
-  reserved_range?: EnumDescriptorProto_EnumReservedRangeAmino[];
+  reserved_range: EnumDescriptorProto_EnumReservedRangeAmino[];
   /**
    * Reserved enum value names, which may not be reused. A given name may only
    * be reserved once.
    */
-  reserved_name?: string[];
+  reserved_name: string[];
   /**
    * Support for `export` and `local` keywords on enums.
    */
-  visibility?: SymbolVisibility;
+  visibility: SymbolVisibility;
 }
 export interface EnumDescriptorProtoAminoMsg {
   type: "/google.protobuf.EnumDescriptorProto";
   value: EnumDescriptorProtoAmino;
-}
-/**
- * Describes an enum type.
- * @name EnumDescriptorProtoSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.EnumDescriptorProto
- */
-export interface EnumDescriptorProtoSDKType {
-  name: string;
-  value: EnumValueDescriptorProtoSDKType[];
-  options?: EnumOptionsSDKType;
-  reserved_range: EnumDescriptorProto_EnumReservedRangeSDKType[];
-  reserved_name: string[];
-  visibility: SymbolVisibility;
 }
 /**
  * Range of reserved numeric values. Reserved values may not be used by
@@ -1938,30 +1779,15 @@ export interface EnumDescriptorProto_EnumReservedRangeAmino {
   /**
    * Inclusive.
    */
-  start?: number;
+  start: number;
   /**
    * Inclusive.
    */
-  end?: number;
+  end: number;
 }
 export interface EnumDescriptorProto_EnumReservedRangeAminoMsg {
   type: "/google.protobuf.EnumReservedRange";
   value: EnumDescriptorProto_EnumReservedRangeAmino;
-}
-/**
- * Range of reserved numeric values. Reserved values may not be used by
- * entries in the same enum. Reserved ranges may not overlap.
- * 
- * Note that this is distinct from DescriptorProto.ReservedRange in that it
- * is inclusive such that it can appropriately represent the entire int32
- * domain.
- * @name EnumDescriptorProto_EnumReservedRangeSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.EnumReservedRange
- */
-export interface EnumDescriptorProto_EnumReservedRangeSDKType {
-  start: number;
-  end: number;
 }
 /**
  * Describes a value within an enum.
@@ -1985,24 +1811,13 @@ export interface EnumValueDescriptorProtoProtoMsg {
  * @see proto type: google.protobuf.EnumValueDescriptorProto
  */
 export interface EnumValueDescriptorProtoAmino {
-  name?: string;
-  number?: number;
+  name: string;
+  number: number;
   options?: EnumValueOptionsAmino;
 }
 export interface EnumValueDescriptorProtoAminoMsg {
   type: "/google.protobuf.EnumValueDescriptorProto";
   value: EnumValueDescriptorProtoAmino;
-}
-/**
- * Describes a value within an enum.
- * @name EnumValueDescriptorProtoSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.EnumValueDescriptorProto
- */
-export interface EnumValueDescriptorProtoSDKType {
-  name: string;
-  number: number;
-  options?: EnumValueOptionsSDKType;
 }
 /**
  * Describes a service.
@@ -2026,24 +1841,13 @@ export interface ServiceDescriptorProtoProtoMsg {
  * @see proto type: google.protobuf.ServiceDescriptorProto
  */
 export interface ServiceDescriptorProtoAmino {
-  name?: string;
-  method?: MethodDescriptorProtoAmino[];
+  name: string;
+  method: MethodDescriptorProtoAmino[];
   options?: ServiceOptionsAmino;
 }
 export interface ServiceDescriptorProtoAminoMsg {
   type: "/google.protobuf.ServiceDescriptorProto";
   value: ServiceDescriptorProtoAmino;
-}
-/**
- * Describes a service.
- * @name ServiceDescriptorProtoSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.ServiceDescriptorProto
- */
-export interface ServiceDescriptorProtoSDKType {
-  name: string;
-  method: MethodDescriptorProtoSDKType[];
-  options?: ServiceOptionsSDKType;
 }
 /**
  * Describes a method of a service.
@@ -2080,40 +1884,26 @@ export interface MethodDescriptorProtoProtoMsg {
  * @see proto type: google.protobuf.MethodDescriptorProto
  */
 export interface MethodDescriptorProtoAmino {
-  name?: string;
+  name: string;
   /**
    * Input and output type names.  These are resolved in the same way as
    * FieldDescriptorProto.type_name, but must refer to a message type.
    */
-  input_type?: string;
-  output_type?: string;
+  input_type: string;
+  output_type: string;
   options?: MethodOptionsAmino;
   /**
    * Identifies if client streams multiple client messages
    */
-  client_streaming?: boolean;
+  client_streaming: boolean;
   /**
    * Identifies if server streams multiple server messages
    */
-  server_streaming?: boolean;
+  server_streaming: boolean;
 }
 export interface MethodDescriptorProtoAminoMsg {
   type: "/google.protobuf.MethodDescriptorProto";
   value: MethodDescriptorProtoAmino;
-}
-/**
- * Describes a method of a service.
- * @name MethodDescriptorProtoSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.MethodDescriptorProto
- */
-export interface MethodDescriptorProtoSDKType {
-  name: string;
-  input_type: string;
-  output_type: string;
-  options?: MethodOptionsSDKType;
-  client_streaming: boolean;
-  server_streaming: boolean;
 }
 /**
  * @name FileOptions
@@ -2267,7 +2057,7 @@ export interface FileOptionsAmino {
    * inappropriate because proto packages do not normally start with backwards
    * domain names.
    */
-  java_package?: string;
+  java_package: string;
   /**
    * Controls the name of the wrapper Java class generated for the .proto file.
    * That class will always contain the .proto file's getDescriptor() method as
@@ -2275,7 +2065,7 @@ export interface FileOptionsAmino {
    * If java_multiple_files is disabled, then all the other classes from the
    * .proto file will be nested inside the single wrapper outer class.
    */
-  java_outer_classname?: string;
+  java_outer_classname: string;
   /**
    * If enabled, then the Java code generator will generate a separate .java
    * file for each top-level message, enum, and service defined in the .proto
@@ -2284,12 +2074,12 @@ export interface FileOptionsAmino {
    * generated to contain the file's getDescriptor() method as well as any
    * top-level extensions defined in the file.
    */
-  java_multiple_files?: boolean;
+  java_multiple_files: boolean;
   /**
    * This option does nothing.
    * @deprecated
    */
-  java_generate_equals_and_hash?: boolean;
+  java_generate_equals_and_hash: boolean;
   /**
    * A proto2 file can set this to true to opt in to UTF-8 checking for Java,
    * which will throw an exception if invalid UTF-8 is parsed from the wire or
@@ -2302,8 +2092,8 @@ export interface FileOptionsAmino {
    * false has no effect: it cannot be used to opt proto3 files out of UTF-8
    * checks.
    */
-  java_string_check_utf8?: boolean;
-  optimize_for?: FileOptions_OptimizeMode;
+  java_string_check_utf8: boolean;
+  optimize_for: FileOptions_OptimizeMode;
   /**
    * Sets the Go package where structs generated from this .proto will be
    * placed. If omitted, the Go package will be derived from the following:
@@ -2311,7 +2101,7 @@ export interface FileOptionsAmino {
    *   - Otherwise, the package statement in the .proto file, if present.
    *   - Otherwise, the basename of the .proto file, without extension.
    */
-  go_package?: string;
+  go_package: string;
   /**
    * Should generic services be generated in each language?  "Generic" services
    * are not specific to any particular RPC system.  They are generated by the
@@ -2324,60 +2114,60 @@ export interface FileOptionsAmino {
    * these default to false.  Old code which depends on generic services should
    * explicitly set them to true.
    */
-  cc_generic_services?: boolean;
-  java_generic_services?: boolean;
-  py_generic_services?: boolean;
+  cc_generic_services: boolean;
+  java_generic_services: boolean;
+  py_generic_services: boolean;
   /**
    * Is this file deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for everything in the file, or it will be completely ignored; in the very
    * least, this is a formalization for deprecating files.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /**
    * Enables the use of arenas for the proto messages in this file. This applies
    * only to generated classes for C++.
    */
-  cc_enable_arenas?: boolean;
+  cc_enable_arenas: boolean;
   /**
    * Sets the objective c class prefix which is prepended to all objective c
    * generated classes from this .proto. There is no default.
    */
-  objc_class_prefix?: string;
+  objc_class_prefix: string;
   /**
    * Namespace for generated classes; defaults to the package.
    */
-  csharp_namespace?: string;
+  csharp_namespace: string;
   /**
    * By default Swift generators will take the proto package and CamelCase it
    * replacing '.' with underscore and use that to prefix the types/symbols
    * defined. When this options is provided, they will use this value instead
    * to prefix the types/symbols defined.
    */
-  swift_prefix?: string;
+  swift_prefix: string;
   /**
    * Sets the php class prefix which is prepended to all php generated classes
    * from this .proto. Default is empty.
    */
-  php_class_prefix?: string;
+  php_class_prefix: string;
   /**
    * Use this option to change the namespace of php generated classes. Default
    * is empty. When this option is empty, the package name will be used for
    * determining the namespace.
    */
-  php_namespace?: string;
+  php_namespace: string;
   /**
    * Use this option to change the namespace of php generated metadata classes.
    * Default is empty. When this option is empty, the proto file name will be
    * used for determining the namespace.
    */
-  php_metadata_namespace?: string;
+  php_metadata_namespace: string;
   /**
    * Use this option to change the package of ruby generated classes. Default
    * is empty. When this option is not set, the package name will be used for
    * determining the ruby package.
    */
-  ruby_package?: string;
+  ruby_package: string;
   /**
    * Any features defined in the specific edition.
    * WARNING: This field should only be used by protobuf plugins or special
@@ -2389,42 +2179,11 @@ export interface FileOptionsAmino {
    * The parser stores options it doesn't recognize here.
    * See the documentation for the "Options" section above.
    */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface FileOptionsAminoMsg {
   type: "/google.protobuf.FileOptions";
   value: FileOptionsAmino;
-}
-/**
- * @name FileOptionsSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.FileOptions
- */
-export interface FileOptionsSDKType {
-  java_package: string;
-  java_outer_classname: string;
-  java_multiple_files: boolean;
-  /**
-   * @deprecated
-   */
-  java_generate_equals_and_hash: boolean;
-  java_string_check_utf8: boolean;
-  optimize_for: FileOptions_OptimizeMode;
-  go_package: string;
-  cc_generic_services: boolean;
-  java_generic_services: boolean;
-  py_generic_services: boolean;
-  deprecated: boolean;
-  cc_enable_arenas: boolean;
-  objc_class_prefix: string;
-  csharp_namespace: string;
-  swift_prefix: string;
-  php_class_prefix: string;
-  php_namespace: string;
-  php_metadata_namespace: string;
-  ruby_package: string;
-  features?: FeatureSetSDKType;
-  uninterpreted_option: UninterpretedOptionSDKType[];
 }
 /**
  * @name MessageOptions
@@ -2546,20 +2305,20 @@ export interface MessageOptionsAmino {
    * Because this is an option, the above two restrictions are not enforced by
    * the protocol compiler.
    */
-  message_set_wire_format?: boolean;
+  message_set_wire_format: boolean;
   /**
    * Disables the generation of the standard "descriptor()" accessor, which can
    * conflict with a field of the same name.  This is meant to make migration
    * from proto1 easier; new code should avoid fields named "descriptor".
    */
-  no_standard_descriptor_accessor?: boolean;
+  no_standard_descriptor_accessor: boolean;
   /**
    * Is this message deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for the message, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating messages.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /**
    * Whether the message is an automatically generated map entry type for the
    * maps field.
@@ -2583,7 +2342,7 @@ export interface MessageOptionsAmino {
    * instead. The option should only be implicitly set by the proto compiler
    * parser.
    */
-  map_entry?: boolean;
+  map_entry: boolean;
   /**
    * Enable the legacy handling of JSON field name conflicts.  This lowercases
    * and strips underscored from the fields before comparison in proto3 only.
@@ -2597,7 +2356,7 @@ export interface MessageOptionsAmino {
    * teams have had time to migrate.
    * @deprecated
    */
-  deprecated_legacy_json_field_conflicts?: boolean;
+  deprecated_legacy_json_field_conflicts: boolean;
   /**
    * Any features defined in the specific edition.
    * WARNING: This field should only be used by protobuf plugins or special
@@ -2608,28 +2367,11 @@ export interface MessageOptionsAmino {
   /**
    * The parser stores options it doesn't recognize here. See above.
    */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface MessageOptionsAminoMsg {
   type: "/google.protobuf.MessageOptions";
   value: MessageOptionsAmino;
-}
-/**
- * @name MessageOptionsSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.MessageOptions
- */
-export interface MessageOptionsSDKType {
-  message_set_wire_format: boolean;
-  no_standard_descriptor_accessor: boolean;
-  deprecated: boolean;
-  map_entry: boolean;
-  /**
-   * @deprecated
-   */
-  deprecated_legacy_json_field_conflicts: boolean;
-  features?: FeatureSetSDKType;
-  uninterpreted_option: UninterpretedOptionSDKType[];
 }
 /**
  * @name FieldOptions
@@ -2753,7 +2495,7 @@ export interface FieldOptionsAmino {
    * type "bytes" in the open source release.
    * TODO: make ctype actually deprecated.
    */
-  ctype?: FieldOptions_CType;
+  ctype: FieldOptions_CType;
   /**
    * The packed option can be enabled for repeated primitive fields to enable
    * a more efficient representation on the wire. Rather than repeatedly
@@ -2763,7 +2505,7 @@ export interface FieldOptionsAmino {
    * Editions, but the `repeated_field_encoding` feature can be used to control
    * the behavior.
    */
-  packed?: boolean;
+  packed: boolean;
   /**
    * The jstype option determines the JavaScript type used for values of the
    * field.  The option is permitted only for 64 bit integral and fixed types
@@ -2777,7 +2519,7 @@ export interface FieldOptionsAmino {
    * This option is an enum to permit additional types to be added, e.g.
    * goog.math.Integer.
    */
-  jstype?: FieldOptions_JSType;
+  jstype: FieldOptions_JSType;
   /**
    * Should this field be parsed lazily?  Lazy applies only to message-type
    * fields.  It means that when the outer message is initially parsed, the
@@ -2802,32 +2544,32 @@ export interface FieldOptionsAmino {
    * fields. Failed verification would result in parsing failure (except when
    * uninitialized messages are acceptable).
    */
-  lazy?: boolean;
+  lazy: boolean;
   /**
    * unverified_lazy does no correctness checks on the byte stream. This should
    * only be used where lazy with verification is prohibitive for performance
    * reasons.
    */
-  unverified_lazy?: boolean;
+  unverified_lazy: boolean;
   /**
    * Is this field deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for accessors, or it will be completely ignored; in the very least, this
    * is a formalization for deprecating fields.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /**
    * For Google-internal migration only. Do not use.
    */
-  weak?: boolean;
+  weak: boolean;
   /**
    * Indicate that the field value should not be printed out when using debug
    * formats, e.g. when the field contains sensitive credentials.
    */
-  debug_redact?: boolean;
-  retention?: FieldOptions_OptionRetention;
-  targets?: FieldOptions_OptionTargetType[];
-  edition_defaults?: FieldOptions_EditionDefaultAmino[];
+  debug_redact: boolean;
+  retention: FieldOptions_OptionRetention;
+  targets: FieldOptions_OptionTargetType[];
+  edition_defaults: FieldOptions_EditionDefaultAmino[];
   /**
    * Any features defined in the specific edition.
    * WARNING: This field should only be used by protobuf plugins or special
@@ -2839,32 +2581,11 @@ export interface FieldOptionsAmino {
   /**
    * The parser stores options it doesn't recognize here. See above.
    */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface FieldOptionsAminoMsg {
   type: "/google.protobuf.FieldOptions";
   value: FieldOptionsAmino;
-}
-/**
- * @name FieldOptionsSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.FieldOptions
- */
-export interface FieldOptionsSDKType {
-  ctype: FieldOptions_CType;
-  packed: boolean;
-  jstype: FieldOptions_JSType;
-  lazy: boolean;
-  unverified_lazy: boolean;
-  deprecated: boolean;
-  weak: boolean;
-  debug_redact: boolean;
-  retention: FieldOptions_OptionRetention;
-  targets: FieldOptions_OptionTargetType[];
-  edition_defaults: FieldOptions_EditionDefaultSDKType[];
-  features?: FeatureSetSDKType;
-  feature_support?: FieldOptions_FeatureSupportSDKType;
-  uninterpreted_option: UninterpretedOptionSDKType[];
 }
 /**
  * @name FieldOptions_EditionDefault
@@ -2888,24 +2609,15 @@ export interface FieldOptions_EditionDefaultProtoMsg {
  * @see proto type: google.protobuf.FieldOptions_EditionDefault
  */
 export interface FieldOptions_EditionDefaultAmino {
-  edition?: Edition;
+  edition: Edition;
   /**
    * Textproto value.
    */
-  value?: string;
+  value: string;
 }
 export interface FieldOptions_EditionDefaultAminoMsg {
   type: "/google.protobuf.EditionDefault";
   value: FieldOptions_EditionDefaultAmino;
-}
-/**
- * @name FieldOptions_EditionDefaultSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.EditionDefault
- */
-export interface FieldOptions_EditionDefaultSDKType {
-  edition: Edition;
-  value: string;
 }
 /**
  * Information about the support window of a feature.
@@ -2953,39 +2665,27 @@ export interface FieldOptions_FeatureSupportAmino {
    * earlier than this one, the default assigned to EDITION_LEGACY will be
    * used, and proto files will not be able to override it.
    */
-  edition_introduced?: Edition;
+  edition_introduced: Edition;
   /**
    * The edition this feature becomes deprecated in.  Using this after this
    * edition may trigger warnings.
    */
-  edition_deprecated?: Edition;
+  edition_deprecated: Edition;
   /**
    * The deprecation warning text if this feature is used after the edition it
    * was marked deprecated in.
    */
-  deprecation_warning?: string;
+  deprecation_warning: string;
   /**
    * The edition this feature is no longer available in.  In editions after
    * this one, the last default assigned will be used, and proto files will
    * not be able to override it.
    */
-  edition_removed?: Edition;
+  edition_removed: Edition;
 }
 export interface FieldOptions_FeatureSupportAminoMsg {
   type: "/google.protobuf.FeatureSupport";
   value: FieldOptions_FeatureSupportAmino;
-}
-/**
- * Information about the support window of a feature.
- * @name FieldOptions_FeatureSupportSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.FeatureSupport
- */
-export interface FieldOptions_FeatureSupportSDKType {
-  edition_introduced: Edition;
-  edition_deprecated: Edition;
-  deprecation_warning: string;
-  edition_removed: Edition;
 }
 /**
  * @name OneofOptions
@@ -3025,20 +2725,11 @@ export interface OneofOptionsAmino {
   /**
    * The parser stores options it doesn't recognize here. See above.
    */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface OneofOptionsAminoMsg {
   type: "/google.protobuf.OneofOptions";
   value: OneofOptionsAmino;
-}
-/**
- * @name OneofOptionsSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.OneofOptions
- */
-export interface OneofOptionsSDKType {
-  features?: FeatureSetSDKType;
-  uninterpreted_option: UninterpretedOptionSDKType[];
 }
 /**
  * @name EnumOptions
@@ -3094,14 +2785,14 @@ export interface EnumOptionsAmino {
    * Set this option to true to allow mapping different tag names to the same
    * value.
    */
-  allow_alias?: boolean;
+  allow_alias: boolean;
   /**
    * Is this enum deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for the enum, or it will be completely ignored; in the very least, this
    * is a formalization for deprecating enums.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /**
    * Enable the legacy handling of JSON field name conflicts.  This lowercases
    * and strips underscored from the fields before comparison in proto3 only.
@@ -3111,7 +2802,7 @@ export interface EnumOptionsAmino {
    * had time to migrate.
    * @deprecated
    */
-  deprecated_legacy_json_field_conflicts?: boolean;
+  deprecated_legacy_json_field_conflicts: boolean;
   /**
    * Any features defined in the specific edition.
    * WARNING: This field should only be used by protobuf plugins or special
@@ -3122,26 +2813,11 @@ export interface EnumOptionsAmino {
   /**
    * The parser stores options it doesn't recognize here. See above.
    */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface EnumOptionsAminoMsg {
   type: "/google.protobuf.EnumOptions";
   value: EnumOptionsAmino;
-}
-/**
- * @name EnumOptionsSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.EnumOptions
- */
-export interface EnumOptionsSDKType {
-  allow_alias: boolean;
-  deprecated: boolean;
-  /**
-   * @deprecated
-   */
-  deprecated_legacy_json_field_conflicts: boolean;
-  features?: FeatureSetSDKType;
-  uninterpreted_option: UninterpretedOptionSDKType[];
 }
 /**
  * @name EnumValueOptions
@@ -3194,7 +2870,7 @@ export interface EnumValueOptionsAmino {
    * for the enum value, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating enum values.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /**
    * Any features defined in the specific edition.
    * WARNING: This field should only be used by protobuf plugins or special
@@ -3207,7 +2883,7 @@ export interface EnumValueOptionsAmino {
    * out when using debug formats, e.g. when the field contains sensitive
    * credentials.
    */
-  debug_redact?: boolean;
+  debug_redact: boolean;
   /**
    * Information about the support window of a feature value.
    */
@@ -3215,23 +2891,11 @@ export interface EnumValueOptionsAmino {
   /**
    * The parser stores options it doesn't recognize here. See above.
    */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface EnumValueOptionsAminoMsg {
   type: "/google.protobuf.EnumValueOptions";
   value: EnumValueOptionsAmino;
-}
-/**
- * @name EnumValueOptionsSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.EnumValueOptions
- */
-export interface EnumValueOptionsSDKType {
-  deprecated: boolean;
-  features?: FeatureSetSDKType;
-  debug_redact: boolean;
-  feature_support?: FieldOptions_FeatureSupportSDKType;
-  uninterpreted_option: UninterpretedOptionSDKType[];
 }
 /**
  * @name ServiceOptions
@@ -3281,25 +2945,15 @@ export interface ServiceOptionsAmino {
    * for the service, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating services.
    */
-  deprecated?: boolean;
+  deprecated: boolean;
   /**
    * The parser stores options it doesn't recognize here. See above.
    */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface ServiceOptionsAminoMsg {
   type: "/google.protobuf.ServiceOptions";
   value: ServiceOptionsAmino;
-}
-/**
- * @name ServiceOptionsSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.ServiceOptions
- */
-export interface ServiceOptionsSDKType {
-  features?: FeatureSetSDKType;
-  deprecated: boolean;
-  uninterpreted_option: UninterpretedOptionSDKType[];
 }
 /**
  * @name MethodOptions
@@ -3343,8 +2997,8 @@ export interface MethodOptionsAmino {
    * for the method, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating methods.
    */
-  deprecated?: boolean;
-  idempotency_level?: MethodOptions_IdempotencyLevel;
+  deprecated: boolean;
+  idempotency_level: MethodOptions_IdempotencyLevel;
   /**
    * Any features defined in the specific edition.
    * WARNING: This field should only be used by protobuf plugins or special
@@ -3355,22 +3009,11 @@ export interface MethodOptionsAmino {
   /**
    * The parser stores options it doesn't recognize here. See above.
    */
-  uninterpreted_option?: UninterpretedOptionAmino[];
+  uninterpreted_option: UninterpretedOptionAmino[];
 }
 export interface MethodOptionsAminoMsg {
   type: "/google.protobuf.MethodOptions";
   value: MethodOptionsAmino;
-}
-/**
- * @name MethodOptionsSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.MethodOptions
- */
-export interface MethodOptionsSDKType {
-  deprecated: boolean;
-  idempotency_level: MethodOptions_IdempotencyLevel;
-  features?: FeatureSetSDKType;
-  uninterpreted_option: UninterpretedOptionSDKType[];
 }
 /**
  * A message representing a option the parser does not recognize. This only
@@ -3412,41 +3055,21 @@ export interface UninterpretedOptionProtoMsg {
  * @see proto type: google.protobuf.UninterpretedOption
  */
 export interface UninterpretedOptionAmino {
-  name?: UninterpretedOption_NamePartAmino[];
+  name: UninterpretedOption_NamePartAmino[];
   /**
    * The value of the uninterpreted option, in whatever type the tokenizer
    * identified it as during parsing. Exactly one of these should be set.
    */
-  identifier_value?: string;
-  positive_int_value?: string;
-  negative_int_value?: string;
-  double_value?: number;
-  string_value?: string;
-  aggregate_value?: string;
+  identifier_value: string;
+  positive_int_value: string;
+  negative_int_value: string;
+  double_value: number;
+  string_value: string;
+  aggregate_value: string;
 }
 export interface UninterpretedOptionAminoMsg {
   type: "/google.protobuf.UninterpretedOption";
   value: UninterpretedOptionAmino;
-}
-/**
- * A message representing a option the parser does not recognize. This only
- * appears in options protos created by the compiler::Parser class.
- * DescriptorPool resolves these when building Descriptor objects. Therefore,
- * options protos in descriptor objects (e.g. returned by Descriptor::options(),
- * or produced by Descriptor::CopyTo()) will never have UninterpretedOptions
- * in them.
- * @name UninterpretedOptionSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.UninterpretedOption
- */
-export interface UninterpretedOptionSDKType {
-  name: UninterpretedOption_NamePartSDKType[];
-  identifier_value: string;
-  positive_int_value: bigint;
-  negative_int_value: bigint;
-  double_value: number;
-  string_value: Uint8Array;
-  aggregate_value: string;
 }
 /**
  * The name of the uninterpreted option.  Each string represents a segment in
@@ -3477,26 +3100,12 @@ export interface UninterpretedOption_NamePartProtoMsg {
  * @see proto type: google.protobuf.UninterpretedOption_NamePart
  */
 export interface UninterpretedOption_NamePartAmino {
-  name_part?: string;
-  is_extension?: boolean;
+  name_part: string;
+  is_extension: boolean;
 }
 export interface UninterpretedOption_NamePartAminoMsg {
   type: "/google.protobuf.NamePart";
   value: UninterpretedOption_NamePartAmino;
-}
-/**
- * The name of the uninterpreted option.  Each string represents a segment in
- * a dot-separated name.  is_extension is true iff a segment represents an
- * extension (denoted with parentheses in options specs in .proto files).
- * E.g.,{ ["foo", false], ["bar.baz", true], ["moo", false] } represents
- * "foo.(bar.baz).moo".
- * @name UninterpretedOption_NamePartSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.NamePart
- */
-export interface UninterpretedOption_NamePartSDKType {
-  name_part: string;
-  is_extension: boolean;
 }
 /**
  * TODO Enums in C++ gencode (and potentially other languages) are
@@ -3534,30 +3143,6 @@ export interface FeatureSetProtoMsg {
  * @see proto type: google.protobuf.FeatureSet
  */
 export interface FeatureSetAmino {
-  field_presence?: FeatureSet_FieldPresence;
-  enum_type?: FeatureSet_EnumType;
-  repeated_field_encoding?: FeatureSet_RepeatedFieldEncoding;
-  utf8_validation?: FeatureSet_Utf8Validation;
-  message_encoding?: FeatureSet_MessageEncoding;
-  json_format?: FeatureSet_JsonFormat;
-  enforce_naming_style?: FeatureSet_EnforceNamingStyle;
-}
-export interface FeatureSetAminoMsg {
-  type: "/google.protobuf.FeatureSet";
-  value: FeatureSetAmino;
-}
-/**
- * TODO Enums in C++ gencode (and potentially other languages) are
- * not well scoped.  This means that each of the feature enums below can clash
- * with each other.  The short names we've chosen maximize call-site
- * readability, but leave us very open to this scenario.  A future feature will
- * be designed and implemented to handle this, hopefully before we ever hit a
- * conflict here.
- * @name FeatureSetSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.FeatureSet
- */
-export interface FeatureSetSDKType {
   field_presence: FeatureSet_FieldPresence;
   enum_type: FeatureSet_EnumType;
   repeated_field_encoding: FeatureSet_RepeatedFieldEncoding;
@@ -3565,6 +3150,10 @@ export interface FeatureSetSDKType {
   message_encoding: FeatureSet_MessageEncoding;
   json_format: FeatureSet_JsonFormat;
   enforce_naming_style: FeatureSet_EnforceNamingStyle;
+}
+export interface FeatureSetAminoMsg {
+  type: "/google.protobuf.FeatureSet";
+  value: FeatureSetAmino;
 }
 /**
  * @name FeatureSet_VisibilityFeature
@@ -3586,12 +3175,6 @@ export interface FeatureSet_VisibilityFeatureAminoMsg {
   type: "/google.protobuf.VisibilityFeature";
   value: FeatureSet_VisibilityFeatureAmino;
 }
-/**
- * @name FeatureSet_VisibilityFeatureSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.VisibilityFeature
- */
-export interface FeatureSet_VisibilityFeatureSDKType {}
 /**
  * A compiled specification for the defaults of a set of features.  These
  * messages are generated from FeatureSet extensions and can be used to seed
@@ -3628,35 +3211,21 @@ export interface FeatureSetDefaultsProtoMsg {
  * @see proto type: google.protobuf.FeatureSetDefaults
  */
 export interface FeatureSetDefaultsAmino {
-  defaults?: FeatureSetDefaults_FeatureSetEditionDefaultAmino[];
+  defaults: FeatureSetDefaults_FeatureSetEditionDefaultAmino[];
   /**
    * The minimum supported edition (inclusive) when this was constructed.
    * Editions before this will not have defaults.
    */
-  minimum_edition?: Edition;
+  minimum_edition: Edition;
   /**
    * The maximum known edition (inclusive) when this was constructed. Editions
    * after this will not have reliable defaults.
    */
-  maximum_edition?: Edition;
+  maximum_edition: Edition;
 }
 export interface FeatureSetDefaultsAminoMsg {
   type: "/google.protobuf.FeatureSetDefaults";
   value: FeatureSetDefaultsAmino;
-}
-/**
- * A compiled specification for the defaults of a set of features.  These
- * messages are generated from FeatureSet extensions and can be used to seed
- * feature resolution. The resolution with this object becomes a simple search
- * for the closest matching edition, followed by proto merges.
- * @name FeatureSetDefaultsSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.FeatureSetDefaults
- */
-export interface FeatureSetDefaultsSDKType {
-  defaults: FeatureSetDefaults_FeatureSetEditionDefaultSDKType[];
-  minimum_edition: Edition;
-  maximum_edition: Edition;
 }
 /**
  * A map from every known edition with a unique set of defaults to its
@@ -3692,7 +3261,7 @@ export interface FeatureSetDefaults_FeatureSetEditionDefaultProtoMsg {
  * @see proto type: google.protobuf.FeatureSetDefaults_FeatureSetEditionDefault
  */
 export interface FeatureSetDefaults_FeatureSetEditionDefaultAmino {
-  edition?: Edition;
+  edition: Edition;
   /**
    * Defaults of features that can be overridden in this edition.
    */
@@ -3705,20 +3274,6 @@ export interface FeatureSetDefaults_FeatureSetEditionDefaultAmino {
 export interface FeatureSetDefaults_FeatureSetEditionDefaultAminoMsg {
   type: "/google.protobuf.FeatureSetEditionDefault";
   value: FeatureSetDefaults_FeatureSetEditionDefaultAmino;
-}
-/**
- * A map from every known edition with a unique set of defaults to its
- * defaults. Not all editions may be contained here.  For a given edition,
- * the defaults at the closest matching edition ordered at or before it should
- * be used.  This field must be in strict ascending order by edition.
- * @name FeatureSetDefaults_FeatureSetEditionDefaultSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.FeatureSetEditionDefault
- */
-export interface FeatureSetDefaults_FeatureSetEditionDefaultSDKType {
-  edition: Edition;
-  overridable_features?: FeatureSetSDKType;
-  fixed_features?: FeatureSetSDKType;
 }
 /**
  * Encapsulates information about the original source file from which a
@@ -3832,21 +3387,11 @@ export interface SourceCodeInfoAmino {
    *   ignore those that it doesn't understand, as more types of locations could
    *   be recorded in the future.
    */
-  location?: SourceCodeInfo_LocationAmino[];
+  location: SourceCodeInfo_LocationAmino[];
 }
 export interface SourceCodeInfoAminoMsg {
   type: "/google.protobuf.SourceCodeInfo";
   value: SourceCodeInfoAmino;
-}
-/**
- * Encapsulates information about the original source file from which a
- * FileDescriptorProto was generated.
- * @name SourceCodeInfoSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.SourceCodeInfo
- */
-export interface SourceCodeInfoSDKType {
-  location: SourceCodeInfo_LocationSDKType[];
 }
 /**
  * @name SourceCodeInfo_Location
@@ -3976,7 +3521,7 @@ export interface SourceCodeInfo_LocationAmino {
    * this path refers to the whole field declaration (from the beginning
    * of the label to the terminating semicolon).
    */
-  path?: number[];
+  path: number[];
   /**
    * Always has exactly three or four elements: start line, start column,
    * end line (optional, otherwise assumed same as start line), end column.
@@ -3984,7 +3529,7 @@ export interface SourceCodeInfo_LocationAmino {
    * and column numbers are zero-based -- typically you will want to add
    * 1 to each before displaying to a user.
    */
-  span?: number[];
+  span: number[];
   /**
    * If this SourceCodeInfo represents a complete declaration, these are any
    * comments appearing before and after the declaration which appear to be
@@ -4034,25 +3579,13 @@ export interface SourceCodeInfo_LocationAmino {
    * 
    *   // ignored detached comments.
    */
-  leading_comments?: string;
-  trailing_comments?: string;
-  leading_detached_comments?: string[];
+  leading_comments: string;
+  trailing_comments: string;
+  leading_detached_comments: string[];
 }
 export interface SourceCodeInfo_LocationAminoMsg {
   type: "/google.protobuf.Location";
   value: SourceCodeInfo_LocationAmino;
-}
-/**
- * @name SourceCodeInfo_LocationSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.Location
- */
-export interface SourceCodeInfo_LocationSDKType {
-  path: number[];
-  span: number[];
-  leading_comments: string;
-  trailing_comments: string;
-  leading_detached_comments: string[];
 }
 /**
  * Describes the relationship between generated code and its original source
@@ -4086,22 +3619,11 @@ export interface GeneratedCodeInfoAmino {
    * An Annotation connects some span of text in generated code to an element
    * of its generating .proto file.
    */
-  annotation?: GeneratedCodeInfo_AnnotationAmino[];
+  annotation: GeneratedCodeInfo_AnnotationAmino[];
 }
 export interface GeneratedCodeInfoAminoMsg {
   type: "/google.protobuf.GeneratedCodeInfo";
   value: GeneratedCodeInfoAmino;
-}
-/**
- * Describes the relationship between generated code and its original source
- * file. A GeneratedCodeInfo message is associated with only one generated
- * source file, but may contain references to different source .proto files.
- * @name GeneratedCodeInfoSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.GeneratedCodeInfo
- */
-export interface GeneratedCodeInfoSDKType {
-  annotation: GeneratedCodeInfo_AnnotationSDKType[];
 }
 /**
  * @name GeneratedCodeInfo_Annotation
@@ -4145,39 +3667,27 @@ export interface GeneratedCodeInfo_AnnotationAmino {
    * Identifies the element in the original source .proto file. This field
    * is formatted the same as SourceCodeInfo.Location.path.
    */
-  path?: number[];
+  path: number[];
   /**
    * Identifies the filesystem path to the original source .proto.
    */
-  source_file?: string;
+  source_file: string;
   /**
    * Identifies the starting offset in bytes in the generated code
    * that relates to the identified object.
    */
-  begin?: number;
+  begin: number;
   /**
    * Identifies the ending offset in bytes in the generated code that
    * relates to the identified object. The end offset should be one past
    * the last relevant byte (so the length of the text = end - begin).
    */
-  end?: number;
-  semantic?: GeneratedCodeInfo_Annotation_Semantic;
+  end: number;
+  semantic: GeneratedCodeInfo_Annotation_Semantic;
 }
 export interface GeneratedCodeInfo_AnnotationAminoMsg {
   type: "/google.protobuf.Annotation";
   value: GeneratedCodeInfo_AnnotationAmino;
-}
-/**
- * @name GeneratedCodeInfo_AnnotationSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.Annotation
- */
-export interface GeneratedCodeInfo_AnnotationSDKType {
-  path: number[];
-  source_file: string;
-  begin: number;
-  end: number;
-  semantic: GeneratedCodeInfo_Annotation_Semantic;
 }
 function createBaseFileDescriptorSet(): FileDescriptorSet {
   return {
@@ -4195,9 +3705,6 @@ export const FileDescriptorSet = {
   typeUrl: "/google.protobuf.FileDescriptorSet",
   is(o: any): o is FileDescriptorSet {
     return o && (o.$typeUrl === FileDescriptorSet.typeUrl || Array.isArray(o.file) && (!o.file.length || FileDescriptorProto.is(o.file[0])));
-  },
-  isSDK(o: any): o is FileDescriptorSetSDKType {
-    return o && (o.$typeUrl === FileDescriptorSet.typeUrl || Array.isArray(o.file) && (!o.file.length || FileDescriptorProto.isSDK(o.file[0])));
   },
   isAmino(o: any): o is FileDescriptorSetAmino {
     return o && (o.$typeUrl === FileDescriptorSet.typeUrl || Array.isArray(o.file) && (!o.file.length || FileDescriptorProto.isAmino(o.file[0])));
@@ -4225,7 +3732,7 @@ export const FileDescriptorSet = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FileDescriptorSet>, I>>(object: I): FileDescriptorSet {
+  fromPartial(object: DeepPartial<FileDescriptorSet>): FileDescriptorSet {
     const message = createBaseFileDescriptorSet();
     message.file = object.file?.map(e => FileDescriptorProto.fromPartial(e)) || [];
     return message;
@@ -4294,9 +3801,6 @@ export const FileDescriptorProto = {
   typeUrl: "/google.protobuf.FileDescriptorProto",
   is(o: any): o is FileDescriptorProto {
     return o && (o.$typeUrl === FileDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.package === "string" && Array.isArray(o.dependency) && (!o.dependency.length || typeof o.dependency[0] === "string") && Array.isArray(o.publicDependency) && (!o.publicDependency.length || typeof o.publicDependency[0] === "number") && Array.isArray(o.weakDependency) && (!o.weakDependency.length || typeof o.weakDependency[0] === "number") && Array.isArray(o.optionDependency) && (!o.optionDependency.length || typeof o.optionDependency[0] === "string") && Array.isArray(o.messageType) && (!o.messageType.length || DescriptorProto.is(o.messageType[0])) && Array.isArray(o.enumType) && (!o.enumType.length || EnumDescriptorProto.is(o.enumType[0])) && Array.isArray(o.service) && (!o.service.length || ServiceDescriptorProto.is(o.service[0])) && Array.isArray(o.extension) && (!o.extension.length || FieldDescriptorProto.is(o.extension[0])) && typeof o.syntax === "string" && isSet(o.edition));
-  },
-  isSDK(o: any): o is FileDescriptorProtoSDKType {
-    return o && (o.$typeUrl === FileDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.package === "string" && Array.isArray(o.dependency) && (!o.dependency.length || typeof o.dependency[0] === "string") && Array.isArray(o.public_dependency) && (!o.public_dependency.length || typeof o.public_dependency[0] === "number") && Array.isArray(o.weak_dependency) && (!o.weak_dependency.length || typeof o.weak_dependency[0] === "number") && Array.isArray(o.option_dependency) && (!o.option_dependency.length || typeof o.option_dependency[0] === "string") && Array.isArray(o.message_type) && (!o.message_type.length || DescriptorProto.isSDK(o.message_type[0])) && Array.isArray(o.enum_type) && (!o.enum_type.length || EnumDescriptorProto.isSDK(o.enum_type[0])) && Array.isArray(o.service) && (!o.service.length || ServiceDescriptorProto.isSDK(o.service[0])) && Array.isArray(o.extension) && (!o.extension.length || FieldDescriptorProto.isSDK(o.extension[0])) && typeof o.syntax === "string" && isSet(o.edition));
   },
   isAmino(o: any): o is FileDescriptorProtoAmino {
     return o && (o.$typeUrl === FileDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.package === "string" && Array.isArray(o.dependency) && (!o.dependency.length || typeof o.dependency[0] === "string") && Array.isArray(o.public_dependency) && (!o.public_dependency.length || typeof o.public_dependency[0] === "number") && Array.isArray(o.weak_dependency) && (!o.weak_dependency.length || typeof o.weak_dependency[0] === "number") && Array.isArray(o.option_dependency) && (!o.option_dependency.length || typeof o.option_dependency[0] === "string") && Array.isArray(o.message_type) && (!o.message_type.length || DescriptorProto.isAmino(o.message_type[0])) && Array.isArray(o.enum_type) && (!o.enum_type.length || EnumDescriptorProto.isAmino(o.enum_type[0])) && Array.isArray(o.service) && (!o.service.length || ServiceDescriptorProto.isAmino(o.service[0])) && Array.isArray(o.extension) && (!o.extension.length || FieldDescriptorProto.isAmino(o.extension[0])) && typeof o.syntax === "string" && isSet(o.edition));
@@ -4420,7 +3924,7 @@ export const FileDescriptorProto = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FileDescriptorProto>, I>>(object: I): FileDescriptorProto {
+  fromPartial(object: DeepPartial<FileDescriptorProto>): FileDescriptorProto {
     const message = createBaseFileDescriptorProto();
     message.name = object.name ?? "";
     message.package = object.package ?? "";
@@ -4571,9 +4075,6 @@ export const DescriptorProto = {
   is(o: any): o is DescriptorProto {
     return o && (o.$typeUrl === DescriptorProto.typeUrl || typeof o.name === "string" && Array.isArray(o.field) && (!o.field.length || FieldDescriptorProto.is(o.field[0])) && Array.isArray(o.extension) && (!o.extension.length || FieldDescriptorProto.is(o.extension[0])) && Array.isArray(o.nestedType) && (!o.nestedType.length || DescriptorProto.is(o.nestedType[0])) && Array.isArray(o.enumType) && (!o.enumType.length || EnumDescriptorProto.is(o.enumType[0])) && Array.isArray(o.extensionRange) && (!o.extensionRange.length || DescriptorProto_ExtensionRange.is(o.extensionRange[0])) && Array.isArray(o.oneofDecl) && (!o.oneofDecl.length || OneofDescriptorProto.is(o.oneofDecl[0])) && Array.isArray(o.reservedRange) && (!o.reservedRange.length || DescriptorProto_ReservedRange.is(o.reservedRange[0])) && Array.isArray(o.reservedName) && (!o.reservedName.length || typeof o.reservedName[0] === "string") && isSet(o.visibility));
   },
-  isSDK(o: any): o is DescriptorProtoSDKType {
-    return o && (o.$typeUrl === DescriptorProto.typeUrl || typeof o.name === "string" && Array.isArray(o.field) && (!o.field.length || FieldDescriptorProto.isSDK(o.field[0])) && Array.isArray(o.extension) && (!o.extension.length || FieldDescriptorProto.isSDK(o.extension[0])) && Array.isArray(o.nested_type) && (!o.nested_type.length || DescriptorProto.isSDK(o.nested_type[0])) && Array.isArray(o.enum_type) && (!o.enum_type.length || EnumDescriptorProto.isSDK(o.enum_type[0])) && Array.isArray(o.extension_range) && (!o.extension_range.length || DescriptorProto_ExtensionRange.isSDK(o.extension_range[0])) && Array.isArray(o.oneof_decl) && (!o.oneof_decl.length || OneofDescriptorProto.isSDK(o.oneof_decl[0])) && Array.isArray(o.reserved_range) && (!o.reserved_range.length || DescriptorProto_ReservedRange.isSDK(o.reserved_range[0])) && Array.isArray(o.reserved_name) && (!o.reserved_name.length || typeof o.reserved_name[0] === "string") && isSet(o.visibility));
-  },
   isAmino(o: any): o is DescriptorProtoAmino {
     return o && (o.$typeUrl === DescriptorProto.typeUrl || typeof o.name === "string" && Array.isArray(o.field) && (!o.field.length || FieldDescriptorProto.isAmino(o.field[0])) && Array.isArray(o.extension) && (!o.extension.length || FieldDescriptorProto.isAmino(o.extension[0])) && Array.isArray(o.nested_type) && (!o.nested_type.length || DescriptorProto.isAmino(o.nested_type[0])) && Array.isArray(o.enum_type) && (!o.enum_type.length || EnumDescriptorProto.isAmino(o.enum_type[0])) && Array.isArray(o.extension_range) && (!o.extension_range.length || DescriptorProto_ExtensionRange.isAmino(o.extension_range[0])) && Array.isArray(o.oneof_decl) && (!o.oneof_decl.length || OneofDescriptorProto.isAmino(o.oneof_decl[0])) && Array.isArray(o.reserved_range) && (!o.reserved_range.length || DescriptorProto_ReservedRange.isAmino(o.reserved_range[0])) && Array.isArray(o.reserved_name) && (!o.reserved_name.length || typeof o.reserved_name[0] === "string") && isSet(o.visibility));
   },
@@ -4660,7 +4161,7 @@ export const DescriptorProto = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DescriptorProto>, I>>(object: I): DescriptorProto {
+  fromPartial(object: DeepPartial<DescriptorProto>): DescriptorProto {
     const message = createBaseDescriptorProto();
     message.name = object.name ?? "";
     message.field = object.field?.map(e => FieldDescriptorProto.fromPartial(e)) || [];
@@ -4788,9 +4289,6 @@ export const DescriptorProto_ExtensionRange = {
   is(o: any): o is DescriptorProto_ExtensionRange {
     return o && (o.$typeUrl === DescriptorProto_ExtensionRange.typeUrl || typeof o.start === "number" && typeof o.end === "number");
   },
-  isSDK(o: any): o is DescriptorProto_ExtensionRangeSDKType {
-    return o && (o.$typeUrl === DescriptorProto_ExtensionRange.typeUrl || typeof o.start === "number" && typeof o.end === "number");
-  },
   isAmino(o: any): o is DescriptorProto_ExtensionRangeAmino {
     return o && (o.$typeUrl === DescriptorProto_ExtensionRange.typeUrl || typeof o.start === "number" && typeof o.end === "number");
   },
@@ -4829,7 +4327,7 @@ export const DescriptorProto_ExtensionRange = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DescriptorProto_ExtensionRange>, I>>(object: I): DescriptorProto_ExtensionRange {
+  fromPartial(object: DeepPartial<DescriptorProto_ExtensionRange>): DescriptorProto_ExtensionRange {
     const message = createBaseDescriptorProto_ExtensionRange();
     message.start = object.start ?? 0;
     message.end = object.end ?? 0;
@@ -4897,9 +4395,6 @@ export const DescriptorProto_ReservedRange = {
   is(o: any): o is DescriptorProto_ReservedRange {
     return o && (o.$typeUrl === DescriptorProto_ReservedRange.typeUrl || typeof o.start === "number" && typeof o.end === "number");
   },
-  isSDK(o: any): o is DescriptorProto_ReservedRangeSDKType {
-    return o && (o.$typeUrl === DescriptorProto_ReservedRange.typeUrl || typeof o.start === "number" && typeof o.end === "number");
-  },
   isAmino(o: any): o is DescriptorProto_ReservedRangeAmino {
     return o && (o.$typeUrl === DescriptorProto_ReservedRange.typeUrl || typeof o.start === "number" && typeof o.end === "number");
   },
@@ -4932,7 +4427,7 @@ export const DescriptorProto_ReservedRange = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DescriptorProto_ReservedRange>, I>>(object: I): DescriptorProto_ReservedRange {
+  fromPartial(object: DeepPartial<DescriptorProto_ReservedRange>): DescriptorProto_ReservedRange {
     const message = createBaseDescriptorProto_ReservedRange();
     message.start = object.start ?? 0;
     message.end = object.end ?? 0;
@@ -4989,9 +4484,6 @@ export const ExtensionRangeOptions = {
   is(o: any): o is ExtensionRangeOptions {
     return o && (o.$typeUrl === ExtensionRangeOptions.typeUrl || Array.isArray(o.uninterpretedOption) && (!o.uninterpretedOption.length || UninterpretedOption.is(o.uninterpretedOption[0])) && Array.isArray(o.declaration) && (!o.declaration.length || ExtensionRangeOptions_Declaration.is(o.declaration[0])) && isSet(o.verification));
   },
-  isSDK(o: any): o is ExtensionRangeOptionsSDKType {
-    return o && (o.$typeUrl === ExtensionRangeOptions.typeUrl || Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isSDK(o.uninterpreted_option[0])) && Array.isArray(o.declaration) && (!o.declaration.length || ExtensionRangeOptions_Declaration.isSDK(o.declaration[0])) && isSet(o.verification));
-  },
   isAmino(o: any): o is ExtensionRangeOptionsAmino {
     return o && (o.$typeUrl === ExtensionRangeOptions.typeUrl || Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isAmino(o.uninterpreted_option[0])) && Array.isArray(o.declaration) && (!o.declaration.length || ExtensionRangeOptions_Declaration.isAmino(o.declaration[0])) && isSet(o.verification));
   },
@@ -5036,7 +4528,7 @@ export const ExtensionRangeOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ExtensionRangeOptions>, I>>(object: I): ExtensionRangeOptions {
+  fromPartial(object: DeepPartial<ExtensionRangeOptions>): ExtensionRangeOptions {
     const message = createBaseExtensionRangeOptions();
     message.uninterpretedOption = object.uninterpretedOption?.map(e => UninterpretedOption.fromPartial(e)) || [];
     message.declaration = object.declaration?.map(e => ExtensionRangeOptions_Declaration.fromPartial(e)) || [];
@@ -5115,9 +4607,6 @@ export const ExtensionRangeOptions_Declaration = {
   is(o: any): o is ExtensionRangeOptions_Declaration {
     return o && (o.$typeUrl === ExtensionRangeOptions_Declaration.typeUrl || typeof o.number === "number" && typeof o.fullName === "string" && typeof o.type === "string" && typeof o.reserved === "boolean" && typeof o.repeated === "boolean");
   },
-  isSDK(o: any): o is ExtensionRangeOptions_DeclarationSDKType {
-    return o && (o.$typeUrl === ExtensionRangeOptions_Declaration.typeUrl || typeof o.number === "number" && typeof o.full_name === "string" && typeof o.type === "string" && typeof o.reserved === "boolean" && typeof o.repeated === "boolean");
-  },
   isAmino(o: any): o is ExtensionRangeOptions_DeclarationAmino {
     return o && (o.$typeUrl === ExtensionRangeOptions_Declaration.typeUrl || typeof o.number === "number" && typeof o.full_name === "string" && typeof o.type === "string" && typeof o.reserved === "boolean" && typeof o.repeated === "boolean");
   },
@@ -5168,7 +4657,7 @@ export const ExtensionRangeOptions_Declaration = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ExtensionRangeOptions_Declaration>, I>>(object: I): ExtensionRangeOptions_Declaration {
+  fromPartial(object: DeepPartial<ExtensionRangeOptions_Declaration>): ExtensionRangeOptions_Declaration {
     const message = createBaseExtensionRangeOptions_Declaration();
     message.number = object.number ?? 0;
     message.fullName = object.fullName ?? "";
@@ -5247,9 +4736,6 @@ export const FieldDescriptorProto = {
   typeUrl: "/google.protobuf.FieldDescriptorProto",
   is(o: any): o is FieldDescriptorProto {
     return o && (o.$typeUrl === FieldDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.number === "number" && isSet(o.label) && isSet(o.type) && typeof o.typeName === "string" && typeof o.extendee === "string" && typeof o.defaultValue === "string" && typeof o.oneofIndex === "number" && typeof o.jsonName === "string" && typeof o.proto3Optional === "boolean");
-  },
-  isSDK(o: any): o is FieldDescriptorProtoSDKType {
-    return o && (o.$typeUrl === FieldDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.number === "number" && isSet(o.label) && isSet(o.type) && typeof o.type_name === "string" && typeof o.extendee === "string" && typeof o.default_value === "string" && typeof o.oneof_index === "number" && typeof o.json_name === "string" && typeof o.proto3_optional === "boolean");
   },
   isAmino(o: any): o is FieldDescriptorProtoAmino {
     return o && (o.$typeUrl === FieldDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.number === "number" && isSet(o.label) && isSet(o.type) && typeof o.type_name === "string" && typeof o.extendee === "string" && typeof o.default_value === "string" && typeof o.oneof_index === "number" && typeof o.json_name === "string" && typeof o.proto3_optional === "boolean");
@@ -5337,7 +4823,7 @@ export const FieldDescriptorProto = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FieldDescriptorProto>, I>>(object: I): FieldDescriptorProto {
+  fromPartial(object: DeepPartial<FieldDescriptorProto>): FieldDescriptorProto {
     const message = createBaseFieldDescriptorProto();
     message.name = object.name ?? "";
     message.number = object.number ?? 0;
@@ -5443,9 +4929,6 @@ export const OneofDescriptorProto = {
   is(o: any): o is OneofDescriptorProto {
     return o && (o.$typeUrl === OneofDescriptorProto.typeUrl || typeof o.name === "string");
   },
-  isSDK(o: any): o is OneofDescriptorProtoSDKType {
-    return o && (o.$typeUrl === OneofDescriptorProto.typeUrl || typeof o.name === "string");
-  },
   isAmino(o: any): o is OneofDescriptorProtoAmino {
     return o && (o.$typeUrl === OneofDescriptorProto.typeUrl || typeof o.name === "string");
   },
@@ -5478,7 +4961,7 @@ export const OneofDescriptorProto = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<OneofDescriptorProto>, I>>(object: I): OneofDescriptorProto {
+  fromPartial(object: DeepPartial<OneofDescriptorProto>): OneofDescriptorProto {
     const message = createBaseOneofDescriptorProto();
     message.name = object.name ?? "";
     message.options = object.options !== undefined && object.options !== null ? OneofOptions.fromPartial(object.options) : undefined;
@@ -5543,9 +5026,6 @@ export const EnumDescriptorProto = {
   is(o: any): o is EnumDescriptorProto {
     return o && (o.$typeUrl === EnumDescriptorProto.typeUrl || typeof o.name === "string" && Array.isArray(o.value) && (!o.value.length || EnumValueDescriptorProto.is(o.value[0])) && Array.isArray(o.reservedRange) && (!o.reservedRange.length || EnumDescriptorProto_EnumReservedRange.is(o.reservedRange[0])) && Array.isArray(o.reservedName) && (!o.reservedName.length || typeof o.reservedName[0] === "string") && isSet(o.visibility));
   },
-  isSDK(o: any): o is EnumDescriptorProtoSDKType {
-    return o && (o.$typeUrl === EnumDescriptorProto.typeUrl || typeof o.name === "string" && Array.isArray(o.value) && (!o.value.length || EnumValueDescriptorProto.isSDK(o.value[0])) && Array.isArray(o.reserved_range) && (!o.reserved_range.length || EnumDescriptorProto_EnumReservedRange.isSDK(o.reserved_range[0])) && Array.isArray(o.reserved_name) && (!o.reserved_name.length || typeof o.reserved_name[0] === "string") && isSet(o.visibility));
-  },
   isAmino(o: any): o is EnumDescriptorProtoAmino {
     return o && (o.$typeUrl === EnumDescriptorProto.typeUrl || typeof o.name === "string" && Array.isArray(o.value) && (!o.value.length || EnumValueDescriptorProto.isAmino(o.value[0])) && Array.isArray(o.reserved_range) && (!o.reserved_range.length || EnumDescriptorProto_EnumReservedRange.isAmino(o.reserved_range[0])) && Array.isArray(o.reserved_name) && (!o.reserved_name.length || typeof o.reserved_name[0] === "string") && isSet(o.visibility));
   },
@@ -5602,7 +5082,7 @@ export const EnumDescriptorProto = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EnumDescriptorProto>, I>>(object: I): EnumDescriptorProto {
+  fromPartial(object: DeepPartial<EnumDescriptorProto>): EnumDescriptorProto {
     const message = createBaseEnumDescriptorProto();
     message.name = object.name ?? "";
     message.value = object.value?.map(e => EnumValueDescriptorProto.fromPartial(e)) || [];
@@ -5696,9 +5176,6 @@ export const EnumDescriptorProto_EnumReservedRange = {
   is(o: any): o is EnumDescriptorProto_EnumReservedRange {
     return o && (o.$typeUrl === EnumDescriptorProto_EnumReservedRange.typeUrl || typeof o.start === "number" && typeof o.end === "number");
   },
-  isSDK(o: any): o is EnumDescriptorProto_EnumReservedRangeSDKType {
-    return o && (o.$typeUrl === EnumDescriptorProto_EnumReservedRange.typeUrl || typeof o.start === "number" && typeof o.end === "number");
-  },
   isAmino(o: any): o is EnumDescriptorProto_EnumReservedRangeAmino {
     return o && (o.$typeUrl === EnumDescriptorProto_EnumReservedRange.typeUrl || typeof o.start === "number" && typeof o.end === "number");
   },
@@ -5731,7 +5208,7 @@ export const EnumDescriptorProto_EnumReservedRange = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EnumDescriptorProto_EnumReservedRange>, I>>(object: I): EnumDescriptorProto_EnumReservedRange {
+  fromPartial(object: DeepPartial<EnumDescriptorProto_EnumReservedRange>): EnumDescriptorProto_EnumReservedRange {
     const message = createBaseEnumDescriptorProto_EnumReservedRange();
     message.start = object.start ?? 0;
     message.end = object.end ?? 0;
@@ -5788,9 +5265,6 @@ export const EnumValueDescriptorProto = {
   is(o: any): o is EnumValueDescriptorProto {
     return o && (o.$typeUrl === EnumValueDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.number === "number");
   },
-  isSDK(o: any): o is EnumValueDescriptorProtoSDKType {
-    return o && (o.$typeUrl === EnumValueDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.number === "number");
-  },
   isAmino(o: any): o is EnumValueDescriptorProtoAmino {
     return o && (o.$typeUrl === EnumValueDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.number === "number");
   },
@@ -5829,7 +5303,7 @@ export const EnumValueDescriptorProto = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EnumValueDescriptorProto>, I>>(object: I): EnumValueDescriptorProto {
+  fromPartial(object: DeepPartial<EnumValueDescriptorProto>): EnumValueDescriptorProto {
     const message = createBaseEnumValueDescriptorProto();
     message.name = object.name ?? "";
     message.number = object.number ?? 0;
@@ -5896,9 +5370,6 @@ export const ServiceDescriptorProto = {
   is(o: any): o is ServiceDescriptorProto {
     return o && (o.$typeUrl === ServiceDescriptorProto.typeUrl || typeof o.name === "string" && Array.isArray(o.method) && (!o.method.length || MethodDescriptorProto.is(o.method[0])));
   },
-  isSDK(o: any): o is ServiceDescriptorProtoSDKType {
-    return o && (o.$typeUrl === ServiceDescriptorProto.typeUrl || typeof o.name === "string" && Array.isArray(o.method) && (!o.method.length || MethodDescriptorProto.isSDK(o.method[0])));
-  },
   isAmino(o: any): o is ServiceDescriptorProtoAmino {
     return o && (o.$typeUrl === ServiceDescriptorProto.typeUrl || typeof o.name === "string" && Array.isArray(o.method) && (!o.method.length || MethodDescriptorProto.isAmino(o.method[0])));
   },
@@ -5937,7 +5408,7 @@ export const ServiceDescriptorProto = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ServiceDescriptorProto>, I>>(object: I): ServiceDescriptorProto {
+  fromPartial(object: DeepPartial<ServiceDescriptorProto>): ServiceDescriptorProto {
     const message = createBaseServiceDescriptorProto();
     message.name = object.name ?? "";
     message.method = object.method?.map(e => MethodDescriptorProto.fromPartial(e)) || [];
@@ -6010,9 +5481,6 @@ export const MethodDescriptorProto = {
   is(o: any): o is MethodDescriptorProto {
     return o && (o.$typeUrl === MethodDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.inputType === "string" && typeof o.outputType === "string" && typeof o.clientStreaming === "boolean" && typeof o.serverStreaming === "boolean");
   },
-  isSDK(o: any): o is MethodDescriptorProtoSDKType {
-    return o && (o.$typeUrl === MethodDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.input_type === "string" && typeof o.output_type === "string" && typeof o.client_streaming === "boolean" && typeof o.server_streaming === "boolean");
-  },
   isAmino(o: any): o is MethodDescriptorProtoAmino {
     return o && (o.$typeUrl === MethodDescriptorProto.typeUrl || typeof o.name === "string" && typeof o.input_type === "string" && typeof o.output_type === "string" && typeof o.client_streaming === "boolean" && typeof o.server_streaming === "boolean");
   },
@@ -6069,7 +5537,7 @@ export const MethodDescriptorProto = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MethodDescriptorProto>, I>>(object: I): MethodDescriptorProto {
+  fromPartial(object: DeepPartial<MethodDescriptorProto>): MethodDescriptorProto {
     const message = createBaseMethodDescriptorProto();
     message.name = object.name ?? "";
     message.inputType = object.inputType ?? "";
@@ -6167,9 +5635,6 @@ export const FileOptions = {
   typeUrl: "/google.protobuf.FileOptions",
   is(o: any): o is FileOptions {
     return o && (o.$typeUrl === FileOptions.typeUrl || typeof o.javaPackage === "string" && typeof o.javaOuterClassname === "string" && typeof o.javaMultipleFiles === "boolean" && typeof o.javaGenerateEqualsAndHash === "boolean" && typeof o.javaStringCheckUtf8 === "boolean" && isSet(o.optimizeFor) && typeof o.goPackage === "string" && typeof o.ccGenericServices === "boolean" && typeof o.javaGenericServices === "boolean" && typeof o.pyGenericServices === "boolean" && typeof o.deprecated === "boolean" && typeof o.ccEnableArenas === "boolean" && typeof o.objcClassPrefix === "string" && typeof o.csharpNamespace === "string" && typeof o.swiftPrefix === "string" && typeof o.phpClassPrefix === "string" && typeof o.phpNamespace === "string" && typeof o.phpMetadataNamespace === "string" && typeof o.rubyPackage === "string" && Array.isArray(o.uninterpretedOption) && (!o.uninterpretedOption.length || UninterpretedOption.is(o.uninterpretedOption[0])));
-  },
-  isSDK(o: any): o is FileOptionsSDKType {
-    return o && (o.$typeUrl === FileOptions.typeUrl || typeof o.java_package === "string" && typeof o.java_outer_classname === "string" && typeof o.java_multiple_files === "boolean" && typeof o.java_generate_equals_and_hash === "boolean" && typeof o.java_string_check_utf8 === "boolean" && isSet(o.optimize_for) && typeof o.go_package === "string" && typeof o.cc_generic_services === "boolean" && typeof o.java_generic_services === "boolean" && typeof o.py_generic_services === "boolean" && typeof o.deprecated === "boolean" && typeof o.cc_enable_arenas === "boolean" && typeof o.objc_class_prefix === "string" && typeof o.csharp_namespace === "string" && typeof o.swift_prefix === "string" && typeof o.php_class_prefix === "string" && typeof o.php_namespace === "string" && typeof o.php_metadata_namespace === "string" && typeof o.ruby_package === "string" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isSDK(o.uninterpreted_option[0])));
   },
   isAmino(o: any): o is FileOptionsAmino {
     return o && (o.$typeUrl === FileOptions.typeUrl || typeof o.java_package === "string" && typeof o.java_outer_classname === "string" && typeof o.java_multiple_files === "boolean" && typeof o.java_generate_equals_and_hash === "boolean" && typeof o.java_string_check_utf8 === "boolean" && isSet(o.optimize_for) && typeof o.go_package === "string" && typeof o.cc_generic_services === "boolean" && typeof o.java_generic_services === "boolean" && typeof o.py_generic_services === "boolean" && typeof o.deprecated === "boolean" && typeof o.cc_enable_arenas === "boolean" && typeof o.objc_class_prefix === "string" && typeof o.csharp_namespace === "string" && typeof o.swift_prefix === "string" && typeof o.php_class_prefix === "string" && typeof o.php_namespace === "string" && typeof o.php_metadata_namespace === "string" && typeof o.ruby_package === "string" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isAmino(o.uninterpreted_option[0])));
@@ -6317,7 +5782,7 @@ export const FileOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FileOptions>, I>>(object: I): FileOptions {
+  fromPartial(object: DeepPartial<FileOptions>): FileOptions {
     const message = createBaseFileOptions();
     message.javaPackage = object.javaPackage ?? "";
     message.javaOuterClassname = object.javaOuterClassname ?? "";
@@ -6480,9 +5945,6 @@ export const MessageOptions = {
   is(o: any): o is MessageOptions {
     return o && (o.$typeUrl === MessageOptions.typeUrl || typeof o.messageSetWireFormat === "boolean" && typeof o.noStandardDescriptorAccessor === "boolean" && typeof o.deprecated === "boolean" && typeof o.mapEntry === "boolean" && typeof o.deprecatedLegacyJsonFieldConflicts === "boolean" && Array.isArray(o.uninterpretedOption) && (!o.uninterpretedOption.length || UninterpretedOption.is(o.uninterpretedOption[0])));
   },
-  isSDK(o: any): o is MessageOptionsSDKType {
-    return o && (o.$typeUrl === MessageOptions.typeUrl || typeof o.message_set_wire_format === "boolean" && typeof o.no_standard_descriptor_accessor === "boolean" && typeof o.deprecated === "boolean" && typeof o.map_entry === "boolean" && typeof o.deprecated_legacy_json_field_conflicts === "boolean" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isSDK(o.uninterpreted_option[0])));
-  },
   isAmino(o: any): o is MessageOptionsAmino {
     return o && (o.$typeUrl === MessageOptions.typeUrl || typeof o.message_set_wire_format === "boolean" && typeof o.no_standard_descriptor_accessor === "boolean" && typeof o.deprecated === "boolean" && typeof o.map_entry === "boolean" && typeof o.deprecated_legacy_json_field_conflicts === "boolean" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isAmino(o.uninterpreted_option[0])));
   },
@@ -6545,7 +6007,7 @@ export const MessageOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MessageOptions>, I>>(object: I): MessageOptions {
+  fromPartial(object: DeepPartial<MessageOptions>): MessageOptions {
     const message = createBaseMessageOptions();
     message.messageSetWireFormat = object.messageSetWireFormat ?? false;
     message.noStandardDescriptorAccessor = object.noStandardDescriptorAccessor ?? false;
@@ -6644,9 +6106,6 @@ export const FieldOptions = {
   typeUrl: "/google.protobuf.FieldOptions",
   is(o: any): o is FieldOptions {
     return o && (o.$typeUrl === FieldOptions.typeUrl || isSet(o.ctype) && typeof o.packed === "boolean" && isSet(o.jstype) && typeof o.lazy === "boolean" && typeof o.unverifiedLazy === "boolean" && typeof o.deprecated === "boolean" && typeof o.weak === "boolean" && typeof o.debugRedact === "boolean" && isSet(o.retention) && Array.isArray(o.targets) && Array.isArray(o.editionDefaults) && (!o.editionDefaults.length || FieldOptions_EditionDefault.is(o.editionDefaults[0])) && Array.isArray(o.uninterpretedOption) && (!o.uninterpretedOption.length || UninterpretedOption.is(o.uninterpretedOption[0])));
-  },
-  isSDK(o: any): o is FieldOptionsSDKType {
-    return o && (o.$typeUrl === FieldOptions.typeUrl || isSet(o.ctype) && typeof o.packed === "boolean" && isSet(o.jstype) && typeof o.lazy === "boolean" && typeof o.unverified_lazy === "boolean" && typeof o.deprecated === "boolean" && typeof o.weak === "boolean" && typeof o.debug_redact === "boolean" && isSet(o.retention) && Array.isArray(o.targets) && Array.isArray(o.edition_defaults) && (!o.edition_defaults.length || FieldOptions_EditionDefault.isSDK(o.edition_defaults[0])) && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isSDK(o.uninterpreted_option[0])));
   },
   isAmino(o: any): o is FieldOptionsAmino {
     return o && (o.$typeUrl === FieldOptions.typeUrl || isSet(o.ctype) && typeof o.packed === "boolean" && isSet(o.jstype) && typeof o.lazy === "boolean" && typeof o.unverified_lazy === "boolean" && typeof o.deprecated === "boolean" && typeof o.weak === "boolean" && typeof o.debug_redact === "boolean" && isSet(o.retention) && Array.isArray(o.targets) && Array.isArray(o.edition_defaults) && (!o.edition_defaults.length || FieldOptions_EditionDefault.isAmino(o.edition_defaults[0])) && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isAmino(o.uninterpreted_option[0])));
@@ -6761,7 +6220,7 @@ export const FieldOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FieldOptions>, I>>(object: I): FieldOptions {
+  fromPartial(object: DeepPartial<FieldOptions>): FieldOptions {
     const message = createBaseFieldOptions();
     message.ctype = object.ctype ?? 1;
     message.packed = object.packed ?? false;
@@ -6890,9 +6349,6 @@ export const FieldOptions_EditionDefault = {
   is(o: any): o is FieldOptions_EditionDefault {
     return o && (o.$typeUrl === FieldOptions_EditionDefault.typeUrl || isSet(o.edition) && typeof o.value === "string");
   },
-  isSDK(o: any): o is FieldOptions_EditionDefaultSDKType {
-    return o && (o.$typeUrl === FieldOptions_EditionDefault.typeUrl || isSet(o.edition) && typeof o.value === "string");
-  },
   isAmino(o: any): o is FieldOptions_EditionDefaultAmino {
     return o && (o.$typeUrl === FieldOptions_EditionDefault.typeUrl || isSet(o.edition) && typeof o.value === "string");
   },
@@ -6925,7 +6381,7 @@ export const FieldOptions_EditionDefault = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FieldOptions_EditionDefault>, I>>(object: I): FieldOptions_EditionDefault {
+  fromPartial(object: DeepPartial<FieldOptions_EditionDefault>): FieldOptions_EditionDefault {
     const message = createBaseFieldOptions_EditionDefault();
     message.edition = object.edition ?? 1;
     message.value = object.value ?? "";
@@ -6983,9 +6439,6 @@ export const FieldOptions_FeatureSupport = {
   is(o: any): o is FieldOptions_FeatureSupport {
     return o && (o.$typeUrl === FieldOptions_FeatureSupport.typeUrl || isSet(o.editionIntroduced) && isSet(o.editionDeprecated) && typeof o.deprecationWarning === "string" && isSet(o.editionRemoved));
   },
-  isSDK(o: any): o is FieldOptions_FeatureSupportSDKType {
-    return o && (o.$typeUrl === FieldOptions_FeatureSupport.typeUrl || isSet(o.edition_introduced) && isSet(o.edition_deprecated) && typeof o.deprecation_warning === "string" && isSet(o.edition_removed));
-  },
   isAmino(o: any): o is FieldOptions_FeatureSupportAmino {
     return o && (o.$typeUrl === FieldOptions_FeatureSupport.typeUrl || isSet(o.edition_introduced) && isSet(o.edition_deprecated) && typeof o.deprecation_warning === "string" && isSet(o.edition_removed));
   },
@@ -7030,7 +6483,7 @@ export const FieldOptions_FeatureSupport = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FieldOptions_FeatureSupport>, I>>(object: I): FieldOptions_FeatureSupport {
+  fromPartial(object: DeepPartial<FieldOptions_FeatureSupport>): FieldOptions_FeatureSupport {
     const message = createBaseFieldOptions_FeatureSupport();
     message.editionIntroduced = object.editionIntroduced ?? 1;
     message.editionDeprecated = object.editionDeprecated ?? 1;
@@ -7095,9 +6548,6 @@ export const OneofOptions = {
   is(o: any): o is OneofOptions {
     return o && (o.$typeUrl === OneofOptions.typeUrl || Array.isArray(o.uninterpretedOption) && (!o.uninterpretedOption.length || UninterpretedOption.is(o.uninterpretedOption[0])));
   },
-  isSDK(o: any): o is OneofOptionsSDKType {
-    return o && (o.$typeUrl === OneofOptions.typeUrl || Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isSDK(o.uninterpreted_option[0])));
-  },
   isAmino(o: any): o is OneofOptionsAmino {
     return o && (o.$typeUrl === OneofOptions.typeUrl || Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isAmino(o.uninterpreted_option[0])));
   },
@@ -7130,7 +6580,7 @@ export const OneofOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<OneofOptions>, I>>(object: I): OneofOptions {
+  fromPartial(object: DeepPartial<OneofOptions>): OneofOptions {
     const message = createBaseOneofOptions();
     message.features = object.features !== undefined && object.features !== null ? FeatureSet.fromPartial(object.features) : undefined;
     message.uninterpretedOption = object.uninterpretedOption?.map(e => UninterpretedOption.fromPartial(e)) || [];
@@ -7196,9 +6646,6 @@ export const EnumOptions = {
   is(o: any): o is EnumOptions {
     return o && (o.$typeUrl === EnumOptions.typeUrl || typeof o.allowAlias === "boolean" && typeof o.deprecated === "boolean" && typeof o.deprecatedLegacyJsonFieldConflicts === "boolean" && Array.isArray(o.uninterpretedOption) && (!o.uninterpretedOption.length || UninterpretedOption.is(o.uninterpretedOption[0])));
   },
-  isSDK(o: any): o is EnumOptionsSDKType {
-    return o && (o.$typeUrl === EnumOptions.typeUrl || typeof o.allow_alias === "boolean" && typeof o.deprecated === "boolean" && typeof o.deprecated_legacy_json_field_conflicts === "boolean" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isSDK(o.uninterpreted_option[0])));
-  },
   isAmino(o: any): o is EnumOptionsAmino {
     return o && (o.$typeUrl === EnumOptions.typeUrl || typeof o.allow_alias === "boolean" && typeof o.deprecated === "boolean" && typeof o.deprecated_legacy_json_field_conflicts === "boolean" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isAmino(o.uninterpreted_option[0])));
   },
@@ -7249,7 +6696,7 @@ export const EnumOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EnumOptions>, I>>(object: I): EnumOptions {
+  fromPartial(object: DeepPartial<EnumOptions>): EnumOptions {
     const message = createBaseEnumOptions();
     message.allowAlias = object.allowAlias ?? false;
     message.deprecated = object.deprecated ?? false;
@@ -7330,9 +6777,6 @@ export const EnumValueOptions = {
   is(o: any): o is EnumValueOptions {
     return o && (o.$typeUrl === EnumValueOptions.typeUrl || typeof o.deprecated === "boolean" && typeof o.debugRedact === "boolean" && Array.isArray(o.uninterpretedOption) && (!o.uninterpretedOption.length || UninterpretedOption.is(o.uninterpretedOption[0])));
   },
-  isSDK(o: any): o is EnumValueOptionsSDKType {
-    return o && (o.$typeUrl === EnumValueOptions.typeUrl || typeof o.deprecated === "boolean" && typeof o.debug_redact === "boolean" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isSDK(o.uninterpreted_option[0])));
-  },
   isAmino(o: any): o is EnumValueOptionsAmino {
     return o && (o.$typeUrl === EnumValueOptions.typeUrl || typeof o.deprecated === "boolean" && typeof o.debug_redact === "boolean" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isAmino(o.uninterpreted_option[0])));
   },
@@ -7383,7 +6827,7 @@ export const EnumValueOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EnumValueOptions>, I>>(object: I): EnumValueOptions {
+  fromPartial(object: DeepPartial<EnumValueOptions>): EnumValueOptions {
     const message = createBaseEnumValueOptions();
     message.deprecated = object.deprecated ?? false;
     message.features = object.features !== undefined && object.features !== null ? FeatureSet.fromPartial(object.features) : undefined;
@@ -7463,9 +6907,6 @@ export const ServiceOptions = {
   is(o: any): o is ServiceOptions {
     return o && (o.$typeUrl === ServiceOptions.typeUrl || typeof o.deprecated === "boolean" && Array.isArray(o.uninterpretedOption) && (!o.uninterpretedOption.length || UninterpretedOption.is(o.uninterpretedOption[0])));
   },
-  isSDK(o: any): o is ServiceOptionsSDKType {
-    return o && (o.$typeUrl === ServiceOptions.typeUrl || typeof o.deprecated === "boolean" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isSDK(o.uninterpreted_option[0])));
-  },
   isAmino(o: any): o is ServiceOptionsAmino {
     return o && (o.$typeUrl === ServiceOptions.typeUrl || typeof o.deprecated === "boolean" && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isAmino(o.uninterpreted_option[0])));
   },
@@ -7504,7 +6945,7 @@ export const ServiceOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ServiceOptions>, I>>(object: I): ServiceOptions {
+  fromPartial(object: DeepPartial<ServiceOptions>): ServiceOptions {
     const message = createBaseServiceOptions();
     message.features = object.features !== undefined && object.features !== null ? FeatureSet.fromPartial(object.features) : undefined;
     message.deprecated = object.deprecated ?? false;
@@ -7574,9 +7015,6 @@ export const MethodOptions = {
   is(o: any): o is MethodOptions {
     return o && (o.$typeUrl === MethodOptions.typeUrl || typeof o.deprecated === "boolean" && isSet(o.idempotencyLevel) && Array.isArray(o.uninterpretedOption) && (!o.uninterpretedOption.length || UninterpretedOption.is(o.uninterpretedOption[0])));
   },
-  isSDK(o: any): o is MethodOptionsSDKType {
-    return o && (o.$typeUrl === MethodOptions.typeUrl || typeof o.deprecated === "boolean" && isSet(o.idempotency_level) && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isSDK(o.uninterpreted_option[0])));
-  },
   isAmino(o: any): o is MethodOptionsAmino {
     return o && (o.$typeUrl === MethodOptions.typeUrl || typeof o.deprecated === "boolean" && isSet(o.idempotency_level) && Array.isArray(o.uninterpreted_option) && (!o.uninterpreted_option.length || UninterpretedOption.isAmino(o.uninterpreted_option[0])));
   },
@@ -7621,7 +7059,7 @@ export const MethodOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MethodOptions>, I>>(object: I): MethodOptions {
+  fromPartial(object: DeepPartial<MethodOptions>): MethodOptions {
     const message = createBaseMethodOptions();
     message.deprecated = object.deprecated ?? false;
     message.idempotencyLevel = object.idempotencyLevel ?? 1;
@@ -7705,9 +7143,6 @@ export const UninterpretedOption = {
   is(o: any): o is UninterpretedOption {
     return o && (o.$typeUrl === UninterpretedOption.typeUrl || Array.isArray(o.name) && (!o.name.length || UninterpretedOption_NamePart.is(o.name[0])) && typeof o.identifierValue === "string" && typeof o.positiveIntValue === "bigint" && typeof o.negativeIntValue === "bigint" && typeof o.doubleValue === "number" && (o.stringValue instanceof Uint8Array || typeof o.stringValue === "string") && typeof o.aggregateValue === "string");
   },
-  isSDK(o: any): o is UninterpretedOptionSDKType {
-    return o && (o.$typeUrl === UninterpretedOption.typeUrl || Array.isArray(o.name) && (!o.name.length || UninterpretedOption_NamePart.isSDK(o.name[0])) && typeof o.identifier_value === "string" && typeof o.positive_int_value === "bigint" && typeof o.negative_int_value === "bigint" && typeof o.double_value === "number" && (o.string_value instanceof Uint8Array || typeof o.string_value === "string") && typeof o.aggregate_value === "string");
-  },
   isAmino(o: any): o is UninterpretedOptionAmino {
     return o && (o.$typeUrl === UninterpretedOption.typeUrl || Array.isArray(o.name) && (!o.name.length || UninterpretedOption_NamePart.isAmino(o.name[0])) && typeof o.identifier_value === "string" && typeof o.positive_int_value === "bigint" && typeof o.negative_int_value === "bigint" && typeof o.double_value === "number" && (o.string_value instanceof Uint8Array || typeof o.string_value === "string") && typeof o.aggregate_value === "string");
   },
@@ -7770,7 +7205,7 @@ export const UninterpretedOption = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<UninterpretedOption>, I>>(object: I): UninterpretedOption {
+  fromPartial(object: DeepPartial<UninterpretedOption>): UninterpretedOption {
     const message = createBaseUninterpretedOption();
     message.name = object.name?.map(e => UninterpretedOption_NamePart.fromPartial(e)) || [];
     message.identifierValue = object.identifierValue ?? "";
@@ -7862,9 +7297,6 @@ export const UninterpretedOption_NamePart = {
   is(o: any): o is UninterpretedOption_NamePart {
     return o && (o.$typeUrl === UninterpretedOption_NamePart.typeUrl || typeof o.namePart === "string" && typeof o.isExtension === "boolean");
   },
-  isSDK(o: any): o is UninterpretedOption_NamePartSDKType {
-    return o && (o.$typeUrl === UninterpretedOption_NamePart.typeUrl || typeof o.name_part === "string" && typeof o.is_extension === "boolean");
-  },
   isAmino(o: any): o is UninterpretedOption_NamePartAmino {
     return o && (o.$typeUrl === UninterpretedOption_NamePart.typeUrl || typeof o.name_part === "string" && typeof o.is_extension === "boolean");
   },
@@ -7897,7 +7329,7 @@ export const UninterpretedOption_NamePart = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<UninterpretedOption_NamePart>, I>>(object: I): UninterpretedOption_NamePart {
+  fromPartial(object: DeepPartial<UninterpretedOption_NamePart>): UninterpretedOption_NamePart {
     const message = createBaseUninterpretedOption_NamePart();
     message.namePart = object.namePart ?? "";
     message.isExtension = object.isExtension ?? false;
@@ -7963,9 +7395,6 @@ export const FeatureSet = {
   is(o: any): o is FeatureSet {
     return o && (o.$typeUrl === FeatureSet.typeUrl || isSet(o.fieldPresence) && isSet(o.enumType) && isSet(o.repeatedFieldEncoding) && isSet(o.utf8Validation) && isSet(o.messageEncoding) && isSet(o.jsonFormat) && isSet(o.enforceNamingStyle));
   },
-  isSDK(o: any): o is FeatureSetSDKType {
-    return o && (o.$typeUrl === FeatureSet.typeUrl || isSet(o.field_presence) && isSet(o.enum_type) && isSet(o.repeated_field_encoding) && isSet(o.utf8_validation) && isSet(o.message_encoding) && isSet(o.json_format) && isSet(o.enforce_naming_style));
-  },
   isAmino(o: any): o is FeatureSetAmino {
     return o && (o.$typeUrl === FeatureSet.typeUrl || isSet(o.field_presence) && isSet(o.enum_type) && isSet(o.repeated_field_encoding) && isSet(o.utf8_validation) && isSet(o.message_encoding) && isSet(o.json_format) && isSet(o.enforce_naming_style));
   },
@@ -8028,7 +7457,7 @@ export const FeatureSet = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FeatureSet>, I>>(object: I): FeatureSet {
+  fromPartial(object: DeepPartial<FeatureSet>): FeatureSet {
     const message = createBaseFeatureSet();
     message.fieldPresence = object.fieldPresence ?? 1;
     message.enumType = object.enumType ?? 1;
@@ -8105,9 +7534,6 @@ export const FeatureSet_VisibilityFeature = {
   is(o: any): o is FeatureSet_VisibilityFeature {
     return o && o.$typeUrl === FeatureSet_VisibilityFeature.typeUrl;
   },
-  isSDK(o: any): o is FeatureSet_VisibilityFeatureSDKType {
-    return o && o.$typeUrl === FeatureSet_VisibilityFeature.typeUrl;
-  },
   isAmino(o: any): o is FeatureSet_VisibilityFeatureAmino {
     return o && o.$typeUrl === FeatureSet_VisibilityFeature.typeUrl;
   },
@@ -8128,7 +7554,7 @@ export const FeatureSet_VisibilityFeature = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FeatureSet_VisibilityFeature>, I>>(_: I): FeatureSet_VisibilityFeature {
+  fromPartial(_: DeepPartial<FeatureSet_VisibilityFeature>): FeatureSet_VisibilityFeature {
     const message = createBaseFeatureSet_VisibilityFeature();
     return message;
   },
@@ -8178,9 +7604,6 @@ export const FeatureSetDefaults = {
   is(o: any): o is FeatureSetDefaults {
     return o && (o.$typeUrl === FeatureSetDefaults.typeUrl || Array.isArray(o.defaults) && (!o.defaults.length || FeatureSetDefaults_FeatureSetEditionDefault.is(o.defaults[0])) && isSet(o.minimumEdition) && isSet(o.maximumEdition));
   },
-  isSDK(o: any): o is FeatureSetDefaultsSDKType {
-    return o && (o.$typeUrl === FeatureSetDefaults.typeUrl || Array.isArray(o.defaults) && (!o.defaults.length || FeatureSetDefaults_FeatureSetEditionDefault.isSDK(o.defaults[0])) && isSet(o.minimum_edition) && isSet(o.maximum_edition));
-  },
   isAmino(o: any): o is FeatureSetDefaultsAmino {
     return o && (o.$typeUrl === FeatureSetDefaults.typeUrl || Array.isArray(o.defaults) && (!o.defaults.length || FeatureSetDefaults_FeatureSetEditionDefault.isAmino(o.defaults[0])) && isSet(o.minimum_edition) && isSet(o.maximum_edition));
   },
@@ -8219,7 +7642,7 @@ export const FeatureSetDefaults = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FeatureSetDefaults>, I>>(object: I): FeatureSetDefaults {
+  fromPartial(object: DeepPartial<FeatureSetDefaults>): FeatureSetDefaults {
     const message = createBaseFeatureSetDefaults();
     message.defaults = object.defaults?.map(e => FeatureSetDefaults_FeatureSetEditionDefault.fromPartial(e)) || [];
     message.minimumEdition = object.minimumEdition ?? 1;
@@ -8291,9 +7714,6 @@ export const FeatureSetDefaults_FeatureSetEditionDefault = {
   is(o: any): o is FeatureSetDefaults_FeatureSetEditionDefault {
     return o && (o.$typeUrl === FeatureSetDefaults_FeatureSetEditionDefault.typeUrl || isSet(o.edition));
   },
-  isSDK(o: any): o is FeatureSetDefaults_FeatureSetEditionDefaultSDKType {
-    return o && (o.$typeUrl === FeatureSetDefaults_FeatureSetEditionDefault.typeUrl || isSet(o.edition));
-  },
   isAmino(o: any): o is FeatureSetDefaults_FeatureSetEditionDefaultAmino {
     return o && (o.$typeUrl === FeatureSetDefaults_FeatureSetEditionDefault.typeUrl || isSet(o.edition));
   },
@@ -8332,7 +7752,7 @@ export const FeatureSetDefaults_FeatureSetEditionDefault = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FeatureSetDefaults_FeatureSetEditionDefault>, I>>(object: I): FeatureSetDefaults_FeatureSetEditionDefault {
+  fromPartial(object: DeepPartial<FeatureSetDefaults_FeatureSetEditionDefault>): FeatureSetDefaults_FeatureSetEditionDefault {
     const message = createBaseFeatureSetDefaults_FeatureSetEditionDefault();
     message.edition = object.edition ?? 1;
     message.overridableFeatures = object.overridableFeatures !== undefined && object.overridableFeatures !== null ? FeatureSet.fromPartial(object.overridableFeatures) : undefined;
@@ -8398,9 +7818,6 @@ export const SourceCodeInfo = {
   is(o: any): o is SourceCodeInfo {
     return o && (o.$typeUrl === SourceCodeInfo.typeUrl || Array.isArray(o.location) && (!o.location.length || SourceCodeInfo_Location.is(o.location[0])));
   },
-  isSDK(o: any): o is SourceCodeInfoSDKType {
-    return o && (o.$typeUrl === SourceCodeInfo.typeUrl || Array.isArray(o.location) && (!o.location.length || SourceCodeInfo_Location.isSDK(o.location[0])));
-  },
   isAmino(o: any): o is SourceCodeInfoAmino {
     return o && (o.$typeUrl === SourceCodeInfo.typeUrl || Array.isArray(o.location) && (!o.location.length || SourceCodeInfo_Location.isAmino(o.location[0])));
   },
@@ -8427,7 +7844,7 @@ export const SourceCodeInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SourceCodeInfo>, I>>(object: I): SourceCodeInfo {
+  fromPartial(object: DeepPartial<SourceCodeInfo>): SourceCodeInfo {
     const message = createBaseSourceCodeInfo();
     message.location = object.location?.map(e => SourceCodeInfo_Location.fromPartial(e)) || [];
     return message;
@@ -8486,9 +7903,6 @@ export const SourceCodeInfo_Location = {
   typeUrl: "/google.protobuf.Location",
   is(o: any): o is SourceCodeInfo_Location {
     return o && (o.$typeUrl === SourceCodeInfo_Location.typeUrl || Array.isArray(o.path) && (!o.path.length || typeof o.path[0] === "number") && Array.isArray(o.span) && (!o.span.length || typeof o.span[0] === "number") && typeof o.leadingComments === "string" && typeof o.trailingComments === "string" && Array.isArray(o.leadingDetachedComments) && (!o.leadingDetachedComments.length || typeof o.leadingDetachedComments[0] === "string"));
-  },
-  isSDK(o: any): o is SourceCodeInfo_LocationSDKType {
-    return o && (o.$typeUrl === SourceCodeInfo_Location.typeUrl || Array.isArray(o.path) && (!o.path.length || typeof o.path[0] === "number") && Array.isArray(o.span) && (!o.span.length || typeof o.span[0] === "number") && typeof o.leading_comments === "string" && typeof o.trailing_comments === "string" && Array.isArray(o.leading_detached_comments) && (!o.leading_detached_comments.length || typeof o.leading_detached_comments[0] === "string"));
   },
   isAmino(o: any): o is SourceCodeInfo_LocationAmino {
     return o && (o.$typeUrl === SourceCodeInfo_Location.typeUrl || Array.isArray(o.path) && (!o.path.length || typeof o.path[0] === "number") && Array.isArray(o.span) && (!o.span.length || typeof o.span[0] === "number") && typeof o.leading_comments === "string" && typeof o.trailing_comments === "string" && Array.isArray(o.leading_detached_comments) && (!o.leading_detached_comments.length || typeof o.leading_detached_comments[0] === "string"));
@@ -8558,7 +7972,7 @@ export const SourceCodeInfo_Location = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SourceCodeInfo_Location>, I>>(object: I): SourceCodeInfo_Location {
+  fromPartial(object: DeepPartial<SourceCodeInfo_Location>): SourceCodeInfo_Location {
     const message = createBaseSourceCodeInfo_Location();
     message.path = object.path?.map(e => e) || [];
     message.span = object.span?.map(e => e) || [];
@@ -8636,9 +8050,6 @@ export const GeneratedCodeInfo = {
   is(o: any): o is GeneratedCodeInfo {
     return o && (o.$typeUrl === GeneratedCodeInfo.typeUrl || Array.isArray(o.annotation) && (!o.annotation.length || GeneratedCodeInfo_Annotation.is(o.annotation[0])));
   },
-  isSDK(o: any): o is GeneratedCodeInfoSDKType {
-    return o && (o.$typeUrl === GeneratedCodeInfo.typeUrl || Array.isArray(o.annotation) && (!o.annotation.length || GeneratedCodeInfo_Annotation.isSDK(o.annotation[0])));
-  },
   isAmino(o: any): o is GeneratedCodeInfoAmino {
     return o && (o.$typeUrl === GeneratedCodeInfo.typeUrl || Array.isArray(o.annotation) && (!o.annotation.length || GeneratedCodeInfo_Annotation.isAmino(o.annotation[0])));
   },
@@ -8665,7 +8076,7 @@ export const GeneratedCodeInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GeneratedCodeInfo>, I>>(object: I): GeneratedCodeInfo {
+  fromPartial(object: DeepPartial<GeneratedCodeInfo>): GeneratedCodeInfo {
     const message = createBaseGeneratedCodeInfo();
     message.annotation = object.annotation?.map(e => GeneratedCodeInfo_Annotation.fromPartial(e)) || [];
     return message;
@@ -8724,9 +8135,6 @@ export const GeneratedCodeInfo_Annotation = {
   typeUrl: "/google.protobuf.Annotation",
   is(o: any): o is GeneratedCodeInfo_Annotation {
     return o && (o.$typeUrl === GeneratedCodeInfo_Annotation.typeUrl || Array.isArray(o.path) && (!o.path.length || typeof o.path[0] === "number") && typeof o.sourceFile === "string" && typeof o.begin === "number" && typeof o.end === "number" && isSet(o.semantic));
-  },
-  isSDK(o: any): o is GeneratedCodeInfo_AnnotationSDKType {
-    return o && (o.$typeUrl === GeneratedCodeInfo_Annotation.typeUrl || Array.isArray(o.path) && (!o.path.length || typeof o.path[0] === "number") && typeof o.source_file === "string" && typeof o.begin === "number" && typeof o.end === "number" && isSet(o.semantic));
   },
   isAmino(o: any): o is GeneratedCodeInfo_AnnotationAmino {
     return o && (o.$typeUrl === GeneratedCodeInfo_Annotation.typeUrl || Array.isArray(o.path) && (!o.path.length || typeof o.path[0] === "number") && typeof o.source_file === "string" && typeof o.begin === "number" && typeof o.end === "number" && isSet(o.semantic));
@@ -8787,7 +8195,7 @@ export const GeneratedCodeInfo_Annotation = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GeneratedCodeInfo_Annotation>, I>>(object: I): GeneratedCodeInfo_Annotation {
+  fromPartial(object: DeepPartial<GeneratedCodeInfo_Annotation>): GeneratedCodeInfo_Annotation {
     const message = createBaseGeneratedCodeInfo_Annotation();
     message.path = object.path?.map(e => e) || [];
     message.sourceFile = object.sourceFile ?? "";

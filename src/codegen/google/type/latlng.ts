@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * An object that represents a latitude/longitude pair. This is expressed as a
  * pair of doubles to represent degrees latitude and degrees longitude. Unless
@@ -40,29 +40,15 @@ export interface LatLngAmino {
   /**
    * The latitude in degrees. It must be in the range [-90.0, +90.0].
    */
-  latitude?: number;
+  latitude: number;
   /**
    * The longitude in degrees. It must be in the range [-180.0, +180.0].
    */
-  longitude?: number;
+  longitude: number;
 }
 export interface LatLngAminoMsg {
   type: "/google.type.LatLng";
   value: LatLngAmino;
-}
-/**
- * An object that represents a latitude/longitude pair. This is expressed as a
- * pair of doubles to represent degrees latitude and degrees longitude. Unless
- * specified otherwise, this must conform to the
- * <a href="http://www.unoosa.org/pdf/icg/2012/template/WGS_84.pdf">WGS84
- * standard</a>. Values must be within normalized ranges.
- * @name LatLngSDKType
- * @package google.type
- * @see proto type: google.type.LatLng
- */
-export interface LatLngSDKType {
-  latitude: number;
-  longitude: number;
 }
 function createBaseLatLng(): LatLng {
   return {
@@ -83,9 +69,6 @@ function createBaseLatLng(): LatLng {
 export const LatLng = {
   typeUrl: "/google.type.LatLng",
   is(o: any): o is LatLng {
-    return o && (o.$typeUrl === LatLng.typeUrl || typeof o.latitude === "number" && typeof o.longitude === "number");
-  },
-  isSDK(o: any): o is LatLngSDKType {
     return o && (o.$typeUrl === LatLng.typeUrl || typeof o.latitude === "number" && typeof o.longitude === "number");
   },
   isAmino(o: any): o is LatLngAmino {
@@ -120,7 +103,7 @@ export const LatLng = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<LatLng>, I>>(object: I): LatLng {
+  fromPartial(object: DeepPartial<LatLng>): LatLng {
     const message = createBaseLatLng();
     message.latitude = object.latitude ?? 0;
     message.longitude = object.longitude ?? 0;

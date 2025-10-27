@@ -1,11 +1,11 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Duration, DurationAmino, DurationSDKType } from "../protobuf/duration";
-import { Any, AnyAmino, AnySDKType } from "../protobuf/any";
-import { Status, StatusAmino, StatusSDKType } from "../rpc/status";
+import { Duration, DurationAmino } from "../protobuf/duration";
+import { Any, AnyAmino } from "../protobuf/any";
+import { Status, StatusAmino } from "../rpc/status";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * This resource represents a long-running operation that is the result of a
  * network API call.
@@ -66,7 +66,7 @@ export interface OperationAmino {
    * originally returns it. If you use the default HTTP mapping, the
    * `name` should be a resource name ending with `operations/{unique_id}`.
    */
-  name?: string;
+  name: string;
   /**
    * Service-specific metadata associated with the operation.  It typically
    * contains progress information and common metadata such as create time.
@@ -79,7 +79,7 @@ export interface OperationAmino {
    * If `true`, the operation is completed, and either `error` or `response` is
    * available.
    */
-  done?: boolean;
+  done: boolean;
   /**
    * The error result of the operation in case of failure or cancellation.
    */
@@ -99,20 +99,6 @@ export interface OperationAmino {
 export interface OperationAminoMsg {
   type: "/google.longrunning.Operation";
   value: OperationAmino;
-}
-/**
- * This resource represents a long-running operation that is the result of a
- * network API call.
- * @name OperationSDKType
- * @package google.longrunning
- * @see proto type: google.longrunning.Operation
- */
-export interface OperationSDKType {
-  name: string;
-  metadata?: AnySDKType;
-  done: boolean;
-  error?: StatusSDKType;
-  response?: AnySDKType;
 }
 /**
  * The request message for
@@ -142,21 +128,11 @@ export interface GetOperationRequestAmino {
   /**
    * The name of the operation resource.
    */
-  name?: string;
+  name: string;
 }
 export interface GetOperationRequestAminoMsg {
   type: "/google.longrunning.GetOperationRequest";
   value: GetOperationRequestAmino;
-}
-/**
- * The request message for
- * [Operations.GetOperation][google.longrunning.Operations.GetOperation].
- * @name GetOperationRequestSDKType
- * @package google.longrunning
- * @see proto type: google.longrunning.GetOperationRequest
- */
-export interface GetOperationRequestSDKType {
-  name: string;
 }
 /**
  * The request message for
@@ -198,36 +174,23 @@ export interface ListOperationsRequestAmino {
   /**
    * The name of the operation's parent resource.
    */
-  name?: string;
+  name: string;
   /**
    * The standard list filter.
    */
-  filter?: string;
+  filter: string;
   /**
    * The standard list page size.
    */
-  page_size?: number;
+  page_size: number;
   /**
    * The standard list page token.
    */
-  page_token?: string;
+  page_token: string;
 }
 export interface ListOperationsRequestAminoMsg {
   type: "/google.longrunning.ListOperationsRequest";
   value: ListOperationsRequestAmino;
-}
-/**
- * The request message for
- * [Operations.ListOperations][google.longrunning.Operations.ListOperations].
- * @name ListOperationsRequestSDKType
- * @package google.longrunning
- * @see proto type: google.longrunning.ListOperationsRequest
- */
-export interface ListOperationsRequestSDKType {
-  name: string;
-  filter: string;
-  page_size: number;
-  page_token: string;
 }
 /**
  * The response message for
@@ -261,26 +224,15 @@ export interface ListOperationsResponseAmino {
   /**
    * A list of operations that matches the specified filter in the request.
    */
-  operations?: OperationAmino[];
+  operations: OperationAmino[];
   /**
    * The standard List next-page token.
    */
-  next_page_token?: string;
+  next_page_token: string;
 }
 export interface ListOperationsResponseAminoMsg {
   type: "/google.longrunning.ListOperationsResponse";
   value: ListOperationsResponseAmino;
-}
-/**
- * The response message for
- * [Operations.ListOperations][google.longrunning.Operations.ListOperations].
- * @name ListOperationsResponseSDKType
- * @package google.longrunning
- * @see proto type: google.longrunning.ListOperationsResponse
- */
-export interface ListOperationsResponseSDKType {
-  operations: OperationSDKType[];
-  next_page_token: string;
 }
 /**
  * The request message for
@@ -310,21 +262,11 @@ export interface CancelOperationRequestAmino {
   /**
    * The name of the operation resource to be cancelled.
    */
-  name?: string;
+  name: string;
 }
 export interface CancelOperationRequestAminoMsg {
   type: "/google.longrunning.CancelOperationRequest";
   value: CancelOperationRequestAmino;
-}
-/**
- * The request message for
- * [Operations.CancelOperation][google.longrunning.Operations.CancelOperation].
- * @name CancelOperationRequestSDKType
- * @package google.longrunning
- * @see proto type: google.longrunning.CancelOperationRequest
- */
-export interface CancelOperationRequestSDKType {
-  name: string;
 }
 /**
  * The request message for
@@ -354,21 +296,11 @@ export interface DeleteOperationRequestAmino {
   /**
    * The name of the operation resource to be deleted.
    */
-  name?: string;
+  name: string;
 }
 export interface DeleteOperationRequestAminoMsg {
   type: "/google.longrunning.DeleteOperationRequest";
   value: DeleteOperationRequestAmino;
-}
-/**
- * The request message for
- * [Operations.DeleteOperation][google.longrunning.Operations.DeleteOperation].
- * @name DeleteOperationRequestSDKType
- * @package google.longrunning
- * @see proto type: google.longrunning.DeleteOperationRequest
- */
-export interface DeleteOperationRequestSDKType {
-  name: string;
 }
 /**
  * The request message for
@@ -404,7 +336,7 @@ export interface WaitOperationRequestAmino {
   /**
    * The name of the operation resource to wait on.
    */
-  name?: string;
+  name: string;
   /**
    * The maximum duration to wait before timing out. If left blank, the wait
    * will be at most the time permitted by the underlying HTTP/RPC protocol.
@@ -415,17 +347,6 @@ export interface WaitOperationRequestAmino {
 export interface WaitOperationRequestAminoMsg {
   type: "/google.longrunning.WaitOperationRequest";
   value: WaitOperationRequestAmino;
-}
-/**
- * The request message for
- * [Operations.WaitOperation][google.longrunning.Operations.WaitOperation].
- * @name WaitOperationRequestSDKType
- * @package google.longrunning
- * @see proto type: google.longrunning.WaitOperationRequest
- */
-export interface WaitOperationRequestSDKType {
-  name: string;
-  timeout?: DurationSDKType;
 }
 /**
  * A message representing the message types used by a long-running operation.
@@ -495,7 +416,7 @@ export interface OperationInfoAmino {
    * 
    * Note: Altering this value constitutes a breaking change.
    */
-  response_type?: string;
+  response_type: string;
   /**
    * Required. The message name of the metadata type for this long-running
    * operation.
@@ -505,30 +426,11 @@ export interface OperationInfoAmino {
    * 
    * Note: Altering this value constitutes a breaking change.
    */
-  metadata_type?: string;
+  metadata_type: string;
 }
 export interface OperationInfoAminoMsg {
   type: "/google.longrunning.OperationInfo";
   value: OperationInfoAmino;
-}
-/**
- * A message representing the message types used by a long-running operation.
- * 
- * Example:
- * 
- *     rpc Export(ExportRequest) returns (google.longrunning.Operation) {
- *       option (google.longrunning.operation_info) = {
- *         response_type: "ExportResponse"
- *         metadata_type: "ExportMetadata"
- *       };
- *     }
- * @name OperationInfoSDKType
- * @package google.longrunning
- * @see proto type: google.longrunning.OperationInfo
- */
-export interface OperationInfoSDKType {
-  response_type: string;
-  metadata_type: string;
 }
 function createBaseOperation(): Operation {
   return {
@@ -549,9 +451,6 @@ function createBaseOperation(): Operation {
 export const Operation = {
   typeUrl: "/google.longrunning.Operation",
   is(o: any): o is Operation {
-    return o && (o.$typeUrl === Operation.typeUrl || typeof o.name === "string" && typeof o.done === "boolean");
-  },
-  isSDK(o: any): o is OperationSDKType {
     return o && (o.$typeUrl === Operation.typeUrl || typeof o.name === "string" && typeof o.done === "boolean");
   },
   isAmino(o: any): o is OperationAmino {
@@ -604,7 +503,7 @@ export const Operation = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Operation>, I>>(object: I): Operation {
+  fromPartial(object: DeepPartial<Operation>): Operation {
     const message = createBaseOperation();
     message.name = object.name ?? "";
     message.metadata = object.metadata !== undefined && object.metadata !== null ? Any.fromPartial(object.metadata) : undefined;
@@ -675,9 +574,6 @@ export const GetOperationRequest = {
   is(o: any): o is GetOperationRequest {
     return o && (o.$typeUrl === GetOperationRequest.typeUrl || typeof o.name === "string");
   },
-  isSDK(o: any): o is GetOperationRequestSDKType {
-    return o && (o.$typeUrl === GetOperationRequest.typeUrl || typeof o.name === "string");
-  },
   isAmino(o: any): o is GetOperationRequestAmino {
     return o && (o.$typeUrl === GetOperationRequest.typeUrl || typeof o.name === "string");
   },
@@ -704,7 +600,7 @@ export const GetOperationRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetOperationRequest>, I>>(object: I): GetOperationRequest {
+  fromPartial(object: DeepPartial<GetOperationRequest>): GetOperationRequest {
     const message = createBaseGetOperationRequest();
     message.name = object.name ?? "";
     return message;
@@ -758,9 +654,6 @@ export const ListOperationsRequest = {
   is(o: any): o is ListOperationsRequest {
     return o && (o.$typeUrl === ListOperationsRequest.typeUrl || typeof o.name === "string" && typeof o.filter === "string" && typeof o.pageSize === "number" && typeof o.pageToken === "string");
   },
-  isSDK(o: any): o is ListOperationsRequestSDKType {
-    return o && (o.$typeUrl === ListOperationsRequest.typeUrl || typeof o.name === "string" && typeof o.filter === "string" && typeof o.page_size === "number" && typeof o.page_token === "string");
-  },
   isAmino(o: any): o is ListOperationsRequestAmino {
     return o && (o.$typeUrl === ListOperationsRequest.typeUrl || typeof o.name === "string" && typeof o.filter === "string" && typeof o.page_size === "number" && typeof o.page_token === "string");
   },
@@ -805,7 +698,7 @@ export const ListOperationsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListOperationsRequest>, I>>(object: I): ListOperationsRequest {
+  fromPartial(object: DeepPartial<ListOperationsRequest>): ListOperationsRequest {
     const message = createBaseListOperationsRequest();
     message.name = object.name ?? "";
     message.filter = object.filter ?? "";
@@ -872,9 +765,6 @@ export const ListOperationsResponse = {
   is(o: any): o is ListOperationsResponse {
     return o && (o.$typeUrl === ListOperationsResponse.typeUrl || Array.isArray(o.operations) && (!o.operations.length || Operation.is(o.operations[0])) && typeof o.nextPageToken === "string");
   },
-  isSDK(o: any): o is ListOperationsResponseSDKType {
-    return o && (o.$typeUrl === ListOperationsResponse.typeUrl || Array.isArray(o.operations) && (!o.operations.length || Operation.isSDK(o.operations[0])) && typeof o.next_page_token === "string");
-  },
   isAmino(o: any): o is ListOperationsResponseAmino {
     return o && (o.$typeUrl === ListOperationsResponse.typeUrl || Array.isArray(o.operations) && (!o.operations.length || Operation.isAmino(o.operations[0])) && typeof o.next_page_token === "string");
   },
@@ -907,7 +797,7 @@ export const ListOperationsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListOperationsResponse>, I>>(object: I): ListOperationsResponse {
+  fromPartial(object: DeepPartial<ListOperationsResponse>): ListOperationsResponse {
     const message = createBaseListOperationsResponse();
     message.operations = object.operations?.map(e => Operation.fromPartial(e)) || [];
     message.nextPageToken = object.nextPageToken ?? "";
@@ -970,9 +860,6 @@ export const CancelOperationRequest = {
   is(o: any): o is CancelOperationRequest {
     return o && (o.$typeUrl === CancelOperationRequest.typeUrl || typeof o.name === "string");
   },
-  isSDK(o: any): o is CancelOperationRequestSDKType {
-    return o && (o.$typeUrl === CancelOperationRequest.typeUrl || typeof o.name === "string");
-  },
   isAmino(o: any): o is CancelOperationRequestAmino {
     return o && (o.$typeUrl === CancelOperationRequest.typeUrl || typeof o.name === "string");
   },
@@ -999,7 +886,7 @@ export const CancelOperationRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CancelOperationRequest>, I>>(object: I): CancelOperationRequest {
+  fromPartial(object: DeepPartial<CancelOperationRequest>): CancelOperationRequest {
     const message = createBaseCancelOperationRequest();
     message.name = object.name ?? "";
     return message;
@@ -1050,9 +937,6 @@ export const DeleteOperationRequest = {
   is(o: any): o is DeleteOperationRequest {
     return o && (o.$typeUrl === DeleteOperationRequest.typeUrl || typeof o.name === "string");
   },
-  isSDK(o: any): o is DeleteOperationRequestSDKType {
-    return o && (o.$typeUrl === DeleteOperationRequest.typeUrl || typeof o.name === "string");
-  },
   isAmino(o: any): o is DeleteOperationRequestAmino {
     return o && (o.$typeUrl === DeleteOperationRequest.typeUrl || typeof o.name === "string");
   },
@@ -1079,7 +963,7 @@ export const DeleteOperationRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DeleteOperationRequest>, I>>(object: I): DeleteOperationRequest {
+  fromPartial(object: DeepPartial<DeleteOperationRequest>): DeleteOperationRequest {
     const message = createBaseDeleteOperationRequest();
     message.name = object.name ?? "";
     return message;
@@ -1131,9 +1015,6 @@ export const WaitOperationRequest = {
   is(o: any): o is WaitOperationRequest {
     return o && (o.$typeUrl === WaitOperationRequest.typeUrl || typeof o.name === "string");
   },
-  isSDK(o: any): o is WaitOperationRequestSDKType {
-    return o && (o.$typeUrl === WaitOperationRequest.typeUrl || typeof o.name === "string");
-  },
   isAmino(o: any): o is WaitOperationRequestAmino {
     return o && (o.$typeUrl === WaitOperationRequest.typeUrl || typeof o.name === "string");
   },
@@ -1166,7 +1047,7 @@ export const WaitOperationRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<WaitOperationRequest>, I>>(object: I): WaitOperationRequest {
+  fromPartial(object: DeepPartial<WaitOperationRequest>): WaitOperationRequest {
     const message = createBaseWaitOperationRequest();
     message.name = object.name ?? "";
     message.timeout = object.timeout !== undefined && object.timeout !== null ? Duration.fromPartial(object.timeout) : undefined;
@@ -1231,9 +1112,6 @@ export const OperationInfo = {
   is(o: any): o is OperationInfo {
     return o && (o.$typeUrl === OperationInfo.typeUrl || typeof o.responseType === "string" && typeof o.metadataType === "string");
   },
-  isSDK(o: any): o is OperationInfoSDKType {
-    return o && (o.$typeUrl === OperationInfo.typeUrl || typeof o.response_type === "string" && typeof o.metadata_type === "string");
-  },
   isAmino(o: any): o is OperationInfoAmino {
     return o && (o.$typeUrl === OperationInfo.typeUrl || typeof o.response_type === "string" && typeof o.metadata_type === "string");
   },
@@ -1266,7 +1144,7 @@ export const OperationInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<OperationInfo>, I>>(object: I): OperationInfo {
+  fromPartial(object: DeepPartial<OperationInfo>): OperationInfo {
     const message = createBaseOperationInfo();
     message.responseType = object.responseType ?? "";
     message.metadataType = object.metadataType ?? "";

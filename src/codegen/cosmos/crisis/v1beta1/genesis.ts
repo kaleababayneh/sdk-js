@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * GenesisState defines the crisis module's genesis state.
  * @name GenesisState
@@ -38,15 +38,6 @@ export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
 }
-/**
- * GenesisState defines the crisis module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.crisis.v1beta1
- * @see proto type: cosmos.crisis.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  constant_fee: CoinSDKType;
-}
 function createBaseGenesisState(): GenesisState {
   return {
     constantFee: Coin.fromPartial({})
@@ -63,9 +54,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Coin.is(o.constantFee));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Coin.isSDK(o.constant_fee));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Coin.isAmino(o.constant_fee));
@@ -93,7 +81,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.constantFee = object.constantFee !== undefined && object.constantFee !== null ? Coin.fromPartial(object.constantFee) : undefined;
     return message;

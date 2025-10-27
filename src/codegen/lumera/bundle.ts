@@ -1,122 +1,122 @@
 // @ts-nocheck
 /* eslint-disable */
-import * as _185 from "./action/action_state";
-import * as _186 from "./action/action_type";
-import * as _187 from "./action/action";
-import * as _188 from "./action/genesis";
-import * as _189 from "./action/metadata";
-import * as _190 from "./action/params";
-import * as _191 from "./action/query";
-import * as _192 from "./action/tx";
-import * as _193 from "./claim/claim_record";
-import * as _194 from "./claim/genesis";
-import * as _195 from "./claim/params";
-import * as _196 from "./claim/query";
-import * as _197 from "./claim/tx";
-import * as _198 from "./lumeraid/genesis";
-import * as _199 from "./lumeraid/handshake_info";
-import * as _200 from "./lumeraid/params";
-import * as _201 from "./lumeraid/query";
-import * as _202 from "./lumeraid/tx";
-import * as _203 from "./supernode/evidence";
-import * as _204 from "./supernode/genesis";
-import * as _205 from "./supernode/ip_address_history";
-import * as _206 from "./supernode/metrics_aggregate";
-import * as _207 from "./supernode/params";
-import * as _208 from "./supernode/query";
-import * as _209 from "./supernode/super_node";
-import * as _210 from "./supernode/supernode_account_history";
-import * as _211 from "./supernode/supernode_state";
-import * as _212 from "./supernode/tx";
-import * as _363 from "./action/tx.amino";
-import * as _364 from "./claim/tx.amino";
-import * as _365 from "./lumeraid/tx.amino";
-import * as _366 from "./supernode/tx.amino";
-import * as _367 from "./action/tx.registry";
-import * as _368 from "./claim/tx.registry";
-import * as _369 from "./lumeraid/tx.registry";
-import * as _370 from "./supernode/tx.registry";
-import * as _371 from "./action/query.rpc.func";
-import * as _372 from "./claim/query.rpc.func";
-import * as _373 from "./lumeraid/query.rpc.func";
-import * as _374 from "./supernode/query.rpc.func";
-import * as _375 from "./action/query.rpc.Query";
-import * as _376 from "./claim/query.rpc.Query";
-import * as _377 from "./lumeraid/query.rpc.Query";
-import * as _378 from "./supernode/query.rpc.Query";
-import * as _379 from "./action/tx.rpc.func";
-import * as _380 from "./claim/tx.rpc.func";
-import * as _381 from "./lumeraid/tx.rpc.func";
-import * as _382 from "./supernode/tx.rpc.func";
-import * as _383 from "./action/tx.rpc.msg";
-import * as _384 from "./claim/tx.rpc.msg";
-import * as _385 from "./lumeraid/tx.rpc.msg";
-import * as _386 from "./supernode/tx.rpc.msg";
-import * as _389 from "./rpc.query";
-import * as _390 from "./rpc.tx";
+import * as _11 from "./supernode/tx";
+import * as _12 from "./supernode/supernode_state";
+import * as _13 from "./supernode/supernode_account_history";
+import * as _14 from "./supernode/super_node";
+import * as _15 from "./supernode/query";
+import * as _16 from "./supernode/params";
+import * as _17 from "./supernode/metrics_aggregate";
+import * as _18 from "./supernode/ip_address_history";
+import * as _19 from "./supernode/genesis";
+import * as _20 from "./supernode/evidence";
+import * as _21 from "./lumeraid/tx";
+import * as _22 from "./lumeraid/query";
+import * as _23 from "./lumeraid/params";
+import * as _24 from "./lumeraid/handshake_info";
+import * as _25 from "./lumeraid/genesis";
+import * as _26 from "./claim/tx";
+import * as _27 from "./claim/query";
+import * as _28 from "./claim/params";
+import * as _29 from "./claim/genesis";
+import * as _30 from "./claim/claim_record";
+import * as _31 from "./action/tx";
+import * as _32 from "./action/query";
+import * as _33 from "./action/params";
+import * as _34 from "./action/metadata";
+import * as _35 from "./action/genesis";
+import * as _36 from "./action/action_type";
+import * as _37 from "./action/action_state";
+import * as _38 from "./action/action";
+import * as _224 from "./supernode/tx.amino";
+import * as _225 from "./lumeraid/tx.amino";
+import * as _226 from "./claim/tx.amino";
+import * as _227 from "./action/tx.amino";
+import * as _228 from "./supernode/tx.registry";
+import * as _229 from "./lumeraid/tx.registry";
+import * as _230 from "./claim/tx.registry";
+import * as _231 from "./action/tx.registry";
+import * as _232 from "./supernode/query.rpc.func";
+import * as _233 from "./lumeraid/query.rpc.func";
+import * as _234 from "./claim/query.rpc.func";
+import * as _235 from "./action/query.rpc.func";
+import * as _236 from "./supernode/query.rpc.Query";
+import * as _237 from "./lumeraid/query.rpc.Query";
+import * as _238 from "./claim/query.rpc.Query";
+import * as _239 from "./action/query.rpc.Query";
+import * as _240 from "./supernode/tx.rpc.func";
+import * as _241 from "./lumeraid/tx.rpc.func";
+import * as _242 from "./claim/tx.rpc.func";
+import * as _243 from "./action/tx.rpc.func";
+import * as _244 from "./supernode/tx.rpc.msg";
+import * as _245 from "./lumeraid/tx.rpc.msg";
+import * as _246 from "./claim/tx.rpc.msg";
+import * as _247 from "./action/tx.rpc.msg";
+import * as _387 from "./rpc.query";
+import * as _388 from "./rpc.tx";
 export namespace lumera {
-  export const action = {
-    ..._185,
-    ..._186,
-    ..._187,
-    ..._188,
-    ..._189,
-    ..._190,
-    ..._191,
-    ..._192,
-    ..._363,
-    ..._367,
-    ..._371,
-    ..._375,
-    ..._379,
-    ..._383
-  };
-  export const claim = {
-    ..._193,
-    ..._194,
-    ..._195,
-    ..._196,
-    ..._197,
-    ..._364,
-    ..._368,
-    ..._372,
-    ..._376,
-    ..._380,
-    ..._384
+  export const supernode = {
+    ..._11,
+    ..._12,
+    ..._13,
+    ..._14,
+    ..._15,
+    ..._16,
+    ..._17,
+    ..._18,
+    ..._19,
+    ..._20,
+    ..._224,
+    ..._228,
+    ..._232,
+    ..._236,
+    ..._240,
+    ..._244
   };
   export const lumeraid = {
-    ..._198,
-    ..._199,
-    ..._200,
-    ..._201,
-    ..._202,
-    ..._365,
-    ..._369,
-    ..._373,
-    ..._377,
-    ..._381,
-    ..._385
+    ..._21,
+    ..._22,
+    ..._23,
+    ..._24,
+    ..._25,
+    ..._225,
+    ..._229,
+    ..._233,
+    ..._237,
+    ..._241,
+    ..._245
   };
-  export const supernode = {
-    ..._203,
-    ..._204,
-    ..._205,
-    ..._206,
-    ..._207,
-    ..._208,
-    ..._209,
-    ..._210,
-    ..._211,
-    ..._212,
-    ..._366,
-    ..._370,
-    ..._374,
-    ..._378,
-    ..._382,
-    ..._386
+  export const claim = {
+    ..._26,
+    ..._27,
+    ..._28,
+    ..._29,
+    ..._30,
+    ..._226,
+    ..._230,
+    ..._234,
+    ..._238,
+    ..._242,
+    ..._246
+  };
+  export const action = {
+    ..._31,
+    ..._32,
+    ..._33,
+    ..._34,
+    ..._35,
+    ..._36,
+    ..._37,
+    ..._38,
+    ..._227,
+    ..._231,
+    ..._235,
+    ..._239,
+    ..._243,
+    ..._247
   };
   export const ClientFactory = {
-    ..._389,
-    ..._390
+    ..._387,
+    ..._388
   };
 }

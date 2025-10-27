@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Value, ValueAmino, ValueSDKType } from "./value";
-import { Status, StatusAmino, StatusSDKType } from "../../../rpc/status";
+import { Value, ValueAmino } from "./value";
+import { Status, StatusAmino } from "../../../rpc/status";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 import { GlobalDecoderRegistry } from "../../../../registry";
 /**
  * The state of an evaluation.
@@ -42,30 +42,18 @@ export interface EvalStateAmino {
   /**
    * The unique values referenced in this message.
    */
-  values?: ExprValueAmino[];
+  values: ExprValueAmino[];
   /**
    * An ordered list of results.
    * 
    * Tracks the flow of evaluation through the expression.
    * May be sparse.
    */
-  results?: EvalState_ResultAmino[];
+  results: EvalState_ResultAmino[];
 }
 export interface EvalStateAminoMsg {
   type: "/google.api.expr.v1beta1.EvalState";
   value: EvalStateAmino;
-}
-/**
- * The state of an evaluation.
- * 
- * Can represent an initial, partial, or completed state of evaluation.
- * @name EvalStateSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.EvalState
- */
-export interface EvalStateSDKType {
-  values: ExprValueSDKType[];
-  results: EvalState_ResultSDKType[];
 }
 /**
  * A single evaluation result.
@@ -101,21 +89,11 @@ export interface EvalState_ResultAmino {
   /**
    * The index in `values` of the resulting value.
    */
-  value?: number;
+  value: number;
 }
 export interface EvalState_ResultAminoMsg {
   type: "/google.api.expr.v1beta1.Result";
   value: EvalState_ResultAmino;
-}
-/**
- * A single evaluation result.
- * @name EvalState_ResultSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.Result
- */
-export interface EvalState_ResultSDKType {
-  expr?: IdRefSDKType;
-  value: number;
 }
 /**
  * The value of an evaluated expression.
@@ -242,17 +220,6 @@ export interface ExprValueAminoMsg {
   value: ExprValueAmino;
 }
 /**
- * The value of an evaluated expression.
- * @name ExprValueSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.ExprValue
- */
-export interface ExprValueSDKType {
-  value?: ValueSDKType;
-  error?: ErrorSetSDKType;
-  unknown?: UnknownSetSDKType;
-}
-/**
  * A set of errors.
  * 
  * The errors included depend on the context. See `ExprValue.error`.
@@ -282,22 +249,11 @@ export interface ErrorSetAmino {
   /**
    * The errors in the set.
    */
-  errors?: StatusAmino[];
+  errors: StatusAmino[];
 }
 export interface ErrorSetAminoMsg {
   type: "/google.api.expr.v1beta1.ErrorSet";
   value: ErrorSetAmino;
-}
-/**
- * A set of errors.
- * 
- * The errors included depend on the context. See `ExprValue.error`.
- * @name ErrorSetSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.ErrorSet
- */
-export interface ErrorSetSDKType {
-  errors: StatusSDKType[];
 }
 /**
  * A set of expressions for which the value is unknown.
@@ -329,22 +285,11 @@ export interface UnknownSetAmino {
   /**
    * The ids of the expressions with unknown values.
    */
-  exprs?: IdRefAmino[];
+  exprs: IdRefAmino[];
 }
 export interface UnknownSetAminoMsg {
   type: "/google.api.expr.v1beta1.UnknownSet";
   value: UnknownSetAmino;
-}
-/**
- * A set of expressions for which the value is unknown.
- * 
- * The unknowns included depend on the context. See `ExprValue.unknown`.
- * @name UnknownSetSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.UnknownSet
- */
-export interface UnknownSetSDKType {
-  exprs: IdRefSDKType[];
 }
 /**
  * A reference to an expression id.
@@ -372,20 +317,11 @@ export interface IdRefAmino {
   /**
    * The expression id.
    */
-  id?: number;
+  id: number;
 }
 export interface IdRefAminoMsg {
   type: "/google.api.expr.v1beta1.IdRef";
   value: IdRefAmino;
-}
-/**
- * A reference to an expression id.
- * @name IdRefSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.IdRef
- */
-export interface IdRefSDKType {
-  id: number;
 }
 function createBaseEvalState(): EvalState {
   return {
@@ -405,9 +341,6 @@ export const EvalState = {
   typeUrl: "/google.api.expr.v1beta1.EvalState",
   is(o: any): o is EvalState {
     return o && (o.$typeUrl === EvalState.typeUrl || Array.isArray(o.values) && (!o.values.length || ExprValue.is(o.values[0])) && Array.isArray(o.results) && (!o.results.length || EvalState_Result.is(o.results[0])));
-  },
-  isSDK(o: any): o is EvalStateSDKType {
-    return o && (o.$typeUrl === EvalState.typeUrl || Array.isArray(o.values) && (!o.values.length || ExprValue.isSDK(o.values[0])) && Array.isArray(o.results) && (!o.results.length || EvalState_Result.isSDK(o.results[0])));
   },
   isAmino(o: any): o is EvalStateAmino {
     return o && (o.$typeUrl === EvalState.typeUrl || Array.isArray(o.values) && (!o.values.length || ExprValue.isAmino(o.values[0])) && Array.isArray(o.results) && (!o.results.length || EvalState_Result.isAmino(o.results[0])));
@@ -441,7 +374,7 @@ export const EvalState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EvalState>, I>>(object: I): EvalState {
+  fromPartial(object: DeepPartial<EvalState>): EvalState {
     const message = createBaseEvalState();
     message.values = object.values?.map(e => ExprValue.fromPartial(e)) || [];
     message.results = object.results?.map(e => EvalState_Result.fromPartial(e)) || [];
@@ -507,9 +440,6 @@ export const EvalState_Result = {
   is(o: any): o is EvalState_Result {
     return o && (o.$typeUrl === EvalState_Result.typeUrl || typeof o.value === "number");
   },
-  isSDK(o: any): o is EvalState_ResultSDKType {
-    return o && (o.$typeUrl === EvalState_Result.typeUrl || typeof o.value === "number");
-  },
   isAmino(o: any): o is EvalState_ResultAmino {
     return o && (o.$typeUrl === EvalState_Result.typeUrl || typeof o.value === "number");
   },
@@ -542,7 +472,7 @@ export const EvalState_Result = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EvalState_Result>, I>>(object: I): EvalState_Result {
+  fromPartial(object: DeepPartial<EvalState_Result>): EvalState_Result {
     const message = createBaseEvalState_Result();
     message.expr = object.expr !== undefined && object.expr !== null ? IdRef.fromPartial(object.expr) : undefined;
     message.value = object.value ?? 0;
@@ -604,9 +534,6 @@ export const ExprValue = {
   is(o: any): o is ExprValue {
     return o && o.$typeUrl === ExprValue.typeUrl;
   },
-  isSDK(o: any): o is ExprValueSDKType {
-    return o && o.$typeUrl === ExprValue.typeUrl;
-  },
   isAmino(o: any): o is ExprValueAmino {
     return o && o.$typeUrl === ExprValue.typeUrl;
   },
@@ -645,7 +572,7 @@ export const ExprValue = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ExprValue>, I>>(object: I): ExprValue {
+  fromPartial(object: DeepPartial<ExprValue>): ExprValue {
     const message = createBaseExprValue();
     message.value = object.value !== undefined && object.value !== null ? Value.fromPartial(object.value) : undefined;
     message.error = object.error !== undefined && object.error !== null ? ErrorSet.fromPartial(object.error) : undefined;
@@ -714,9 +641,6 @@ export const ErrorSet = {
   is(o: any): o is ErrorSet {
     return o && (o.$typeUrl === ErrorSet.typeUrl || Array.isArray(o.errors) && (!o.errors.length || Status.is(o.errors[0])));
   },
-  isSDK(o: any): o is ErrorSetSDKType {
-    return o && (o.$typeUrl === ErrorSet.typeUrl || Array.isArray(o.errors) && (!o.errors.length || Status.isSDK(o.errors[0])));
-  },
   isAmino(o: any): o is ErrorSetAmino {
     return o && (o.$typeUrl === ErrorSet.typeUrl || Array.isArray(o.errors) && (!o.errors.length || Status.isAmino(o.errors[0])));
   },
@@ -743,7 +667,7 @@ export const ErrorSet = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ErrorSet>, I>>(object: I): ErrorSet {
+  fromPartial(object: DeepPartial<ErrorSet>): ErrorSet {
     const message = createBaseErrorSet();
     message.errors = object.errors?.map(e => Status.fromPartial(e)) || [];
     return message;
@@ -802,9 +726,6 @@ export const UnknownSet = {
   is(o: any): o is UnknownSet {
     return o && (o.$typeUrl === UnknownSet.typeUrl || Array.isArray(o.exprs) && (!o.exprs.length || IdRef.is(o.exprs[0])));
   },
-  isSDK(o: any): o is UnknownSetSDKType {
-    return o && (o.$typeUrl === UnknownSet.typeUrl || Array.isArray(o.exprs) && (!o.exprs.length || IdRef.isSDK(o.exprs[0])));
-  },
   isAmino(o: any): o is UnknownSetAmino {
     return o && (o.$typeUrl === UnknownSet.typeUrl || Array.isArray(o.exprs) && (!o.exprs.length || IdRef.isAmino(o.exprs[0])));
   },
@@ -831,7 +752,7 @@ export const UnknownSet = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<UnknownSet>, I>>(object: I): UnknownSet {
+  fromPartial(object: DeepPartial<UnknownSet>): UnknownSet {
     const message = createBaseUnknownSet();
     message.exprs = object.exprs?.map(e => IdRef.fromPartial(e)) || [];
     return message;
@@ -888,9 +809,6 @@ export const IdRef = {
   is(o: any): o is IdRef {
     return o && (o.$typeUrl === IdRef.typeUrl || typeof o.id === "number");
   },
-  isSDK(o: any): o is IdRefSDKType {
-    return o && (o.$typeUrl === IdRef.typeUrl || typeof o.id === "number");
-  },
   isAmino(o: any): o is IdRefAmino {
     return o && (o.$typeUrl === IdRef.typeUrl || typeof o.id === "number");
   },
@@ -917,7 +835,7 @@ export const IdRef = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<IdRef>, I>>(object: I): IdRef {
+  fromPartial(object: DeepPartial<IdRef>): IdRef {
     const message = createBaseIdRef();
     message.id = object.id ?? 0;
     return message;

@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Any, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * Class defines the class of the nft type.
  * @name Class
@@ -53,27 +53,27 @@ export interface ClassAmino {
   /**
    * id defines the unique identifier of the NFT classification, similar to the contract address of ERC721
    */
-  id?: string;
+  id: string;
   /**
    * name defines the human-readable name of the NFT classification. Optional
    */
-  name?: string;
+  name: string;
   /**
    * symbol is an abbreviated name for nft classification. Optional
    */
-  symbol?: string;
+  symbol: string;
   /**
    * description is a brief description of nft classification. Optional
    */
-  description?: string;
+  description: string;
   /**
    * uri for the class metadata stored off chain. It can define schema for Class and NFT `Data` attributes. Optional
    */
-  uri?: string;
+  uri: string;
   /**
    * uri_hash is a hash of the document pointed by uri. Optional
    */
-  uri_hash?: string;
+  uri_hash: string;
   /**
    * data is the app specific metadata of the NFT class. Optional
    */
@@ -82,21 +82,6 @@ export interface ClassAmino {
 export interface ClassAminoMsg {
   type: "cosmos-sdk/Class";
   value: ClassAmino;
-}
-/**
- * Class defines the class of the nft type.
- * @name ClassSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.Class
- */
-export interface ClassSDKType {
-  id: string;
-  name: string;
-  symbol: string;
-  description: string;
-  uri: string;
-  uri_hash: string;
-  data?: AnySDKType;
 }
 /**
  * NFT defines the NFT.
@@ -140,19 +125,19 @@ export interface NFTAmino {
   /**
    * class_id associated with the NFT, similar to the contract address of ERC721
    */
-  class_id?: string;
+  class_id: string;
   /**
    * id is a unique identifier of the NFT
    */
-  id?: string;
+  id: string;
   /**
    * uri for the NFT metadata stored off chain
    */
-  uri?: string;
+  uri: string;
   /**
    * uri_hash is a hash of the document pointed by uri
    */
-  uri_hash?: string;
+  uri_hash: string;
   /**
    * data is an app specific data of the NFT. Optional
    */
@@ -161,19 +146,6 @@ export interface NFTAmino {
 export interface NFTAminoMsg {
   type: "cosmos-sdk/NFT";
   value: NFTAmino;
-}
-/**
- * NFT defines the NFT.
- * @name NFTSDKType
- * @package cosmos.nft.v1beta1
- * @see proto type: cosmos.nft.v1beta1.NFT
- */
-export interface NFTSDKType {
-  class_id: string;
-  id: string;
-  uri: string;
-  uri_hash: string;
-  data?: AnySDKType;
 }
 function createBaseClass(): Class {
   return {
@@ -197,9 +169,6 @@ export const Class = {
   aminoType: "cosmos-sdk/Class",
   is(o: any): o is Class {
     return o && (o.$typeUrl === Class.typeUrl || typeof o.id === "string" && typeof o.name === "string" && typeof o.symbol === "string" && typeof o.description === "string" && typeof o.uri === "string" && typeof o.uriHash === "string");
-  },
-  isSDK(o: any): o is ClassSDKType {
-    return o && (o.$typeUrl === Class.typeUrl || typeof o.id === "string" && typeof o.name === "string" && typeof o.symbol === "string" && typeof o.description === "string" && typeof o.uri === "string" && typeof o.uri_hash === "string");
   },
   isAmino(o: any): o is ClassAmino {
     return o && (o.$typeUrl === Class.typeUrl || typeof o.id === "string" && typeof o.name === "string" && typeof o.symbol === "string" && typeof o.description === "string" && typeof o.uri === "string" && typeof o.uri_hash === "string");
@@ -263,7 +232,7 @@ export const Class = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Class>, I>>(object: I): Class {
+  fromPartial(object: DeepPartial<Class>): Class {
     const message = createBaseClass();
     message.id = object.id ?? "";
     message.name = object.name ?? "";
@@ -354,9 +323,6 @@ export const NFT = {
   is(o: any): o is NFT {
     return o && (o.$typeUrl === NFT.typeUrl || typeof o.classId === "string" && typeof o.id === "string" && typeof o.uri === "string" && typeof o.uriHash === "string");
   },
-  isSDK(o: any): o is NFTSDKType {
-    return o && (o.$typeUrl === NFT.typeUrl || typeof o.class_id === "string" && typeof o.id === "string" && typeof o.uri === "string" && typeof o.uri_hash === "string");
-  },
   isAmino(o: any): o is NFTAmino {
     return o && (o.$typeUrl === NFT.typeUrl || typeof o.class_id === "string" && typeof o.id === "string" && typeof o.uri === "string" && typeof o.uri_hash === "string");
   },
@@ -407,7 +373,7 @@ export const NFT = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<NFT>, I>>(object: I): NFT {
+  fromPartial(object: DeepPartial<NFT>): NFT {
     const message = createBaseNFT();
     message.classId = object.classId ?? "";
     message.id = object.id ?? "";

@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Any, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * GenesisState defines the evidence module's genesis state.
  * @name GenesisState
@@ -29,20 +29,11 @@ export interface GenesisStateAmino {
   /**
    * evidence defines all the evidence at genesis.
    */
-  evidence?: AnyAmino[];
+  evidence: AnyAmino[];
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
-}
-/**
- * GenesisState defines the evidence module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.evidence.v1beta1
- * @see proto type: cosmos.evidence.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  evidence: AnySDKType[];
 }
 function createBaseGenesisState(): GenesisState {
   return {
@@ -60,9 +51,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.evidence) && (!o.evidence.length || Any.is(o.evidence[0])));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.evidence) && (!o.evidence.length || Any.isSDK(o.evidence[0])));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.evidence) && (!o.evidence.length || Any.isAmino(o.evidence[0])));
@@ -90,7 +78,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.evidence = object.evidence?.map(e => Any.fromPartial(e)) || [];
     return message;

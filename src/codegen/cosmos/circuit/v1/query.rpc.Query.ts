@@ -17,27 +17,27 @@ export class QueryClientImpl implements Query {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.account = this.account.bind(this);
-    this.accounts = this.accounts.bind(this);
-    this.disabledList = this.disabledList.bind(this);
   }
-  account(request: QueryAccountRequest): Promise<AccountResponse> {
+  /* Account returns account permissions. */
+  account = async (request: QueryAccountRequest): Promise<AccountResponse> => {
     const data = QueryAccountRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.circuit.v1.Query", "Account", data);
     return promise.then(data => AccountResponse.decode(new BinaryReader(data)));
-  }
-  accounts(request: QueryAccountsRequest = {
+  };
+  /* Account returns account permissions. */
+  accounts = async (request: QueryAccountsRequest = {
     pagination: undefined
-  }): Promise<AccountsResponse> {
+  }): Promise<AccountsResponse> => {
     const data = QueryAccountsRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.circuit.v1.Query", "Accounts", data);
     return promise.then(data => AccountsResponse.decode(new BinaryReader(data)));
-  }
-  disabledList(request: QueryDisabledListRequest = {}): Promise<DisabledListResponse> {
+  };
+  /* DisabledList returns a list of disabled message urls */
+  disabledList = async (request: QueryDisabledListRequest = {}): Promise<DisabledListResponse> => {
     const data = QueryDisabledListRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.circuit.v1.Query", "DisabledList", data);
     return promise.then(data => DisabledListResponse.decode(new BinaryReader(data)));
-  }
+  };
 }
 export const createRpcQueryExtension = (base: QueryClient) => {
   const rpc = createProtobufRpcClient(base);

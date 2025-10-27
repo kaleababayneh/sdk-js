@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Represents a time of day. The date and time zone are either not significant
  * or are specified elsewhere. An API may choose to allow leap seconds. Related
@@ -49,39 +49,24 @@ export interface TimeOfDayAmino {
    * Hours of day in 24 hour format. Should be from 0 to 23. An API may choose
    * to allow the value "24:00:00" for scenarios like business closing time.
    */
-  hours?: number;
+  hours: number;
   /**
    * Minutes of hour of day. Must be from 0 to 59.
    */
-  minutes?: number;
+  minutes: number;
   /**
    * Seconds of minutes of the time. Must normally be from 0 to 59. An API may
    * allow the value 60 if it allows leap-seconds.
    */
-  seconds?: number;
+  seconds: number;
   /**
    * Fractions of seconds in nanoseconds. Must be from 0 to 999,999,999.
    */
-  nanos?: number;
+  nanos: number;
 }
 export interface TimeOfDayAminoMsg {
   type: "/google.type.TimeOfDay";
   value: TimeOfDayAmino;
-}
-/**
- * Represents a time of day. The date and time zone are either not significant
- * or are specified elsewhere. An API may choose to allow leap seconds. Related
- * types are [google.type.Date][google.type.Date] and
- * `google.protobuf.Timestamp`.
- * @name TimeOfDaySDKType
- * @package google.type
- * @see proto type: google.type.TimeOfDay
- */
-export interface TimeOfDaySDKType {
-  hours: number;
-  minutes: number;
-  seconds: number;
-  nanos: number;
 }
 function createBaseTimeOfDay(): TimeOfDay {
   return {
@@ -103,9 +88,6 @@ function createBaseTimeOfDay(): TimeOfDay {
 export const TimeOfDay = {
   typeUrl: "/google.type.TimeOfDay",
   is(o: any): o is TimeOfDay {
-    return o && (o.$typeUrl === TimeOfDay.typeUrl || typeof o.hours === "number" && typeof o.minutes === "number" && typeof o.seconds === "number" && typeof o.nanos === "number");
-  },
-  isSDK(o: any): o is TimeOfDaySDKType {
     return o && (o.$typeUrl === TimeOfDay.typeUrl || typeof o.hours === "number" && typeof o.minutes === "number" && typeof o.seconds === "number" && typeof o.nanos === "number");
   },
   isAmino(o: any): o is TimeOfDayAmino {
@@ -152,7 +134,7 @@ export const TimeOfDay = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TimeOfDay>, I>>(object: I): TimeOfDay {
+  fromPartial(object: DeepPartial<TimeOfDay>): TimeOfDay {
     const message = createBaseTimeOfDay();
     message.hours = object.hours ?? 0;
     message.minutes = object.minutes ?? 0;

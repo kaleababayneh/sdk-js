@@ -21,39 +21,39 @@ export class QueryClientImpl implements Query {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.params = this.params.bind(this);
-    this.getSuperNode = this.getSuperNode.bind(this);
-    this.getSuperNodeBySuperNodeAddress = this.getSuperNodeBySuperNodeAddress.bind(this);
-    this.listSuperNodes = this.listSuperNodes.bind(this);
-    this.getTopSuperNodesForBlock = this.getTopSuperNodesForBlock.bind(this);
   }
-  params(request: QueryParamsRequest = {}): Promise<QueryParamsResponse> {
+  /* Parameters queries the parameters of the module. */
+  params = async (request: QueryParamsRequest = {}): Promise<QueryParamsResponse> => {
     const data = QueryParamsRequest.encode(request).finish();
     const promise = this.rpc.request("lumera.supernode.Query", "Params", data);
     return promise.then(data => QueryParamsResponse.decode(new BinaryReader(data)));
-  }
-  getSuperNode(request: QueryGetSuperNodeRequest): Promise<QueryGetSuperNodeResponse> {
+  };
+  /* Queries a SuperNode by validatorAddress. */
+  getSuperNode = async (request: QueryGetSuperNodeRequest): Promise<QueryGetSuperNodeResponse> => {
     const data = QueryGetSuperNodeRequest.encode(request).finish();
     const promise = this.rpc.request("lumera.supernode.Query", "GetSuperNode", data);
     return promise.then(data => QueryGetSuperNodeResponse.decode(new BinaryReader(data)));
-  }
-  getSuperNodeBySuperNodeAddress(request: QueryGetSuperNodeBySuperNodeAddressRequest): Promise<QueryGetSuperNodeBySuperNodeAddressResponse> {
+  };
+  /* Queries a SuperNode by supernodeAddress. */
+  getSuperNodeBySuperNodeAddress = async (request: QueryGetSuperNodeBySuperNodeAddressRequest): Promise<QueryGetSuperNodeBySuperNodeAddressResponse> => {
     const data = QueryGetSuperNodeBySuperNodeAddressRequest.encode(request).finish();
     const promise = this.rpc.request("lumera.supernode.Query", "GetSuperNodeBySuperNodeAddress", data);
     return promise.then(data => QueryGetSuperNodeBySuperNodeAddressResponse.decode(new BinaryReader(data)));
-  }
-  listSuperNodes(request: QueryListSuperNodesRequest = {
+  };
+  /* Queries a list of SuperNodes. */
+  listSuperNodes = async (request: QueryListSuperNodesRequest = {
     pagination: undefined
-  }): Promise<QueryListSuperNodesResponse> {
+  }): Promise<QueryListSuperNodesResponse> => {
     const data = QueryListSuperNodesRequest.encode(request).finish();
     const promise = this.rpc.request("lumera.supernode.Query", "ListSuperNodes", data);
     return promise.then(data => QueryListSuperNodesResponse.decode(new BinaryReader(data)));
-  }
-  getTopSuperNodesForBlock(request: QueryGetTopSuperNodesForBlockRequest): Promise<QueryGetTopSuperNodesForBlockResponse> {
+  };
+  /* Queries a list of GetTopSuperNodesForBlock items. */
+  getTopSuperNodesForBlock = async (request: QueryGetTopSuperNodesForBlockRequest): Promise<QueryGetTopSuperNodesForBlockResponse> => {
     const data = QueryGetTopSuperNodesForBlockRequest.encode(request).finish();
     const promise = this.rpc.request("lumera.supernode.Query", "GetTopSuperNodesForBlock", data);
     return promise.then(data => QueryGetTopSuperNodesForBlockResponse.decode(new BinaryReader(data)));
-  }
+  };
 }
 export const createRpcQueryExtension = (base: QueryClient) => {
   const rpc = createProtobufRpcClient(base);

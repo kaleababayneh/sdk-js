@@ -15,13 +15,14 @@ export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.updateParams = this.updateParams.bind(this);
   }
-  updateParams(request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> {
+  /* UpdateParams defines a (governance) operation for updating the module
+   parameters. The authority defaults to the x/gov module account. */
+  updateParams = async (request: MsgUpdateParams): Promise<MsgUpdateParamsResponse> => {
     const data = MsgUpdateParams.encode(request).finish();
     const promise = this.rpc.request("lumera.lumeraid.Msg", "UpdateParams", data);
     return promise.then(data => MsgUpdateParamsResponse.decode(new BinaryReader(data)));
-  }
+  };
 }
 export const createClientImpl = (rpc: TxRpc) => {
   return new MsgClientImpl(rpc);

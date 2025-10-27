@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { BlockParams, BlockParamsAmino, BlockParamsSDKType, EvidenceParams, EvidenceParamsAmino, EvidenceParamsSDKType, ValidatorParams, ValidatorParamsAmino, ValidatorParamsSDKType, ABCIParams, ABCIParamsAmino, ABCIParamsSDKType } from "../../../tendermint/types/params";
+import { BlockParams, BlockParamsAmino, EvidenceParams, EvidenceParamsAmino, ValidatorParams, ValidatorParamsAmino, ABCIParams, ABCIParamsAmino } from "../../../tendermint/types/params";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * @name MsgUpdateParams
@@ -44,7 +44,7 @@ export interface MsgUpdateParamsAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/consensus parameters to update.
    * VersionsParams is not included in this Msg because it is tracked
@@ -63,19 +63,6 @@ export interface MsgUpdateParamsAmino {
 export interface MsgUpdateParamsAminoMsg {
   type: "cosmos-sdk/x/consensus/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
-}
-/**
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * @name MsgUpdateParamsSDKType
- * @package cosmos.consensus.v1
- * @see proto type: cosmos.consensus.v1.MsgUpdateParams
- */
-export interface MsgUpdateParamsSDKType {
-  authority: string;
-  block?: BlockParamsSDKType;
-  evidence?: EvidenceParamsSDKType;
-  validator?: ValidatorParamsSDKType;
-  abci?: ABCIParamsSDKType;
 }
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
@@ -101,14 +88,6 @@ export interface MsgUpdateParamsResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateParamsResponse";
   value: MsgUpdateParamsResponseAmino;
 }
-/**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- * @name MsgUpdateParamsResponseSDKType
- * @package cosmos.consensus.v1
- * @see proto type: cosmos.consensus.v1.MsgUpdateParamsResponse
- */
-export interface MsgUpdateParamsResponseSDKType {}
 function createBaseMsgUpdateParams(): MsgUpdateParams {
   return {
     authority: "",
@@ -128,9 +107,6 @@ export const MsgUpdateParams = {
   typeUrl: "/cosmos.consensus.v1.MsgUpdateParams",
   aminoType: "cosmos-sdk/x/consensus/MsgUpdateParams",
   is(o: any): o is MsgUpdateParams {
-    return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string");
-  },
-  isSDK(o: any): o is MsgUpdateParamsSDKType {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string");
   },
   isAmino(o: any): o is MsgUpdateParamsAmino {
@@ -183,7 +159,7 @@ export const MsgUpdateParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParams>, I>>(object: I): MsgUpdateParams {
+  fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
     message.block = object.block !== undefined && object.block !== null ? BlockParams.fromPartial(object.block) : undefined;
@@ -267,9 +243,6 @@ export const MsgUpdateParamsResponse = {
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateParamsResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateParamsResponseAmino {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -290,7 +263,7 @@ export const MsgUpdateParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParamsResponse>, I>>(_: I): MsgUpdateParamsResponse {
+  fromPartial(_: DeepPartial<MsgUpdateParamsResponse>): MsgUpdateParamsResponse {
     const message = createBaseMsgUpdateParamsResponse();
     return message;
   },

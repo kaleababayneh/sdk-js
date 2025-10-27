@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 /**
  * MsgSubmitEvidence represents a message that supports submitting arbitrary
  * Evidence of misbehavior such as equivocation or counterfactual signing.
@@ -42,7 +42,7 @@ export interface MsgSubmitEvidenceAmino {
   /**
    * submitter is the signer account address of evidence.
    */
-  submitter?: string;
+  submitter: string;
   /**
    * evidence defines the evidence of misbehavior.
    */
@@ -51,17 +51,6 @@ export interface MsgSubmitEvidenceAmino {
 export interface MsgSubmitEvidenceAminoMsg {
   type: "cosmos-sdk/MsgSubmitEvidence";
   value: MsgSubmitEvidenceAmino;
-}
-/**
- * MsgSubmitEvidence represents a message that supports submitting arbitrary
- * Evidence of misbehavior such as equivocation or counterfactual signing.
- * @name MsgSubmitEvidenceSDKType
- * @package cosmos.evidence.v1beta1
- * @see proto type: cosmos.evidence.v1beta1.MsgSubmitEvidence
- */
-export interface MsgSubmitEvidenceSDKType {
-  submitter: string;
-  evidence?: AnySDKType | undefined;
 }
 /**
  * MsgSubmitEvidenceResponse defines the Msg/SubmitEvidence response type.
@@ -89,20 +78,11 @@ export interface MsgSubmitEvidenceResponseAmino {
   /**
    * hash defines the hash of the evidence.
    */
-  hash?: string;
+  hash: string;
 }
 export interface MsgSubmitEvidenceResponseAminoMsg {
   type: "cosmos-sdk/MsgSubmitEvidenceResponse";
   value: MsgSubmitEvidenceResponseAmino;
-}
-/**
- * MsgSubmitEvidenceResponse defines the Msg/SubmitEvidence response type.
- * @name MsgSubmitEvidenceResponseSDKType
- * @package cosmos.evidence.v1beta1
- * @see proto type: cosmos.evidence.v1beta1.MsgSubmitEvidenceResponse
- */
-export interface MsgSubmitEvidenceResponseSDKType {
-  hash: Uint8Array;
 }
 function createBaseMsgSubmitEvidence(): MsgSubmitEvidence {
   return {
@@ -121,9 +101,6 @@ export const MsgSubmitEvidence = {
   typeUrl: "/cosmos.evidence.v1beta1.MsgSubmitEvidence",
   aminoType: "cosmos-sdk/MsgSubmitEvidence",
   is(o: any): o is MsgSubmitEvidence {
-    return o && (o.$typeUrl === MsgSubmitEvidence.typeUrl || typeof o.submitter === "string");
-  },
-  isSDK(o: any): o is MsgSubmitEvidenceSDKType {
     return o && (o.$typeUrl === MsgSubmitEvidence.typeUrl || typeof o.submitter === "string");
   },
   isAmino(o: any): o is MsgSubmitEvidenceAmino {
@@ -158,7 +135,7 @@ export const MsgSubmitEvidence = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSubmitEvidence>, I>>(object: I): MsgSubmitEvidence {
+  fromPartial(object: DeepPartial<MsgSubmitEvidence>): MsgSubmitEvidence {
     const message = createBaseMsgSubmitEvidence();
     message.submitter = object.submitter ?? "";
     message.evidence = object.evidence !== undefined && object.evidence !== null ? GlobalDecoderRegistry.fromPartial(object.evidence) : undefined;
@@ -220,9 +197,6 @@ export const MsgSubmitEvidenceResponse = {
   is(o: any): o is MsgSubmitEvidenceResponse {
     return o && (o.$typeUrl === MsgSubmitEvidenceResponse.typeUrl || o.hash instanceof Uint8Array || typeof o.hash === "string");
   },
-  isSDK(o: any): o is MsgSubmitEvidenceResponseSDKType {
-    return o && (o.$typeUrl === MsgSubmitEvidenceResponse.typeUrl || o.hash instanceof Uint8Array || typeof o.hash === "string");
-  },
   isAmino(o: any): o is MsgSubmitEvidenceResponseAmino {
     return o && (o.$typeUrl === MsgSubmitEvidenceResponse.typeUrl || o.hash instanceof Uint8Array || typeof o.hash === "string");
   },
@@ -249,7 +223,7 @@ export const MsgSubmitEvidenceResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSubmitEvidenceResponse>, I>>(object: I): MsgSubmitEvidenceResponse {
+  fromPartial(object: DeepPartial<MsgSubmitEvidenceResponse>): MsgSubmitEvidenceResponse {
     const message = createBaseMsgSubmitEvidenceResponse();
     message.hash = object.hash ?? new Uint8Array();
     return message;

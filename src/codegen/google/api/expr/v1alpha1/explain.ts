@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Value, ValueAmino, ValueSDKType } from "./value";
+import { Value, ValueAmino } from "./value";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 import { GlobalDecoderRegistry } from "../../../../registry";
 /**
  * Values of intermediate expressions produced when evaluating expression.
@@ -48,7 +48,7 @@ export interface ExplainAmino {
    * The field value_index is an index in the values list.
    * Separating values from steps is needed to remove redundant values.
    */
-  values?: ValueAmino[];
+  values: ValueAmino[];
   /**
    * List of steps.
    * 
@@ -56,23 +56,11 @@ export interface ExplainAmino {
    * instances. The order of such ExprStep instances matches the order of
    * elements returned by Comprehension.iter_range.
    */
-  expr_steps?: Explain_ExprStepAmino[];
+  expr_steps: Explain_ExprStepAmino[];
 }
 export interface ExplainAminoMsg {
   type: "/google.api.expr.v1alpha1.Explain";
   value: ExplainAmino;
-}
-/**
- * Values of intermediate expressions produced when evaluating expression.
- * Deprecated, use `EvalState` instead.
- * @name ExplainSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.Explain
- * @deprecated
- */
-export interface ExplainSDKType {
-  values: ValueSDKType[];
-  expr_steps: Explain_ExprStepSDKType[];
 }
 /**
  * ID and value index of one step.
@@ -104,25 +92,15 @@ export interface Explain_ExprStepAmino {
   /**
    * ID of corresponding Expr node.
    */
-  id?: string;
+  id: string;
   /**
    * Index of the value in the values list.
    */
-  value_index?: number;
+  value_index: number;
 }
 export interface Explain_ExprStepAminoMsg {
   type: "/google.api.expr.v1alpha1.ExprStep";
   value: Explain_ExprStepAmino;
-}
-/**
- * ID and value index of one step.
- * @name Explain_ExprStepSDKType
- * @package google.api.expr.v1alpha1
- * @see proto type: google.api.expr.v1alpha1.ExprStep
- */
-export interface Explain_ExprStepSDKType {
-  id: bigint;
-  value_index: number;
 }
 function createBaseExplain(): Explain {
   return {
@@ -142,9 +120,6 @@ export const Explain = {
   typeUrl: "/google.api.expr.v1alpha1.Explain",
   is(o: any): o is Explain {
     return o && (o.$typeUrl === Explain.typeUrl || Array.isArray(o.values) && (!o.values.length || Value.is(o.values[0])) && Array.isArray(o.exprSteps) && (!o.exprSteps.length || Explain_ExprStep.is(o.exprSteps[0])));
-  },
-  isSDK(o: any): o is ExplainSDKType {
-    return o && (o.$typeUrl === Explain.typeUrl || Array.isArray(o.values) && (!o.values.length || Value.isSDK(o.values[0])) && Array.isArray(o.expr_steps) && (!o.expr_steps.length || Explain_ExprStep.isSDK(o.expr_steps[0])));
   },
   isAmino(o: any): o is ExplainAmino {
     return o && (o.$typeUrl === Explain.typeUrl || Array.isArray(o.values) && (!o.values.length || Value.isAmino(o.values[0])) && Array.isArray(o.expr_steps) && (!o.expr_steps.length || Explain_ExprStep.isAmino(o.expr_steps[0])));
@@ -178,7 +153,7 @@ export const Explain = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Explain>, I>>(object: I): Explain {
+  fromPartial(object: DeepPartial<Explain>): Explain {
     const message = createBaseExplain();
     message.values = object.values?.map(e => Value.fromPartial(e)) || [];
     message.exprSteps = object.exprSteps?.map(e => Explain_ExprStep.fromPartial(e)) || [];
@@ -244,9 +219,6 @@ export const Explain_ExprStep = {
   is(o: any): o is Explain_ExprStep {
     return o && (o.$typeUrl === Explain_ExprStep.typeUrl || typeof o.id === "bigint" && typeof o.valueIndex === "number");
   },
-  isSDK(o: any): o is Explain_ExprStepSDKType {
-    return o && (o.$typeUrl === Explain_ExprStep.typeUrl || typeof o.id === "bigint" && typeof o.value_index === "number");
-  },
   isAmino(o: any): o is Explain_ExprStepAmino {
     return o && (o.$typeUrl === Explain_ExprStep.typeUrl || typeof o.id === "bigint" && typeof o.value_index === "number");
   },
@@ -279,7 +251,7 @@ export const Explain_ExprStep = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Explain_ExprStep>, I>>(object: I): Explain_ExprStep {
+  fromPartial(object: DeepPartial<Explain_ExprStep>): Explain_ExprStep {
     const message = createBaseExplain_ExprStep();
     message.id = object.id !== undefined && object.id !== null ? BigInt(object.id.toString()) : BigInt(0);
     message.valueIndex = object.valueIndex ?? 0;

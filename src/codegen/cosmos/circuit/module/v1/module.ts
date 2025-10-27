@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * Module is the config object of the circuit module.
  * @name Module
@@ -28,20 +28,11 @@ export interface ModuleAmino {
   /**
    * authority defines the custom module authority. If not set, defaults to the governance module.
    */
-  authority?: string;
+  authority: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
   value: ModuleAmino;
-}
-/**
- * Module is the config object of the circuit module.
- * @name ModuleSDKType
- * @package cosmos.circuit.module.v1
- * @see proto type: cosmos.circuit.module.v1.Module
- */
-export interface ModuleSDKType {
-  authority: string;
 }
 function createBaseModule(): Module {
   return {
@@ -58,9 +49,6 @@ export const Module = {
   typeUrl: "/cosmos.circuit.module.v1.Module",
   aminoType: "cosmos-sdk/Module",
   is(o: any): o is Module {
-    return o && (o.$typeUrl === Module.typeUrl || typeof o.authority === "string");
-  },
-  isSDK(o: any): o is ModuleSDKType {
     return o && (o.$typeUrl === Module.typeUrl || typeof o.authority === "string");
   },
   isAmino(o: any): o is ModuleAmino {
@@ -89,7 +77,7 @@ export const Module = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Module>, I>>(object: I): Module {
+  fromPartial(object: DeepPartial<Module>): Module {
     const message = createBaseModule();
     message.authority = object.authority ?? "";
     return message;

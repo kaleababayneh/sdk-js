@@ -20,7 +20,6 @@ export enum DayOfWeek {
   SUNDAY = 7,
   UNRECOGNIZED = -1,
 }
-export const DayOfWeekSDKType = DayOfWeek;
 export const DayOfWeekAmino = DayOfWeek;
 export function dayOfWeekFromJSON(object: any): DayOfWeek {
   switch (object) {

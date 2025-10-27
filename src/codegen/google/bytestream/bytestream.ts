@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../helpers";
 /**
  * Request object for ByteStream.Read.
  * @name ReadRequest
@@ -46,7 +46,7 @@ export interface ReadRequestAmino {
   /**
    * The name of the resource to read.
    */
-  resource_name?: string;
+  resource_name: string;
   /**
    * The offset for the first byte to return in the read, relative to the start
    * of the resource.
@@ -54,7 +54,7 @@ export interface ReadRequestAmino {
    * A `read_offset` that is negative or greater than the size of the resource
    * will cause an `OUT_OF_RANGE` error.
    */
-  read_offset?: string;
+  read_offset: string;
   /**
    * The maximum number of `data` bytes the server is allowed to return in the
    * sum of all `ReadResponse` messages. A `read_limit` of zero indicates that
@@ -64,22 +64,11 @@ export interface ReadRequestAmino {
    * error occurred, the stream includes all data from the `read_offset` to the
    * end of the resource.
    */
-  read_limit?: string;
+  read_limit: string;
 }
 export interface ReadRequestAminoMsg {
   type: "/google.bytestream.ReadRequest";
   value: ReadRequestAmino;
-}
-/**
- * Request object for ByteStream.Read.
- * @name ReadRequestSDKType
- * @package google.bytestream
- * @see proto type: google.bytestream.ReadRequest
- */
-export interface ReadRequestSDKType {
-  resource_name: string;
-  read_offset: bigint;
-  read_limit: bigint;
 }
 /**
  * Response object for ByteStream.Read.
@@ -113,20 +102,11 @@ export interface ReadResponseAmino {
    * client that the request is still live while it is running an operation to
    * generate more data.
    */
-  data?: string;
+  data: string;
 }
 export interface ReadResponseAminoMsg {
   type: "/google.bytestream.ReadResponse";
   value: ReadResponseAmino;
-}
-/**
- * Response object for ByteStream.Read.
- * @name ReadResponseSDKType
- * @package google.bytestream
- * @see proto type: google.bytestream.ReadResponse
- */
-export interface ReadResponseSDKType {
-  data: Uint8Array;
 }
 /**
  * Request object for ByteStream.Write.
@@ -186,7 +166,7 @@ export interface WriteRequestAmino {
    * `WriteRequest` of each `Write()` action. If it is set on subsequent calls,
    * it **must** match the value of the first request.
    */
-  resource_name?: string;
+  resource_name: string;
   /**
    * The offset from the beginning of the resource at which the data should be
    * written. It is required on all `WriteRequest`s.
@@ -201,36 +181,24 @@ export interface WriteRequestAmino {
    * 
    * An incorrect value will cause an error.
    */
-  write_offset?: string;
+  write_offset: string;
   /**
    * If `true`, this indicates that the write is complete. Sending any
    * `WriteRequest`s subsequent to one in which `finish_write` is `true` will
    * cause an error.
    */
-  finish_write?: boolean;
+  finish_write: boolean;
   /**
    * A portion of the data for the resource. The client **may** leave `data`
    * empty for any given `WriteRequest`. This enables the client to inform the
    * service that the request is still live while it is running an operation to
    * generate more data.
    */
-  data?: string;
+  data: string;
 }
 export interface WriteRequestAminoMsg {
   type: "/google.bytestream.WriteRequest";
   value: WriteRequestAmino;
-}
-/**
- * Request object for ByteStream.Write.
- * @name WriteRequestSDKType
- * @package google.bytestream
- * @see proto type: google.bytestream.WriteRequest
- */
-export interface WriteRequestSDKType {
-  resource_name: string;
-  write_offset: bigint;
-  finish_write: boolean;
-  data: Uint8Array;
 }
 /**
  * Response object for ByteStream.Write.
@@ -258,20 +226,11 @@ export interface WriteResponseAmino {
   /**
    * The number of bytes that have been processed for the given resource.
    */
-  committed_size?: string;
+  committed_size: string;
 }
 export interface WriteResponseAminoMsg {
   type: "/google.bytestream.WriteResponse";
   value: WriteResponseAmino;
-}
-/**
- * Response object for ByteStream.Write.
- * @name WriteResponseSDKType
- * @package google.bytestream
- * @see proto type: google.bytestream.WriteResponse
- */
-export interface WriteResponseSDKType {
-  committed_size: bigint;
 }
 /**
  * Request object for ByteStream.QueryWriteStatus.
@@ -299,20 +258,11 @@ export interface QueryWriteStatusRequestAmino {
   /**
    * The name of the resource whose write status is being requested.
    */
-  resource_name?: string;
+  resource_name: string;
 }
 export interface QueryWriteStatusRequestAminoMsg {
   type: "/google.bytestream.QueryWriteStatusRequest";
   value: QueryWriteStatusRequestAmino;
-}
-/**
- * Request object for ByteStream.QueryWriteStatus.
- * @name QueryWriteStatusRequestSDKType
- * @package google.bytestream
- * @see proto type: google.bytestream.QueryWriteStatusRequest
- */
-export interface QueryWriteStatusRequestSDKType {
-  resource_name: string;
 }
 /**
  * Response object for ByteStream.QueryWriteStatus.
@@ -345,26 +295,16 @@ export interface QueryWriteStatusResponseAmino {
   /**
    * The number of bytes that have been processed for the given resource.
    */
-  committed_size?: string;
+  committed_size: string;
   /**
    * `complete` is `true` only if the client has sent a `WriteRequest` with
    * `finish_write` set to true, and the server has processed that request.
    */
-  complete?: boolean;
+  complete: boolean;
 }
 export interface QueryWriteStatusResponseAminoMsg {
   type: "/google.bytestream.QueryWriteStatusResponse";
   value: QueryWriteStatusResponseAmino;
-}
-/**
- * Response object for ByteStream.QueryWriteStatus.
- * @name QueryWriteStatusResponseSDKType
- * @package google.bytestream
- * @see proto type: google.bytestream.QueryWriteStatusResponse
- */
-export interface QueryWriteStatusResponseSDKType {
-  committed_size: bigint;
-  complete: boolean;
 }
 function createBaseReadRequest(): ReadRequest {
   return {
@@ -383,9 +323,6 @@ export const ReadRequest = {
   typeUrl: "/google.bytestream.ReadRequest",
   is(o: any): o is ReadRequest {
     return o && (o.$typeUrl === ReadRequest.typeUrl || typeof o.resourceName === "string" && typeof o.readOffset === "bigint" && typeof o.readLimit === "bigint");
-  },
-  isSDK(o: any): o is ReadRequestSDKType {
-    return o && (o.$typeUrl === ReadRequest.typeUrl || typeof o.resource_name === "string" && typeof o.read_offset === "bigint" && typeof o.read_limit === "bigint");
   },
   isAmino(o: any): o is ReadRequestAmino {
     return o && (o.$typeUrl === ReadRequest.typeUrl || typeof o.resource_name === "string" && typeof o.read_offset === "bigint" && typeof o.read_limit === "bigint");
@@ -425,7 +362,7 @@ export const ReadRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ReadRequest>, I>>(object: I): ReadRequest {
+  fromPartial(object: DeepPartial<ReadRequest>): ReadRequest {
     const message = createBaseReadRequest();
     message.resourceName = object.resourceName ?? "";
     message.readOffset = object.readOffset !== undefined && object.readOffset !== null ? BigInt(object.readOffset.toString()) : BigInt(0);
@@ -485,9 +422,6 @@ export const ReadResponse = {
   is(o: any): o is ReadResponse {
     return o && (o.$typeUrl === ReadResponse.typeUrl || o.data instanceof Uint8Array || typeof o.data === "string");
   },
-  isSDK(o: any): o is ReadResponseSDKType {
-    return o && (o.$typeUrl === ReadResponse.typeUrl || o.data instanceof Uint8Array || typeof o.data === "string");
-  },
   isAmino(o: any): o is ReadResponseAmino {
     return o && (o.$typeUrl === ReadResponse.typeUrl || o.data instanceof Uint8Array || typeof o.data === "string");
   },
@@ -514,7 +448,7 @@ export const ReadResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ReadResponse>, I>>(object: I): ReadResponse {
+  fromPartial(object: DeepPartial<ReadResponse>): ReadResponse {
     const message = createBaseReadResponse();
     message.data = object.data ?? new Uint8Array();
     return message;
@@ -567,9 +501,6 @@ export const WriteRequest = {
   is(o: any): o is WriteRequest {
     return o && (o.$typeUrl === WriteRequest.typeUrl || typeof o.resourceName === "string" && typeof o.writeOffset === "bigint" && typeof o.finishWrite === "boolean" && (o.data instanceof Uint8Array || typeof o.data === "string"));
   },
-  isSDK(o: any): o is WriteRequestSDKType {
-    return o && (o.$typeUrl === WriteRequest.typeUrl || typeof o.resource_name === "string" && typeof o.write_offset === "bigint" && typeof o.finish_write === "boolean" && (o.data instanceof Uint8Array || typeof o.data === "string"));
-  },
   isAmino(o: any): o is WriteRequestAmino {
     return o && (o.$typeUrl === WriteRequest.typeUrl || typeof o.resource_name === "string" && typeof o.write_offset === "bigint" && typeof o.finish_write === "boolean" && (o.data instanceof Uint8Array || typeof o.data === "string"));
   },
@@ -614,7 +545,7 @@ export const WriteRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<WriteRequest>, I>>(object: I): WriteRequest {
+  fromPartial(object: DeepPartial<WriteRequest>): WriteRequest {
     const message = createBaseWriteRequest();
     message.resourceName = object.resourceName ?? "";
     message.writeOffset = object.writeOffset !== undefined && object.writeOffset !== null ? BigInt(object.writeOffset.toString()) : BigInt(0);
@@ -679,9 +610,6 @@ export const WriteResponse = {
   is(o: any): o is WriteResponse {
     return o && (o.$typeUrl === WriteResponse.typeUrl || typeof o.committedSize === "bigint");
   },
-  isSDK(o: any): o is WriteResponseSDKType {
-    return o && (o.$typeUrl === WriteResponse.typeUrl || typeof o.committed_size === "bigint");
-  },
   isAmino(o: any): o is WriteResponseAmino {
     return o && (o.$typeUrl === WriteResponse.typeUrl || typeof o.committed_size === "bigint");
   },
@@ -708,7 +636,7 @@ export const WriteResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<WriteResponse>, I>>(object: I): WriteResponse {
+  fromPartial(object: DeepPartial<WriteResponse>): WriteResponse {
     const message = createBaseWriteResponse();
     message.committedSize = object.committedSize !== undefined && object.committedSize !== null ? BigInt(object.committedSize.toString()) : BigInt(0);
     return message;
@@ -758,9 +686,6 @@ export const QueryWriteStatusRequest = {
   is(o: any): o is QueryWriteStatusRequest {
     return o && (o.$typeUrl === QueryWriteStatusRequest.typeUrl || typeof o.resourceName === "string");
   },
-  isSDK(o: any): o is QueryWriteStatusRequestSDKType {
-    return o && (o.$typeUrl === QueryWriteStatusRequest.typeUrl || typeof o.resource_name === "string");
-  },
   isAmino(o: any): o is QueryWriteStatusRequestAmino {
     return o && (o.$typeUrl === QueryWriteStatusRequest.typeUrl || typeof o.resource_name === "string");
   },
@@ -787,7 +712,7 @@ export const QueryWriteStatusRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryWriteStatusRequest>, I>>(object: I): QueryWriteStatusRequest {
+  fromPartial(object: DeepPartial<QueryWriteStatusRequest>): QueryWriteStatusRequest {
     const message = createBaseQueryWriteStatusRequest();
     message.resourceName = object.resourceName ?? "";
     return message;
@@ -838,9 +763,6 @@ export const QueryWriteStatusResponse = {
   is(o: any): o is QueryWriteStatusResponse {
     return o && (o.$typeUrl === QueryWriteStatusResponse.typeUrl || typeof o.committedSize === "bigint" && typeof o.complete === "boolean");
   },
-  isSDK(o: any): o is QueryWriteStatusResponseSDKType {
-    return o && (o.$typeUrl === QueryWriteStatusResponse.typeUrl || typeof o.committed_size === "bigint" && typeof o.complete === "boolean");
-  },
   isAmino(o: any): o is QueryWriteStatusResponseAmino {
     return o && (o.$typeUrl === QueryWriteStatusResponse.typeUrl || typeof o.committed_size === "bigint" && typeof o.complete === "boolean");
   },
@@ -873,7 +795,7 @@ export const QueryWriteStatusResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryWriteStatusResponse>, I>>(object: I): QueryWriteStatusResponse {
+  fromPartial(object: DeepPartial<QueryWriteStatusResponse>): QueryWriteStatusResponse {
     const message = createBaseQueryWriteStatusResponse();
     message.committedSize = object.committedSize !== undefined && object.committedSize !== null ? BigInt(object.committedSize.toString()) : BigInt(0);
     message.complete = object.complete ?? false;

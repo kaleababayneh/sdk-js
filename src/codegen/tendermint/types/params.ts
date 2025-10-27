@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Duration, DurationAmino, DurationSDKType } from "../../google/protobuf/duration";
+import { Duration, DurationAmino } from "../../google/protobuf/duration";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * ConsensusParams contains consensus critical parameters that determine the
  * validity of blocks.
@@ -41,20 +41,6 @@ export interface ConsensusParamsAminoMsg {
   value: ConsensusParamsAmino;
 }
 /**
- * ConsensusParams contains consensus critical parameters that determine the
- * validity of blocks.
- * @name ConsensusParamsSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.ConsensusParams
- */
-export interface ConsensusParamsSDKType {
-  block?: BlockParamsSDKType;
-  evidence?: EvidenceParamsSDKType;
-  validator?: ValidatorParamsSDKType;
-  version?: VersionParamsSDKType;
-  abci?: ABCIParamsSDKType;
-}
-/**
  * BlockParams contains limits on the block size.
  * @name BlockParams
  * @package tendermint.types
@@ -87,26 +73,16 @@ export interface BlockParamsAmino {
    * Max block size, in bytes.
    * Note: must be greater than 0
    */
-  max_bytes?: string;
+  max_bytes: string;
   /**
    * Max gas per block.
    * Note: must be greater or equal to -1
    */
-  max_gas?: string;
+  max_gas: string;
 }
 export interface BlockParamsAminoMsg {
   type: "/tendermint.types.BlockParams";
   value: BlockParamsAmino;
-}
-/**
- * BlockParams contains limits on the block size.
- * @name BlockParamsSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.BlockParams
- */
-export interface BlockParamsSDKType {
-  max_bytes: bigint;
-  max_gas: bigint;
 }
 /**
  * EvidenceParams determine how we handle evidence of malfeasance.
@@ -154,7 +130,7 @@ export interface EvidenceParamsAmino {
    * The basic formula for calculating this is: MaxAgeDuration / {average block
    * time}.
    */
-  max_age_num_blocks?: string;
+  max_age_num_blocks: string;
   /**
    * Max age of evidence, in time.
    * 
@@ -162,28 +138,17 @@ export interface EvidenceParamsAmino {
    * mechanism for handling [Nothing-At-Stake
    * attacks](https://github.com/ethereum/wiki/wiki/Proof-of-Stake-FAQ#what-is-the-nothing-at-stake-problem-and-how-can-it-be-fixed).
    */
-  max_age_duration?: DurationAmino;
+  max_age_duration: DurationAmino;
   /**
    * This sets the maximum size of total evidence in bytes that can be committed in a single block.
    * and should fall comfortably under the max block bytes.
    * Default is 1048576 or 1MB
    */
-  max_bytes?: string;
+  max_bytes: string;
 }
 export interface EvidenceParamsAminoMsg {
   type: "/tendermint.types.EvidenceParams";
   value: EvidenceParamsAmino;
-}
-/**
- * EvidenceParams determine how we handle evidence of malfeasance.
- * @name EvidenceParamsSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.EvidenceParams
- */
-export interface EvidenceParamsSDKType {
-  max_age_num_blocks: bigint;
-  max_age_duration: DurationSDKType;
-  max_bytes: bigint;
 }
 /**
  * ValidatorParams restrict the public key types validators can use.
@@ -207,21 +172,11 @@ export interface ValidatorParamsProtoMsg {
  * @see proto type: tendermint.types.ValidatorParams
  */
 export interface ValidatorParamsAmino {
-  pub_key_types?: string[];
+  pub_key_types: string[];
 }
 export interface ValidatorParamsAminoMsg {
   type: "/tendermint.types.ValidatorParams";
   value: ValidatorParamsAmino;
-}
-/**
- * ValidatorParams restrict the public key types validators can use.
- * NOTE: uses ABCI pubkey naming, not Amino names.
- * @name ValidatorParamsSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.ValidatorParams
- */
-export interface ValidatorParamsSDKType {
-  pub_key_types: string[];
 }
 /**
  * VersionParams contains the ABCI application version.
@@ -243,20 +198,11 @@ export interface VersionParamsProtoMsg {
  * @see proto type: tendermint.types.VersionParams
  */
 export interface VersionParamsAmino {
-  app?: string;
+  app: string;
 }
 export interface VersionParamsAminoMsg {
   type: "/tendermint.types.VersionParams";
   value: VersionParamsAmino;
-}
-/**
- * VersionParams contains the ABCI application version.
- * @name VersionParamsSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.VersionParams
- */
-export interface VersionParamsSDKType {
-  app: bigint;
 }
 /**
  * HashedParams is a subset of ConsensusParams.
@@ -283,24 +229,12 @@ export interface HashedParamsProtoMsg {
  * @see proto type: tendermint.types.HashedParams
  */
 export interface HashedParamsAmino {
-  block_max_bytes?: string;
-  block_max_gas?: string;
+  block_max_bytes: string;
+  block_max_gas: string;
 }
 export interface HashedParamsAminoMsg {
   type: "/tendermint.types.HashedParams";
   value: HashedParamsAmino;
-}
-/**
- * HashedParams is a subset of ConsensusParams.
- * 
- * It is hashed into the Header.ConsensusHash.
- * @name HashedParamsSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.HashedParams
- */
-export interface HashedParamsSDKType {
-  block_max_bytes: bigint;
-  block_max_gas: bigint;
 }
 /**
  * ABCIParams configure functionality specific to the Application Blockchain Interface.
@@ -344,20 +278,11 @@ export interface ABCIParamsAmino {
    * passed to the application for validation in VerifyVoteExtension and given
    * to the application to use when proposing a block during PrepareProposal.
    */
-  vote_extensions_enable_height?: string;
+  vote_extensions_enable_height: string;
 }
 export interface ABCIParamsAminoMsg {
   type: "/tendermint.types.ABCIParams";
   value: ABCIParamsAmino;
-}
-/**
- * ABCIParams configure functionality specific to the Application Blockchain Interface.
- * @name ABCIParamsSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.ABCIParams
- */
-export interface ABCIParamsSDKType {
-  vote_extensions_enable_height: bigint;
 }
 function createBaseConsensusParams(): ConsensusParams {
   return {
@@ -378,9 +303,6 @@ function createBaseConsensusParams(): ConsensusParams {
 export const ConsensusParams = {
   typeUrl: "/tendermint.types.ConsensusParams",
   is(o: any): o is ConsensusParams {
-    return o && o.$typeUrl === ConsensusParams.typeUrl;
-  },
-  isSDK(o: any): o is ConsensusParamsSDKType {
     return o && o.$typeUrl === ConsensusParams.typeUrl;
   },
   isAmino(o: any): o is ConsensusParamsAmino {
@@ -433,7 +355,7 @@ export const ConsensusParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ConsensusParams>, I>>(object: I): ConsensusParams {
+  fromPartial(object: DeepPartial<ConsensusParams>): ConsensusParams {
     const message = createBaseConsensusParams();
     message.block = object.block !== undefined && object.block !== null ? BlockParams.fromPartial(object.block) : undefined;
     message.evidence = object.evidence !== undefined && object.evidence !== null ? EvidenceParams.fromPartial(object.evidence) : undefined;
@@ -513,9 +435,6 @@ export const BlockParams = {
   is(o: any): o is BlockParams {
     return o && (o.$typeUrl === BlockParams.typeUrl || typeof o.maxBytes === "bigint" && typeof o.maxGas === "bigint");
   },
-  isSDK(o: any): o is BlockParamsSDKType {
-    return o && (o.$typeUrl === BlockParams.typeUrl || typeof o.max_bytes === "bigint" && typeof o.max_gas === "bigint");
-  },
   isAmino(o: any): o is BlockParamsAmino {
     return o && (o.$typeUrl === BlockParams.typeUrl || typeof o.max_bytes === "bigint" && typeof o.max_gas === "bigint");
   },
@@ -548,7 +467,7 @@ export const BlockParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BlockParams>, I>>(object: I): BlockParams {
+  fromPartial(object: DeepPartial<BlockParams>): BlockParams {
     const message = createBaseBlockParams();
     message.maxBytes = object.maxBytes !== undefined && object.maxBytes !== null ? BigInt(object.maxBytes.toString()) : BigInt(0);
     message.maxGas = object.maxGas !== undefined && object.maxGas !== null ? BigInt(object.maxGas.toString()) : BigInt(0);
@@ -605,9 +524,6 @@ export const EvidenceParams = {
   is(o: any): o is EvidenceParams {
     return o && (o.$typeUrl === EvidenceParams.typeUrl || typeof o.maxAgeNumBlocks === "bigint" && Duration.is(o.maxAgeDuration) && typeof o.maxBytes === "bigint");
   },
-  isSDK(o: any): o is EvidenceParamsSDKType {
-    return o && (o.$typeUrl === EvidenceParams.typeUrl || typeof o.max_age_num_blocks === "bigint" && Duration.isSDK(o.max_age_duration) && typeof o.max_bytes === "bigint");
-  },
   isAmino(o: any): o is EvidenceParamsAmino {
     return o && (o.$typeUrl === EvidenceParams.typeUrl || typeof o.max_age_num_blocks === "bigint" && Duration.isAmino(o.max_age_duration) && typeof o.max_bytes === "bigint");
   },
@@ -646,7 +562,7 @@ export const EvidenceParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EvidenceParams>, I>>(object: I): EvidenceParams {
+  fromPartial(object: DeepPartial<EvidenceParams>): EvidenceParams {
     const message = createBaseEvidenceParams();
     message.maxAgeNumBlocks = object.maxAgeNumBlocks !== undefined && object.maxAgeNumBlocks !== null ? BigInt(object.maxAgeNumBlocks.toString()) : BigInt(0);
     message.maxAgeDuration = object.maxAgeDuration !== undefined && object.maxAgeDuration !== null ? Duration.fromPartial(object.maxAgeDuration) : undefined;
@@ -707,9 +623,6 @@ export const ValidatorParams = {
   is(o: any): o is ValidatorParams {
     return o && (o.$typeUrl === ValidatorParams.typeUrl || Array.isArray(o.pubKeyTypes) && (!o.pubKeyTypes.length || typeof o.pubKeyTypes[0] === "string"));
   },
-  isSDK(o: any): o is ValidatorParamsSDKType {
-    return o && (o.$typeUrl === ValidatorParams.typeUrl || Array.isArray(o.pub_key_types) && (!o.pub_key_types.length || typeof o.pub_key_types[0] === "string"));
-  },
   isAmino(o: any): o is ValidatorParamsAmino {
     return o && (o.$typeUrl === ValidatorParams.typeUrl || Array.isArray(o.pub_key_types) && (!o.pub_key_types.length || typeof o.pub_key_types[0] === "string"));
   },
@@ -736,7 +649,7 @@ export const ValidatorParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorParams>, I>>(object: I): ValidatorParams {
+  fromPartial(object: DeepPartial<ValidatorParams>): ValidatorParams {
     const message = createBaseValidatorParams();
     message.pubKeyTypes = object.pubKeyTypes?.map(e => e) || [];
     return message;
@@ -788,9 +701,6 @@ export const VersionParams = {
   is(o: any): o is VersionParams {
     return o && (o.$typeUrl === VersionParams.typeUrl || typeof o.app === "bigint");
   },
-  isSDK(o: any): o is VersionParamsSDKType {
-    return o && (o.$typeUrl === VersionParams.typeUrl || typeof o.app === "bigint");
-  },
   isAmino(o: any): o is VersionParamsAmino {
     return o && (o.$typeUrl === VersionParams.typeUrl || typeof o.app === "bigint");
   },
@@ -817,7 +727,7 @@ export const VersionParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<VersionParams>, I>>(object: I): VersionParams {
+  fromPartial(object: DeepPartial<VersionParams>): VersionParams {
     const message = createBaseVersionParams();
     message.app = object.app !== undefined && object.app !== null ? BigInt(object.app.toString()) : BigInt(0);
     return message;
@@ -870,9 +780,6 @@ export const HashedParams = {
   is(o: any): o is HashedParams {
     return o && (o.$typeUrl === HashedParams.typeUrl || typeof o.blockMaxBytes === "bigint" && typeof o.blockMaxGas === "bigint");
   },
-  isSDK(o: any): o is HashedParamsSDKType {
-    return o && (o.$typeUrl === HashedParams.typeUrl || typeof o.block_max_bytes === "bigint" && typeof o.block_max_gas === "bigint");
-  },
   isAmino(o: any): o is HashedParamsAmino {
     return o && (o.$typeUrl === HashedParams.typeUrl || typeof o.block_max_bytes === "bigint" && typeof o.block_max_gas === "bigint");
   },
@@ -905,7 +812,7 @@ export const HashedParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<HashedParams>, I>>(object: I): HashedParams {
+  fromPartial(object: DeepPartial<HashedParams>): HashedParams {
     const message = createBaseHashedParams();
     message.blockMaxBytes = object.blockMaxBytes !== undefined && object.blockMaxBytes !== null ? BigInt(object.blockMaxBytes.toString()) : BigInt(0);
     message.blockMaxGas = object.blockMaxGas !== undefined && object.blockMaxGas !== null ? BigInt(object.blockMaxGas.toString()) : BigInt(0);
@@ -960,9 +867,6 @@ export const ABCIParams = {
   is(o: any): o is ABCIParams {
     return o && (o.$typeUrl === ABCIParams.typeUrl || typeof o.voteExtensionsEnableHeight === "bigint");
   },
-  isSDK(o: any): o is ABCIParamsSDKType {
-    return o && (o.$typeUrl === ABCIParams.typeUrl || typeof o.vote_extensions_enable_height === "bigint");
-  },
   isAmino(o: any): o is ABCIParamsAmino {
     return o && (o.$typeUrl === ABCIParams.typeUrl || typeof o.vote_extensions_enable_height === "bigint");
   },
@@ -989,7 +893,7 @@ export const ABCIParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ABCIParams>, I>>(object: I): ABCIParams {
+  fromPartial(object: DeepPartial<ABCIParams>): ABCIParams {
     const message = createBaseABCIParams();
     message.voteExtensionsEnableHeight = object.voteExtensionsEnableHeight !== undefined && object.voteExtensionsEnableHeight !== null ? BigInt(object.voteExtensionsEnableHeight.toString()) : BigInt(0);
     return message;

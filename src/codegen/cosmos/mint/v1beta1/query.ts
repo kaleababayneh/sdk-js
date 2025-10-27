@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType } from "./mint";
+import { Params, ParamsAmino } from "./mint";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryParamsRequest is the request type for the Query/Params RPC method.
@@ -26,13 +26,6 @@ export interface QueryParamsRequestAminoMsg {
   type: "cosmos-sdk/QueryParamsRequest";
   value: QueryParamsRequestAmino;
 }
-/**
- * QueryParamsRequest is the request type for the Query/Params RPC method.
- * @name QueryParamsRequestSDKType
- * @package cosmos.mint.v1beta1
- * @see proto type: cosmos.mint.v1beta1.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {}
 /**
  * QueryParamsResponse is the response type for the Query/Params RPC method.
  * @name QueryParamsResponse
@@ -66,15 +59,6 @@ export interface QueryParamsResponseAminoMsg {
   value: QueryParamsResponseAmino;
 }
 /**
- * QueryParamsResponse is the response type for the Query/Params RPC method.
- * @name QueryParamsResponseSDKType
- * @package cosmos.mint.v1beta1
- * @see proto type: cosmos.mint.v1beta1.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  params: ParamsSDKType;
-}
-/**
  * QueryInflationRequest is the request type for the Query/Inflation RPC method.
  * @name QueryInflationRequest
  * @package cosmos.mint.v1beta1
@@ -96,13 +80,6 @@ export interface QueryInflationRequestAminoMsg {
   type: "cosmos-sdk/QueryInflationRequest";
   value: QueryInflationRequestAmino;
 }
-/**
- * QueryInflationRequest is the request type for the Query/Inflation RPC method.
- * @name QueryInflationRequestSDKType
- * @package cosmos.mint.v1beta1
- * @see proto type: cosmos.mint.v1beta1.QueryInflationRequest
- */
-export interface QueryInflationRequestSDKType {}
 /**
  * QueryInflationResponse is the response type for the Query/Inflation RPC
  * method.
@@ -138,16 +115,6 @@ export interface QueryInflationResponseAminoMsg {
   value: QueryInflationResponseAmino;
 }
 /**
- * QueryInflationResponse is the response type for the Query/Inflation RPC
- * method.
- * @name QueryInflationResponseSDKType
- * @package cosmos.mint.v1beta1
- * @see proto type: cosmos.mint.v1beta1.QueryInflationResponse
- */
-export interface QueryInflationResponseSDKType {
-  inflation: Uint8Array;
-}
-/**
  * QueryAnnualProvisionsRequest is the request type for the
  * Query/AnnualProvisions RPC method.
  * @name QueryAnnualProvisionsRequest
@@ -171,14 +138,6 @@ export interface QueryAnnualProvisionsRequestAminoMsg {
   type: "cosmos-sdk/QueryAnnualProvisionsRequest";
   value: QueryAnnualProvisionsRequestAmino;
 }
-/**
- * QueryAnnualProvisionsRequest is the request type for the
- * Query/AnnualProvisions RPC method.
- * @name QueryAnnualProvisionsRequestSDKType
- * @package cosmos.mint.v1beta1
- * @see proto type: cosmos.mint.v1beta1.QueryAnnualProvisionsRequest
- */
-export interface QueryAnnualProvisionsRequestSDKType {}
 /**
  * QueryAnnualProvisionsResponse is the response type for the
  * Query/AnnualProvisions RPC method.
@@ -213,16 +172,6 @@ export interface QueryAnnualProvisionsResponseAminoMsg {
   type: "cosmos-sdk/QueryAnnualProvisionsResponse";
   value: QueryAnnualProvisionsResponseAmino;
 }
-/**
- * QueryAnnualProvisionsResponse is the response type for the
- * Query/AnnualProvisions RPC method.
- * @name QueryAnnualProvisionsResponseSDKType
- * @package cosmos.mint.v1beta1
- * @see proto type: cosmos.mint.v1beta1.QueryAnnualProvisionsResponse
- */
-export interface QueryAnnualProvisionsResponseSDKType {
-  annual_provisions: Uint8Array;
-}
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
 }
@@ -236,9 +185,6 @@ export const QueryParamsRequest = {
   typeUrl: "/cosmos.mint.v1beta1.QueryParamsRequest",
   aminoType: "cosmos-sdk/QueryParamsRequest",
   is(o: any): o is QueryParamsRequest {
-    return o && o.$typeUrl === QueryParamsRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
   isAmino(o: any): o is QueryParamsRequestAmino {
@@ -261,7 +207,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(_: I): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -313,9 +259,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.is(o.params));
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isSDK(o.params));
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isAmino(o.params));
   },
@@ -342,7 +285,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;
@@ -402,9 +345,6 @@ export const QueryInflationRequest = {
   is(o: any): o is QueryInflationRequest {
     return o && o.$typeUrl === QueryInflationRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryInflationRequestSDKType {
-    return o && o.$typeUrl === QueryInflationRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryInflationRequestAmino {
     return o && o.$typeUrl === QueryInflationRequest.typeUrl;
   },
@@ -425,7 +365,7 @@ export const QueryInflationRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryInflationRequest>, I>>(_: I): QueryInflationRequest {
+  fromPartial(_: DeepPartial<QueryInflationRequest>): QueryInflationRequest {
     const message = createBaseQueryInflationRequest();
     return message;
   },
@@ -478,9 +418,6 @@ export const QueryInflationResponse = {
   is(o: any): o is QueryInflationResponse {
     return o && (o.$typeUrl === QueryInflationResponse.typeUrl || o.inflation instanceof Uint8Array || typeof o.inflation === "string");
   },
-  isSDK(o: any): o is QueryInflationResponseSDKType {
-    return o && (o.$typeUrl === QueryInflationResponse.typeUrl || o.inflation instanceof Uint8Array || typeof o.inflation === "string");
-  },
   isAmino(o: any): o is QueryInflationResponseAmino {
     return o && (o.$typeUrl === QueryInflationResponse.typeUrl || o.inflation instanceof Uint8Array || typeof o.inflation === "string");
   },
@@ -507,7 +444,7 @@ export const QueryInflationResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryInflationResponse>, I>>(object: I): QueryInflationResponse {
+  fromPartial(object: DeepPartial<QueryInflationResponse>): QueryInflationResponse {
     const message = createBaseQueryInflationResponse();
     message.inflation = object.inflation ?? new Uint8Array();
     return message;
@@ -563,9 +500,6 @@ export const QueryAnnualProvisionsRequest = {
   is(o: any): o is QueryAnnualProvisionsRequest {
     return o && o.$typeUrl === QueryAnnualProvisionsRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryAnnualProvisionsRequestSDKType {
-    return o && o.$typeUrl === QueryAnnualProvisionsRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryAnnualProvisionsRequestAmino {
     return o && o.$typeUrl === QueryAnnualProvisionsRequest.typeUrl;
   },
@@ -586,7 +520,7 @@ export const QueryAnnualProvisionsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAnnualProvisionsRequest>, I>>(_: I): QueryAnnualProvisionsRequest {
+  fromPartial(_: DeepPartial<QueryAnnualProvisionsRequest>): QueryAnnualProvisionsRequest {
     const message = createBaseQueryAnnualProvisionsRequest();
     return message;
   },
@@ -639,9 +573,6 @@ export const QueryAnnualProvisionsResponse = {
   is(o: any): o is QueryAnnualProvisionsResponse {
     return o && (o.$typeUrl === QueryAnnualProvisionsResponse.typeUrl || o.annualProvisions instanceof Uint8Array || typeof o.annualProvisions === "string");
   },
-  isSDK(o: any): o is QueryAnnualProvisionsResponseSDKType {
-    return o && (o.$typeUrl === QueryAnnualProvisionsResponse.typeUrl || o.annual_provisions instanceof Uint8Array || typeof o.annual_provisions === "string");
-  },
   isAmino(o: any): o is QueryAnnualProvisionsResponseAmino {
     return o && (o.$typeUrl === QueryAnnualProvisionsResponse.typeUrl || o.annual_provisions instanceof Uint8Array || typeof o.annual_provisions === "string");
   },
@@ -668,7 +599,7 @@ export const QueryAnnualProvisionsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAnnualProvisionsResponse>, I>>(object: I): QueryAnnualProvisionsResponse {
+  fromPartial(object: DeepPartial<QueryAnnualProvisionsResponse>): QueryAnnualProvisionsResponse {
     const message = createBaseQueryAnnualProvisionsResponse();
     message.annualProvisions = object.annualProvisions ?? new Uint8Array();
     return message;

@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { RequestFinalizeBlock, RequestFinalizeBlockAmino, RequestFinalizeBlockSDKType, ResponseFinalizeBlock, ResponseFinalizeBlockAmino, ResponseFinalizeBlockSDKType, ResponseCommit, ResponseCommitAmino, ResponseCommitSDKType } from "../../../../tendermint/abci/types";
-import { StoreKVPair, StoreKVPairAmino, StoreKVPairSDKType } from "../../v1beta1/listening";
+import { RequestFinalizeBlock, RequestFinalizeBlockAmino, ResponseFinalizeBlock, ResponseFinalizeBlockAmino, ResponseCommit, ResponseCommitAmino } from "../../../../tendermint/abci/types";
+import { StoreKVPair, StoreKVPairAmino } from "../../v1beta1/listening";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * ListenEndBlockRequest is the request type for the ListenEndBlock RPC method
  * @name ListenFinalizeBlockRequest
@@ -34,16 +34,6 @@ export interface ListenFinalizeBlockRequestAminoMsg {
   value: ListenFinalizeBlockRequestAmino;
 }
 /**
- * ListenEndBlockRequest is the request type for the ListenEndBlock RPC method
- * @name ListenFinalizeBlockRequestSDKType
- * @package cosmos.store.streaming.abci
- * @see proto type: cosmos.store.streaming.abci.ListenFinalizeBlockRequest
- */
-export interface ListenFinalizeBlockRequestSDKType {
-  req?: RequestFinalizeBlockSDKType;
-  res?: ResponseFinalizeBlockSDKType;
-}
-/**
  * ListenEndBlockResponse is the response type for the ListenEndBlock RPC method
  * @name ListenFinalizeBlockResponse
  * @package cosmos.store.streaming.abci
@@ -65,13 +55,6 @@ export interface ListenFinalizeBlockResponseAminoMsg {
   type: "cosmos-sdk/ListenFinalizeBlockResponse";
   value: ListenFinalizeBlockResponseAmino;
 }
-/**
- * ListenEndBlockResponse is the response type for the ListenEndBlock RPC method
- * @name ListenFinalizeBlockResponseSDKType
- * @package cosmos.store.streaming.abci
- * @see proto type: cosmos.store.streaming.abci.ListenFinalizeBlockResponse
- */
-export interface ListenFinalizeBlockResponseSDKType {}
 /**
  * ListenCommitRequest is the request type for the ListenCommit RPC method
  * @name ListenCommitRequest
@@ -100,24 +83,13 @@ export interface ListenCommitRequestAmino {
   /**
    * explicitly pass in block height as ResponseCommit does not contain this info
    */
-  block_height?: string;
+  block_height: string;
   res?: ResponseCommitAmino;
-  change_set?: StoreKVPairAmino[];
+  change_set: StoreKVPairAmino[];
 }
 export interface ListenCommitRequestAminoMsg {
   type: "cosmos-sdk/ListenCommitRequest";
   value: ListenCommitRequestAmino;
-}
-/**
- * ListenCommitRequest is the request type for the ListenCommit RPC method
- * @name ListenCommitRequestSDKType
- * @package cosmos.store.streaming.abci
- * @see proto type: cosmos.store.streaming.abci.ListenCommitRequest
- */
-export interface ListenCommitRequestSDKType {
-  block_height: bigint;
-  res?: ResponseCommitSDKType;
-  change_set: StoreKVPairSDKType[];
 }
 /**
  * ListenCommitResponse is the response type for the ListenCommit RPC method
@@ -141,13 +113,6 @@ export interface ListenCommitResponseAminoMsg {
   type: "cosmos-sdk/ListenCommitResponse";
   value: ListenCommitResponseAmino;
 }
-/**
- * ListenCommitResponse is the response type for the ListenCommit RPC method
- * @name ListenCommitResponseSDKType
- * @package cosmos.store.streaming.abci
- * @see proto type: cosmos.store.streaming.abci.ListenCommitResponse
- */
-export interface ListenCommitResponseSDKType {}
 function createBaseListenFinalizeBlockRequest(): ListenFinalizeBlockRequest {
   return {
     req: undefined,
@@ -164,9 +129,6 @@ export const ListenFinalizeBlockRequest = {
   typeUrl: "/cosmos.store.streaming.abci.ListenFinalizeBlockRequest",
   aminoType: "cosmos-sdk/ListenFinalizeBlockRequest",
   is(o: any): o is ListenFinalizeBlockRequest {
-    return o && o.$typeUrl === ListenFinalizeBlockRequest.typeUrl;
-  },
-  isSDK(o: any): o is ListenFinalizeBlockRequestSDKType {
     return o && o.$typeUrl === ListenFinalizeBlockRequest.typeUrl;
   },
   isAmino(o: any): o is ListenFinalizeBlockRequestAmino {
@@ -201,7 +163,7 @@ export const ListenFinalizeBlockRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListenFinalizeBlockRequest>, I>>(object: I): ListenFinalizeBlockRequest {
+  fromPartial(object: DeepPartial<ListenFinalizeBlockRequest>): ListenFinalizeBlockRequest {
     const message = createBaseListenFinalizeBlockRequest();
     message.req = object.req !== undefined && object.req !== null ? RequestFinalizeBlock.fromPartial(object.req) : undefined;
     message.res = object.res !== undefined && object.res !== null ? ResponseFinalizeBlock.fromPartial(object.res) : undefined;
@@ -267,9 +229,6 @@ export const ListenFinalizeBlockResponse = {
   is(o: any): o is ListenFinalizeBlockResponse {
     return o && o.$typeUrl === ListenFinalizeBlockResponse.typeUrl;
   },
-  isSDK(o: any): o is ListenFinalizeBlockResponseSDKType {
-    return o && o.$typeUrl === ListenFinalizeBlockResponse.typeUrl;
-  },
   isAmino(o: any): o is ListenFinalizeBlockResponseAmino {
     return o && o.$typeUrl === ListenFinalizeBlockResponse.typeUrl;
   },
@@ -290,7 +249,7 @@ export const ListenFinalizeBlockResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListenFinalizeBlockResponse>, I>>(_: I): ListenFinalizeBlockResponse {
+  fromPartial(_: DeepPartial<ListenFinalizeBlockResponse>): ListenFinalizeBlockResponse {
     const message = createBaseListenFinalizeBlockResponse();
     return message;
   },
@@ -344,9 +303,6 @@ export const ListenCommitRequest = {
   is(o: any): o is ListenCommitRequest {
     return o && (o.$typeUrl === ListenCommitRequest.typeUrl || typeof o.blockHeight === "bigint" && Array.isArray(o.changeSet) && (!o.changeSet.length || StoreKVPair.is(o.changeSet[0])));
   },
-  isSDK(o: any): o is ListenCommitRequestSDKType {
-    return o && (o.$typeUrl === ListenCommitRequest.typeUrl || typeof o.block_height === "bigint" && Array.isArray(o.change_set) && (!o.change_set.length || StoreKVPair.isSDK(o.change_set[0])));
-  },
   isAmino(o: any): o is ListenCommitRequestAmino {
     return o && (o.$typeUrl === ListenCommitRequest.typeUrl || typeof o.block_height === "bigint" && Array.isArray(o.change_set) && (!o.change_set.length || StoreKVPair.isAmino(o.change_set[0])));
   },
@@ -385,7 +341,7 @@ export const ListenCommitRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListenCommitRequest>, I>>(object: I): ListenCommitRequest {
+  fromPartial(object: DeepPartial<ListenCommitRequest>): ListenCommitRequest {
     const message = createBaseListenCommitRequest();
     message.blockHeight = object.blockHeight !== undefined && object.blockHeight !== null ? BigInt(object.blockHeight.toString()) : BigInt(0);
     message.res = object.res !== undefined && object.res !== null ? ResponseCommit.fromPartial(object.res) : undefined;
@@ -458,9 +414,6 @@ export const ListenCommitResponse = {
   is(o: any): o is ListenCommitResponse {
     return o && o.$typeUrl === ListenCommitResponse.typeUrl;
   },
-  isSDK(o: any): o is ListenCommitResponseSDKType {
-    return o && o.$typeUrl === ListenCommitResponse.typeUrl;
-  },
   isAmino(o: any): o is ListenCommitResponseAmino {
     return o && o.$typeUrl === ListenCommitResponse.typeUrl;
   },
@@ -481,7 +434,7 @@ export const ListenCommitResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListenCommitResponse>, I>>(_: I): ListenCommitResponse {
+  fromPartial(_: DeepPartial<ListenCommitResponse>): ListenCommitResponse {
     const message = createBaseListenCommitResponse();
     return message;
   },

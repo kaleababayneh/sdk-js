@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { BaseAccount, BaseAccountAmino, BaseAccountSDKType } from "../../auth/v1beta1/auth";
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
+import { BaseAccount, BaseAccountAmino } from "../../auth/v1beta1/auth";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * BaseVestingAccount implements the VestingAccount interface. It contains all
  * the necessary fields needed for any vesting account implementation.
@@ -41,25 +41,11 @@ export interface BaseVestingAccountAmino {
   /**
    * Vesting end time, as unix timestamp (in seconds).
    */
-  end_time?: string;
+  end_time: string;
 }
 export interface BaseVestingAccountAminoMsg {
   type: "cosmos-sdk/BaseVestingAccount";
   value: BaseVestingAccountAmino;
-}
-/**
- * BaseVestingAccount implements the VestingAccount interface. It contains all
- * the necessary fields needed for any vesting account implementation.
- * @name BaseVestingAccountSDKType
- * @package cosmos.vesting.v1beta1
- * @see proto type: cosmos.vesting.v1beta1.BaseVestingAccount
- */
-export interface BaseVestingAccountSDKType {
-  base_account?: BaseAccountSDKType;
-  original_vesting: CoinSDKType[];
-  delegated_free: CoinSDKType[];
-  delegated_vesting: CoinSDKType[];
-  end_time: bigint;
 }
 /**
  * ContinuousVestingAccount implements the VestingAccount interface. It
@@ -91,22 +77,11 @@ export interface ContinuousVestingAccountAmino {
   /**
    * Vesting start time, as unix timestamp (in seconds).
    */
-  start_time?: string;
+  start_time: string;
 }
 export interface ContinuousVestingAccountAminoMsg {
   type: "cosmos-sdk/ContinuousVestingAccount";
   value: ContinuousVestingAccountAmino;
-}
-/**
- * ContinuousVestingAccount implements the VestingAccount interface. It
- * continuously vests by unlocking coins linearly with respect to time.
- * @name ContinuousVestingAccountSDKType
- * @package cosmos.vesting.v1beta1
- * @see proto type: cosmos.vesting.v1beta1.ContinuousVestingAccount
- */
-export interface ContinuousVestingAccountSDKType {
-  base_vesting_account?: BaseVestingAccountSDKType;
-  start_time: bigint;
 }
 /**
  * DelayedVestingAccount implements the VestingAccount interface. It vests all
@@ -139,17 +114,6 @@ export interface DelayedVestingAccountAminoMsg {
   value: DelayedVestingAccountAmino;
 }
 /**
- * DelayedVestingAccount implements the VestingAccount interface. It vests all
- * coins after a specific time, but non prior. In other words, it keeps them
- * locked until a specified time.
- * @name DelayedVestingAccountSDKType
- * @package cosmos.vesting.v1beta1
- * @see proto type: cosmos.vesting.v1beta1.DelayedVestingAccount
- */
-export interface DelayedVestingAccountSDKType {
-  base_vesting_account?: BaseVestingAccountSDKType;
-}
-/**
  * Period defines a length of time and amount of coins that will vest.
  * @name Period
  * @package cosmos.vesting.v1beta1
@@ -176,22 +140,12 @@ export interface PeriodAmino {
   /**
    * Period duration in seconds.
    */
-  length?: string;
+  length: string;
   amount: CoinAmino[];
 }
 export interface PeriodAminoMsg {
   type: "cosmos-sdk/Period";
   value: PeriodAmino;
-}
-/**
- * Period defines a length of time and amount of coins that will vest.
- * @name PeriodSDKType
- * @package cosmos.vesting.v1beta1
- * @see proto type: cosmos.vesting.v1beta1.Period
- */
-export interface PeriodSDKType {
-  length: bigint;
-  amount: CoinSDKType[];
 }
 /**
  * PeriodicVestingAccount implements the VestingAccount interface. It
@@ -218,24 +172,12 @@ export interface PeriodicVestingAccountProtoMsg {
  */
 export interface PeriodicVestingAccountAmino {
   base_vesting_account?: BaseVestingAccountAmino;
-  start_time?: string;
+  start_time: string;
   vesting_periods: PeriodAmino[];
 }
 export interface PeriodicVestingAccountAminoMsg {
   type: "cosmos-sdk/PeriodicVestingAccount";
   value: PeriodicVestingAccountAmino;
-}
-/**
- * PeriodicVestingAccount implements the VestingAccount interface. It
- * periodically vests by unlocking coins during each specified period.
- * @name PeriodicVestingAccountSDKType
- * @package cosmos.vesting.v1beta1
- * @see proto type: cosmos.vesting.v1beta1.PeriodicVestingAccount
- */
-export interface PeriodicVestingAccountSDKType {
-  base_vesting_account?: BaseVestingAccountSDKType;
-  start_time: bigint;
-  vesting_periods: PeriodSDKType[];
 }
 /**
  * PermanentLockedAccount implements the VestingAccount interface. It does
@@ -271,19 +213,6 @@ export interface PermanentLockedAccountAminoMsg {
   type: "cosmos-sdk/PermanentLockedAccount";
   value: PermanentLockedAccountAmino;
 }
-/**
- * PermanentLockedAccount implements the VestingAccount interface. It does
- * not ever release coins, locking them indefinitely. Coins in this account can
- * still be used for delegating and for governance votes even while locked.
- * 
- * Since: cosmos-sdk 0.43
- * @name PermanentLockedAccountSDKType
- * @package cosmos.vesting.v1beta1
- * @see proto type: cosmos.vesting.v1beta1.PermanentLockedAccount
- */
-export interface PermanentLockedAccountSDKType {
-  base_vesting_account?: BaseVestingAccountSDKType;
-}
 function createBaseBaseVestingAccount(): BaseVestingAccount {
   return {
     baseAccount: undefined,
@@ -305,9 +234,6 @@ export const BaseVestingAccount = {
   aminoType: "cosmos-sdk/BaseVestingAccount",
   is(o: any): o is BaseVestingAccount {
     return o && (o.$typeUrl === BaseVestingAccount.typeUrl || Array.isArray(o.originalVesting) && (!o.originalVesting.length || Coin.is(o.originalVesting[0])) && Array.isArray(o.delegatedFree) && (!o.delegatedFree.length || Coin.is(o.delegatedFree[0])) && Array.isArray(o.delegatedVesting) && (!o.delegatedVesting.length || Coin.is(o.delegatedVesting[0])) && typeof o.endTime === "bigint");
-  },
-  isSDK(o: any): o is BaseVestingAccountSDKType {
-    return o && (o.$typeUrl === BaseVestingAccount.typeUrl || Array.isArray(o.original_vesting) && (!o.original_vesting.length || Coin.isSDK(o.original_vesting[0])) && Array.isArray(o.delegated_free) && (!o.delegated_free.length || Coin.isSDK(o.delegated_free[0])) && Array.isArray(o.delegated_vesting) && (!o.delegated_vesting.length || Coin.isSDK(o.delegated_vesting[0])) && typeof o.end_time === "bigint");
   },
   isAmino(o: any): o is BaseVestingAccountAmino {
     return o && (o.$typeUrl === BaseVestingAccount.typeUrl || Array.isArray(o.original_vesting) && (!o.original_vesting.length || Coin.isAmino(o.original_vesting[0])) && Array.isArray(o.delegated_free) && (!o.delegated_free.length || Coin.isAmino(o.delegated_free[0])) && Array.isArray(o.delegated_vesting) && (!o.delegated_vesting.length || Coin.isAmino(o.delegated_vesting[0])) && typeof o.end_time === "bigint");
@@ -359,7 +285,7 @@ export const BaseVestingAccount = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BaseVestingAccount>, I>>(object: I): BaseVestingAccount {
+  fromPartial(object: DeepPartial<BaseVestingAccount>): BaseVestingAccount {
     const message = createBaseBaseVestingAccount();
     message.baseAccount = object.baseAccount !== undefined && object.baseAccount !== null ? BaseAccount.fromPartial(object.baseAccount) : undefined;
     message.originalVesting = object.originalVesting?.map(e => Coin.fromPartial(e)) || [];
@@ -450,9 +376,6 @@ export const ContinuousVestingAccount = {
   is(o: any): o is ContinuousVestingAccount {
     return o && (o.$typeUrl === ContinuousVestingAccount.typeUrl || typeof o.startTime === "bigint");
   },
-  isSDK(o: any): o is ContinuousVestingAccountSDKType {
-    return o && (o.$typeUrl === ContinuousVestingAccount.typeUrl || typeof o.start_time === "bigint");
-  },
   isAmino(o: any): o is ContinuousVestingAccountAmino {
     return o && (o.$typeUrl === ContinuousVestingAccount.typeUrl || typeof o.start_time === "bigint");
   },
@@ -485,7 +408,7 @@ export const ContinuousVestingAccount = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ContinuousVestingAccount>, I>>(object: I): ContinuousVestingAccount {
+  fromPartial(object: DeepPartial<ContinuousVestingAccount>): ContinuousVestingAccount {
     const message = createBaseContinuousVestingAccount();
     message.baseVestingAccount = object.baseVestingAccount !== undefined && object.baseVestingAccount !== null ? BaseVestingAccount.fromPartial(object.baseVestingAccount) : undefined;
     message.startTime = object.startTime !== undefined && object.startTime !== null ? BigInt(object.startTime.toString()) : BigInt(0);
@@ -554,9 +477,6 @@ export const DelayedVestingAccount = {
   is(o: any): o is DelayedVestingAccount {
     return o && o.$typeUrl === DelayedVestingAccount.typeUrl;
   },
-  isSDK(o: any): o is DelayedVestingAccountSDKType {
-    return o && o.$typeUrl === DelayedVestingAccount.typeUrl;
-  },
   isAmino(o: any): o is DelayedVestingAccountAmino {
     return o && o.$typeUrl === DelayedVestingAccount.typeUrl;
   },
@@ -583,7 +503,7 @@ export const DelayedVestingAccount = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DelayedVestingAccount>, I>>(object: I): DelayedVestingAccount {
+  fromPartial(object: DeepPartial<DelayedVestingAccount>): DelayedVestingAccount {
     const message = createBaseDelayedVestingAccount();
     message.baseVestingAccount = object.baseVestingAccount !== undefined && object.baseVestingAccount !== null ? BaseVestingAccount.fromPartial(object.baseVestingAccount) : undefined;
     return message;
@@ -646,9 +566,6 @@ export const Period = {
   is(o: any): o is Period {
     return o && (o.$typeUrl === Period.typeUrl || typeof o.length === "bigint" && Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])));
   },
-  isSDK(o: any): o is PeriodSDKType {
-    return o && (o.$typeUrl === Period.typeUrl || typeof o.length === "bigint" && Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])));
-  },
   isAmino(o: any): o is PeriodAmino {
     return o && (o.$typeUrl === Period.typeUrl || typeof o.length === "bigint" && Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])));
   },
@@ -681,7 +598,7 @@ export const Period = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Period>, I>>(object: I): Period {
+  fromPartial(object: DeepPartial<Period>): Period {
     const message = createBasePeriod();
     message.length = object.length !== undefined && object.length !== null ? BigInt(object.length.toString()) : BigInt(0);
     message.amount = object.amount?.map(e => Coin.fromPartial(e)) || [];
@@ -753,9 +670,6 @@ export const PeriodicVestingAccount = {
   is(o: any): o is PeriodicVestingAccount {
     return o && (o.$typeUrl === PeriodicVestingAccount.typeUrl || typeof o.startTime === "bigint" && Array.isArray(o.vestingPeriods) && (!o.vestingPeriods.length || Period.is(o.vestingPeriods[0])));
   },
-  isSDK(o: any): o is PeriodicVestingAccountSDKType {
-    return o && (o.$typeUrl === PeriodicVestingAccount.typeUrl || typeof o.start_time === "bigint" && Array.isArray(o.vesting_periods) && (!o.vesting_periods.length || Period.isSDK(o.vesting_periods[0])));
-  },
   isAmino(o: any): o is PeriodicVestingAccountAmino {
     return o && (o.$typeUrl === PeriodicVestingAccount.typeUrl || typeof o.start_time === "bigint" && Array.isArray(o.vesting_periods) && (!o.vesting_periods.length || Period.isAmino(o.vesting_periods[0])));
   },
@@ -794,7 +708,7 @@ export const PeriodicVestingAccount = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PeriodicVestingAccount>, I>>(object: I): PeriodicVestingAccount {
+  fromPartial(object: DeepPartial<PeriodicVestingAccount>): PeriodicVestingAccount {
     const message = createBasePeriodicVestingAccount();
     message.baseVestingAccount = object.baseVestingAccount !== undefined && object.baseVestingAccount !== null ? BaseVestingAccount.fromPartial(object.baseVestingAccount) : undefined;
     message.startTime = object.startTime !== undefined && object.startTime !== null ? BigInt(object.startTime.toString()) : BigInt(0);
@@ -873,9 +787,6 @@ export const PermanentLockedAccount = {
   is(o: any): o is PermanentLockedAccount {
     return o && o.$typeUrl === PermanentLockedAccount.typeUrl;
   },
-  isSDK(o: any): o is PermanentLockedAccountSDKType {
-    return o && o.$typeUrl === PermanentLockedAccount.typeUrl;
-  },
   isAmino(o: any): o is PermanentLockedAccountAmino {
     return o && o.$typeUrl === PermanentLockedAccount.typeUrl;
   },
@@ -902,7 +813,7 @@ export const PermanentLockedAccount = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PermanentLockedAccount>, I>>(object: I): PermanentLockedAccount {
+  fromPartial(object: DeepPartial<PermanentLockedAccount>): PermanentLockedAccount {
     const message = createBasePermanentLockedAccount();
     message.baseVestingAccount = object.baseVestingAccount !== undefined && object.baseVestingAccount !== null ? BaseVestingAccount.fromPartial(object.baseVestingAccount) : undefined;
     return message;

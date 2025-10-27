@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../helpers";
 /**
  * HandshakeInfo message
  * @name HandshakeInfo
@@ -44,40 +44,27 @@ export interface HandshakeInfoAmino {
   /**
    * Cosmos account address
    */
-  address?: string;
+  address: string;
   /**
    * Peer type (0 = Simplenode, 1 = Supernode)
    */
-  peer_type?: number;
+  peer_type: number;
   /**
    * ephemeral public key
    */
-  public_key?: string;
+  public_key: string;
   /**
    * Cosmos account public key
    */
-  account_public_key?: string;
+  account_public_key: string;
   /**
    * Curve type (e.g., P256, P384, P521)
    */
-  curve?: string;
+  curve: string;
 }
 export interface HandshakeInfoAminoMsg {
   type: "/lumera.lumeraid.HandshakeInfo";
   value: HandshakeInfoAmino;
-}
-/**
- * HandshakeInfo message
- * @name HandshakeInfoSDKType
- * @package lumera.lumeraid
- * @see proto type: lumera.lumeraid.HandshakeInfo
- */
-export interface HandshakeInfoSDKType {
-  address: string;
-  peer_type: number;
-  public_key: Uint8Array;
-  account_public_key: Uint8Array;
-  curve: string;
 }
 function createBaseHandshakeInfo(): HandshakeInfo {
   return {
@@ -98,9 +85,6 @@ export const HandshakeInfo = {
   typeUrl: "/lumera.lumeraid.HandshakeInfo",
   is(o: any): o is HandshakeInfo {
     return o && (o.$typeUrl === HandshakeInfo.typeUrl || typeof o.address === "string" && typeof o.peerType === "number" && (o.publicKey instanceof Uint8Array || typeof o.publicKey === "string") && (o.accountPublicKey instanceof Uint8Array || typeof o.accountPublicKey === "string") && typeof o.curve === "string");
-  },
-  isSDK(o: any): o is HandshakeInfoSDKType {
-    return o && (o.$typeUrl === HandshakeInfo.typeUrl || typeof o.address === "string" && typeof o.peer_type === "number" && (o.public_key instanceof Uint8Array || typeof o.public_key === "string") && (o.account_public_key instanceof Uint8Array || typeof o.account_public_key === "string") && typeof o.curve === "string");
   },
   isAmino(o: any): o is HandshakeInfoAmino {
     return o && (o.$typeUrl === HandshakeInfo.typeUrl || typeof o.address === "string" && typeof o.peer_type === "number" && (o.public_key instanceof Uint8Array || typeof o.public_key === "string") && (o.account_public_key instanceof Uint8Array || typeof o.account_public_key === "string") && typeof o.curve === "string");
@@ -152,7 +136,7 @@ export const HandshakeInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<HandshakeInfo>, I>>(object: I): HandshakeInfo {
+  fromPartial(object: DeepPartial<HandshakeInfo>): HandshakeInfo {
     const message = createBaseHandshakeInfo();
     message.address = object.address ?? "";
     message.peerType = object.peerType ?? 0;

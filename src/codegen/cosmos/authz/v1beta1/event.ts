@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * EventGrant is emitted on Msg/Grant
  * @name EventGrant
@@ -36,30 +36,19 @@ export interface EventGrantAmino {
   /**
    * Msg type URL for which an autorization is granted
    */
-  msg_type_url?: string;
+  msg_type_url: string;
   /**
    * Granter account address
    */
-  granter?: string;
+  granter: string;
   /**
    * Grantee account address
    */
-  grantee?: string;
+  grantee: string;
 }
 export interface EventGrantAminoMsg {
   type: "cosmos-sdk/EventGrant";
   value: EventGrantAmino;
-}
-/**
- * EventGrant is emitted on Msg/Grant
- * @name EventGrantSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.EventGrant
- */
-export interface EventGrantSDKType {
-  msg_type_url: string;
-  granter: string;
-  grantee: string;
 }
 /**
  * EventRevoke is emitted on Msg/Revoke
@@ -95,30 +84,19 @@ export interface EventRevokeAmino {
   /**
    * Msg type URL for which an autorization is revoked
    */
-  msg_type_url?: string;
+  msg_type_url: string;
   /**
    * Granter account address
    */
-  granter?: string;
+  granter: string;
   /**
    * Grantee account address
    */
-  grantee?: string;
+  grantee: string;
 }
 export interface EventRevokeAminoMsg {
   type: "cosmos-sdk/EventRevoke";
   value: EventRevokeAmino;
-}
-/**
- * EventRevoke is emitted on Msg/Revoke
- * @name EventRevokeSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.EventRevoke
- */
-export interface EventRevokeSDKType {
-  msg_type_url: string;
-  granter: string;
-  grantee: string;
 }
 function createBaseEventGrant(): EventGrant {
   return {
@@ -138,9 +116,6 @@ export const EventGrant = {
   aminoType: "cosmos-sdk/EventGrant",
   is(o: any): o is EventGrant {
     return o && (o.$typeUrl === EventGrant.typeUrl || typeof o.msgTypeUrl === "string" && typeof o.granter === "string" && typeof o.grantee === "string");
-  },
-  isSDK(o: any): o is EventGrantSDKType {
-    return o && (o.$typeUrl === EventGrant.typeUrl || typeof o.msg_type_url === "string" && typeof o.granter === "string" && typeof o.grantee === "string");
   },
   isAmino(o: any): o is EventGrantAmino {
     return o && (o.$typeUrl === EventGrant.typeUrl || typeof o.msg_type_url === "string" && typeof o.granter === "string" && typeof o.grantee === "string");
@@ -180,7 +155,7 @@ export const EventGrant = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventGrant>, I>>(object: I): EventGrant {
+  fromPartial(object: DeepPartial<EventGrant>): EventGrant {
     const message = createBaseEventGrant();
     message.msgTypeUrl = object.msgTypeUrl ?? "";
     message.granter = object.granter ?? "";
@@ -249,9 +224,6 @@ export const EventRevoke = {
   is(o: any): o is EventRevoke {
     return o && (o.$typeUrl === EventRevoke.typeUrl || typeof o.msgTypeUrl === "string" && typeof o.granter === "string" && typeof o.grantee === "string");
   },
-  isSDK(o: any): o is EventRevokeSDKType {
-    return o && (o.$typeUrl === EventRevoke.typeUrl || typeof o.msg_type_url === "string" && typeof o.granter === "string" && typeof o.grantee === "string");
-  },
   isAmino(o: any): o is EventRevokeAmino {
     return o && (o.$typeUrl === EventRevoke.typeUrl || typeof o.msg_type_url === "string" && typeof o.granter === "string" && typeof o.grantee === "string");
   },
@@ -290,7 +262,7 @@ export const EventRevoke = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventRevoke>, I>>(object: I): EventRevoke {
+  fromPartial(object: DeepPartial<EventRevoke>): EventRevoke {
     const message = createBaseEventRevoke();
     message.msgTypeUrl = object.msgTypeUrl ?? "";
     message.granter = object.granter ?? "";

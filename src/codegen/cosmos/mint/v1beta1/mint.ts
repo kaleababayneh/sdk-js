@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { Decimal } from "@interchainjs/math";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * Minter represents the minting state.
  * @name Minter
@@ -33,25 +33,15 @@ export interface MinterAmino {
   /**
    * current annual inflation rate
    */
-  inflation?: string;
+  inflation: string;
   /**
    * current annual expected provisions
    */
-  annual_provisions?: string;
+  annual_provisions: string;
 }
 export interface MinterAminoMsg {
   type: "cosmos-sdk/Minter";
   value: MinterAmino;
-}
-/**
- * Minter represents the minting state.
- * @name MinterSDKType
- * @package cosmos.mint.v1beta1
- * @see proto type: cosmos.mint.v1beta1.Minter
- */
-export interface MinterSDKType {
-  inflation: string;
-  annual_provisions: string;
 }
 /**
  * Params defines the parameters for the x/mint module.
@@ -99,7 +89,7 @@ export interface ParamsAmino {
   /**
    * type of coin to mint
    */
-  mint_denom?: string;
+  mint_denom: string;
   /**
    * maximum annual change in inflation rate
    */
@@ -119,25 +109,11 @@ export interface ParamsAmino {
   /**
    * expected blocks per year
    */
-  blocks_per_year?: string;
+  blocks_per_year: string;
 }
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/x/mint/Params";
   value: ParamsAmino;
-}
-/**
- * Params defines the parameters for the x/mint module.
- * @name ParamsSDKType
- * @package cosmos.mint.v1beta1
- * @see proto type: cosmos.mint.v1beta1.Params
- */
-export interface ParamsSDKType {
-  mint_denom: string;
-  inflation_rate_change: string;
-  inflation_max: string;
-  inflation_min: string;
-  goal_bonded: string;
-  blocks_per_year: bigint;
 }
 function createBaseMinter(): Minter {
   return {
@@ -156,9 +132,6 @@ export const Minter = {
   aminoType: "cosmos-sdk/Minter",
   is(o: any): o is Minter {
     return o && (o.$typeUrl === Minter.typeUrl || typeof o.inflation === "string" && typeof o.annualProvisions === "string");
-  },
-  isSDK(o: any): o is MinterSDKType {
-    return o && (o.$typeUrl === Minter.typeUrl || typeof o.inflation === "string" && typeof o.annual_provisions === "string");
   },
   isAmino(o: any): o is MinterAmino {
     return o && (o.$typeUrl === Minter.typeUrl || typeof o.inflation === "string" && typeof o.annual_provisions === "string");
@@ -192,7 +165,7 @@ export const Minter = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Minter>, I>>(object: I): Minter {
+  fromPartial(object: DeepPartial<Minter>): Minter {
     const message = createBaseMinter();
     message.inflation = object.inflation ?? "";
     message.annualProvisions = object.annualProvisions ?? "";
@@ -259,9 +232,6 @@ export const Params = {
   is(o: any): o is Params {
     return o && (o.$typeUrl === Params.typeUrl || typeof o.mintDenom === "string" && typeof o.inflationRateChange === "string" && typeof o.inflationMax === "string" && typeof o.inflationMin === "string" && typeof o.goalBonded === "string" && typeof o.blocksPerYear === "bigint");
   },
-  isSDK(o: any): o is ParamsSDKType {
-    return o && (o.$typeUrl === Params.typeUrl || typeof o.mint_denom === "string" && typeof o.inflation_rate_change === "string" && typeof o.inflation_max === "string" && typeof o.inflation_min === "string" && typeof o.goal_bonded === "string" && typeof o.blocks_per_year === "bigint");
-  },
   isAmino(o: any): o is ParamsAmino {
     return o && (o.$typeUrl === Params.typeUrl || typeof o.mint_denom === "string" && typeof o.inflation_rate_change === "string" && typeof o.inflation_max === "string" && typeof o.inflation_min === "string" && typeof o.goal_bonded === "string" && typeof o.blocks_per_year === "bigint");
   },
@@ -318,7 +288,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(object: I): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.mintDenom = object.mintDenom ?? "";
     message.inflationRateChange = object.inflationRateChange ?? "";

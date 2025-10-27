@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Represents a textual expression in the Common Expression Language (CEL)
  * syntax. CEL is a C-like expression language. The syntax and semantics of CEL
@@ -106,69 +106,27 @@ export interface ExprAmino {
    * Textual representation of an expression in Common Expression Language
    * syntax.
    */
-  expression?: string;
+  expression: string;
   /**
    * Optional. Title for the expression, i.e. a short string describing
    * its purpose. This can be used e.g. in UIs which allow to enter the
    * expression.
    */
-  title?: string;
+  title: string;
   /**
    * Optional. Description of the expression. This is a longer text which
    * describes the expression, e.g. when hovered over it in a UI.
    */
-  description?: string;
+  description: string;
   /**
    * Optional. String indicating the location of the expression for error
    * reporting, e.g. a file name and a position in the file.
    */
-  location?: string;
+  location: string;
 }
 export interface ExprAminoMsg {
   type: "/google.type.Expr";
   value: ExprAmino;
-}
-/**
- * Represents a textual expression in the Common Expression Language (CEL)
- * syntax. CEL is a C-like expression language. The syntax and semantics of CEL
- * are documented at https://github.com/google/cel-spec.
- * 
- * Example (Comparison):
- * 
- *     title: "Summary size limit"
- *     description: "Determines if a summary is less than 100 chars"
- *     expression: "document.summary.size() < 100"
- * 
- * Example (Equality):
- * 
- *     title: "Requestor is owner"
- *     description: "Determines if requestor is the document owner"
- *     expression: "document.owner == request.auth.claims.email"
- * 
- * Example (Logic):
- * 
- *     title: "Public documents"
- *     description: "Determine whether the document should be publicly visible"
- *     expression: "document.type != 'private' && document.type != 'internal'"
- * 
- * Example (Data Manipulation):
- * 
- *     title: "Notification string"
- *     description: "Create a notification string with a timestamp."
- *     expression: "'New message received at ' + string(document.create_time)"
- * 
- * The exact variables and functions that may be referenced within an expression
- * are determined by the service that evaluates it. See the service
- * documentation for additional information.
- * @name ExprSDKType
- * @package google.type
- * @see proto type: google.type.Expr
- */
-export interface ExprSDKType {
-  expression: string;
-  title: string;
-  description: string;
-  location: string;
 }
 function createBaseExpr(): Expr {
   return {
@@ -219,9 +177,6 @@ export const Expr = {
   is(o: any): o is Expr {
     return o && (o.$typeUrl === Expr.typeUrl || typeof o.expression === "string" && typeof o.title === "string" && typeof o.description === "string" && typeof o.location === "string");
   },
-  isSDK(o: any): o is ExprSDKType {
-    return o && (o.$typeUrl === Expr.typeUrl || typeof o.expression === "string" && typeof o.title === "string" && typeof o.description === "string" && typeof o.location === "string");
-  },
   isAmino(o: any): o is ExprAmino {
     return o && (o.$typeUrl === Expr.typeUrl || typeof o.expression === "string" && typeof o.title === "string" && typeof o.description === "string" && typeof o.location === "string");
   },
@@ -266,7 +221,7 @@ export const Expr = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Expr>, I>>(object: I): Expr {
+  fromPartial(object: DeepPartial<Expr>): Expr {
     const message = createBaseExpr();
     message.expression = object.expression ?? "";
     message.title = object.title ?? "";

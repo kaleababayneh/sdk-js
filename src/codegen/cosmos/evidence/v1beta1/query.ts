@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
-import { Any, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
+import { Any, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryEvidenceRequest is the request type for the Query/Evidence RPC method.
@@ -41,30 +41,17 @@ export interface QueryEvidenceRequestAmino {
    * Deprecated: Use hash, a HEX encoded string, instead.
    * @deprecated
    */
-  evidence_hash?: string;
+  evidence_hash: string;
   /**
    * hash defines the evidence hash of the requested evidence.
    * 
    * Since: cosmos-sdk 0.47
    */
-  hash?: string;
+  hash: string;
 }
 export interface QueryEvidenceRequestAminoMsg {
   type: "cosmos-sdk/QueryEvidenceRequest";
   value: QueryEvidenceRequestAmino;
-}
-/**
- * QueryEvidenceRequest is the request type for the Query/Evidence RPC method.
- * @name QueryEvidenceRequestSDKType
- * @package cosmos.evidence.v1beta1
- * @see proto type: cosmos.evidence.v1beta1.QueryEvidenceRequest
- */
-export interface QueryEvidenceRequestSDKType {
-  /**
-   * @deprecated
-   */
-  evidence_hash: Uint8Array;
-  hash: string;
 }
 /**
  * QueryEvidenceResponse is the response type for the Query/Evidence RPC method.
@@ -97,15 +84,6 @@ export interface QueryEvidenceResponseAmino {
 export interface QueryEvidenceResponseAminoMsg {
   type: "cosmos-sdk/QueryEvidenceResponse";
   value: QueryEvidenceResponseAmino;
-}
-/**
- * QueryEvidenceResponse is the response type for the Query/Evidence RPC method.
- * @name QueryEvidenceResponseSDKType
- * @package cosmos.evidence.v1beta1
- * @see proto type: cosmos.evidence.v1beta1.QueryEvidenceResponse
- */
-export interface QueryEvidenceResponseSDKType {
-  evidence?: AnySDKType;
 }
 /**
  * QueryEvidenceRequest is the request type for the Query/AllEvidence RPC
@@ -142,16 +120,6 @@ export interface QueryAllEvidenceRequestAminoMsg {
   value: QueryAllEvidenceRequestAmino;
 }
 /**
- * QueryEvidenceRequest is the request type for the Query/AllEvidence RPC
- * method.
- * @name QueryAllEvidenceRequestSDKType
- * @package cosmos.evidence.v1beta1
- * @see proto type: cosmos.evidence.v1beta1.QueryAllEvidenceRequest
- */
-export interface QueryAllEvidenceRequestSDKType {
-  pagination?: PageRequestSDKType;
-}
-/**
  * QueryAllEvidenceResponse is the response type for the Query/AllEvidence RPC
  * method.
  * @name QueryAllEvidenceResponse
@@ -183,7 +151,7 @@ export interface QueryAllEvidenceResponseAmino {
   /**
    * evidence returns all evidences.
    */
-  evidence?: AnyAmino[];
+  evidence: AnyAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -192,17 +160,6 @@ export interface QueryAllEvidenceResponseAmino {
 export interface QueryAllEvidenceResponseAminoMsg {
   type: "cosmos-sdk/QueryAllEvidenceResponse";
   value: QueryAllEvidenceResponseAmino;
-}
-/**
- * QueryAllEvidenceResponse is the response type for the Query/AllEvidence RPC
- * method.
- * @name QueryAllEvidenceResponseSDKType
- * @package cosmos.evidence.v1beta1
- * @see proto type: cosmos.evidence.v1beta1.QueryAllEvidenceResponse
- */
-export interface QueryAllEvidenceResponseSDKType {
-  evidence: AnySDKType[];
-  pagination?: PageResponseSDKType;
 }
 function createBaseQueryEvidenceRequest(): QueryEvidenceRequest {
   return {
@@ -221,9 +178,6 @@ export const QueryEvidenceRequest = {
   aminoType: "cosmos-sdk/QueryEvidenceRequest",
   is(o: any): o is QueryEvidenceRequest {
     return o && (o.$typeUrl === QueryEvidenceRequest.typeUrl || (o.evidenceHash instanceof Uint8Array || typeof o.evidenceHash === "string") && typeof o.hash === "string");
-  },
-  isSDK(o: any): o is QueryEvidenceRequestSDKType {
-    return o && (o.$typeUrl === QueryEvidenceRequest.typeUrl || (o.evidence_hash instanceof Uint8Array || typeof o.evidence_hash === "string") && typeof o.hash === "string");
   },
   isAmino(o: any): o is QueryEvidenceRequestAmino {
     return o && (o.$typeUrl === QueryEvidenceRequest.typeUrl || (o.evidence_hash instanceof Uint8Array || typeof o.evidence_hash === "string") && typeof o.hash === "string");
@@ -257,7 +211,7 @@ export const QueryEvidenceRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryEvidenceRequest>, I>>(object: I): QueryEvidenceRequest {
+  fromPartial(object: DeepPartial<QueryEvidenceRequest>): QueryEvidenceRequest {
     const message = createBaseQueryEvidenceRequest();
     message.evidenceHash = object.evidenceHash ?? new Uint8Array();
     message.hash = object.hash ?? "";
@@ -319,9 +273,6 @@ export const QueryEvidenceResponse = {
   is(o: any): o is QueryEvidenceResponse {
     return o && o.$typeUrl === QueryEvidenceResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryEvidenceResponseSDKType {
-    return o && o.$typeUrl === QueryEvidenceResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryEvidenceResponseAmino {
     return o && o.$typeUrl === QueryEvidenceResponse.typeUrl;
   },
@@ -348,7 +299,7 @@ export const QueryEvidenceResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryEvidenceResponse>, I>>(object: I): QueryEvidenceResponse {
+  fromPartial(object: DeepPartial<QueryEvidenceResponse>): QueryEvidenceResponse {
     const message = createBaseQueryEvidenceResponse();
     message.evidence = object.evidence !== undefined && object.evidence !== null ? Any.fromPartial(object.evidence) : undefined;
     return message;
@@ -406,9 +357,6 @@ export const QueryAllEvidenceRequest = {
   is(o: any): o is QueryAllEvidenceRequest {
     return o && o.$typeUrl === QueryAllEvidenceRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryAllEvidenceRequestSDKType {
-    return o && o.$typeUrl === QueryAllEvidenceRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryAllEvidenceRequestAmino {
     return o && o.$typeUrl === QueryAllEvidenceRequest.typeUrl;
   },
@@ -435,7 +383,7 @@ export const QueryAllEvidenceRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAllEvidenceRequest>, I>>(object: I): QueryAllEvidenceRequest {
+  fromPartial(object: DeepPartial<QueryAllEvidenceRequest>): QueryAllEvidenceRequest {
     const message = createBaseQueryAllEvidenceRequest();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -499,9 +447,6 @@ export const QueryAllEvidenceResponse = {
   is(o: any): o is QueryAllEvidenceResponse {
     return o && (o.$typeUrl === QueryAllEvidenceResponse.typeUrl || Array.isArray(o.evidence) && (!o.evidence.length || Any.is(o.evidence[0])));
   },
-  isSDK(o: any): o is QueryAllEvidenceResponseSDKType {
-    return o && (o.$typeUrl === QueryAllEvidenceResponse.typeUrl || Array.isArray(o.evidence) && (!o.evidence.length || Any.isSDK(o.evidence[0])));
-  },
   isAmino(o: any): o is QueryAllEvidenceResponseAmino {
     return o && (o.$typeUrl === QueryAllEvidenceResponse.typeUrl || Array.isArray(o.evidence) && (!o.evidence.length || Any.isAmino(o.evidence[0])));
   },
@@ -534,7 +479,7 @@ export const QueryAllEvidenceResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAllEvidenceResponse>, I>>(object: I): QueryAllEvidenceResponse {
+  fromPartial(object: DeepPartial<QueryAllEvidenceResponse>): QueryAllEvidenceResponse {
     const message = createBaseQueryAllEvidenceResponse();
     message.evidence = object.evidence?.map(e => Any.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;

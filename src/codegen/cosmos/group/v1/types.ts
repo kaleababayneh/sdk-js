@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
 import { Timestamp } from "../../../google/protobuf/timestamp";
-import { Duration, DurationAmino, DurationSDKType } from "../../../google/protobuf/duration";
-import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Duration, DurationAmino } from "../../../google/protobuf/duration";
+import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { toTimestamp, fromTimestamp, Exact, isSet } from "../../../helpers";
+import { toTimestamp, fromTimestamp, DeepPartial, isSet } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /** VoteOption enumerates the valid vote options for a given proposal. */
 export enum VoteOption {
@@ -23,7 +23,6 @@ export enum VoteOption {
   VOTE_OPTION_NO_WITH_VETO = 4,
   UNRECOGNIZED = -1,
 }
-export const VoteOptionSDKType = VoteOption;
 export const VoteOptionAmino = VoteOption;
 export function voteOptionFromJSON(object: any): VoteOption {
   switch (object) {
@@ -93,7 +92,6 @@ export enum ProposalStatus {
   PROPOSAL_STATUS_WITHDRAWN = 5,
   UNRECOGNIZED = -1,
 }
-export const ProposalStatusSDKType = ProposalStatus;
 export const ProposalStatusAmino = ProposalStatus;
 export function proposalStatusFromJSON(object: any): ProposalStatus {
   switch (object) {
@@ -152,7 +150,6 @@ export enum ProposalExecutorResult {
   PROPOSAL_EXECUTOR_RESULT_FAILURE = 3,
   UNRECOGNIZED = -1,
 }
-export const ProposalExecutorResultSDKType = ProposalExecutorResult;
 export const ProposalExecutorResultAmino = ProposalExecutorResult;
 export function proposalExecutorResultFromJSON(object: any): ProposalExecutorResult {
   switch (object) {
@@ -229,15 +226,15 @@ export interface MemberAmino {
   /**
    * address is the member's account address.
    */
-  address?: string;
+  address: string;
   /**
    * weight is the member's voting weight that should be greater than 0.
    */
-  weight?: string;
+  weight: string;
   /**
    * metadata is any arbitrary metadata attached to the member.
    */
-  metadata?: string;
+  metadata: string;
   /**
    * added_at is a timestamp specifying when a member was added.
    */
@@ -246,19 +243,6 @@ export interface MemberAmino {
 export interface MemberAminoMsg {
   type: "cosmos-sdk/Member";
   value: MemberAmino;
-}
-/**
- * Member represents a group member with an account address,
- * non-zero weight, metadata and added_at timestamp.
- * @name MemberSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.Member
- */
-export interface MemberSDKType {
-  address: string;
-  weight: string;
-  metadata: string;
-  added_at: Date;
 }
 /**
  * MemberRequest represents a group member to be used in Msg server requests.
@@ -298,32 +282,19 @@ export interface MemberRequestAmino {
   /**
    * address is the member's account address.
    */
-  address?: string;
+  address: string;
   /**
    * weight is the member's voting weight that should be greater than 0.
    */
-  weight?: string;
+  weight: string;
   /**
    * metadata is any arbitrary metadata attached to the member.
    */
-  metadata?: string;
+  metadata: string;
 }
 export interface MemberRequestAminoMsg {
   type: "cosmos-sdk/MemberRequest";
   value: MemberRequestAmino;
-}
-/**
- * MemberRequest represents a group member to be used in Msg server requests.
- * Contrary to `Member`, it doesn't have any `added_at` field
- * since this field cannot be set as part of requests.
- * @name MemberRequestSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.MemberRequest
- */
-export interface MemberRequestSDKType {
-  address: string;
-  weight: string;
-  metadata: string;
 }
 /**
  * ThresholdDecisionPolicy is a decision policy where a proposal passes when it
@@ -337,7 +308,6 @@ export interface MemberRequestSDKType {
  * @see proto type: cosmos.group.v1.ThresholdDecisionPolicy
  */
 export interface ThresholdDecisionPolicy {
-  $typeUrl?: "/cosmos.group.v1.ThresholdDecisionPolicy";
   /**
    * threshold is the minimum weighted sum of `YES` votes that must be met or
    * exceeded for a proposal to succeed.
@@ -368,7 +338,7 @@ export interface ThresholdDecisionPolicyAmino {
    * threshold is the minimum weighted sum of `YES` votes that must be met or
    * exceeded for a proposal to succeed.
    */
-  threshold?: string;
+  threshold: string;
   /**
    * windows defines the different windows for voting and execution.
    */
@@ -377,22 +347,6 @@ export interface ThresholdDecisionPolicyAmino {
 export interface ThresholdDecisionPolicyAminoMsg {
   type: "cosmos-sdk/ThresholdDecisionPolicy";
   value: ThresholdDecisionPolicyAmino;
-}
-/**
- * ThresholdDecisionPolicy is a decision policy where a proposal passes when it
- * satisfies the two following conditions:
- * 1. The sum of all `YES` voter's weights is greater or equal than the defined
- *    `threshold`.
- * 2. The voting and execution periods of the proposal respect the parameters
- *    given by `windows`.
- * @name ThresholdDecisionPolicySDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.ThresholdDecisionPolicy
- */
-export interface ThresholdDecisionPolicySDKType {
-  $typeUrl?: "/cosmos.group.v1.ThresholdDecisionPolicy";
-  threshold: string;
-  windows?: DecisionPolicyWindowsSDKType;
 }
 /**
  * PercentageDecisionPolicy is a decision policy where a proposal passes when
@@ -406,7 +360,6 @@ export interface ThresholdDecisionPolicySDKType {
  * @see proto type: cosmos.group.v1.PercentageDecisionPolicy
  */
 export interface PercentageDecisionPolicy {
-  $typeUrl?: "/cosmos.group.v1.PercentageDecisionPolicy";
   /**
    * percentage is the minimum percentage of the weighted sum of `YES` votes must
    * meet for a proposal to succeed.
@@ -437,7 +390,7 @@ export interface PercentageDecisionPolicyAmino {
    * percentage is the minimum percentage of the weighted sum of `YES` votes must
    * meet for a proposal to succeed.
    */
-  percentage?: string;
+  percentage: string;
   /**
    * windows defines the different windows for voting and execution.
    */
@@ -446,22 +399,6 @@ export interface PercentageDecisionPolicyAmino {
 export interface PercentageDecisionPolicyAminoMsg {
   type: "cosmos-sdk/PercentageDecisionPolicy";
   value: PercentageDecisionPolicyAmino;
-}
-/**
- * PercentageDecisionPolicy is a decision policy where a proposal passes when
- * it satisfies the two following conditions:
- * 1. The percentage of all `YES` voters' weights out of the total group weight
- *    is greater or equal than the given `percentage`.
- * 2. The voting and execution periods of the proposal respect the parameters
- *    given by `windows`.
- * @name PercentageDecisionPolicySDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.PercentageDecisionPolicy
- */
-export interface PercentageDecisionPolicySDKType {
-  $typeUrl?: "/cosmos.group.v1.PercentageDecisionPolicy";
-  percentage: string;
-  windows?: DecisionPolicyWindowsSDKType;
 }
 /**
  * DecisionPolicyWindows defines the different windows for voting and execution.
@@ -526,16 +463,6 @@ export interface DecisionPolicyWindowsAminoMsg {
   value: DecisionPolicyWindowsAmino;
 }
 /**
- * DecisionPolicyWindows defines the different windows for voting and execution.
- * @name DecisionPolicyWindowsSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.DecisionPolicyWindows
- */
-export interface DecisionPolicyWindowsSDKType {
-  voting_period: DurationSDKType;
-  min_execution_period: DurationSDKType;
-}
-/**
  * GroupInfo represents the high-level on-chain information for a group.
  * @name GroupInfo
  * @package cosmos.group.v1
@@ -585,27 +512,27 @@ export interface GroupInfoAmino {
   /**
    * id is the unique ID of the group.
    */
-  id?: string;
+  id: string;
   /**
    * admin is the account address of the group's admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * metadata is any arbitrary metadata to attached to the group.
    * the recommended format of the metadata is to be found here: https://docs.cosmos.network/v0.47/modules/group#group-1
    */
-  metadata?: string;
+  metadata: string;
   /**
    * version is used to track changes to a group's membership structure that
    * would break existing proposals. Whenever any members weight is changed,
    * or any member is added or removed this version is incremented and will
    * cause proposals based on older versions of this group to fail
    */
-  version?: string;
+  version: string;
   /**
    * total_weight is the sum of the group members' weights.
    */
-  total_weight?: string;
+  total_weight: string;
   /**
    * created_at is a timestamp specifying when a group was created.
    */
@@ -614,20 +541,6 @@ export interface GroupInfoAmino {
 export interface GroupInfoAminoMsg {
   type: "cosmos-sdk/GroupInfo";
   value: GroupInfoAmino;
-}
-/**
- * GroupInfo represents the high-level on-chain information for a group.
- * @name GroupInfoSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.GroupInfo
- */
-export interface GroupInfoSDKType {
-  id: bigint;
-  admin: string;
-  metadata: string;
-  version: bigint;
-  total_weight: string;
-  created_at: Date;
 }
 /**
  * GroupMember represents the relationship between a group and a member.
@@ -659,7 +572,7 @@ export interface GroupMemberAmino {
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
   /**
    * member is the member data.
    */
@@ -668,16 +581,6 @@ export interface GroupMemberAmino {
 export interface GroupMemberAminoMsg {
   type: "cosmos-sdk/GroupMember";
   value: GroupMemberAmino;
-}
-/**
- * GroupMember represents the relationship between a group and a member.
- * @name GroupMemberSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.GroupMember
- */
-export interface GroupMemberSDKType {
-  group_id: bigint;
-  member?: MemberSDKType;
 }
 /**
  * GroupPolicyInfo represents the high-level on-chain information for a group policy.
@@ -738,26 +641,26 @@ export interface GroupPolicyInfoAmino {
   /**
    * address is the account address of group policy.
    */
-  address?: string;
+  address: string;
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
   /**
    * admin is the account address of the group admin.
    */
-  admin?: string;
+  admin: string;
   /**
    * metadata is any arbitrary metadata attached to the group policy.
    * the recommended format of the metadata is to be found here:
    * https://docs.cosmos.network/v0.47/modules/group#decision-policy-1
    */
-  metadata?: string;
+  metadata: string;
   /**
    * version is used to track changes to a group's GroupPolicyInfo structure that
    * would create a different result on a running proposal.
    */
-  version?: string;
+  version: string;
   /**
    * decision_policy specifies the group policy's decision policy.
    */
@@ -770,21 +673,6 @@ export interface GroupPolicyInfoAmino {
 export interface GroupPolicyInfoAminoMsg {
   type: "cosmos-sdk/GroupPolicyInfo";
   value: GroupPolicyInfoAmino;
-}
-/**
- * GroupPolicyInfo represents the high-level on-chain information for a group policy.
- * @name GroupPolicyInfoSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.GroupPolicyInfo
- */
-export interface GroupPolicyInfoSDKType {
-  address: string;
-  group_id: bigint;
-  admin: string;
-  metadata: string;
-  version: bigint;
-  decision_policy?: ThresholdDecisionPolicySDKType | PercentageDecisionPolicySDKType | AnySDKType | undefined;
-  created_at: Date;
 }
 /**
  * Proposal defines a group proposal. Any member of a group can submit a proposal
@@ -887,21 +775,21 @@ export interface ProposalAmino {
   /**
    * id is the unique id of the proposal.
    */
-  id?: string;
+  id: string;
   /**
    * group_policy_address is the account address of group policy.
    */
-  group_policy_address?: string;
+  group_policy_address: string;
   /**
    * metadata is any arbitrary metadata attached to the proposal.
    * the recommended format of the metadata is to be found here:
    * https://docs.cosmos.network/v0.47/modules/group#proposal-4
    */
-  metadata?: string;
+  metadata: string;
   /**
    * proposers are the account addresses of the proposers.
    */
-  proposers?: string[];
+  proposers: string[];
   /**
    * submit_time is a timestamp specifying when a proposal was submitted.
    */
@@ -910,18 +798,18 @@ export interface ProposalAmino {
    * group_version tracks the version of the group at proposal submission.
    * This field is here for informational purposes only.
    */
-  group_version?: string;
+  group_version: string;
   /**
    * group_policy_version tracks the version of the group policy at proposal submission.
    * When a decision policy is changed, existing proposals from previous policy
    * versions will become invalid with the `ABORTED` status.
    * This field is here for informational purposes only.
    */
-  group_policy_version?: string;
+  group_policy_version: string;
   /**
    * status represents the high level position in the life cycle of the proposal. Initial value is Submitted.
    */
-  status?: ProposalStatus;
+  status: ProposalStatus;
   /**
    * final_tally_result contains the sums of all weighted votes for this
    * proposal for each vote option. It is empty at submission, and only
@@ -940,52 +828,27 @@ export interface ProposalAmino {
   /**
    * executor_result is the final result of the proposal execution. Initial value is NotRun.
    */
-  executor_result?: ProposalExecutorResult;
+  executor_result: ProposalExecutorResult;
   /**
    * messages is a list of `sdk.Msg`s that will be executed if the proposal passes.
    */
-  messages?: AnyAmino[];
+  messages: AnyAmino[];
   /**
    * title is the title of the proposal
    * 
    * Since: cosmos-sdk 0.47
    */
-  title?: string;
+  title: string;
   /**
    * summary is a short summary of the proposal
    * 
    * Since: cosmos-sdk 0.47
    */
-  summary?: string;
+  summary: string;
 }
 export interface ProposalAminoMsg {
   type: "cosmos-sdk/Proposal";
   value: ProposalAmino;
-}
-/**
- * Proposal defines a group proposal. Any member of a group can submit a proposal
- * for a group policy to decide upon.
- * A proposal consists of a set of `sdk.Msg`s that will be executed if the proposal
- * passes as well as some optional metadata associated with the proposal.
- * @name ProposalSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.Proposal
- */
-export interface ProposalSDKType {
-  id: bigint;
-  group_policy_address: string;
-  metadata: string;
-  proposers: string[];
-  submit_time: Date;
-  group_version: bigint;
-  group_policy_version: bigint;
-  status: ProposalStatus;
-  final_tally_result: TallyResultSDKType;
-  voting_period_end: Date;
-  executor_result: ProposalExecutorResult;
-  messages: AnySDKType[];
-  title: string;
-  summary: string;
 }
 /**
  * TallyResult represents the sum of weighted votes for each vote option.
@@ -1025,35 +888,23 @@ export interface TallyResultAmino {
   /**
    * yes_count is the weighted sum of yes votes.
    */
-  yes_count?: string;
+  yes_count: string;
   /**
    * abstain_count is the weighted sum of abstainers.
    */
-  abstain_count?: string;
+  abstain_count: string;
   /**
    * no_count is the weighted sum of no votes.
    */
-  no_count?: string;
+  no_count: string;
   /**
    * no_with_veto_count is the weighted sum of veto.
    */
-  no_with_veto_count?: string;
+  no_with_veto_count: string;
 }
 export interface TallyResultAminoMsg {
   type: "cosmos-sdk/TallyResult";
   value: TallyResultAmino;
-}
-/**
- * TallyResult represents the sum of weighted votes for each vote option.
- * @name TallyResultSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.TallyResult
- */
-export interface TallyResultSDKType {
-  yes_count: string;
-  abstain_count: string;
-  no_count: string;
-  no_with_veto_count: string;
 }
 /**
  * Vote represents a vote for a proposal.string metadata
@@ -1098,20 +949,20 @@ export interface VoteAmino {
   /**
    * proposal is the unique ID of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
   /**
    * voter is the account address of the voter.
    */
-  voter?: string;
+  voter: string;
   /**
    * option is the voter's choice on the proposal.
    */
-  option?: VoteOption;
+  option: VoteOption;
   /**
    * metadata is any arbitrary metadata attached to the vote.
    * the recommended format of the metadata is to be found here: https://docs.cosmos.network/v0.47/modules/group#vote-2
    */
-  metadata?: string;
+  metadata: string;
   /**
    * submit_time is the timestamp when the vote was submitted.
    */
@@ -1120,19 +971,6 @@ export interface VoteAmino {
 export interface VoteAminoMsg {
   type: "cosmos-sdk/Vote";
   value: VoteAmino;
-}
-/**
- * Vote represents a vote for a proposal.string metadata
- * @name VoteSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.Vote
- */
-export interface VoteSDKType {
-  proposal_id: bigint;
-  voter: string;
-  option: VoteOption;
-  metadata: string;
-  submit_time: Date;
 }
 function createBaseMember(): Member {
   return {
@@ -1154,9 +992,6 @@ export const Member = {
   aminoType: "cosmos-sdk/Member",
   is(o: any): o is Member {
     return o && (o.$typeUrl === Member.typeUrl || typeof o.address === "string" && typeof o.weight === "string" && typeof o.metadata === "string" && Timestamp.is(o.addedAt));
-  },
-  isSDK(o: any): o is MemberSDKType {
-    return o && (o.$typeUrl === Member.typeUrl || typeof o.address === "string" && typeof o.weight === "string" && typeof o.metadata === "string" && Timestamp.isSDK(o.added_at));
   },
   isAmino(o: any): o is MemberAmino {
     return o && (o.$typeUrl === Member.typeUrl || typeof o.address === "string" && typeof o.weight === "string" && typeof o.metadata === "string" && Timestamp.isAmino(o.added_at));
@@ -1202,7 +1037,7 @@ export const Member = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Member>, I>>(object: I): Member {
+  fromPartial(object: DeepPartial<Member>): Member {
     const message = createBaseMember();
     message.address = object.address ?? "";
     message.weight = object.weight ?? "";
@@ -1278,9 +1113,6 @@ export const MemberRequest = {
   is(o: any): o is MemberRequest {
     return o && (o.$typeUrl === MemberRequest.typeUrl || typeof o.address === "string" && typeof o.weight === "string" && typeof o.metadata === "string");
   },
-  isSDK(o: any): o is MemberRequestSDKType {
-    return o && (o.$typeUrl === MemberRequest.typeUrl || typeof o.address === "string" && typeof o.weight === "string" && typeof o.metadata === "string");
-  },
   isAmino(o: any): o is MemberRequestAmino {
     return o && (o.$typeUrl === MemberRequest.typeUrl || typeof o.address === "string" && typeof o.weight === "string" && typeof o.metadata === "string");
   },
@@ -1319,7 +1151,7 @@ export const MemberRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MemberRequest>, I>>(object: I): MemberRequest {
+  fromPartial(object: DeepPartial<MemberRequest>): MemberRequest {
     const message = createBaseMemberRequest();
     message.address = object.address ?? "";
     message.weight = object.weight ?? "";
@@ -1371,7 +1203,6 @@ export const MemberRequest = {
 };
 function createBaseThresholdDecisionPolicy(): ThresholdDecisionPolicy {
   return {
-    $typeUrl: "/cosmos.group.v1.ThresholdDecisionPolicy",
     threshold: "",
     windows: undefined
   };
@@ -1391,9 +1222,6 @@ export const ThresholdDecisionPolicy = {
   typeUrl: "/cosmos.group.v1.ThresholdDecisionPolicy",
   aminoType: "cosmos-sdk/ThresholdDecisionPolicy",
   is(o: any): o is ThresholdDecisionPolicy {
-    return o && (o.$typeUrl === ThresholdDecisionPolicy.typeUrl || typeof o.threshold === "string");
-  },
-  isSDK(o: any): o is ThresholdDecisionPolicySDKType {
     return o && (o.$typeUrl === ThresholdDecisionPolicy.typeUrl || typeof o.threshold === "string");
   },
   isAmino(o: any): o is ThresholdDecisionPolicyAmino {
@@ -1428,7 +1256,7 @@ export const ThresholdDecisionPolicy = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ThresholdDecisionPolicy>, I>>(object: I): ThresholdDecisionPolicy {
+  fromPartial(object: DeepPartial<ThresholdDecisionPolicy>): ThresholdDecisionPolicy {
     const message = createBaseThresholdDecisionPolicy();
     message.threshold = object.threshold ?? "";
     message.windows = object.windows !== undefined && object.windows !== null ? DecisionPolicyWindows.fromPartial(object.windows) : undefined;
@@ -1482,7 +1310,6 @@ export const ThresholdDecisionPolicy = {
 };
 function createBasePercentageDecisionPolicy(): PercentageDecisionPolicy {
   return {
-    $typeUrl: "/cosmos.group.v1.PercentageDecisionPolicy",
     percentage: "",
     windows: undefined
   };
@@ -1502,9 +1329,6 @@ export const PercentageDecisionPolicy = {
   typeUrl: "/cosmos.group.v1.PercentageDecisionPolicy",
   aminoType: "cosmos-sdk/PercentageDecisionPolicy",
   is(o: any): o is PercentageDecisionPolicy {
-    return o && (o.$typeUrl === PercentageDecisionPolicy.typeUrl || typeof o.percentage === "string");
-  },
-  isSDK(o: any): o is PercentageDecisionPolicySDKType {
     return o && (o.$typeUrl === PercentageDecisionPolicy.typeUrl || typeof o.percentage === "string");
   },
   isAmino(o: any): o is PercentageDecisionPolicyAmino {
@@ -1539,7 +1363,7 @@ export const PercentageDecisionPolicy = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PercentageDecisionPolicy>, I>>(object: I): PercentageDecisionPolicy {
+  fromPartial(object: DeepPartial<PercentageDecisionPolicy>): PercentageDecisionPolicy {
     const message = createBasePercentageDecisionPolicy();
     message.percentage = object.percentage ?? "";
     message.windows = object.windows !== undefined && object.windows !== null ? DecisionPolicyWindows.fromPartial(object.windows) : undefined;
@@ -1609,9 +1433,6 @@ export const DecisionPolicyWindows = {
   is(o: any): o is DecisionPolicyWindows {
     return o && (o.$typeUrl === DecisionPolicyWindows.typeUrl || Duration.is(o.votingPeriod) && Duration.is(o.minExecutionPeriod));
   },
-  isSDK(o: any): o is DecisionPolicyWindowsSDKType {
-    return o && (o.$typeUrl === DecisionPolicyWindows.typeUrl || Duration.isSDK(o.voting_period) && Duration.isSDK(o.min_execution_period));
-  },
   isAmino(o: any): o is DecisionPolicyWindowsAmino {
     return o && (o.$typeUrl === DecisionPolicyWindows.typeUrl || Duration.isAmino(o.voting_period) && Duration.isAmino(o.min_execution_period));
   },
@@ -1644,7 +1465,7 @@ export const DecisionPolicyWindows = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DecisionPolicyWindows>, I>>(object: I): DecisionPolicyWindows {
+  fromPartial(object: DeepPartial<DecisionPolicyWindows>): DecisionPolicyWindows {
     const message = createBaseDecisionPolicyWindows();
     message.votingPeriod = object.votingPeriod !== undefined && object.votingPeriod !== null ? Duration.fromPartial(object.votingPeriod) : undefined;
     message.minExecutionPeriod = object.minExecutionPeriod !== undefined && object.minExecutionPeriod !== null ? Duration.fromPartial(object.minExecutionPeriod) : undefined;
@@ -1711,9 +1532,6 @@ export const GroupInfo = {
   is(o: any): o is GroupInfo {
     return o && (o.$typeUrl === GroupInfo.typeUrl || typeof o.id === "bigint" && typeof o.admin === "string" && typeof o.metadata === "string" && typeof o.version === "bigint" && typeof o.totalWeight === "string" && Timestamp.is(o.createdAt));
   },
-  isSDK(o: any): o is GroupInfoSDKType {
-    return o && (o.$typeUrl === GroupInfo.typeUrl || typeof o.id === "bigint" && typeof o.admin === "string" && typeof o.metadata === "string" && typeof o.version === "bigint" && typeof o.total_weight === "string" && Timestamp.isSDK(o.created_at));
-  },
   isAmino(o: any): o is GroupInfoAmino {
     return o && (o.$typeUrl === GroupInfo.typeUrl || typeof o.id === "bigint" && typeof o.admin === "string" && typeof o.metadata === "string" && typeof o.version === "bigint" && typeof o.total_weight === "string" && Timestamp.isAmino(o.created_at));
   },
@@ -1770,7 +1588,7 @@ export const GroupInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GroupInfo>, I>>(object: I): GroupInfo {
+  fromPartial(object: DeepPartial<GroupInfo>): GroupInfo {
     const message = createBaseGroupInfo();
     message.id = object.id !== undefined && object.id !== null ? BigInt(object.id.toString()) : BigInt(0);
     message.admin = object.admin ?? "";
@@ -1853,9 +1671,6 @@ export const GroupMember = {
   is(o: any): o is GroupMember {
     return o && (o.$typeUrl === GroupMember.typeUrl || typeof o.groupId === "bigint");
   },
-  isSDK(o: any): o is GroupMemberSDKType {
-    return o && (o.$typeUrl === GroupMember.typeUrl || typeof o.group_id === "bigint");
-  },
   isAmino(o: any): o is GroupMemberAmino {
     return o && (o.$typeUrl === GroupMember.typeUrl || typeof o.group_id === "bigint");
   },
@@ -1888,7 +1703,7 @@ export const GroupMember = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GroupMember>, I>>(object: I): GroupMember {
+  fromPartial(object: DeepPartial<GroupMember>): GroupMember {
     const message = createBaseGroupMember();
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
     message.member = object.member !== undefined && object.member !== null ? Member.fromPartial(object.member) : undefined;
@@ -1961,9 +1776,6 @@ export const GroupPolicyInfo = {
   is(o: any): o is GroupPolicyInfo {
     return o && (o.$typeUrl === GroupPolicyInfo.typeUrl || typeof o.address === "string" && typeof o.groupId === "bigint" && typeof o.admin === "string" && typeof o.metadata === "string" && typeof o.version === "bigint" && Timestamp.is(o.createdAt));
   },
-  isSDK(o: any): o is GroupPolicyInfoSDKType {
-    return o && (o.$typeUrl === GroupPolicyInfo.typeUrl || typeof o.address === "string" && typeof o.group_id === "bigint" && typeof o.admin === "string" && typeof o.metadata === "string" && typeof o.version === "bigint" && Timestamp.isSDK(o.created_at));
-  },
   isAmino(o: any): o is GroupPolicyInfoAmino {
     return o && (o.$typeUrl === GroupPolicyInfo.typeUrl || typeof o.address === "string" && typeof o.group_id === "bigint" && typeof o.admin === "string" && typeof o.metadata === "string" && typeof o.version === "bigint" && Timestamp.isAmino(o.created_at));
   },
@@ -2026,7 +1838,7 @@ export const GroupPolicyInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GroupPolicyInfo>, I>>(object: I): GroupPolicyInfo {
+  fromPartial(object: DeepPartial<GroupPolicyInfo>): GroupPolicyInfo {
     const message = createBaseGroupPolicyInfo();
     message.address = object.address ?? "";
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
@@ -2135,9 +1947,6 @@ export const Proposal = {
   is(o: any): o is Proposal {
     return o && (o.$typeUrl === Proposal.typeUrl || typeof o.id === "bigint" && typeof o.groupPolicyAddress === "string" && typeof o.metadata === "string" && Array.isArray(o.proposers) && (!o.proposers.length || typeof o.proposers[0] === "string") && Timestamp.is(o.submitTime) && typeof o.groupVersion === "bigint" && typeof o.groupPolicyVersion === "bigint" && isSet(o.status) && TallyResult.is(o.finalTallyResult) && Timestamp.is(o.votingPeriodEnd) && isSet(o.executorResult) && Array.isArray(o.messages) && (!o.messages.length || Any.is(o.messages[0])) && typeof o.title === "string" && typeof o.summary === "string");
   },
-  isSDK(o: any): o is ProposalSDKType {
-    return o && (o.$typeUrl === Proposal.typeUrl || typeof o.id === "bigint" && typeof o.group_policy_address === "string" && typeof o.metadata === "string" && Array.isArray(o.proposers) && (!o.proposers.length || typeof o.proposers[0] === "string") && Timestamp.isSDK(o.submit_time) && typeof o.group_version === "bigint" && typeof o.group_policy_version === "bigint" && isSet(o.status) && TallyResult.isSDK(o.final_tally_result) && Timestamp.isSDK(o.voting_period_end) && isSet(o.executor_result) && Array.isArray(o.messages) && (!o.messages.length || Any.isSDK(o.messages[0])) && typeof o.title === "string" && typeof o.summary === "string");
-  },
   isAmino(o: any): o is ProposalAmino {
     return o && (o.$typeUrl === Proposal.typeUrl || typeof o.id === "bigint" && typeof o.group_policy_address === "string" && typeof o.metadata === "string" && Array.isArray(o.proposers) && (!o.proposers.length || typeof o.proposers[0] === "string") && Timestamp.isAmino(o.submit_time) && typeof o.group_version === "bigint" && typeof o.group_policy_version === "bigint" && isSet(o.status) && TallyResult.isAmino(o.final_tally_result) && Timestamp.isAmino(o.voting_period_end) && isSet(o.executor_result) && Array.isArray(o.messages) && (!o.messages.length || Any.isAmino(o.messages[0])) && typeof o.title === "string" && typeof o.summary === "string");
   },
@@ -2242,7 +2051,7 @@ export const Proposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Proposal>, I>>(object: I): Proposal {
+  fromPartial(object: DeepPartial<Proposal>): Proposal {
     const message = createBaseProposal();
     message.id = object.id !== undefined && object.id !== null ? BigInt(object.id.toString()) : BigInt(0);
     message.groupPolicyAddress = object.groupPolicyAddress ?? "";
@@ -2371,9 +2180,6 @@ export const TallyResult = {
   is(o: any): o is TallyResult {
     return o && (o.$typeUrl === TallyResult.typeUrl || typeof o.yesCount === "string" && typeof o.abstainCount === "string" && typeof o.noCount === "string" && typeof o.noWithVetoCount === "string");
   },
-  isSDK(o: any): o is TallyResultSDKType {
-    return o && (o.$typeUrl === TallyResult.typeUrl || typeof o.yes_count === "string" && typeof o.abstain_count === "string" && typeof o.no_count === "string" && typeof o.no_with_veto_count === "string");
-  },
   isAmino(o: any): o is TallyResultAmino {
     return o && (o.$typeUrl === TallyResult.typeUrl || typeof o.yes_count === "string" && typeof o.abstain_count === "string" && typeof o.no_count === "string" && typeof o.no_with_veto_count === "string");
   },
@@ -2418,7 +2224,7 @@ export const TallyResult = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TallyResult>, I>>(object: I): TallyResult {
+  fromPartial(object: DeepPartial<TallyResult>): TallyResult {
     const message = createBaseTallyResult();
     message.yesCount = object.yesCount ?? "";
     message.abstainCount = object.abstainCount ?? "";
@@ -2494,9 +2300,6 @@ export const Vote = {
   is(o: any): o is Vote {
     return o && (o.$typeUrl === Vote.typeUrl || typeof o.proposalId === "bigint" && typeof o.voter === "string" && isSet(o.option) && typeof o.metadata === "string" && Timestamp.is(o.submitTime));
   },
-  isSDK(o: any): o is VoteSDKType {
-    return o && (o.$typeUrl === Vote.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string" && isSet(o.option) && typeof o.metadata === "string" && Timestamp.isSDK(o.submit_time));
-  },
   isAmino(o: any): o is VoteAmino {
     return o && (o.$typeUrl === Vote.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string" && isSet(o.option) && typeof o.metadata === "string" && Timestamp.isAmino(o.submit_time));
   },
@@ -2547,7 +2350,7 @@ export const Vote = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Vote>, I>>(object: I): Vote {
+  fromPartial(object: DeepPartial<Vote>): Vote {
     const message = createBaseVote();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.voter = object.voter ?? "";

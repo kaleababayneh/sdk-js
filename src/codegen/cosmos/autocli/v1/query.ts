@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { ModuleOptions, ModuleOptionsAmino, ModuleOptionsSDKType } from "./options";
+import { ModuleOptions, ModuleOptionsAmino } from "./options";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, isSet } from "../../../helpers";
+import { DeepPartial, isSet } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * AppOptionsRequest is the RemoteInfoService/AppOptions request type.
@@ -27,13 +27,6 @@ export interface AppOptionsRequestAminoMsg {
   value: AppOptionsRequestAmino;
 }
 /**
- * AppOptionsRequest is the RemoteInfoService/AppOptions request type.
- * @name AppOptionsRequestSDKType
- * @package cosmos.autocli.v1
- * @see proto type: cosmos.autocli.v1.AppOptionsRequest
- */
-export interface AppOptionsRequestSDKType {}
-/**
  * @name AppOptionsResponse_ModuleOptionsEntry
  * @package cosmos.autocli.v1
  * @see proto type: cosmos.autocli.v1.undefined
@@ -52,21 +45,12 @@ export interface AppOptionsResponse_ModuleOptionsEntryProtoMsg {
  * @see proto type: cosmos.autocli.v1.AppOptionsResponse_ModuleOptionsEntry
  */
 export interface AppOptionsResponse_ModuleOptionsEntryAmino {
-  key?: string;
+  key: string;
   value?: ModuleOptionsAmino;
 }
 export interface AppOptionsResponse_ModuleOptionsEntryAminoMsg {
   type: string;
   value: AppOptionsResponse_ModuleOptionsEntryAmino;
-}
-/**
- * @name AppOptionsResponse_ModuleOptionsEntrySDKType
- * @package cosmos.autocli.v1
- * @see proto type: cosmos.autocli.v1.undefined
- */
-export interface AppOptionsResponse_ModuleOptionsEntrySDKType {
-  key: string;
-  value?: ModuleOptionsSDKType;
 }
 /**
  * AppOptionsResponse is the RemoteInfoService/AppOptions response type.
@@ -96,24 +80,13 @@ export interface AppOptionsResponseAmino {
   /**
    * module_options is a map of module name to autocli module options.
    */
-  module_options?: {
+  module_options: {
     [key: string]: ModuleOptionsAmino;
   };
 }
 export interface AppOptionsResponseAminoMsg {
   type: "cosmos-sdk/AppOptionsResponse";
   value: AppOptionsResponseAmino;
-}
-/**
- * AppOptionsResponse is the RemoteInfoService/AppOptions response type.
- * @name AppOptionsResponseSDKType
- * @package cosmos.autocli.v1
- * @see proto type: cosmos.autocli.v1.AppOptionsResponse
- */
-export interface AppOptionsResponseSDKType {
-  module_options: {
-    [key: string]: ModuleOptionsSDKType;
-  };
 }
 function createBaseAppOptionsRequest(): AppOptionsRequest {
   return {};
@@ -128,9 +101,6 @@ export const AppOptionsRequest = {
   typeUrl: "/cosmos.autocli.v1.AppOptionsRequest",
   aminoType: "cosmos-sdk/AppOptionsRequest",
   is(o: any): o is AppOptionsRequest {
-    return o && o.$typeUrl === AppOptionsRequest.typeUrl;
-  },
-  isSDK(o: any): o is AppOptionsRequestSDKType {
     return o && o.$typeUrl === AppOptionsRequest.typeUrl;
   },
   isAmino(o: any): o is AppOptionsRequestAmino {
@@ -153,7 +123,7 @@ export const AppOptionsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AppOptionsRequest>, I>>(_: I): AppOptionsRequest {
+  fromPartial(_: DeepPartial<AppOptionsRequest>): AppOptionsRequest {
     const message = createBaseAppOptionsRequest();
     return message;
   },
@@ -229,7 +199,7 @@ export const AppOptionsResponse_ModuleOptionsEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AppOptionsResponse_ModuleOptionsEntry>, I>>(object: I): AppOptionsResponse_ModuleOptionsEntry {
+  fromPartial(object: DeepPartial<AppOptionsResponse_ModuleOptionsEntry>): AppOptionsResponse_ModuleOptionsEntry {
     const message = createBaseAppOptionsResponse_ModuleOptionsEntry();
     message.key = object.key ?? "";
     message.value = object.value !== undefined && object.value !== null ? ModuleOptions.fromPartial(object.value) : undefined;
@@ -281,9 +251,6 @@ export const AppOptionsResponse = {
   is(o: any): o is AppOptionsResponse {
     return o && (o.$typeUrl === AppOptionsResponse.typeUrl || isSet(o.moduleOptions));
   },
-  isSDK(o: any): o is AppOptionsResponseSDKType {
-    return o && (o.$typeUrl === AppOptionsResponse.typeUrl || isSet(o.module_options));
-  },
   isAmino(o: any): o is AppOptionsResponseAmino {
     return o && (o.$typeUrl === AppOptionsResponse.typeUrl || isSet(o.module_options));
   },
@@ -316,7 +283,7 @@ export const AppOptionsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AppOptionsResponse>, I>>(object: I): AppOptionsResponse {
+  fromPartial(object: DeepPartial<AppOptionsResponse>): AppOptionsResponse {
     const message = createBaseAppOptionsResponse();
     message.moduleOptions = Object.entries(object.moduleOptions ?? {}).reduce<{
       [key: string]: ModuleOptions;

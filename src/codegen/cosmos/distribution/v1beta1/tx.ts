@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
-import { Params, ParamsAmino, ParamsSDKType } from "./distribution";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
+import { Params, ParamsAmino } from "./distribution";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * MsgSetWithdrawAddress sets the withdraw address for
@@ -28,23 +28,12 @@ export interface MsgSetWithdrawAddressProtoMsg {
  * @see proto type: cosmos.distribution.v1beta1.MsgSetWithdrawAddress
  */
 export interface MsgSetWithdrawAddressAmino {
-  delegator_address?: string;
-  withdraw_address?: string;
+  delegator_address: string;
+  withdraw_address: string;
 }
 export interface MsgSetWithdrawAddressAminoMsg {
   type: "cosmos-sdk/MsgModifyWithdrawAddress";
   value: MsgSetWithdrawAddressAmino;
-}
-/**
- * MsgSetWithdrawAddress sets the withdraw address for
- * a delegator (or validator self-delegation).
- * @name MsgSetWithdrawAddressSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgSetWithdrawAddress
- */
-export interface MsgSetWithdrawAddressSDKType {
-  delegator_address: string;
-  withdraw_address: string;
 }
 /**
  * MsgSetWithdrawAddressResponse defines the Msg/SetWithdrawAddress response
@@ -71,14 +60,6 @@ export interface MsgSetWithdrawAddressResponseAminoMsg {
   value: MsgSetWithdrawAddressResponseAmino;
 }
 /**
- * MsgSetWithdrawAddressResponse defines the Msg/SetWithdrawAddress response
- * type.
- * @name MsgSetWithdrawAddressResponseSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgSetWithdrawAddressResponse
- */
-export interface MsgSetWithdrawAddressResponseSDKType {}
-/**
  * MsgWithdrawDelegatorReward represents delegation withdrawal to a delegator
  * from a single validator.
  * @name MsgWithdrawDelegatorReward
@@ -101,23 +82,12 @@ export interface MsgWithdrawDelegatorRewardProtoMsg {
  * @see proto type: cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward
  */
 export interface MsgWithdrawDelegatorRewardAmino {
-  delegator_address?: string;
-  validator_address?: string;
+  delegator_address: string;
+  validator_address: string;
 }
 export interface MsgWithdrawDelegatorRewardAminoMsg {
   type: "cosmos-sdk/MsgWithdrawDelegationReward";
   value: MsgWithdrawDelegatorRewardAmino;
-}
-/**
- * MsgWithdrawDelegatorReward represents delegation withdrawal to a delegator
- * from a single validator.
- * @name MsgWithdrawDelegatorRewardSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward
- */
-export interface MsgWithdrawDelegatorRewardSDKType {
-  delegator_address: string;
-  validator_address: string;
 }
 /**
  * MsgWithdrawDelegatorRewardResponse defines the Msg/WithdrawDelegatorReward
@@ -154,16 +124,6 @@ export interface MsgWithdrawDelegatorRewardResponseAminoMsg {
   value: MsgWithdrawDelegatorRewardResponseAmino;
 }
 /**
- * MsgWithdrawDelegatorRewardResponse defines the Msg/WithdrawDelegatorReward
- * response type.
- * @name MsgWithdrawDelegatorRewardResponseSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgWithdrawDelegatorRewardResponse
- */
-export interface MsgWithdrawDelegatorRewardResponseSDKType {
-  amount: CoinSDKType[];
-}
-/**
  * MsgWithdrawValidatorCommission withdraws the full commission to the validator
  * address.
  * @name MsgWithdrawValidatorCommission
@@ -185,21 +145,11 @@ export interface MsgWithdrawValidatorCommissionProtoMsg {
  * @see proto type: cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission
  */
 export interface MsgWithdrawValidatorCommissionAmino {
-  validator_address?: string;
+  validator_address: string;
 }
 export interface MsgWithdrawValidatorCommissionAminoMsg {
   type: "cosmos-sdk/MsgWithdrawValidatorCommission";
   value: MsgWithdrawValidatorCommissionAmino;
-}
-/**
- * MsgWithdrawValidatorCommission withdraws the full commission to the validator
- * address.
- * @name MsgWithdrawValidatorCommissionSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission
- */
-export interface MsgWithdrawValidatorCommissionSDKType {
-  validator_address: string;
 }
 /**
  * MsgWithdrawValidatorCommissionResponse defines the
@@ -236,16 +186,6 @@ export interface MsgWithdrawValidatorCommissionResponseAminoMsg {
   value: MsgWithdrawValidatorCommissionResponseAmino;
 }
 /**
- * MsgWithdrawValidatorCommissionResponse defines the
- * Msg/WithdrawValidatorCommission response type.
- * @name MsgWithdrawValidatorCommissionResponseSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgWithdrawValidatorCommissionResponse
- */
-export interface MsgWithdrawValidatorCommissionResponseSDKType {
-  amount: CoinSDKType[];
-}
-/**
  * MsgFundCommunityPool allows an account to directly
  * fund the community pool.
  * @name MsgFundCommunityPool
@@ -269,22 +209,11 @@ export interface MsgFundCommunityPoolProtoMsg {
  */
 export interface MsgFundCommunityPoolAmino {
   amount: CoinAmino[];
-  depositor?: string;
+  depositor: string;
 }
 export interface MsgFundCommunityPoolAminoMsg {
   type: "cosmos-sdk/MsgFundCommunityPool";
   value: MsgFundCommunityPoolAmino;
-}
-/**
- * MsgFundCommunityPool allows an account to directly
- * fund the community pool.
- * @name MsgFundCommunityPoolSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgFundCommunityPool
- */
-export interface MsgFundCommunityPoolSDKType {
-  amount: CoinSDKType[];
-  depositor: string;
 }
 /**
  * MsgFundCommunityPoolResponse defines the Msg/FundCommunityPool response type.
@@ -308,13 +237,6 @@ export interface MsgFundCommunityPoolResponseAminoMsg {
   type: "cosmos-sdk/MsgFundCommunityPoolResponse";
   value: MsgFundCommunityPoolResponseAmino;
 }
-/**
- * MsgFundCommunityPoolResponse defines the Msg/FundCommunityPool response type.
- * @name MsgFundCommunityPoolResponseSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgFundCommunityPoolResponse
- */
-export interface MsgFundCommunityPoolResponseSDKType {}
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * 
@@ -351,7 +273,7 @@ export interface MsgUpdateParamsAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/distribution parameters to update.
    * 
@@ -362,18 +284,6 @@ export interface MsgUpdateParamsAmino {
 export interface MsgUpdateParamsAminoMsg {
   type: "cosmos-sdk/distribution/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
-}
-/**
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgUpdateParams
- */
-export interface MsgUpdateParamsSDKType {
-  authority: string;
-  params: ParamsSDKType;
 }
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
@@ -403,16 +313,6 @@ export interface MsgUpdateParamsResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateParamsResponse";
   value: MsgUpdateParamsResponseAmino;
 }
-/**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsResponseSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgUpdateParamsResponse
- */
-export interface MsgUpdateParamsResponseSDKType {}
 /**
  * MsgCommunityPoolSpend defines a message for sending tokens from the community
  * pool to another account. This message is typically executed via a governance
@@ -449,28 +349,13 @@ export interface MsgCommunityPoolSpendAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
-  recipient?: string;
+  authority: string;
+  recipient: string;
   amount: CoinAmino[];
 }
 export interface MsgCommunityPoolSpendAminoMsg {
   type: "cosmos-sdk/distr/MsgCommunityPoolSpend";
   value: MsgCommunityPoolSpendAmino;
-}
-/**
- * MsgCommunityPoolSpend defines a message for sending tokens from the community
- * pool to another account. This message is typically executed via a governance
- * proposal with the governance module being the executing authority.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgCommunityPoolSpendSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgCommunityPoolSpend
- */
-export interface MsgCommunityPoolSpendSDKType {
-  authority: string;
-  recipient: string;
-  amount: CoinSDKType[];
 }
 /**
  * MsgCommunityPoolSpendResponse defines the response to executing a
@@ -501,16 +386,6 @@ export interface MsgCommunityPoolSpendResponseAminoMsg {
   value: MsgCommunityPoolSpendResponseAmino;
 }
 /**
- * MsgCommunityPoolSpendResponse defines the response to executing a
- * MsgCommunityPoolSpend message.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgCommunityPoolSpendResponseSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgCommunityPoolSpendResponse
- */
-export interface MsgCommunityPoolSpendResponseSDKType {}
-/**
  * DepositValidatorRewardsPool defines the request structure to provide
  * additional rewards to delegators from a specific validator.
  * 
@@ -538,27 +413,13 @@ export interface MsgDepositValidatorRewardsPoolProtoMsg {
  * @see proto type: cosmos.distribution.v1beta1.MsgDepositValidatorRewardsPool
  */
 export interface MsgDepositValidatorRewardsPoolAmino {
-  depositor?: string;
-  validator_address?: string;
+  depositor: string;
+  validator_address: string;
   amount: CoinAmino[];
 }
 export interface MsgDepositValidatorRewardsPoolAminoMsg {
   type: "cosmos-sdk/distr/MsgDepositValRewards";
   value: MsgDepositValidatorRewardsPoolAmino;
-}
-/**
- * DepositValidatorRewardsPool defines the request structure to provide
- * additional rewards to delegators from a specific validator.
- * 
- * Since: cosmos-sdk 0.50
- * @name MsgDepositValidatorRewardsPoolSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgDepositValidatorRewardsPool
- */
-export interface MsgDepositValidatorRewardsPoolSDKType {
-  depositor: string;
-  validator_address: string;
-  amount: CoinSDKType[];
 }
 /**
  * MsgDepositValidatorRewardsPoolResponse defines the response to executing a
@@ -588,16 +449,6 @@ export interface MsgDepositValidatorRewardsPoolResponseAminoMsg {
   type: "cosmos-sdk/MsgDepositValidatorRewardsPoolResponse";
   value: MsgDepositValidatorRewardsPoolResponseAmino;
 }
-/**
- * MsgDepositValidatorRewardsPoolResponse defines the response to executing a
- * MsgDepositValidatorRewardsPool message.
- * 
- * Since: cosmos-sdk 0.50
- * @name MsgDepositValidatorRewardsPoolResponseSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.MsgDepositValidatorRewardsPoolResponse
- */
-export interface MsgDepositValidatorRewardsPoolResponseSDKType {}
 function createBaseMsgSetWithdrawAddress(): MsgSetWithdrawAddress {
   return {
     delegatorAddress: "",
@@ -616,9 +467,6 @@ export const MsgSetWithdrawAddress = {
   aminoType: "cosmos-sdk/MsgModifyWithdrawAddress",
   is(o: any): o is MsgSetWithdrawAddress {
     return o && (o.$typeUrl === MsgSetWithdrawAddress.typeUrl || typeof o.delegatorAddress === "string" && typeof o.withdrawAddress === "string");
-  },
-  isSDK(o: any): o is MsgSetWithdrawAddressSDKType {
-    return o && (o.$typeUrl === MsgSetWithdrawAddress.typeUrl || typeof o.delegator_address === "string" && typeof o.withdraw_address === "string");
   },
   isAmino(o: any): o is MsgSetWithdrawAddressAmino {
     return o && (o.$typeUrl === MsgSetWithdrawAddress.typeUrl || typeof o.delegator_address === "string" && typeof o.withdraw_address === "string");
@@ -652,7 +500,7 @@ export const MsgSetWithdrawAddress = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSetWithdrawAddress>, I>>(object: I): MsgSetWithdrawAddress {
+  fromPartial(object: DeepPartial<MsgSetWithdrawAddress>): MsgSetWithdrawAddress {
     const message = createBaseMsgSetWithdrawAddress();
     message.delegatorAddress = object.delegatorAddress ?? "";
     message.withdrawAddress = object.withdrawAddress ?? "";
@@ -713,9 +561,6 @@ export const MsgSetWithdrawAddressResponse = {
   is(o: any): o is MsgSetWithdrawAddressResponse {
     return o && o.$typeUrl === MsgSetWithdrawAddressResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgSetWithdrawAddressResponseSDKType {
-    return o && o.$typeUrl === MsgSetWithdrawAddressResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgSetWithdrawAddressResponseAmino {
     return o && o.$typeUrl === MsgSetWithdrawAddressResponse.typeUrl;
   },
@@ -736,7 +581,7 @@ export const MsgSetWithdrawAddressResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSetWithdrawAddressResponse>, I>>(_: I): MsgSetWithdrawAddressResponse {
+  fromPartial(_: DeepPartial<MsgSetWithdrawAddressResponse>): MsgSetWithdrawAddressResponse {
     const message = createBaseMsgSetWithdrawAddressResponse();
     return message;
   },
@@ -790,9 +635,6 @@ export const MsgWithdrawDelegatorReward = {
   is(o: any): o is MsgWithdrawDelegatorReward {
     return o && (o.$typeUrl === MsgWithdrawDelegatorReward.typeUrl || typeof o.delegatorAddress === "string" && typeof o.validatorAddress === "string");
   },
-  isSDK(o: any): o is MsgWithdrawDelegatorRewardSDKType {
-    return o && (o.$typeUrl === MsgWithdrawDelegatorReward.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_address === "string");
-  },
   isAmino(o: any): o is MsgWithdrawDelegatorRewardAmino {
     return o && (o.$typeUrl === MsgWithdrawDelegatorReward.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_address === "string");
   },
@@ -825,7 +667,7 @@ export const MsgWithdrawDelegatorReward = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgWithdrawDelegatorReward>, I>>(object: I): MsgWithdrawDelegatorReward {
+  fromPartial(object: DeepPartial<MsgWithdrawDelegatorReward>): MsgWithdrawDelegatorReward {
     const message = createBaseMsgWithdrawDelegatorReward();
     message.delegatorAddress = object.delegatorAddress ?? "";
     message.validatorAddress = object.validatorAddress ?? "";
@@ -888,9 +730,6 @@ export const MsgWithdrawDelegatorRewardResponse = {
   is(o: any): o is MsgWithdrawDelegatorRewardResponse {
     return o && (o.$typeUrl === MsgWithdrawDelegatorRewardResponse.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])));
   },
-  isSDK(o: any): o is MsgWithdrawDelegatorRewardResponseSDKType {
-    return o && (o.$typeUrl === MsgWithdrawDelegatorRewardResponse.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])));
-  },
   isAmino(o: any): o is MsgWithdrawDelegatorRewardResponseAmino {
     return o && (o.$typeUrl === MsgWithdrawDelegatorRewardResponse.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])));
   },
@@ -917,7 +756,7 @@ export const MsgWithdrawDelegatorRewardResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgWithdrawDelegatorRewardResponse>, I>>(object: I): MsgWithdrawDelegatorRewardResponse {
+  fromPartial(object: DeepPartial<MsgWithdrawDelegatorRewardResponse>): MsgWithdrawDelegatorRewardResponse {
     const message = createBaseMsgWithdrawDelegatorRewardResponse();
     message.amount = object.amount?.map(e => Coin.fromPartial(e)) || [];
     return message;
@@ -982,9 +821,6 @@ export const MsgWithdrawValidatorCommission = {
   is(o: any): o is MsgWithdrawValidatorCommission {
     return o && (o.$typeUrl === MsgWithdrawValidatorCommission.typeUrl || typeof o.validatorAddress === "string");
   },
-  isSDK(o: any): o is MsgWithdrawValidatorCommissionSDKType {
-    return o && (o.$typeUrl === MsgWithdrawValidatorCommission.typeUrl || typeof o.validator_address === "string");
-  },
   isAmino(o: any): o is MsgWithdrawValidatorCommissionAmino {
     return o && (o.$typeUrl === MsgWithdrawValidatorCommission.typeUrl || typeof o.validator_address === "string");
   },
@@ -1011,7 +847,7 @@ export const MsgWithdrawValidatorCommission = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgWithdrawValidatorCommission>, I>>(object: I): MsgWithdrawValidatorCommission {
+  fromPartial(object: DeepPartial<MsgWithdrawValidatorCommission>): MsgWithdrawValidatorCommission {
     const message = createBaseMsgWithdrawValidatorCommission();
     message.validatorAddress = object.validatorAddress ?? "";
     return message;
@@ -1069,9 +905,6 @@ export const MsgWithdrawValidatorCommissionResponse = {
   is(o: any): o is MsgWithdrawValidatorCommissionResponse {
     return o && (o.$typeUrl === MsgWithdrawValidatorCommissionResponse.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])));
   },
-  isSDK(o: any): o is MsgWithdrawValidatorCommissionResponseSDKType {
-    return o && (o.$typeUrl === MsgWithdrawValidatorCommissionResponse.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])));
-  },
   isAmino(o: any): o is MsgWithdrawValidatorCommissionResponseAmino {
     return o && (o.$typeUrl === MsgWithdrawValidatorCommissionResponse.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])));
   },
@@ -1098,7 +931,7 @@ export const MsgWithdrawValidatorCommissionResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgWithdrawValidatorCommissionResponse>, I>>(object: I): MsgWithdrawValidatorCommissionResponse {
+  fromPartial(object: DeepPartial<MsgWithdrawValidatorCommissionResponse>): MsgWithdrawValidatorCommissionResponse {
     const message = createBaseMsgWithdrawValidatorCommissionResponse();
     message.amount = object.amount?.map(e => Coin.fromPartial(e)) || [];
     return message;
@@ -1164,9 +997,6 @@ export const MsgFundCommunityPool = {
   is(o: any): o is MsgFundCommunityPool {
     return o && (o.$typeUrl === MsgFundCommunityPool.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])) && typeof o.depositor === "string");
   },
-  isSDK(o: any): o is MsgFundCommunityPoolSDKType {
-    return o && (o.$typeUrl === MsgFundCommunityPool.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])) && typeof o.depositor === "string");
-  },
   isAmino(o: any): o is MsgFundCommunityPoolAmino {
     return o && (o.$typeUrl === MsgFundCommunityPool.typeUrl || Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])) && typeof o.depositor === "string");
   },
@@ -1199,7 +1029,7 @@ export const MsgFundCommunityPool = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgFundCommunityPool>, I>>(object: I): MsgFundCommunityPool {
+  fromPartial(object: DeepPartial<MsgFundCommunityPool>): MsgFundCommunityPool {
     const message = createBaseMsgFundCommunityPool();
     message.amount = object.amount?.map(e => Coin.fromPartial(e)) || [];
     message.depositor = object.depositor ?? "";
@@ -1266,9 +1096,6 @@ export const MsgFundCommunityPoolResponse = {
   is(o: any): o is MsgFundCommunityPoolResponse {
     return o && o.$typeUrl === MsgFundCommunityPoolResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgFundCommunityPoolResponseSDKType {
-    return o && o.$typeUrl === MsgFundCommunityPoolResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgFundCommunityPoolResponseAmino {
     return o && o.$typeUrl === MsgFundCommunityPoolResponse.typeUrl;
   },
@@ -1289,7 +1116,7 @@ export const MsgFundCommunityPoolResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgFundCommunityPoolResponse>, I>>(_: I): MsgFundCommunityPoolResponse {
+  fromPartial(_: DeepPartial<MsgFundCommunityPoolResponse>): MsgFundCommunityPoolResponse {
     const message = createBaseMsgFundCommunityPoolResponse();
     return message;
   },
@@ -1344,9 +1171,6 @@ export const MsgUpdateParams = {
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.is(o.params));
   },
-  isSDK(o: any): o is MsgUpdateParamsSDKType {
-    return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isSDK(o.params));
-  },
   isAmino(o: any): o is MsgUpdateParamsAmino {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isAmino(o.params));
   },
@@ -1379,7 +1203,7 @@ export const MsgUpdateParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParams>, I>>(object: I): MsgUpdateParams {
+  fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
@@ -1447,9 +1271,6 @@ export const MsgUpdateParamsResponse = {
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateParamsResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateParamsResponseAmino {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -1470,7 +1291,7 @@ export const MsgUpdateParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParamsResponse>, I>>(_: I): MsgUpdateParamsResponse {
+  fromPartial(_: DeepPartial<MsgUpdateParamsResponse>): MsgUpdateParamsResponse {
     const message = createBaseMsgUpdateParamsResponse();
     return message;
   },
@@ -1528,9 +1349,6 @@ export const MsgCommunityPoolSpend = {
   is(o: any): o is MsgCommunityPoolSpend {
     return o && (o.$typeUrl === MsgCommunityPoolSpend.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])));
   },
-  isSDK(o: any): o is MsgCommunityPoolSpendSDKType {
-    return o && (o.$typeUrl === MsgCommunityPoolSpend.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])));
-  },
   isAmino(o: any): o is MsgCommunityPoolSpendAmino {
     return o && (o.$typeUrl === MsgCommunityPoolSpend.typeUrl || typeof o.authority === "string" && typeof o.recipient === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])));
   },
@@ -1569,7 +1387,7 @@ export const MsgCommunityPoolSpend = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCommunityPoolSpend>, I>>(object: I): MsgCommunityPoolSpend {
+  fromPartial(object: DeepPartial<MsgCommunityPoolSpend>): MsgCommunityPoolSpend {
     const message = createBaseMsgCommunityPoolSpend();
     message.authority = object.authority ?? "";
     message.recipient = object.recipient ?? "";
@@ -1644,9 +1462,6 @@ export const MsgCommunityPoolSpendResponse = {
   is(o: any): o is MsgCommunityPoolSpendResponse {
     return o && o.$typeUrl === MsgCommunityPoolSpendResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgCommunityPoolSpendResponseSDKType {
-    return o && o.$typeUrl === MsgCommunityPoolSpendResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgCommunityPoolSpendResponseAmino {
     return o && o.$typeUrl === MsgCommunityPoolSpendResponse.typeUrl;
   },
@@ -1667,7 +1482,7 @@ export const MsgCommunityPoolSpendResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCommunityPoolSpendResponse>, I>>(_: I): MsgCommunityPoolSpendResponse {
+  fromPartial(_: DeepPartial<MsgCommunityPoolSpendResponse>): MsgCommunityPoolSpendResponse {
     const message = createBaseMsgCommunityPoolSpendResponse();
     return message;
   },
@@ -1724,9 +1539,6 @@ export const MsgDepositValidatorRewardsPool = {
   is(o: any): o is MsgDepositValidatorRewardsPool {
     return o && (o.$typeUrl === MsgDepositValidatorRewardsPool.typeUrl || typeof o.depositor === "string" && typeof o.validatorAddress === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])));
   },
-  isSDK(o: any): o is MsgDepositValidatorRewardsPoolSDKType {
-    return o && (o.$typeUrl === MsgDepositValidatorRewardsPool.typeUrl || typeof o.depositor === "string" && typeof o.validator_address === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])));
-  },
   isAmino(o: any): o is MsgDepositValidatorRewardsPoolAmino {
     return o && (o.$typeUrl === MsgDepositValidatorRewardsPool.typeUrl || typeof o.depositor === "string" && typeof o.validator_address === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])));
   },
@@ -1765,7 +1577,7 @@ export const MsgDepositValidatorRewardsPool = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgDepositValidatorRewardsPool>, I>>(object: I): MsgDepositValidatorRewardsPool {
+  fromPartial(object: DeepPartial<MsgDepositValidatorRewardsPool>): MsgDepositValidatorRewardsPool {
     const message = createBaseMsgDepositValidatorRewardsPool();
     message.depositor = object.depositor ?? "";
     message.validatorAddress = object.validatorAddress ?? "";
@@ -1840,9 +1652,6 @@ export const MsgDepositValidatorRewardsPoolResponse = {
   is(o: any): o is MsgDepositValidatorRewardsPoolResponse {
     return o && o.$typeUrl === MsgDepositValidatorRewardsPoolResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgDepositValidatorRewardsPoolResponseSDKType {
-    return o && o.$typeUrl === MsgDepositValidatorRewardsPoolResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgDepositValidatorRewardsPoolResponseAmino {
     return o && o.$typeUrl === MsgDepositValidatorRewardsPoolResponse.typeUrl;
   },
@@ -1863,7 +1672,7 @@ export const MsgDepositValidatorRewardsPoolResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgDepositValidatorRewardsPoolResponse>, I>>(_: I): MsgDepositValidatorRewardsPoolResponse {
+  fromPartial(_: DeepPartial<MsgDepositValidatorRewardsPoolResponse>): MsgDepositValidatorRewardsPoolResponse {
     const message = createBaseMsgDepositValidatorRewardsPoolResponse();
     return message;
   },

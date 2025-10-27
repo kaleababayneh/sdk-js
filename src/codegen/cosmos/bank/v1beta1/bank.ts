@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * Params defines the parameters for the bank module.
@@ -41,25 +41,12 @@ export interface ParamsAmino {
    * As of cosmos-sdk 0.47, this only exists for backwards compatibility of genesis files.
    * @deprecated
    */
-  send_enabled?: SendEnabledAmino[];
-  default_send_enabled?: boolean;
+  send_enabled: SendEnabledAmino[];
+  default_send_enabled: boolean;
 }
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/x/bank/Params";
   value: ParamsAmino;
-}
-/**
- * Params defines the parameters for the bank module.
- * @name ParamsSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.Params
- */
-export interface ParamsSDKType {
-  /**
-   * @deprecated
-   */
-  send_enabled: SendEnabledSDKType[];
-  default_send_enabled: boolean;
 }
 /**
  * SendEnabled maps coin denom to a send_enabled status (whether a denom is
@@ -84,23 +71,12 @@ export interface SendEnabledProtoMsg {
  * @see proto type: cosmos.bank.v1beta1.SendEnabled
  */
 export interface SendEnabledAmino {
-  denom?: string;
-  enabled?: boolean;
+  denom: string;
+  enabled: boolean;
 }
 export interface SendEnabledAminoMsg {
   type: "cosmos-sdk/SendEnabled";
   value: SendEnabledAmino;
-}
-/**
- * SendEnabled maps coin denom to a send_enabled status (whether a denom is
- * sendable).
- * @name SendEnabledSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.SendEnabled
- */
-export interface SendEnabledSDKType {
-  denom: string;
-  enabled: boolean;
 }
 /**
  * Input models transaction input.
@@ -123,22 +99,12 @@ export interface InputProtoMsg {
  * @see proto type: cosmos.bank.v1beta1.Input
  */
 export interface InputAmino {
-  address?: string;
+  address: string;
   coins: CoinAmino[];
 }
 export interface InputAminoMsg {
   type: "cosmos-sdk/Input";
   value: InputAmino;
-}
-/**
- * Input models transaction input.
- * @name InputSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.Input
- */
-export interface InputSDKType {
-  address: string;
-  coins: CoinSDKType[];
 }
 /**
  * Output models transaction outputs.
@@ -161,22 +127,12 @@ export interface OutputProtoMsg {
  * @see proto type: cosmos.bank.v1beta1.Output
  */
 export interface OutputAmino {
-  address?: string;
+  address: string;
   coins: CoinAmino[];
 }
 export interface OutputAminoMsg {
   type: "cosmos-sdk/Output";
   value: OutputAmino;
-}
-/**
- * Output models transaction outputs.
- * @name OutputSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.Output
- */
-export interface OutputSDKType {
-  address: string;
-  coins: CoinSDKType[];
 }
 /**
  * Supply represents a struct that passively keeps track of the total supply
@@ -188,7 +144,6 @@ export interface OutputSDKType {
  * @deprecated
  */
 export interface Supply {
-  $typeUrl?: "/cosmos.bank.v1beta1.Supply";
   total: Coin[];
 }
 export interface SupplyProtoMsg {
@@ -210,19 +165,6 @@ export interface SupplyAmino {
 export interface SupplyAminoMsg {
   type: "cosmos-sdk/Supply";
   value: SupplyAmino;
-}
-/**
- * Supply represents a struct that passively keeps track of the total supply
- * amounts in the network.
- * This message is deprecated now that supply is indexed by denom.
- * @name SupplySDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.Supply
- * @deprecated
- */
-export interface SupplySDKType {
-  $typeUrl?: "/cosmos.bank.v1beta1.Supply";
-  total: CoinSDKType[];
 }
 /**
  * DenomUnit represents a struct that describes a given
@@ -264,7 +206,7 @@ export interface DenomUnitAmino {
   /**
    * denom represents the string name of the given denom unit (e.g uatom).
    */
-  denom?: string;
+  denom: string;
   /**
    * exponent represents power of 10 exponent that one must
    * raise the base_denom to in order to equal the given DenomUnit's denom
@@ -272,27 +214,15 @@ export interface DenomUnitAmino {
    * (e.g. with a base_denom of uatom, one can create a DenomUnit of 'atom' with
    * exponent = 6, thus: 1 atom = 10^6 uatom).
    */
-  exponent?: number;
+  exponent: number;
   /**
    * aliases is a list of string aliases for the given denom
    */
-  aliases?: string[];
+  aliases: string[];
 }
 export interface DenomUnitAminoMsg {
   type: "cosmos-sdk/DenomUnit";
   value: DenomUnitAmino;
-}
-/**
- * DenomUnit represents a struct that describes a given
- * denomination unit of the basic token.
- * @name DenomUnitSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.DenomUnit
- */
-export interface DenomUnitSDKType {
-  denom: string;
-  exponent: number;
-  aliases: string[];
 }
 /**
  * Metadata represents a struct that describes
@@ -355,67 +285,50 @@ export interface MetadataProtoMsg {
  * @see proto type: cosmos.bank.v1beta1.Metadata
  */
 export interface MetadataAmino {
-  description?: string;
+  description: string;
   /**
    * denom_units represents the list of DenomUnit's for a given coin
    */
-  denom_units?: DenomUnitAmino[];
+  denom_units: DenomUnitAmino[];
   /**
    * base represents the base denom (should be the DenomUnit with exponent = 0).
    */
-  base?: string;
+  base: string;
   /**
    * display indicates the suggested denom that should be
    * displayed in clients.
    */
-  display?: string;
+  display: string;
   /**
    * name defines the name of the token (eg: Cosmos Atom)
    * 
    * Since: cosmos-sdk 0.43
    */
-  name?: string;
+  name: string;
   /**
    * symbol is the token symbol usually shown on exchanges (eg: ATOM). This can
    * be the same as the display.
    * 
    * Since: cosmos-sdk 0.43
    */
-  symbol?: string;
+  symbol: string;
   /**
    * URI to a document (on or off-chain) that contains additional information. Optional.
    * 
    * Since: cosmos-sdk 0.46
    */
-  uri?: string;
+  uri: string;
   /**
    * URIHash is a sha256 hash of a document pointed by URI. It's used to verify that
    * the document didn't change. Optional.
    * 
    * Since: cosmos-sdk 0.46
    */
-  uri_hash?: string;
+  uri_hash: string;
 }
 export interface MetadataAminoMsg {
   type: "cosmos-sdk/Metadata";
   value: MetadataAmino;
-}
-/**
- * Metadata represents a struct that describes
- * a basic token.
- * @name MetadataSDKType
- * @package cosmos.bank.v1beta1
- * @see proto type: cosmos.bank.v1beta1.Metadata
- */
-export interface MetadataSDKType {
-  description: string;
-  denom_units: DenomUnitSDKType[];
-  base: string;
-  display: string;
-  name: string;
-  symbol: string;
-  uri: string;
-  uri_hash: string;
 }
 function createBaseParams(): Params {
   return {
@@ -434,9 +347,6 @@ export const Params = {
   aminoType: "cosmos-sdk/x/bank/Params",
   is(o: any): o is Params {
     return o && (o.$typeUrl === Params.typeUrl || Array.isArray(o.sendEnabled) && (!o.sendEnabled.length || SendEnabled.is(o.sendEnabled[0])) && typeof o.defaultSendEnabled === "boolean");
-  },
-  isSDK(o: any): o is ParamsSDKType {
-    return o && (o.$typeUrl === Params.typeUrl || Array.isArray(o.send_enabled) && (!o.send_enabled.length || SendEnabled.isSDK(o.send_enabled[0])) && typeof o.default_send_enabled === "boolean");
   },
   isAmino(o: any): o is ParamsAmino {
     return o && (o.$typeUrl === Params.typeUrl || Array.isArray(o.send_enabled) && (!o.send_enabled.length || SendEnabled.isAmino(o.send_enabled[0])) && typeof o.default_send_enabled === "boolean");
@@ -470,7 +380,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(object: I): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.sendEnabled = object.sendEnabled?.map(e => SendEnabled.fromPartial(e)) || [];
     message.defaultSendEnabled = object.defaultSendEnabled ?? false;
@@ -541,9 +451,6 @@ export const SendEnabled = {
   is(o: any): o is SendEnabled {
     return o && (o.$typeUrl === SendEnabled.typeUrl || typeof o.denom === "string" && typeof o.enabled === "boolean");
   },
-  isSDK(o: any): o is SendEnabledSDKType {
-    return o && (o.$typeUrl === SendEnabled.typeUrl || typeof o.denom === "string" && typeof o.enabled === "boolean");
-  },
   isAmino(o: any): o is SendEnabledAmino {
     return o && (o.$typeUrl === SendEnabled.typeUrl || typeof o.denom === "string" && typeof o.enabled === "boolean");
   },
@@ -576,7 +483,7 @@ export const SendEnabled = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SendEnabled>, I>>(object: I): SendEnabled {
+  fromPartial(object: DeepPartial<SendEnabled>): SendEnabled {
     const message = createBaseSendEnabled();
     message.denom = object.denom ?? "";
     message.enabled = object.enabled ?? false;
@@ -639,9 +546,6 @@ export const Input = {
   is(o: any): o is Input {
     return o && (o.$typeUrl === Input.typeUrl || typeof o.address === "string" && Array.isArray(o.coins) && (!o.coins.length || Coin.is(o.coins[0])));
   },
-  isSDK(o: any): o is InputSDKType {
-    return o && (o.$typeUrl === Input.typeUrl || typeof o.address === "string" && Array.isArray(o.coins) && (!o.coins.length || Coin.isSDK(o.coins[0])));
-  },
   isAmino(o: any): o is InputAmino {
     return o && (o.$typeUrl === Input.typeUrl || typeof o.address === "string" && Array.isArray(o.coins) && (!o.coins.length || Coin.isAmino(o.coins[0])));
   },
@@ -674,7 +578,7 @@ export const Input = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Input>, I>>(object: I): Input {
+  fromPartial(object: DeepPartial<Input>): Input {
     const message = createBaseInput();
     message.address = object.address ?? "";
     message.coins = object.coins?.map(e => Coin.fromPartial(e)) || [];
@@ -744,9 +648,6 @@ export const Output = {
   is(o: any): o is Output {
     return o && (o.$typeUrl === Output.typeUrl || typeof o.address === "string" && Array.isArray(o.coins) && (!o.coins.length || Coin.is(o.coins[0])));
   },
-  isSDK(o: any): o is OutputSDKType {
-    return o && (o.$typeUrl === Output.typeUrl || typeof o.address === "string" && Array.isArray(o.coins) && (!o.coins.length || Coin.isSDK(o.coins[0])));
-  },
   isAmino(o: any): o is OutputAmino {
     return o && (o.$typeUrl === Output.typeUrl || typeof o.address === "string" && Array.isArray(o.coins) && (!o.coins.length || Coin.isAmino(o.coins[0])));
   },
@@ -779,7 +680,7 @@ export const Output = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Output>, I>>(object: I): Output {
+  fromPartial(object: DeepPartial<Output>): Output {
     const message = createBaseOutput();
     message.address = object.address ?? "";
     message.coins = object.coins?.map(e => Coin.fromPartial(e)) || [];
@@ -833,7 +734,6 @@ export const Output = {
 };
 function createBaseSupply(): Supply {
   return {
-    $typeUrl: "/cosmos.bank.v1beta1.Supply",
     total: []
   };
 }
@@ -851,9 +751,6 @@ export const Supply = {
   aminoType: "cosmos-sdk/Supply",
   is(o: any): o is Supply {
     return o && (o.$typeUrl === Supply.typeUrl || Array.isArray(o.total) && (!o.total.length || Coin.is(o.total[0])));
-  },
-  isSDK(o: any): o is SupplySDKType {
-    return o && (o.$typeUrl === Supply.typeUrl || Array.isArray(o.total) && (!o.total.length || Coin.isSDK(o.total[0])));
   },
   isAmino(o: any): o is SupplyAmino {
     return o && (o.$typeUrl === Supply.typeUrl || Array.isArray(o.total) && (!o.total.length || Coin.isAmino(o.total[0])));
@@ -881,7 +778,7 @@ export const Supply = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Supply>, I>>(object: I): Supply {
+  fromPartial(object: DeepPartial<Supply>): Supply {
     const message = createBaseSupply();
     message.total = object.total?.map(e => Coin.fromPartial(e)) || [];
     return message;
@@ -950,9 +847,6 @@ export const DenomUnit = {
   is(o: any): o is DenomUnit {
     return o && (o.$typeUrl === DenomUnit.typeUrl || typeof o.denom === "string" && typeof o.exponent === "number" && Array.isArray(o.aliases) && (!o.aliases.length || typeof o.aliases[0] === "string"));
   },
-  isSDK(o: any): o is DenomUnitSDKType {
-    return o && (o.$typeUrl === DenomUnit.typeUrl || typeof o.denom === "string" && typeof o.exponent === "number" && Array.isArray(o.aliases) && (!o.aliases.length || typeof o.aliases[0] === "string"));
-  },
   isAmino(o: any): o is DenomUnitAmino {
     return o && (o.$typeUrl === DenomUnit.typeUrl || typeof o.denom === "string" && typeof o.exponent === "number" && Array.isArray(o.aliases) && (!o.aliases.length || typeof o.aliases[0] === "string"));
   },
@@ -991,7 +885,7 @@ export const DenomUnit = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DenomUnit>, I>>(object: I): DenomUnit {
+  fromPartial(object: DeepPartial<DenomUnit>): DenomUnit {
     const message = createBaseDenomUnit();
     message.denom = object.denom ?? "";
     message.exponent = object.exponent ?? 0;
@@ -1068,9 +962,6 @@ export const Metadata = {
   is(o: any): o is Metadata {
     return o && (o.$typeUrl === Metadata.typeUrl || typeof o.description === "string" && Array.isArray(o.denomUnits) && (!o.denomUnits.length || DenomUnit.is(o.denomUnits[0])) && typeof o.base === "string" && typeof o.display === "string" && typeof o.name === "string" && typeof o.symbol === "string" && typeof o.uri === "string" && typeof o.uriHash === "string");
   },
-  isSDK(o: any): o is MetadataSDKType {
-    return o && (o.$typeUrl === Metadata.typeUrl || typeof o.description === "string" && Array.isArray(o.denom_units) && (!o.denom_units.length || DenomUnit.isSDK(o.denom_units[0])) && typeof o.base === "string" && typeof o.display === "string" && typeof o.name === "string" && typeof o.symbol === "string" && typeof o.uri === "string" && typeof o.uri_hash === "string");
-  },
   isAmino(o: any): o is MetadataAmino {
     return o && (o.$typeUrl === Metadata.typeUrl || typeof o.description === "string" && Array.isArray(o.denom_units) && (!o.denom_units.length || DenomUnit.isAmino(o.denom_units[0])) && typeof o.base === "string" && typeof o.display === "string" && typeof o.name === "string" && typeof o.symbol === "string" && typeof o.uri === "string" && typeof o.uri_hash === "string");
   },
@@ -1139,7 +1030,7 @@ export const Metadata = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Metadata>, I>>(object: I): Metadata {
+  fromPartial(object: DeepPartial<Metadata>): Metadata {
     const message = createBaseMetadata();
     message.description = object.description ?? "";
     message.denomUnits = object.denomUnits?.map(e => DenomUnit.fromPartial(e)) || [];

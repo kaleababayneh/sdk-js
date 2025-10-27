@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { Timestamp } from "../../../google/protobuf/timestamp";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { toTimestamp, fromTimestamp, Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { toTimestamp, fromTimestamp, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * CommitInfo defines commit information used by the multi-store when committing
@@ -28,25 +28,13 @@ export interface CommitInfoProtoMsg {
  * @see proto type: cosmos.store.v1beta1.CommitInfo
  */
 export interface CommitInfoAmino {
-  version?: string;
-  store_infos?: StoreInfoAmino[];
-  timestamp?: string;
+  version: string;
+  store_infos: StoreInfoAmino[];
+  timestamp: string;
 }
 export interface CommitInfoAminoMsg {
   type: "cosmos-sdk/CommitInfo";
   value: CommitInfoAmino;
-}
-/**
- * CommitInfo defines commit information used by the multi-store when committing
- * a version/height.
- * @name CommitInfoSDKType
- * @package cosmos.store.v1beta1
- * @see proto type: cosmos.store.v1beta1.CommitInfo
- */
-export interface CommitInfoSDKType {
-  version: bigint;
-  store_infos: StoreInfoSDKType[];
-  timestamp: Date;
 }
 /**
  * StoreInfo defines store-specific commit information. It contains a reference
@@ -71,23 +59,12 @@ export interface StoreInfoProtoMsg {
  * @see proto type: cosmos.store.v1beta1.StoreInfo
  */
 export interface StoreInfoAmino {
-  name?: string;
-  commit_id?: CommitIDAmino;
+  name: string;
+  commit_id: CommitIDAmino;
 }
 export interface StoreInfoAminoMsg {
   type: "cosmos-sdk/StoreInfo";
   value: StoreInfoAmino;
-}
-/**
- * StoreInfo defines store-specific commit information. It contains a reference
- * between a store name and the commit ID.
- * @name StoreInfoSDKType
- * @package cosmos.store.v1beta1
- * @see proto type: cosmos.store.v1beta1.StoreInfo
- */
-export interface StoreInfoSDKType {
-  name: string;
-  commit_id: CommitIDSDKType;
 }
 /**
  * CommitID defines the commitment information when a specific store is
@@ -112,23 +89,12 @@ export interface CommitIDProtoMsg {
  * @see proto type: cosmos.store.v1beta1.CommitID
  */
 export interface CommitIDAmino {
-  version?: string;
-  hash?: string;
+  version: string;
+  hash: string;
 }
 export interface CommitIDAminoMsg {
   type: "cosmos-sdk/CommitID";
   value: CommitIDAmino;
-}
-/**
- * CommitID defines the commitment information when a specific store is
- * committed.
- * @name CommitIDSDKType
- * @package cosmos.store.v1beta1
- * @see proto type: cosmos.store.v1beta1.CommitID
- */
-export interface CommitIDSDKType {
-  version: bigint;
-  hash: Uint8Array;
 }
 function createBaseCommitInfo(): CommitInfo {
   return {
@@ -149,9 +115,6 @@ export const CommitInfo = {
   aminoType: "cosmos-sdk/CommitInfo",
   is(o: any): o is CommitInfo {
     return o && (o.$typeUrl === CommitInfo.typeUrl || typeof o.version === "bigint" && Array.isArray(o.storeInfos) && (!o.storeInfos.length || StoreInfo.is(o.storeInfos[0])) && Timestamp.is(o.timestamp));
-  },
-  isSDK(o: any): o is CommitInfoSDKType {
-    return o && (o.$typeUrl === CommitInfo.typeUrl || typeof o.version === "bigint" && Array.isArray(o.store_infos) && (!o.store_infos.length || StoreInfo.isSDK(o.store_infos[0])) && Timestamp.isSDK(o.timestamp));
   },
   isAmino(o: any): o is CommitInfoAmino {
     return o && (o.$typeUrl === CommitInfo.typeUrl || typeof o.version === "bigint" && Array.isArray(o.store_infos) && (!o.store_infos.length || StoreInfo.isAmino(o.store_infos[0])) && Timestamp.isAmino(o.timestamp));
@@ -191,7 +154,7 @@ export const CommitInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CommitInfo>, I>>(object: I): CommitInfo {
+  fromPartial(object: DeepPartial<CommitInfo>): CommitInfo {
     const message = createBaseCommitInfo();
     message.version = object.version !== undefined && object.version !== null ? BigInt(object.version.toString()) : BigInt(0);
     message.storeInfos = object.storeInfos?.map(e => StoreInfo.fromPartial(e)) || [];
@@ -267,9 +230,6 @@ export const StoreInfo = {
   is(o: any): o is StoreInfo {
     return o && (o.$typeUrl === StoreInfo.typeUrl || typeof o.name === "string" && CommitID.is(o.commitId));
   },
-  isSDK(o: any): o is StoreInfoSDKType {
-    return o && (o.$typeUrl === StoreInfo.typeUrl || typeof o.name === "string" && CommitID.isSDK(o.commit_id));
-  },
   isAmino(o: any): o is StoreInfoAmino {
     return o && (o.$typeUrl === StoreInfo.typeUrl || typeof o.name === "string" && CommitID.isAmino(o.commit_id));
   },
@@ -302,7 +262,7 @@ export const StoreInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<StoreInfo>, I>>(object: I): StoreInfo {
+  fromPartial(object: DeepPartial<StoreInfo>): StoreInfo {
     const message = createBaseStoreInfo();
     message.name = object.name ?? "";
     message.commitId = object.commitId !== undefined && object.commitId !== null ? CommitID.fromPartial(object.commitId) : undefined;
@@ -371,9 +331,6 @@ export const CommitID = {
   is(o: any): o is CommitID {
     return o && (o.$typeUrl === CommitID.typeUrl || typeof o.version === "bigint" && (o.hash instanceof Uint8Array || typeof o.hash === "string"));
   },
-  isSDK(o: any): o is CommitIDSDKType {
-    return o && (o.$typeUrl === CommitID.typeUrl || typeof o.version === "bigint" && (o.hash instanceof Uint8Array || typeof o.hash === "string"));
-  },
   isAmino(o: any): o is CommitIDAmino {
     return o && (o.$typeUrl === CommitID.typeUrl || typeof o.version === "bigint" && (o.hash instanceof Uint8Array || typeof o.hash === "string"));
   },
@@ -406,7 +363,7 @@ export const CommitID = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CommitID>, I>>(object: I): CommitID {
+  fromPartial(object: DeepPartial<CommitID>): CommitID {
     const message = createBaseCommitID();
     message.version = object.version !== undefined && object.version !== null ? BigInt(object.version.toString()) : BigInt(0);
     message.hash = object.hash ?? new Uint8Array();

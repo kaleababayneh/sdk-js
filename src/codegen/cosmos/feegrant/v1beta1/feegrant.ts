@@ -1,11 +1,11 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
 import { Timestamp } from "../../../google/protobuf/timestamp";
-import { Duration, DurationAmino, DurationSDKType } from "../../../google/protobuf/duration";
-import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Duration, DurationAmino } from "../../../google/protobuf/duration";
+import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { toTimestamp, fromTimestamp, Exact } from "../../../helpers";
+import { toTimestamp, fromTimestamp, DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * BasicAllowance implements Allowance with a one-time grant of coins
@@ -15,7 +15,6 @@ import { GlobalDecoderRegistry } from "../../../registry";
  * @see proto type: cosmos.feegrant.v1beta1.BasicAllowance
  */
 export interface BasicAllowance {
-  $typeUrl?: "/cosmos.feegrant.v1beta1.BasicAllowance";
   /**
    * spend_limit specifies the maximum amount of coins that can be spent
    * by this allowance and will be updated as coins are spent. If it is
@@ -55,18 +54,6 @@ export interface BasicAllowanceAminoMsg {
   value: BasicAllowanceAmino;
 }
 /**
- * BasicAllowance implements Allowance with a one-time grant of coins
- * that optionally expires. The grantee can use up to SpendLimit to cover fees.
- * @name BasicAllowanceSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.BasicAllowance
- */
-export interface BasicAllowanceSDKType {
-  $typeUrl?: "/cosmos.feegrant.v1beta1.BasicAllowance";
-  spend_limit: CoinSDKType[];
-  expiration?: Date;
-}
-/**
  * PeriodicAllowance extends Allowance to allow for both a maximum cap,
  * as well as a limit per time period.
  * @name PeriodicAllowance
@@ -74,7 +61,6 @@ export interface BasicAllowanceSDKType {
  * @see proto type: cosmos.feegrant.v1beta1.PeriodicAllowance
  */
 export interface PeriodicAllowance {
-  $typeUrl?: "/cosmos.feegrant.v1beta1.PeriodicAllowance";
   /**
    * basic specifies a struct of `BasicAllowance`
    */
@@ -142,28 +128,12 @@ export interface PeriodicAllowanceAminoMsg {
   value: PeriodicAllowanceAmino;
 }
 /**
- * PeriodicAllowance extends Allowance to allow for both a maximum cap,
- * as well as a limit per time period.
- * @name PeriodicAllowanceSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.PeriodicAllowance
- */
-export interface PeriodicAllowanceSDKType {
-  $typeUrl?: "/cosmos.feegrant.v1beta1.PeriodicAllowance";
-  basic: BasicAllowanceSDKType;
-  period: DurationSDKType;
-  period_spend_limit: CoinSDKType[];
-  period_can_spend: CoinSDKType[];
-  period_reset: Date;
-}
-/**
  * AllowedMsgAllowance creates allowance only for specified message types.
  * @name AllowedMsgAllowance
  * @package cosmos.feegrant.v1beta1
  * @see proto type: cosmos.feegrant.v1beta1.AllowedMsgAllowance
  */
 export interface AllowedMsgAllowance {
-  $typeUrl?: "/cosmos.feegrant.v1beta1.AllowedMsgAllowance";
   /**
    * allowance can be any of basic and periodic fee allowance.
    */
@@ -197,22 +167,11 @@ export interface AllowedMsgAllowanceAmino {
   /**
    * allowed_messages are the messages for which the grantee has the access.
    */
-  allowed_messages?: string[];
+  allowed_messages: string[];
 }
 export interface AllowedMsgAllowanceAminoMsg {
   type: "cosmos-sdk/AllowedMsgAllowance";
   value: AllowedMsgAllowanceAmino;
-}
-/**
- * AllowedMsgAllowance creates allowance only for specified message types.
- * @name AllowedMsgAllowanceSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.AllowedMsgAllowance
- */
-export interface AllowedMsgAllowanceSDKType {
-  $typeUrl?: "/cosmos.feegrant.v1beta1.AllowedMsgAllowance";
-  allowance?: BasicAllowanceSDKType | PeriodicAllowanceSDKType | AllowedMsgAllowanceSDKType | AnySDKType | undefined;
-  allowed_messages: string[];
 }
 /**
  * Grant is stored in the KVStore to record a grant with full context
@@ -254,11 +213,11 @@ export interface GrantAmino {
   /**
    * granter is the address of the user granting an allowance of their funds.
    */
-  granter?: string;
+  granter: string;
   /**
    * grantee is the address of the user being granted an allowance of another user's funds.
    */
-  grantee?: string;
+  grantee: string;
   /**
    * allowance can be any of basic, periodic, allowed fee allowance.
    */
@@ -268,20 +227,8 @@ export interface GrantAminoMsg {
   type: "cosmos-sdk/Grant";
   value: GrantAmino;
 }
-/**
- * Grant is stored in the KVStore to record a grant with full context
- * @name GrantSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.Grant
- */
-export interface GrantSDKType {
-  granter: string;
-  grantee: string;
-  allowance?: BasicAllowanceSDKType | PeriodicAllowanceSDKType | AllowedMsgAllowanceSDKType | AnySDKType | undefined;
-}
 function createBaseBasicAllowance(): BasicAllowance {
   return {
-    $typeUrl: "/cosmos.feegrant.v1beta1.BasicAllowance",
     spendLimit: [],
     expiration: undefined
   };
@@ -298,9 +245,6 @@ export const BasicAllowance = {
   aminoType: "cosmos-sdk/BasicAllowance",
   is(o: any): o is BasicAllowance {
     return o && (o.$typeUrl === BasicAllowance.typeUrl || Array.isArray(o.spendLimit) && (!o.spendLimit.length || Coin.is(o.spendLimit[0])));
-  },
-  isSDK(o: any): o is BasicAllowanceSDKType {
-    return o && (o.$typeUrl === BasicAllowance.typeUrl || Array.isArray(o.spend_limit) && (!o.spend_limit.length || Coin.isSDK(o.spend_limit[0])));
   },
   isAmino(o: any): o is BasicAllowanceAmino {
     return o && (o.$typeUrl === BasicAllowance.typeUrl || Array.isArray(o.spend_limit) && (!o.spend_limit.length || Coin.isAmino(o.spend_limit[0])));
@@ -334,7 +278,7 @@ export const BasicAllowance = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BasicAllowance>, I>>(object: I): BasicAllowance {
+  fromPartial(object: DeepPartial<BasicAllowance>): BasicAllowance {
     const message = createBaseBasicAllowance();
     message.spendLimit = object.spendLimit?.map(e => Coin.fromPartial(e)) || [];
     message.expiration = object.expiration ?? undefined;
@@ -390,7 +334,6 @@ export const BasicAllowance = {
 };
 function createBasePeriodicAllowance(): PeriodicAllowance {
   return {
-    $typeUrl: "/cosmos.feegrant.v1beta1.PeriodicAllowance",
     basic: BasicAllowance.fromPartial({}),
     period: Duration.fromPartial({}),
     periodSpendLimit: [],
@@ -410,9 +353,6 @@ export const PeriodicAllowance = {
   aminoType: "cosmos-sdk/PeriodicAllowance",
   is(o: any): o is PeriodicAllowance {
     return o && (o.$typeUrl === PeriodicAllowance.typeUrl || BasicAllowance.is(o.basic) && Duration.is(o.period) && Array.isArray(o.periodSpendLimit) && (!o.periodSpendLimit.length || Coin.is(o.periodSpendLimit[0])) && Array.isArray(o.periodCanSpend) && (!o.periodCanSpend.length || Coin.is(o.periodCanSpend[0])) && Timestamp.is(o.periodReset));
-  },
-  isSDK(o: any): o is PeriodicAllowanceSDKType {
-    return o && (o.$typeUrl === PeriodicAllowance.typeUrl || BasicAllowance.isSDK(o.basic) && Duration.isSDK(o.period) && Array.isArray(o.period_spend_limit) && (!o.period_spend_limit.length || Coin.isSDK(o.period_spend_limit[0])) && Array.isArray(o.period_can_spend) && (!o.period_can_spend.length || Coin.isSDK(o.period_can_spend[0])) && Timestamp.isSDK(o.period_reset));
   },
   isAmino(o: any): o is PeriodicAllowanceAmino {
     return o && (o.$typeUrl === PeriodicAllowance.typeUrl || BasicAllowance.isAmino(o.basic) && Duration.isAmino(o.period) && Array.isArray(o.period_spend_limit) && (!o.period_spend_limit.length || Coin.isAmino(o.period_spend_limit[0])) && Array.isArray(o.period_can_spend) && (!o.period_can_spend.length || Coin.isAmino(o.period_can_spend[0])) && Timestamp.isAmino(o.period_reset));
@@ -464,7 +404,7 @@ export const PeriodicAllowance = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PeriodicAllowance>, I>>(object: I): PeriodicAllowance {
+  fromPartial(object: DeepPartial<PeriodicAllowance>): PeriodicAllowance {
     const message = createBasePeriodicAllowance();
     message.basic = object.basic !== undefined && object.basic !== null ? BasicAllowance.fromPartial(object.basic) : undefined;
     message.period = object.period !== undefined && object.period !== null ? Duration.fromPartial(object.period) : undefined;
@@ -538,7 +478,6 @@ export const PeriodicAllowance = {
 };
 function createBaseAllowedMsgAllowance(): AllowedMsgAllowance {
   return {
-    $typeUrl: "/cosmos.feegrant.v1beta1.AllowedMsgAllowance",
     allowance: undefined,
     allowedMessages: []
   };
@@ -554,9 +493,6 @@ export const AllowedMsgAllowance = {
   aminoType: "cosmos-sdk/AllowedMsgAllowance",
   is(o: any): o is AllowedMsgAllowance {
     return o && (o.$typeUrl === AllowedMsgAllowance.typeUrl || Array.isArray(o.allowedMessages) && (!o.allowedMessages.length || typeof o.allowedMessages[0] === "string"));
-  },
-  isSDK(o: any): o is AllowedMsgAllowanceSDKType {
-    return o && (o.$typeUrl === AllowedMsgAllowance.typeUrl || Array.isArray(o.allowed_messages) && (!o.allowed_messages.length || typeof o.allowed_messages[0] === "string"));
   },
   isAmino(o: any): o is AllowedMsgAllowanceAmino {
     return o && (o.$typeUrl === AllowedMsgAllowance.typeUrl || Array.isArray(o.allowed_messages) && (!o.allowed_messages.length || typeof o.allowed_messages[0] === "string"));
@@ -590,7 +526,7 @@ export const AllowedMsgAllowance = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AllowedMsgAllowance>, I>>(object: I): AllowedMsgAllowance {
+  fromPartial(object: DeepPartial<AllowedMsgAllowance>): AllowedMsgAllowance {
     const message = createBaseAllowedMsgAllowance();
     message.allowance = object.allowance !== undefined && object.allowance !== null ? GlobalDecoderRegistry.fromPartial(object.allowance) : undefined;
     message.allowedMessages = object.allowedMessages?.map(e => e) || [];
@@ -665,9 +601,6 @@ export const Grant = {
   is(o: any): o is Grant {
     return o && (o.$typeUrl === Grant.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
   },
-  isSDK(o: any): o is GrantSDKType {
-    return o && (o.$typeUrl === Grant.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
-  },
   isAmino(o: any): o is GrantAmino {
     return o && (o.$typeUrl === Grant.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
   },
@@ -706,7 +639,7 @@ export const Grant = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Grant>, I>>(object: I): Grant {
+  fromPartial(object: DeepPartial<Grant>): Grant {
     const message = createBaseGrant();
     message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";

@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { GrantAuthorization, GrantAuthorizationAmino, GrantAuthorizationSDKType } from "./authz";
+import { GrantAuthorization, GrantAuthorizationAmino } from "./authz";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * GenesisState defines the authz module's genesis state.
@@ -30,15 +30,6 @@ export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
 }
-/**
- * GenesisState defines the authz module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  authorization: GrantAuthorizationSDKType[];
-}
 function createBaseGenesisState(): GenesisState {
   return {
     authorization: []
@@ -55,9 +46,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.authorization) && (!o.authorization.length || GrantAuthorization.is(o.authorization[0])));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.authorization) && (!o.authorization.length || GrantAuthorization.isSDK(o.authorization[0])));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.authorization) && (!o.authorization.length || GrantAuthorization.isAmino(o.authorization[0])));
@@ -85,7 +73,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.authorization = object.authorization?.map(e => GrantAuthorization.fromPartial(e)) || [];
     return message;

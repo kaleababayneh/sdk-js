@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * A representation of a decimal value, such as 2.5. Clients may convert values
  * into language-native decimal formats, such as Java's [BigDecimal][] or
@@ -158,26 +158,11 @@ export interface DecimalAmino {
    * Services **should** error with `400 Bad Request` (`INVALID_ARGUMENT` in
    * gRPC) if the service receives a value outside of the supported range.
    */
-  value?: string;
+  value: string;
 }
 export interface DecimalAminoMsg {
   type: "/google.type.Decimal";
   value: DecimalAmino;
-}
-/**
- * A representation of a decimal value, such as 2.5. Clients may convert values
- * into language-native decimal formats, such as Java's [BigDecimal][] or
- * Python's [decimal.Decimal][].
- * 
- * [BigDecimal]:
- * https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/math/BigDecimal.html
- * [decimal.Decimal]: https://docs.python.org/3/library/decimal.html
- * @name DecimalSDKType
- * @package google.type
- * @see proto type: google.type.Decimal
- */
-export interface DecimalSDKType {
-  value: string;
 }
 function createBaseDecimal(): Decimal {
   return {
@@ -199,9 +184,6 @@ function createBaseDecimal(): Decimal {
 export const Decimal = {
   typeUrl: "/google.type.Decimal",
   is(o: any): o is Decimal {
-    return o && (o.$typeUrl === Decimal.typeUrl || typeof o.value === "string");
-  },
-  isSDK(o: any): o is DecimalSDKType {
     return o && (o.$typeUrl === Decimal.typeUrl || typeof o.value === "string");
   },
   isAmino(o: any): o is DecimalAmino {
@@ -230,7 +212,7 @@ export const Decimal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Decimal>, I>>(object: I): Decimal {
+  fromPartial(object: DeepPartial<Decimal>): Decimal {
     const message = createBaseDecimal();
     message.value = object.value ?? "";
     return message;

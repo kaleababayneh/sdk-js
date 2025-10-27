@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Any, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 /**
  * BaseAccount defines a base account type. It contains all the necessary fields
  * for basic account functionality. Any custom account type should extend this
@@ -13,7 +13,6 @@ import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
  * @see proto type: cosmos.auth.v1beta1.BaseAccount
  */
 export interface BaseAccount {
-  $typeUrl?: "/cosmos.auth.v1beta1.BaseAccount";
   address: string;
   pubKey?: Any;
   accountNumber: bigint;
@@ -32,29 +31,14 @@ export interface BaseAccountProtoMsg {
  * @see proto type: cosmos.auth.v1beta1.BaseAccount
  */
 export interface BaseAccountAmino {
-  address?: string;
+  address: string;
   pub_key?: AnyAmino;
-  account_number?: string;
-  sequence?: string;
+  account_number: string;
+  sequence: string;
 }
 export interface BaseAccountAminoMsg {
   type: "cosmos-sdk/BaseAccount";
   value: BaseAccountAmino;
-}
-/**
- * BaseAccount defines a base account type. It contains all the necessary fields
- * for basic account functionality. Any custom account type should extend this
- * type for additional functionality (e.g. vesting).
- * @name BaseAccountSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.BaseAccount
- */
-export interface BaseAccountSDKType {
-  $typeUrl?: "/cosmos.auth.v1beta1.BaseAccount";
-  address: string;
-  pub_key?: AnySDKType;
-  account_number: bigint;
-  sequence: bigint;
 }
 /**
  * ModuleAccount defines an account for modules that holds coins on a pool.
@@ -63,7 +47,6 @@ export interface BaseAccountSDKType {
  * @see proto type: cosmos.auth.v1beta1.ModuleAccount
  */
 export interface ModuleAccount {
-  $typeUrl?: "/cosmos.auth.v1beta1.ModuleAccount";
   baseAccount?: BaseAccount;
   name: string;
   permissions: string[];
@@ -80,24 +63,12 @@ export interface ModuleAccountProtoMsg {
  */
 export interface ModuleAccountAmino {
   base_account?: BaseAccountAmino;
-  name?: string;
-  permissions?: string[];
+  name: string;
+  permissions: string[];
 }
 export interface ModuleAccountAminoMsg {
   type: "cosmos-sdk/ModuleAccount";
   value: ModuleAccountAmino;
-}
-/**
- * ModuleAccount defines an account for modules that holds coins on a pool.
- * @name ModuleAccountSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.ModuleAccount
- */
-export interface ModuleAccountSDKType {
-  $typeUrl?: "/cosmos.auth.v1beta1.ModuleAccount";
-  base_account?: BaseAccountSDKType;
-  name: string;
-  permissions: string[];
 }
 /**
  * ModuleCredential represents a unclaimable pubkey for base accounts controlled by modules.
@@ -134,28 +105,16 @@ export interface ModuleCredentialAmino {
   /**
    * module_name is the name of the module used for address derivation (passed into address.Module).
    */
-  module_name?: string;
+  module_name: string;
   /**
    * derivation_keys is for deriving a module account address (passed into address.Module)
    * adding more keys creates sub-account addresses (passed into address.Derive)
    */
-  derivation_keys?: string[];
+  derivation_keys: string[];
 }
 export interface ModuleCredentialAminoMsg {
   type: "cosmos-sdk/GroupAccountCredential";
   value: ModuleCredentialAmino;
-}
-/**
- * ModuleCredential represents a unclaimable pubkey for base accounts controlled by modules.
- * 
- * Since: cosmos-sdk 0.47
- * @name ModuleCredentialSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.ModuleCredential
- */
-export interface ModuleCredentialSDKType {
-  module_name: string;
-  derivation_keys: Uint8Array[];
 }
 /**
  * Params defines the parameters for the auth module.
@@ -181,32 +140,18 @@ export interface ParamsProtoMsg {
  * @see proto type: cosmos.auth.v1beta1.Params
  */
 export interface ParamsAmino {
-  max_memo_characters?: string;
-  tx_sig_limit?: string;
-  tx_size_cost_per_byte?: string;
-  sig_verify_cost_ed25519?: string;
-  sig_verify_cost_secp256k1?: string;
+  max_memo_characters: string;
+  tx_sig_limit: string;
+  tx_size_cost_per_byte: string;
+  sig_verify_cost_ed25519: string;
+  sig_verify_cost_secp256k1: string;
 }
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/x/auth/Params";
   value: ParamsAmino;
 }
-/**
- * Params defines the parameters for the auth module.
- * @name ParamsSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.Params
- */
-export interface ParamsSDKType {
-  max_memo_characters: bigint;
-  tx_sig_limit: bigint;
-  tx_size_cost_per_byte: bigint;
-  sig_verify_cost_ed25519: bigint;
-  sig_verify_cost_secp256k1: bigint;
-}
 function createBaseBaseAccount(): BaseAccount {
   return {
-    $typeUrl: "/cosmos.auth.v1beta1.BaseAccount",
     address: "",
     pubKey: undefined,
     accountNumber: BigInt(0),
@@ -226,9 +171,6 @@ export const BaseAccount = {
   aminoType: "cosmos-sdk/BaseAccount",
   is(o: any): o is BaseAccount {
     return o && (o.$typeUrl === BaseAccount.typeUrl || typeof o.address === "string" && typeof o.accountNumber === "bigint" && typeof o.sequence === "bigint");
-  },
-  isSDK(o: any): o is BaseAccountSDKType {
-    return o && (o.$typeUrl === BaseAccount.typeUrl || typeof o.address === "string" && typeof o.account_number === "bigint" && typeof o.sequence === "bigint");
   },
   isAmino(o: any): o is BaseAccountAmino {
     return o && (o.$typeUrl === BaseAccount.typeUrl || typeof o.address === "string" && typeof o.account_number === "bigint" && typeof o.sequence === "bigint");
@@ -274,7 +216,7 @@ export const BaseAccount = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BaseAccount>, I>>(object: I): BaseAccount {
+  fromPartial(object: DeepPartial<BaseAccount>): BaseAccount {
     const message = createBaseBaseAccount();
     message.address = object.address ?? "";
     message.pubKey = object.pubKey !== undefined && object.pubKey !== null ? Any.fromPartial(object.pubKey) : undefined;
@@ -337,7 +279,6 @@ export const BaseAccount = {
 };
 function createBaseModuleAccount(): ModuleAccount {
   return {
-    $typeUrl: "/cosmos.auth.v1beta1.ModuleAccount",
     baseAccount: undefined,
     name: "",
     permissions: []
@@ -353,9 +294,6 @@ export const ModuleAccount = {
   typeUrl: "/cosmos.auth.v1beta1.ModuleAccount",
   aminoType: "cosmos-sdk/ModuleAccount",
   is(o: any): o is ModuleAccount {
-    return o && (o.$typeUrl === ModuleAccount.typeUrl || typeof o.name === "string" && Array.isArray(o.permissions) && (!o.permissions.length || typeof o.permissions[0] === "string"));
-  },
-  isSDK(o: any): o is ModuleAccountSDKType {
     return o && (o.$typeUrl === ModuleAccount.typeUrl || typeof o.name === "string" && Array.isArray(o.permissions) && (!o.permissions.length || typeof o.permissions[0] === "string"));
   },
   isAmino(o: any): o is ModuleAccountAmino {
@@ -396,7 +334,7 @@ export const ModuleAccount = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ModuleAccount>, I>>(object: I): ModuleAccount {
+  fromPartial(object: DeepPartial<ModuleAccount>): ModuleAccount {
     const message = createBaseModuleAccount();
     message.baseAccount = object.baseAccount !== undefined && object.baseAccount !== null ? BaseAccount.fromPartial(object.baseAccount) : undefined;
     message.name = object.name ?? "";
@@ -475,9 +413,6 @@ export const ModuleCredential = {
   is(o: any): o is ModuleCredential {
     return o && (o.$typeUrl === ModuleCredential.typeUrl || typeof o.moduleName === "string" && Array.isArray(o.derivationKeys) && (!o.derivationKeys.length || o.derivationKeys[0] instanceof Uint8Array || typeof o.derivationKeys[0] === "string"));
   },
-  isSDK(o: any): o is ModuleCredentialSDKType {
-    return o && (o.$typeUrl === ModuleCredential.typeUrl || typeof o.module_name === "string" && Array.isArray(o.derivation_keys) && (!o.derivation_keys.length || o.derivation_keys[0] instanceof Uint8Array || typeof o.derivation_keys[0] === "string"));
-  },
   isAmino(o: any): o is ModuleCredentialAmino {
     return o && (o.$typeUrl === ModuleCredential.typeUrl || typeof o.module_name === "string" && Array.isArray(o.derivation_keys) && (!o.derivation_keys.length || o.derivation_keys[0] instanceof Uint8Array || typeof o.derivation_keys[0] === "string"));
   },
@@ -510,7 +445,7 @@ export const ModuleCredential = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ModuleCredential>, I>>(object: I): ModuleCredential {
+  fromPartial(object: DeepPartial<ModuleCredential>): ModuleCredential {
     const message = createBaseModuleCredential();
     message.moduleName = object.moduleName ?? "";
     message.derivationKeys = object.derivationKeys?.map(e => e) || [];
@@ -578,9 +513,6 @@ export const Params = {
   is(o: any): o is Params {
     return o && (o.$typeUrl === Params.typeUrl || typeof o.maxMemoCharacters === "bigint" && typeof o.txSigLimit === "bigint" && typeof o.txSizeCostPerByte === "bigint" && typeof o.sigVerifyCostEd25519 === "bigint" && typeof o.sigVerifyCostSecp256k1 === "bigint");
   },
-  isSDK(o: any): o is ParamsSDKType {
-    return o && (o.$typeUrl === Params.typeUrl || typeof o.max_memo_characters === "bigint" && typeof o.tx_sig_limit === "bigint" && typeof o.tx_size_cost_per_byte === "bigint" && typeof o.sig_verify_cost_ed25519 === "bigint" && typeof o.sig_verify_cost_secp256k1 === "bigint");
-  },
   isAmino(o: any): o is ParamsAmino {
     return o && (o.$typeUrl === Params.typeUrl || typeof o.max_memo_characters === "bigint" && typeof o.tx_sig_limit === "bigint" && typeof o.tx_size_cost_per_byte === "bigint" && typeof o.sig_verify_cost_ed25519 === "bigint" && typeof o.sig_verify_cost_secp256k1 === "bigint");
   },
@@ -631,7 +563,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(object: I): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.maxMemoCharacters = object.maxMemoCharacters !== undefined && object.maxMemoCharacters !== null ? BigInt(object.maxMemoCharacters.toString()) : BigInt(0);
     message.txSigLimit = object.txSigLimit !== undefined && object.txSigLimit !== null ? BigInt(object.txSigLimit.toString()) : BigInt(0);

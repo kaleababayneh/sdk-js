@@ -54,7 +54,6 @@ export enum LaunchStage {
   DEPRECATED = 5,
   UNRECOGNIZED = -1,
 }
-export const LaunchStageSDKType = LaunchStage;
 export const LaunchStageAmino = LaunchStage;
 export function launchStageFromJSON(object: any): LaunchStage {
   switch (object) {

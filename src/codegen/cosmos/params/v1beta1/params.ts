@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * ParameterChangeProposal defines a proposal to change one or more parameters.
@@ -10,7 +10,6 @@ import { GlobalDecoderRegistry } from "../../../registry";
  * @see proto type: cosmos.params.v1beta1.ParameterChangeProposal
  */
 export interface ParameterChangeProposal {
-  $typeUrl?: "/cosmos.params.v1beta1.ParameterChangeProposal";
   title: string;
   description: string;
   changes: ParamChange[];
@@ -26,25 +25,13 @@ export interface ParameterChangeProposalProtoMsg {
  * @see proto type: cosmos.params.v1beta1.ParameterChangeProposal
  */
 export interface ParameterChangeProposalAmino {
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
   changes: ParamChangeAmino[];
 }
 export interface ParameterChangeProposalAminoMsg {
   type: "cosmos-sdk/ParameterChangeProposal";
   value: ParameterChangeProposalAmino;
-}
-/**
- * ParameterChangeProposal defines a proposal to change one or more parameters.
- * @name ParameterChangeProposalSDKType
- * @package cosmos.params.v1beta1
- * @see proto type: cosmos.params.v1beta1.ParameterChangeProposal
- */
-export interface ParameterChangeProposalSDKType {
-  $typeUrl?: "/cosmos.params.v1beta1.ParameterChangeProposal";
-  title: string;
-  description: string;
-  changes: ParamChangeSDKType[];
 }
 /**
  * ParamChange defines an individual parameter change, for use in
@@ -70,29 +57,16 @@ export interface ParamChangeProtoMsg {
  * @see proto type: cosmos.params.v1beta1.ParamChange
  */
 export interface ParamChangeAmino {
-  subspace?: string;
-  key?: string;
-  value?: string;
+  subspace: string;
+  key: string;
+  value: string;
 }
 export interface ParamChangeAminoMsg {
   type: "cosmos-sdk/ParamChange";
   value: ParamChangeAmino;
 }
-/**
- * ParamChange defines an individual parameter change, for use in
- * ParameterChangeProposal.
- * @name ParamChangeSDKType
- * @package cosmos.params.v1beta1
- * @see proto type: cosmos.params.v1beta1.ParamChange
- */
-export interface ParamChangeSDKType {
-  subspace: string;
-  key: string;
-  value: string;
-}
 function createBaseParameterChangeProposal(): ParameterChangeProposal {
   return {
-    $typeUrl: "/cosmos.params.v1beta1.ParameterChangeProposal",
     title: "",
     description: "",
     changes: []
@@ -109,9 +83,6 @@ export const ParameterChangeProposal = {
   aminoType: "cosmos-sdk/ParameterChangeProposal",
   is(o: any): o is ParameterChangeProposal {
     return o && (o.$typeUrl === ParameterChangeProposal.typeUrl || typeof o.title === "string" && typeof o.description === "string" && Array.isArray(o.changes) && (!o.changes.length || ParamChange.is(o.changes[0])));
-  },
-  isSDK(o: any): o is ParameterChangeProposalSDKType {
-    return o && (o.$typeUrl === ParameterChangeProposal.typeUrl || typeof o.title === "string" && typeof o.description === "string" && Array.isArray(o.changes) && (!o.changes.length || ParamChange.isSDK(o.changes[0])));
   },
   isAmino(o: any): o is ParameterChangeProposalAmino {
     return o && (o.$typeUrl === ParameterChangeProposal.typeUrl || typeof o.title === "string" && typeof o.description === "string" && Array.isArray(o.changes) && (!o.changes.length || ParamChange.isAmino(o.changes[0])));
@@ -151,7 +122,7 @@ export const ParameterChangeProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ParameterChangeProposal>, I>>(object: I): ParameterChangeProposal {
+  fromPartial(object: DeepPartial<ParameterChangeProposal>): ParameterChangeProposal {
     const message = createBaseParameterChangeProposal();
     message.title = object.title ?? "";
     message.description = object.description ?? "";
@@ -230,9 +201,6 @@ export const ParamChange = {
   is(o: any): o is ParamChange {
     return o && (o.$typeUrl === ParamChange.typeUrl || typeof o.subspace === "string" && typeof o.key === "string" && typeof o.value === "string");
   },
-  isSDK(o: any): o is ParamChangeSDKType {
-    return o && (o.$typeUrl === ParamChange.typeUrl || typeof o.subspace === "string" && typeof o.key === "string" && typeof o.value === "string");
-  },
   isAmino(o: any): o is ParamChangeAmino {
     return o && (o.$typeUrl === ParamChange.typeUrl || typeof o.subspace === "string" && typeof o.key === "string" && typeof o.value === "string");
   },
@@ -271,7 +239,7 @@ export const ParamChange = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ParamChange>, I>>(object: I): ParamChange {
+  fromPartial(object: DeepPartial<ParamChange>): ParamChange {
     const message = createBaseParamChange();
     message.subspace = object.subspace ?? "";
     message.key = object.key ?? "";

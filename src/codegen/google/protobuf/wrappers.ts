@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../helpers";
 /**
  * Wrapper message for `number`.
  * 
@@ -32,22 +32,11 @@ export interface DoubleValueAmino {
   /**
    * The number value.
    */
-  value?: number;
+  value: number;
 }
 export interface DoubleValueAminoMsg {
   type: "/google.protobuf.DoubleValue";
   value: DoubleValueAmino;
-}
-/**
- * Wrapper message for `number`.
- * 
- * The JSON representation for `DoubleValue` is JSON number.
- * @name DoubleValueSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.DoubleValue
- */
-export interface DoubleValueSDKType {
-  value: number;
 }
 /**
  * Wrapper message for `float`.
@@ -79,22 +68,11 @@ export interface FloatValueAmino {
   /**
    * The float value.
    */
-  value?: number;
+  value: number;
 }
 export interface FloatValueAminoMsg {
   type: "/google.protobuf.FloatValue";
   value: FloatValueAmino;
-}
-/**
- * Wrapper message for `float`.
- * 
- * The JSON representation for `FloatValue` is JSON number.
- * @name FloatValueSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.FloatValue
- */
-export interface FloatValueSDKType {
-  value: number;
 }
 /**
  * Wrapper message for `int64`.
@@ -126,22 +104,11 @@ export interface Int64ValueAmino {
   /**
    * The int64 value.
    */
-  value?: string;
+  value: string;
 }
 export interface Int64ValueAminoMsg {
   type: "/google.protobuf.Int64Value";
   value: Int64ValueAmino;
-}
-/**
- * Wrapper message for `int64`.
- * 
- * The JSON representation for `Int64Value` is JSON string.
- * @name Int64ValueSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.Int64Value
- */
-export interface Int64ValueSDKType {
-  value: bigint;
 }
 /**
  * Wrapper message for `uint64`.
@@ -173,22 +140,11 @@ export interface UInt64ValueAmino {
   /**
    * The uint64 value.
    */
-  value?: string;
+  value: string;
 }
 export interface UInt64ValueAminoMsg {
   type: "/google.protobuf.UInt64Value";
   value: UInt64ValueAmino;
-}
-/**
- * Wrapper message for `uint64`.
- * 
- * The JSON representation for `UInt64Value` is JSON string.
- * @name UInt64ValueSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.UInt64Value
- */
-export interface UInt64ValueSDKType {
-  value: bigint;
 }
 /**
  * Wrapper message for `int32`.
@@ -220,22 +176,11 @@ export interface Int32ValueAmino {
   /**
    * The int32 value.
    */
-  value?: number;
+  value: number;
 }
 export interface Int32ValueAminoMsg {
   type: "/google.protobuf.Int32Value";
   value: Int32ValueAmino;
-}
-/**
- * Wrapper message for `int32`.
- * 
- * The JSON representation for `Int32Value` is JSON number.
- * @name Int32ValueSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.Int32Value
- */
-export interface Int32ValueSDKType {
-  value: number;
 }
 /**
  * Wrapper message for `uint32`.
@@ -267,22 +212,11 @@ export interface UInt32ValueAmino {
   /**
    * The uint32 value.
    */
-  value?: number;
+  value: number;
 }
 export interface UInt32ValueAminoMsg {
   type: "/google.protobuf.UInt32Value";
   value: UInt32ValueAmino;
-}
-/**
- * Wrapper message for `uint32`.
- * 
- * The JSON representation for `UInt32Value` is JSON number.
- * @name UInt32ValueSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.UInt32Value
- */
-export interface UInt32ValueSDKType {
-  value: number;
 }
 /**
  * Wrapper message for `bool`.
@@ -314,22 +248,11 @@ export interface BoolValueAmino {
   /**
    * The bool value.
    */
-  value?: boolean;
+  value: boolean;
 }
 export interface BoolValueAminoMsg {
   type: "/google.protobuf.BoolValue";
   value: BoolValueAmino;
-}
-/**
- * Wrapper message for `bool`.
- * 
- * The JSON representation for `BoolValue` is JSON `true` and `false`.
- * @name BoolValueSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.BoolValue
- */
-export interface BoolValueSDKType {
-  value: boolean;
 }
 /**
  * Wrapper message for `string`.
@@ -361,22 +284,11 @@ export interface StringValueAmino {
   /**
    * The string value.
    */
-  value?: string;
+  value: string;
 }
 export interface StringValueAminoMsg {
   type: "/google.protobuf.StringValue";
   value: StringValueAmino;
-}
-/**
- * Wrapper message for `string`.
- * 
- * The JSON representation for `StringValue` is JSON string.
- * @name StringValueSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.StringValue
- */
-export interface StringValueSDKType {
-  value: string;
 }
 /**
  * Wrapper message for `bytes`.
@@ -408,22 +320,11 @@ export interface BytesValueAmino {
   /**
    * The bytes value.
    */
-  value?: string;
+  value: string;
 }
 export interface BytesValueAminoMsg {
   type: "/google.protobuf.BytesValue";
   value: BytesValueAmino;
-}
-/**
- * Wrapper message for `bytes`.
- * 
- * The JSON representation for `BytesValue` is JSON string.
- * @name BytesValueSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.BytesValue
- */
-export interface BytesValueSDKType {
-  value: Uint8Array;
 }
 function createBaseDoubleValue(): DoubleValue {
   return {
@@ -441,9 +342,6 @@ function createBaseDoubleValue(): DoubleValue {
 export const DoubleValue = {
   typeUrl: "/google.protobuf.DoubleValue",
   is(o: any): o is DoubleValue {
-    return o && (o.$typeUrl === DoubleValue.typeUrl || typeof o.value === "number");
-  },
-  isSDK(o: any): o is DoubleValueSDKType {
     return o && (o.$typeUrl === DoubleValue.typeUrl || typeof o.value === "number");
   },
   isAmino(o: any): o is DoubleValueAmino {
@@ -472,7 +370,7 @@ export const DoubleValue = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DoubleValue>, I>>(object: I): DoubleValue {
+  fromPartial(object: DeepPartial<DoubleValue>): DoubleValue {
     const message = createBaseDoubleValue();
     message.value = object.value ?? 0;
     return message;
@@ -524,9 +422,6 @@ export const FloatValue = {
   is(o: any): o is FloatValue {
     return o && (o.$typeUrl === FloatValue.typeUrl || typeof o.value === "number");
   },
-  isSDK(o: any): o is FloatValueSDKType {
-    return o && (o.$typeUrl === FloatValue.typeUrl || typeof o.value === "number");
-  },
   isAmino(o: any): o is FloatValueAmino {
     return o && (o.$typeUrl === FloatValue.typeUrl || typeof o.value === "number");
   },
@@ -553,7 +448,7 @@ export const FloatValue = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FloatValue>, I>>(object: I): FloatValue {
+  fromPartial(object: DeepPartial<FloatValue>): FloatValue {
     const message = createBaseFloatValue();
     message.value = object.value ?? 0;
     return message;
@@ -605,9 +500,6 @@ export const Int64Value = {
   is(o: any): o is Int64Value {
     return o && (o.$typeUrl === Int64Value.typeUrl || typeof o.value === "bigint");
   },
-  isSDK(o: any): o is Int64ValueSDKType {
-    return o && (o.$typeUrl === Int64Value.typeUrl || typeof o.value === "bigint");
-  },
   isAmino(o: any): o is Int64ValueAmino {
     return o && (o.$typeUrl === Int64Value.typeUrl || typeof o.value === "bigint");
   },
@@ -634,7 +526,7 @@ export const Int64Value = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Int64Value>, I>>(object: I): Int64Value {
+  fromPartial(object: DeepPartial<Int64Value>): Int64Value {
     const message = createBaseInt64Value();
     message.value = object.value !== undefined && object.value !== null ? BigInt(object.value.toString()) : BigInt(0);
     return message;
@@ -686,9 +578,6 @@ export const UInt64Value = {
   is(o: any): o is UInt64Value {
     return o && (o.$typeUrl === UInt64Value.typeUrl || typeof o.value === "bigint");
   },
-  isSDK(o: any): o is UInt64ValueSDKType {
-    return o && (o.$typeUrl === UInt64Value.typeUrl || typeof o.value === "bigint");
-  },
   isAmino(o: any): o is UInt64ValueAmino {
     return o && (o.$typeUrl === UInt64Value.typeUrl || typeof o.value === "bigint");
   },
@@ -715,7 +604,7 @@ export const UInt64Value = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<UInt64Value>, I>>(object: I): UInt64Value {
+  fromPartial(object: DeepPartial<UInt64Value>): UInt64Value {
     const message = createBaseUInt64Value();
     message.value = object.value !== undefined && object.value !== null ? BigInt(object.value.toString()) : BigInt(0);
     return message;
@@ -767,9 +656,6 @@ export const Int32Value = {
   is(o: any): o is Int32Value {
     return o && (o.$typeUrl === Int32Value.typeUrl || typeof o.value === "number");
   },
-  isSDK(o: any): o is Int32ValueSDKType {
-    return o && (o.$typeUrl === Int32Value.typeUrl || typeof o.value === "number");
-  },
   isAmino(o: any): o is Int32ValueAmino {
     return o && (o.$typeUrl === Int32Value.typeUrl || typeof o.value === "number");
   },
@@ -796,7 +682,7 @@ export const Int32Value = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Int32Value>, I>>(object: I): Int32Value {
+  fromPartial(object: DeepPartial<Int32Value>): Int32Value {
     const message = createBaseInt32Value();
     message.value = object.value ?? 0;
     return message;
@@ -848,9 +734,6 @@ export const UInt32Value = {
   is(o: any): o is UInt32Value {
     return o && (o.$typeUrl === UInt32Value.typeUrl || typeof o.value === "number");
   },
-  isSDK(o: any): o is UInt32ValueSDKType {
-    return o && (o.$typeUrl === UInt32Value.typeUrl || typeof o.value === "number");
-  },
   isAmino(o: any): o is UInt32ValueAmino {
     return o && (o.$typeUrl === UInt32Value.typeUrl || typeof o.value === "number");
   },
@@ -877,7 +760,7 @@ export const UInt32Value = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<UInt32Value>, I>>(object: I): UInt32Value {
+  fromPartial(object: DeepPartial<UInt32Value>): UInt32Value {
     const message = createBaseUInt32Value();
     message.value = object.value ?? 0;
     return message;
@@ -929,9 +812,6 @@ export const BoolValue = {
   is(o: any): o is BoolValue {
     return o && (o.$typeUrl === BoolValue.typeUrl || typeof o.value === "boolean");
   },
-  isSDK(o: any): o is BoolValueSDKType {
-    return o && (o.$typeUrl === BoolValue.typeUrl || typeof o.value === "boolean");
-  },
   isAmino(o: any): o is BoolValueAmino {
     return o && (o.$typeUrl === BoolValue.typeUrl || typeof o.value === "boolean");
   },
@@ -958,7 +838,7 @@ export const BoolValue = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BoolValue>, I>>(object: I): BoolValue {
+  fromPartial(object: DeepPartial<BoolValue>): BoolValue {
     const message = createBaseBoolValue();
     message.value = object.value ?? false;
     return message;
@@ -1010,9 +890,6 @@ export const StringValue = {
   is(o: any): o is StringValue {
     return o && (o.$typeUrl === StringValue.typeUrl || typeof o.value === "string");
   },
-  isSDK(o: any): o is StringValueSDKType {
-    return o && (o.$typeUrl === StringValue.typeUrl || typeof o.value === "string");
-  },
   isAmino(o: any): o is StringValueAmino {
     return o && (o.$typeUrl === StringValue.typeUrl || typeof o.value === "string");
   },
@@ -1039,7 +916,7 @@ export const StringValue = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<StringValue>, I>>(object: I): StringValue {
+  fromPartial(object: DeepPartial<StringValue>): StringValue {
     const message = createBaseStringValue();
     message.value = object.value ?? "";
     return message;
@@ -1091,9 +968,6 @@ export const BytesValue = {
   is(o: any): o is BytesValue {
     return o && (o.$typeUrl === BytesValue.typeUrl || o.value instanceof Uint8Array || typeof o.value === "string");
   },
-  isSDK(o: any): o is BytesValueSDKType {
-    return o && (o.$typeUrl === BytesValue.typeUrl || o.value instanceof Uint8Array || typeof o.value === "string");
-  },
   isAmino(o: any): o is BytesValueAmino {
     return o && (o.$typeUrl === BytesValue.typeUrl || o.value instanceof Uint8Array || typeof o.value === "string");
   },
@@ -1120,7 +994,7 @@ export const BytesValue = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BytesValue>, I>>(object: I): BytesValue {
+  fromPartial(object: DeepPartial<BytesValue>): BytesValue {
     const message = createBaseBytesValue();
     message.value = object.value ?? new Uint8Array();
     return message;

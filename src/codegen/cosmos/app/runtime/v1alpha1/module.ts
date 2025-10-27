@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 import { GlobalDecoderRegistry } from "../../../../registry";
 /**
  * Module is the config object for the runtime module.
@@ -76,75 +76,58 @@ export interface ModuleAmino {
   /**
    * app_name is the name of the app.
    */
-  app_name?: string;
+  app_name: string;
   /**
    * begin_blockers specifies the module names of begin blockers
    * to call in the order in which they should be called. If this is left empty
    * no begin blocker will be registered.
    */
-  begin_blockers?: string[];
+  begin_blockers: string[];
   /**
    * end_blockers specifies the module names of the end blockers
    * to call in the order in which they should be called. If this is left empty
    * no end blocker will be registered.
    */
-  end_blockers?: string[];
+  end_blockers: string[];
   /**
    * init_genesis specifies the module names of init genesis functions
    * to call in the order in which they should be called. If this is left empty
    * no init genesis function will be registered.
    */
-  init_genesis?: string[];
+  init_genesis: string[];
   /**
    * export_genesis specifies the order in which to export module genesis data.
    * If this is left empty, the init_genesis order will be used for export genesis
    * if it is specified.
    */
-  export_genesis?: string[];
+  export_genesis: string[];
   /**
    * override_store_keys is an optional list of overrides for the module store keys
    * to be used in keeper construction.
    */
-  override_store_keys?: StoreKeyConfigAmino[];
+  override_store_keys: StoreKeyConfigAmino[];
   /**
    * order_migrations defines the order in which module migrations are performed.
    * If this is left empty, it uses the default migration order.
    * https://pkg.go.dev/github.com/cosmos/cosmos-sdk@v0.47.0-alpha2/types/module#DefaultMigrationsOrder
    */
-  order_migrations?: string[];
+  order_migrations: string[];
   /**
    * precommiters specifies the module names of the precommiters
    * to call in the order in which they should be called. If this is left empty
    * no precommit function will be registered.
    */
-  precommiters?: string[];
+  precommiters: string[];
   /**
    * prepare_check_staters specifies the module names of the prepare_check_staters
    * to call in the order in which they should be called. If this is left empty
    * no preparecheckstate function will be registered.
    */
-  prepare_check_staters?: string[];
+  prepare_check_staters: string[];
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
   value: ModuleAmino;
-}
-/**
- * Module is the config object for the runtime module.
- * @name ModuleSDKType
- * @package cosmos.app.runtime.v1alpha1
- * @see proto type: cosmos.app.runtime.v1alpha1.Module
- */
-export interface ModuleSDKType {
-  app_name: string;
-  begin_blockers: string[];
-  end_blockers: string[];
-  init_genesis: string[];
-  export_genesis: string[];
-  override_store_keys: StoreKeyConfigSDKType[];
-  order_migrations: string[];
-  precommiters: string[];
-  prepare_check_staters: string[];
 }
 /**
  * StoreKeyConfig may be supplied to override the default module store key, which
@@ -178,26 +161,15 @@ export interface StoreKeyConfigAmino {
   /**
    * name of the module to override the store key of
    */
-  module_name?: string;
+  module_name: string;
   /**
    * the kv store key to use instead of the module name.
    */
-  kv_store_key?: string;
+  kv_store_key: string;
 }
 export interface StoreKeyConfigAminoMsg {
   type: "cosmos-sdk/StoreKeyConfig";
   value: StoreKeyConfigAmino;
-}
-/**
- * StoreKeyConfig may be supplied to override the default module store key, which
- * is the module name.
- * @name StoreKeyConfigSDKType
- * @package cosmos.app.runtime.v1alpha1
- * @see proto type: cosmos.app.runtime.v1alpha1.StoreKeyConfig
- */
-export interface StoreKeyConfigSDKType {
-  module_name: string;
-  kv_store_key: string;
 }
 function createBaseModule(): Module {
   return {
@@ -223,9 +195,6 @@ export const Module = {
   aminoType: "cosmos-sdk/Module",
   is(o: any): o is Module {
     return o && (o.$typeUrl === Module.typeUrl || typeof o.appName === "string" && Array.isArray(o.beginBlockers) && (!o.beginBlockers.length || typeof o.beginBlockers[0] === "string") && Array.isArray(o.endBlockers) && (!o.endBlockers.length || typeof o.endBlockers[0] === "string") && Array.isArray(o.initGenesis) && (!o.initGenesis.length || typeof o.initGenesis[0] === "string") && Array.isArray(o.exportGenesis) && (!o.exportGenesis.length || typeof o.exportGenesis[0] === "string") && Array.isArray(o.overrideStoreKeys) && (!o.overrideStoreKeys.length || StoreKeyConfig.is(o.overrideStoreKeys[0])) && Array.isArray(o.orderMigrations) && (!o.orderMigrations.length || typeof o.orderMigrations[0] === "string") && Array.isArray(o.precommiters) && (!o.precommiters.length || typeof o.precommiters[0] === "string") && Array.isArray(o.prepareCheckStaters) && (!o.prepareCheckStaters.length || typeof o.prepareCheckStaters[0] === "string"));
-  },
-  isSDK(o: any): o is ModuleSDKType {
-    return o && (o.$typeUrl === Module.typeUrl || typeof o.app_name === "string" && Array.isArray(o.begin_blockers) && (!o.begin_blockers.length || typeof o.begin_blockers[0] === "string") && Array.isArray(o.end_blockers) && (!o.end_blockers.length || typeof o.end_blockers[0] === "string") && Array.isArray(o.init_genesis) && (!o.init_genesis.length || typeof o.init_genesis[0] === "string") && Array.isArray(o.export_genesis) && (!o.export_genesis.length || typeof o.export_genesis[0] === "string") && Array.isArray(o.override_store_keys) && (!o.override_store_keys.length || StoreKeyConfig.isSDK(o.override_store_keys[0])) && Array.isArray(o.order_migrations) && (!o.order_migrations.length || typeof o.order_migrations[0] === "string") && Array.isArray(o.precommiters) && (!o.precommiters.length || typeof o.precommiters[0] === "string") && Array.isArray(o.prepare_check_staters) && (!o.prepare_check_staters.length || typeof o.prepare_check_staters[0] === "string"));
   },
   isAmino(o: any): o is ModuleAmino {
     return o && (o.$typeUrl === Module.typeUrl || typeof o.app_name === "string" && Array.isArray(o.begin_blockers) && (!o.begin_blockers.length || typeof o.begin_blockers[0] === "string") && Array.isArray(o.end_blockers) && (!o.end_blockers.length || typeof o.end_blockers[0] === "string") && Array.isArray(o.init_genesis) && (!o.init_genesis.length || typeof o.init_genesis[0] === "string") && Array.isArray(o.export_genesis) && (!o.export_genesis.length || typeof o.export_genesis[0] === "string") && Array.isArray(o.override_store_keys) && (!o.override_store_keys.length || StoreKeyConfig.isAmino(o.override_store_keys[0])) && Array.isArray(o.order_migrations) && (!o.order_migrations.length || typeof o.order_migrations[0] === "string") && Array.isArray(o.precommiters) && (!o.precommiters.length || typeof o.precommiters[0] === "string") && Array.isArray(o.prepare_check_staters) && (!o.prepare_check_staters.length || typeof o.prepare_check_staters[0] === "string"));
@@ -301,7 +270,7 @@ export const Module = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Module>, I>>(object: I): Module {
+  fromPartial(object: DeepPartial<Module>): Module {
     const message = createBaseModule();
     message.appName = object.appName ?? "";
     message.beginBlockers = object.beginBlockers?.map(e => e) || [];
@@ -421,9 +390,6 @@ export const StoreKeyConfig = {
   is(o: any): o is StoreKeyConfig {
     return o && (o.$typeUrl === StoreKeyConfig.typeUrl || typeof o.moduleName === "string" && typeof o.kvStoreKey === "string");
   },
-  isSDK(o: any): o is StoreKeyConfigSDKType {
-    return o && (o.$typeUrl === StoreKeyConfig.typeUrl || typeof o.module_name === "string" && typeof o.kv_store_key === "string");
-  },
   isAmino(o: any): o is StoreKeyConfigAmino {
     return o && (o.$typeUrl === StoreKeyConfig.typeUrl || typeof o.module_name === "string" && typeof o.kv_store_key === "string");
   },
@@ -456,7 +422,7 @@ export const StoreKeyConfig = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<StoreKeyConfig>, I>>(object: I): StoreKeyConfig {
+  fromPartial(object: DeepPartial<StoreKeyConfig>): StoreKeyConfig {
     const message = createBaseStoreKeyConfig();
     message.moduleName = object.moduleName ?? "";
     message.kvStoreKey = object.kvStoreKey ?? "";

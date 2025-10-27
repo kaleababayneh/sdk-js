@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * Module is the config object of the bank module.
  * @name Module
@@ -36,25 +36,15 @@ export interface ModuleAmino {
    * funds. If left empty it defaults to the list of account names supplied in the auth module configuration as
    * module_account_permissions
    */
-  blocked_module_accounts_override?: string[];
+  blocked_module_accounts_override: string[];
   /**
    * authority defines the custom module authority. If not set, defaults to the governance module.
    */
-  authority?: string;
+  authority: string;
 }
 export interface ModuleAminoMsg {
   type: "cosmos-sdk/Module";
   value: ModuleAmino;
-}
-/**
- * Module is the config object of the bank module.
- * @name ModuleSDKType
- * @package cosmos.bank.module.v1
- * @see proto type: cosmos.bank.module.v1.Module
- */
-export interface ModuleSDKType {
-  blocked_module_accounts_override: string[];
-  authority: string;
 }
 function createBaseModule(): Module {
   return {
@@ -73,9 +63,6 @@ export const Module = {
   aminoType: "cosmos-sdk/Module",
   is(o: any): o is Module {
     return o && (o.$typeUrl === Module.typeUrl || Array.isArray(o.blockedModuleAccountsOverride) && (!o.blockedModuleAccountsOverride.length || typeof o.blockedModuleAccountsOverride[0] === "string") && typeof o.authority === "string");
-  },
-  isSDK(o: any): o is ModuleSDKType {
-    return o && (o.$typeUrl === Module.typeUrl || Array.isArray(o.blocked_module_accounts_override) && (!o.blocked_module_accounts_override.length || typeof o.blocked_module_accounts_override[0] === "string") && typeof o.authority === "string");
   },
   isAmino(o: any): o is ModuleAmino {
     return o && (o.$typeUrl === Module.typeUrl || Array.isArray(o.blocked_module_accounts_override) && (!o.blocked_module_accounts_override.length || typeof o.blocked_module_accounts_override[0] === "string") && typeof o.authority === "string");
@@ -109,7 +96,7 @@ export const Module = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Module>, I>>(object: I): Module {
+  fromPartial(object: DeepPartial<Module>): Module {
     const message = createBaseModule();
     message.blockedModuleAccountsOverride = object.blockedModuleAccountsOverride?.map(e => e) || [];
     message.authority = object.authority ?? "";

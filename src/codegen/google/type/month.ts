@@ -30,7 +30,6 @@ export enum Month {
   DECEMBER = 12,
   UNRECOGNIZED = -1,
 }
-export const MonthSDKType = Month;
 export const MonthAmino = Month;
 export function monthFromJSON(object: any): Month {
   switch (object) {

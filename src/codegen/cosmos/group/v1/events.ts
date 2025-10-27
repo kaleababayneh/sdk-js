@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { ProposalExecutorResult, ProposalStatus, TallyResult, TallyResultAmino, TallyResultSDKType } from "./types";
+import { ProposalExecutorResult, ProposalStatus, TallyResult, TallyResultAmino } from "./types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, isSet } from "../../../helpers";
+import { DeepPartial, isSet } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * EventCreateGroup is an event emitted when a group is created.
@@ -30,20 +30,11 @@ export interface EventCreateGroupAmino {
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
 }
 export interface EventCreateGroupAminoMsg {
   type: "cosmos-sdk/EventCreateGroup";
   value: EventCreateGroupAmino;
-}
-/**
- * EventCreateGroup is an event emitted when a group is created.
- * @name EventCreateGroupSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.EventCreateGroup
- */
-export interface EventCreateGroupSDKType {
-  group_id: bigint;
 }
 /**
  * EventUpdateGroup is an event emitted when a group is updated.
@@ -71,20 +62,11 @@ export interface EventUpdateGroupAmino {
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
 }
 export interface EventUpdateGroupAminoMsg {
   type: "cosmos-sdk/EventUpdateGroup";
   value: EventUpdateGroupAmino;
-}
-/**
- * EventUpdateGroup is an event emitted when a group is updated.
- * @name EventUpdateGroupSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.EventUpdateGroup
- */
-export interface EventUpdateGroupSDKType {
-  group_id: bigint;
 }
 /**
  * EventCreateGroupPolicy is an event emitted when a group policy is created.
@@ -112,20 +94,11 @@ export interface EventCreateGroupPolicyAmino {
   /**
    * address is the account address of the group policy.
    */
-  address?: string;
+  address: string;
 }
 export interface EventCreateGroupPolicyAminoMsg {
   type: "cosmos-sdk/EventCreateGroupPolicy";
   value: EventCreateGroupPolicyAmino;
-}
-/**
- * EventCreateGroupPolicy is an event emitted when a group policy is created.
- * @name EventCreateGroupPolicySDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.EventCreateGroupPolicy
- */
-export interface EventCreateGroupPolicySDKType {
-  address: string;
 }
 /**
  * EventUpdateGroupPolicy is an event emitted when a group policy is updated.
@@ -153,20 +126,11 @@ export interface EventUpdateGroupPolicyAmino {
   /**
    * address is the account address of the group policy.
    */
-  address?: string;
+  address: string;
 }
 export interface EventUpdateGroupPolicyAminoMsg {
   type: "cosmos-sdk/EventUpdateGroupPolicy";
   value: EventUpdateGroupPolicyAmino;
-}
-/**
- * EventUpdateGroupPolicy is an event emitted when a group policy is updated.
- * @name EventUpdateGroupPolicySDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.EventUpdateGroupPolicy
- */
-export interface EventUpdateGroupPolicySDKType {
-  address: string;
 }
 /**
  * EventSubmitProposal is an event emitted when a proposal is created.
@@ -194,20 +158,11 @@ export interface EventSubmitProposalAmino {
   /**
    * proposal_id is the unique ID of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
 }
 export interface EventSubmitProposalAminoMsg {
   type: "cosmos-sdk/EventSubmitProposal";
   value: EventSubmitProposalAmino;
-}
-/**
- * EventSubmitProposal is an event emitted when a proposal is created.
- * @name EventSubmitProposalSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.EventSubmitProposal
- */
-export interface EventSubmitProposalSDKType {
-  proposal_id: bigint;
 }
 /**
  * EventWithdrawProposal is an event emitted when a proposal is withdrawn.
@@ -235,20 +190,11 @@ export interface EventWithdrawProposalAmino {
   /**
    * proposal_id is the unique ID of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
 }
 export interface EventWithdrawProposalAminoMsg {
   type: "cosmos-sdk/EventWithdrawProposal";
   value: EventWithdrawProposalAmino;
-}
-/**
- * EventWithdrawProposal is an event emitted when a proposal is withdrawn.
- * @name EventWithdrawProposalSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.EventWithdrawProposal
- */
-export interface EventWithdrawProposalSDKType {
-  proposal_id: bigint;
 }
 /**
  * EventVote is an event emitted when a voter votes on a proposal.
@@ -276,20 +222,11 @@ export interface EventVoteAmino {
   /**
    * proposal_id is the unique ID of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
 }
 export interface EventVoteAminoMsg {
   type: "cosmos-sdk/EventVote";
   value: EventVoteAmino;
-}
-/**
- * EventVote is an event emitted when a voter votes on a proposal.
- * @name EventVoteSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.EventVote
- */
-export interface EventVoteSDKType {
-  proposal_id: bigint;
 }
 /**
  * EventExec is an event emitted when a proposal is executed.
@@ -325,30 +262,19 @@ export interface EventExecAmino {
   /**
    * proposal_id is the unique ID of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
   /**
    * result is the proposal execution result.
    */
-  result?: ProposalExecutorResult;
+  result: ProposalExecutorResult;
   /**
    * logs contains error logs in case the execution result is FAILURE.
    */
-  logs?: string;
+  logs: string;
 }
 export interface EventExecAminoMsg {
   type: "cosmos-sdk/EventExec";
   value: EventExecAmino;
-}
-/**
- * EventExec is an event emitted when a proposal is executed.
- * @name EventExecSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.EventExec
- */
-export interface EventExecSDKType {
-  proposal_id: bigint;
-  result: ProposalExecutorResult;
-  logs: string;
 }
 /**
  * EventLeaveGroup is an event emitted when group member leaves the group.
@@ -380,25 +306,15 @@ export interface EventLeaveGroupAmino {
   /**
    * group_id is the unique ID of the group.
    */
-  group_id?: string;
+  group_id: string;
   /**
    * address is the account address of the group member.
    */
-  address?: string;
+  address: string;
 }
 export interface EventLeaveGroupAminoMsg {
   type: "cosmos-sdk/EventLeaveGroup";
   value: EventLeaveGroupAmino;
-}
-/**
- * EventLeaveGroup is an event emitted when group member leaves the group.
- * @name EventLeaveGroupSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.EventLeaveGroup
- */
-export interface EventLeaveGroupSDKType {
-  group_id: bigint;
-  address: string;
 }
 /**
  * EventProposalPruned is an event emitted when a proposal is pruned.
@@ -434,11 +350,11 @@ export interface EventProposalPrunedAmino {
   /**
    * proposal_id is the unique ID of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
   /**
    * status is the proposal status (UNSPECIFIED, SUBMITTED, ACCEPTED, REJECTED, ABORTED, WITHDRAWN).
    */
-  status?: ProposalStatus;
+  status: ProposalStatus;
   /**
    * tally_result is the proposal tally result (when applicable).
    */
@@ -447,17 +363,6 @@ export interface EventProposalPrunedAmino {
 export interface EventProposalPrunedAminoMsg {
   type: "cosmos-sdk/EventProposalPruned";
   value: EventProposalPrunedAmino;
-}
-/**
- * EventProposalPruned is an event emitted when a proposal is pruned.
- * @name EventProposalPrunedSDKType
- * @package cosmos.group.v1
- * @see proto type: cosmos.group.v1.EventProposalPruned
- */
-export interface EventProposalPrunedSDKType {
-  proposal_id: bigint;
-  status: ProposalStatus;
-  tally_result?: TallyResultSDKType;
 }
 function createBaseEventCreateGroup(): EventCreateGroup {
   return {
@@ -475,9 +380,6 @@ export const EventCreateGroup = {
   aminoType: "cosmos-sdk/EventCreateGroup",
   is(o: any): o is EventCreateGroup {
     return o && (o.$typeUrl === EventCreateGroup.typeUrl || typeof o.groupId === "bigint");
-  },
-  isSDK(o: any): o is EventCreateGroupSDKType {
-    return o && (o.$typeUrl === EventCreateGroup.typeUrl || typeof o.group_id === "bigint");
   },
   isAmino(o: any): o is EventCreateGroupAmino {
     return o && (o.$typeUrl === EventCreateGroup.typeUrl || typeof o.group_id === "bigint");
@@ -505,7 +407,7 @@ export const EventCreateGroup = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventCreateGroup>, I>>(object: I): EventCreateGroup {
+  fromPartial(object: DeepPartial<EventCreateGroup>): EventCreateGroup {
     const message = createBaseEventCreateGroup();
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
     return message;
@@ -562,9 +464,6 @@ export const EventUpdateGroup = {
   is(o: any): o is EventUpdateGroup {
     return o && (o.$typeUrl === EventUpdateGroup.typeUrl || typeof o.groupId === "bigint");
   },
-  isSDK(o: any): o is EventUpdateGroupSDKType {
-    return o && (o.$typeUrl === EventUpdateGroup.typeUrl || typeof o.group_id === "bigint");
-  },
   isAmino(o: any): o is EventUpdateGroupAmino {
     return o && (o.$typeUrl === EventUpdateGroup.typeUrl || typeof o.group_id === "bigint");
   },
@@ -591,7 +490,7 @@ export const EventUpdateGroup = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventUpdateGroup>, I>>(object: I): EventUpdateGroup {
+  fromPartial(object: DeepPartial<EventUpdateGroup>): EventUpdateGroup {
     const message = createBaseEventUpdateGroup();
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
     return message;
@@ -648,9 +547,6 @@ export const EventCreateGroupPolicy = {
   is(o: any): o is EventCreateGroupPolicy {
     return o && (o.$typeUrl === EventCreateGroupPolicy.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is EventCreateGroupPolicySDKType {
-    return o && (o.$typeUrl === EventCreateGroupPolicy.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is EventCreateGroupPolicyAmino {
     return o && (o.$typeUrl === EventCreateGroupPolicy.typeUrl || typeof o.address === "string");
   },
@@ -677,7 +573,7 @@ export const EventCreateGroupPolicy = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventCreateGroupPolicy>, I>>(object: I): EventCreateGroupPolicy {
+  fromPartial(object: DeepPartial<EventCreateGroupPolicy>): EventCreateGroupPolicy {
     const message = createBaseEventCreateGroupPolicy();
     message.address = object.address ?? "";
     return message;
@@ -734,9 +630,6 @@ export const EventUpdateGroupPolicy = {
   is(o: any): o is EventUpdateGroupPolicy {
     return o && (o.$typeUrl === EventUpdateGroupPolicy.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is EventUpdateGroupPolicySDKType {
-    return o && (o.$typeUrl === EventUpdateGroupPolicy.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is EventUpdateGroupPolicyAmino {
     return o && (o.$typeUrl === EventUpdateGroupPolicy.typeUrl || typeof o.address === "string");
   },
@@ -763,7 +656,7 @@ export const EventUpdateGroupPolicy = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventUpdateGroupPolicy>, I>>(object: I): EventUpdateGroupPolicy {
+  fromPartial(object: DeepPartial<EventUpdateGroupPolicy>): EventUpdateGroupPolicy {
     const message = createBaseEventUpdateGroupPolicy();
     message.address = object.address ?? "";
     return message;
@@ -820,9 +713,6 @@ export const EventSubmitProposal = {
   is(o: any): o is EventSubmitProposal {
     return o && (o.$typeUrl === EventSubmitProposal.typeUrl || typeof o.proposalId === "bigint");
   },
-  isSDK(o: any): o is EventSubmitProposalSDKType {
-    return o && (o.$typeUrl === EventSubmitProposal.typeUrl || typeof o.proposal_id === "bigint");
-  },
   isAmino(o: any): o is EventSubmitProposalAmino {
     return o && (o.$typeUrl === EventSubmitProposal.typeUrl || typeof o.proposal_id === "bigint");
   },
@@ -849,7 +739,7 @@ export const EventSubmitProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventSubmitProposal>, I>>(object: I): EventSubmitProposal {
+  fromPartial(object: DeepPartial<EventSubmitProposal>): EventSubmitProposal {
     const message = createBaseEventSubmitProposal();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     return message;
@@ -906,9 +796,6 @@ export const EventWithdrawProposal = {
   is(o: any): o is EventWithdrawProposal {
     return o && (o.$typeUrl === EventWithdrawProposal.typeUrl || typeof o.proposalId === "bigint");
   },
-  isSDK(o: any): o is EventWithdrawProposalSDKType {
-    return o && (o.$typeUrl === EventWithdrawProposal.typeUrl || typeof o.proposal_id === "bigint");
-  },
   isAmino(o: any): o is EventWithdrawProposalAmino {
     return o && (o.$typeUrl === EventWithdrawProposal.typeUrl || typeof o.proposal_id === "bigint");
   },
@@ -935,7 +822,7 @@ export const EventWithdrawProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventWithdrawProposal>, I>>(object: I): EventWithdrawProposal {
+  fromPartial(object: DeepPartial<EventWithdrawProposal>): EventWithdrawProposal {
     const message = createBaseEventWithdrawProposal();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     return message;
@@ -992,9 +879,6 @@ export const EventVote = {
   is(o: any): o is EventVote {
     return o && (o.$typeUrl === EventVote.typeUrl || typeof o.proposalId === "bigint");
   },
-  isSDK(o: any): o is EventVoteSDKType {
-    return o && (o.$typeUrl === EventVote.typeUrl || typeof o.proposal_id === "bigint");
-  },
   isAmino(o: any): o is EventVoteAmino {
     return o && (o.$typeUrl === EventVote.typeUrl || typeof o.proposal_id === "bigint");
   },
@@ -1021,7 +905,7 @@ export const EventVote = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventVote>, I>>(object: I): EventVote {
+  fromPartial(object: DeepPartial<EventVote>): EventVote {
     const message = createBaseEventVote();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     return message;
@@ -1080,9 +964,6 @@ export const EventExec = {
   is(o: any): o is EventExec {
     return o && (o.$typeUrl === EventExec.typeUrl || typeof o.proposalId === "bigint" && isSet(o.result) && typeof o.logs === "string");
   },
-  isSDK(o: any): o is EventExecSDKType {
-    return o && (o.$typeUrl === EventExec.typeUrl || typeof o.proposal_id === "bigint" && isSet(o.result) && typeof o.logs === "string");
-  },
   isAmino(o: any): o is EventExecAmino {
     return o && (o.$typeUrl === EventExec.typeUrl || typeof o.proposal_id === "bigint" && isSet(o.result) && typeof o.logs === "string");
   },
@@ -1121,7 +1002,7 @@ export const EventExec = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventExec>, I>>(object: I): EventExec {
+  fromPartial(object: DeepPartial<EventExec>): EventExec {
     const message = createBaseEventExec();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.result = object.result ?? 0;
@@ -1189,9 +1070,6 @@ export const EventLeaveGroup = {
   is(o: any): o is EventLeaveGroup {
     return o && (o.$typeUrl === EventLeaveGroup.typeUrl || typeof o.groupId === "bigint" && typeof o.address === "string");
   },
-  isSDK(o: any): o is EventLeaveGroupSDKType {
-    return o && (o.$typeUrl === EventLeaveGroup.typeUrl || typeof o.group_id === "bigint" && typeof o.address === "string");
-  },
   isAmino(o: any): o is EventLeaveGroupAmino {
     return o && (o.$typeUrl === EventLeaveGroup.typeUrl || typeof o.group_id === "bigint" && typeof o.address === "string");
   },
@@ -1224,7 +1102,7 @@ export const EventLeaveGroup = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventLeaveGroup>, I>>(object: I): EventLeaveGroup {
+  fromPartial(object: DeepPartial<EventLeaveGroup>): EventLeaveGroup {
     const message = createBaseEventLeaveGroup();
     message.groupId = object.groupId !== undefined && object.groupId !== null ? BigInt(object.groupId.toString()) : BigInt(0);
     message.address = object.address ?? "";
@@ -1288,9 +1166,6 @@ export const EventProposalPruned = {
   is(o: any): o is EventProposalPruned {
     return o && (o.$typeUrl === EventProposalPruned.typeUrl || typeof o.proposalId === "bigint" && isSet(o.status));
   },
-  isSDK(o: any): o is EventProposalPrunedSDKType {
-    return o && (o.$typeUrl === EventProposalPruned.typeUrl || typeof o.proposal_id === "bigint" && isSet(o.status));
-  },
   isAmino(o: any): o is EventProposalPrunedAmino {
     return o && (o.$typeUrl === EventProposalPruned.typeUrl || typeof o.proposal_id === "bigint" && isSet(o.status));
   },
@@ -1329,7 +1204,7 @@ export const EventProposalPruned = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EventProposalPruned>, I>>(object: I): EventProposalPruned {
+  fromPartial(object: DeepPartial<EventProposalPruned>): EventProposalPruned {
     const message = createBaseEventProposalPruned();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.status = object.status ?? 0;

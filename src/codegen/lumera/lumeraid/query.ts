@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType } from "./params";
+import { Params, ParamsAmino } from "./params";
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
  * QueryParamsRequest is request type for the Query/Params RPC method.
@@ -26,13 +26,6 @@ export interface QueryParamsRequestAminoMsg {
   type: "/lumera.lumeraid.QueryParamsRequest";
   value: QueryParamsRequestAmino;
 }
-/**
- * QueryParamsRequest is request type for the Query/Params RPC method.
- * @name QueryParamsRequestSDKType
- * @package lumera.lumeraid
- * @see proto type: lumera.lumeraid.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {}
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
  * @name QueryParamsResponse
@@ -65,15 +58,6 @@ export interface QueryParamsResponseAminoMsg {
   type: "/lumera.lumeraid.QueryParamsResponse";
   value: QueryParamsResponseAmino;
 }
-/**
- * QueryParamsResponse is response type for the Query/Params RPC method.
- * @name QueryParamsResponseSDKType
- * @package lumera.lumeraid
- * @see proto type: lumera.lumeraid.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  params: ParamsSDKType;
-}
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
 }
@@ -86,9 +70,6 @@ function createBaseQueryParamsRequest(): QueryParamsRequest {
 export const QueryParamsRequest = {
   typeUrl: "/lumera.lumeraid.QueryParamsRequest",
   is(o: any): o is QueryParamsRequest {
-    return o && o.$typeUrl === QueryParamsRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
   isAmino(o: any): o is QueryParamsRequestAmino {
@@ -111,7 +92,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(_: I): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -156,9 +137,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.is(o.params));
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isSDK(o.params));
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isAmino(o.params));
   },
@@ -185,7 +163,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;

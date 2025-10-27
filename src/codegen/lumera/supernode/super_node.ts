@@ -1,13 +1,13 @@
 // @ts-nocheck
 /* eslint-disable */
-import { SuperNodeStateRecord, SuperNodeStateRecordAmino, SuperNodeStateRecordSDKType } from "./supernode_state";
-import { Evidence, EvidenceAmino, EvidenceSDKType } from "./evidence";
-import { IPAddressHistory, IPAddressHistoryAmino, IPAddressHistorySDKType } from "./ip_address_history";
-import { MetricsAggregate, MetricsAggregateAmino, MetricsAggregateSDKType } from "./metrics_aggregate";
-import { SupernodeAccountHistory, SupernodeAccountHistoryAmino, SupernodeAccountHistorySDKType } from "./supernode_account_history";
+import { SuperNodeStateRecord, SuperNodeStateRecordAmino } from "./supernode_state";
+import { Evidence, EvidenceAmino } from "./evidence";
+import { IPAddressHistory, IPAddressHistoryAmino } from "./ip_address_history";
+import { MetricsAggregate, MetricsAggregateAmino } from "./metrics_aggregate";
+import { SupernodeAccountHistory, SupernodeAccountHistoryAmino } from "./supernode_account_history";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * @name SuperNode
  * @package lumera.supernode
@@ -34,35 +34,19 @@ export interface SuperNodeProtoMsg {
  * @see proto type: lumera.supernode.SuperNode
  */
 export interface SuperNodeAmino {
-  validator_address?: string;
-  states?: SuperNodeStateRecordAmino[];
-  evidence?: EvidenceAmino[];
-  prev_ip_addresses?: IPAddressHistoryAmino[];
-  note?: string;
+  validator_address: string;
+  states: SuperNodeStateRecordAmino[];
+  evidence: EvidenceAmino[];
+  prev_ip_addresses: IPAddressHistoryAmino[];
+  note: string;
   metrics?: MetricsAggregateAmino;
-  supernode_account?: string;
-  p2p_port?: string;
-  prev_supernode_accounts?: SupernodeAccountHistoryAmino[];
+  supernode_account: string;
+  p2p_port: string;
+  prev_supernode_accounts: SupernodeAccountHistoryAmino[];
 }
 export interface SuperNodeAminoMsg {
   type: "/lumera.supernode.SuperNode";
   value: SuperNodeAmino;
-}
-/**
- * @name SuperNodeSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.SuperNode
- */
-export interface SuperNodeSDKType {
-  validator_address: string;
-  states: SuperNodeStateRecordSDKType[];
-  evidence: EvidenceSDKType[];
-  prev_ip_addresses: IPAddressHistorySDKType[];
-  note: string;
-  metrics?: MetricsAggregateSDKType;
-  supernode_account: string;
-  p2p_port: string;
-  prev_supernode_accounts: SupernodeAccountHistorySDKType[];
 }
 function createBaseSuperNode(): SuperNode {
   return {
@@ -86,9 +70,6 @@ export const SuperNode = {
   typeUrl: "/lumera.supernode.SuperNode",
   is(o: any): o is SuperNode {
     return o && (o.$typeUrl === SuperNode.typeUrl || typeof o.validatorAddress === "string" && Array.isArray(o.states) && (!o.states.length || SuperNodeStateRecord.is(o.states[0])) && Array.isArray(o.evidence) && (!o.evidence.length || Evidence.is(o.evidence[0])) && Array.isArray(o.prevIpAddresses) && (!o.prevIpAddresses.length || IPAddressHistory.is(o.prevIpAddresses[0])) && typeof o.note === "string" && typeof o.supernodeAccount === "string" && typeof o.p2pPort === "string" && Array.isArray(o.prevSupernodeAccounts) && (!o.prevSupernodeAccounts.length || SupernodeAccountHistory.is(o.prevSupernodeAccounts[0])));
-  },
-  isSDK(o: any): o is SuperNodeSDKType {
-    return o && (o.$typeUrl === SuperNode.typeUrl || typeof o.validator_address === "string" && Array.isArray(o.states) && (!o.states.length || SuperNodeStateRecord.isSDK(o.states[0])) && Array.isArray(o.evidence) && (!o.evidence.length || Evidence.isSDK(o.evidence[0])) && Array.isArray(o.prev_ip_addresses) && (!o.prev_ip_addresses.length || IPAddressHistory.isSDK(o.prev_ip_addresses[0])) && typeof o.note === "string" && typeof o.supernode_account === "string" && typeof o.p2p_port === "string" && Array.isArray(o.prev_supernode_accounts) && (!o.prev_supernode_accounts.length || SupernodeAccountHistory.isSDK(o.prev_supernode_accounts[0])));
   },
   isAmino(o: any): o is SuperNodeAmino {
     return o && (o.$typeUrl === SuperNode.typeUrl || typeof o.validator_address === "string" && Array.isArray(o.states) && (!o.states.length || SuperNodeStateRecord.isAmino(o.states[0])) && Array.isArray(o.evidence) && (!o.evidence.length || Evidence.isAmino(o.evidence[0])) && Array.isArray(o.prev_ip_addresses) && (!o.prev_ip_addresses.length || IPAddressHistory.isAmino(o.prev_ip_addresses[0])) && typeof o.note === "string" && typeof o.supernode_account === "string" && typeof o.p2p_port === "string" && Array.isArray(o.prev_supernode_accounts) && (!o.prev_supernode_accounts.length || SupernodeAccountHistory.isAmino(o.prev_supernode_accounts[0])));
@@ -164,7 +145,7 @@ export const SuperNode = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SuperNode>, I>>(object: I): SuperNode {
+  fromPartial(object: DeepPartial<SuperNode>): SuperNode {
     const message = createBaseSuperNode();
     message.validatorAddress = object.validatorAddress ?? "";
     message.states = object.states?.map(e => SuperNodeStateRecord.fromPartial(e)) || [];

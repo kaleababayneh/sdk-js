@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
-import { Permissions, PermissionsAmino, PermissionsSDKType, GenesisAccountPermissions, GenesisAccountPermissionsAmino, GenesisAccountPermissionsSDKType } from "./types";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
+import { Permissions, PermissionsAmino, GenesisAccountPermissions, GenesisAccountPermissionsAmino } from "./types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryAccountRequest is the request type for the Query/Account RPC method.
@@ -25,20 +25,11 @@ export interface QueryAccountRequestProtoMsg {
  * @see proto type: cosmos.circuit.v1.QueryAccountRequest
  */
 export interface QueryAccountRequestAmino {
-  address?: string;
+  address: string;
 }
 export interface QueryAccountRequestAminoMsg {
   type: "cosmos-sdk/QueryAccountRequest";
   value: QueryAccountRequestAmino;
-}
-/**
- * QueryAccountRequest is the request type for the Query/Account RPC method.
- * @name QueryAccountRequestSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.QueryAccountRequest
- */
-export interface QueryAccountRequestSDKType {
-  address: string;
 }
 /**
  * AccountResponse is the response type for the Query/Account RPC method.
@@ -65,15 +56,6 @@ export interface AccountResponseAmino {
 export interface AccountResponseAminoMsg {
   type: "cosmos-sdk/AccountResponse";
   value: AccountResponseAmino;
-}
-/**
- * AccountResponse is the response type for the Query/Account RPC method.
- * @name AccountResponseSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.AccountResponse
- */
-export interface AccountResponseSDKType {
-  permission?: PermissionsSDKType;
 }
 /**
  * QueryAccountsRequest is the request type for the Query/Accounts RPC method.
@@ -108,15 +90,6 @@ export interface QueryAccountsRequestAminoMsg {
   value: QueryAccountsRequestAmino;
 }
 /**
- * QueryAccountsRequest is the request type for the Query/Accounts RPC method.
- * @name QueryAccountsRequestSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.QueryAccountsRequest
- */
-export interface QueryAccountsRequestSDKType {
-  pagination?: PageRequestSDKType;
-}
-/**
  * AccountsResponse is the response type for the Query/Accounts RPC method.
  * @name AccountsResponse
  * @package cosmos.circuit.v1
@@ -140,7 +113,7 @@ export interface AccountsResponseProtoMsg {
  * @see proto type: cosmos.circuit.v1.AccountsResponse
  */
 export interface AccountsResponseAmino {
-  accounts?: GenesisAccountPermissionsAmino[];
+  accounts: GenesisAccountPermissionsAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -149,16 +122,6 @@ export interface AccountsResponseAmino {
 export interface AccountsResponseAminoMsg {
   type: "cosmos-sdk/AccountsResponse";
   value: AccountsResponseAmino;
-}
-/**
- * AccountsResponse is the response type for the Query/Accounts RPC method.
- * @name AccountsResponseSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.AccountsResponse
- */
-export interface AccountsResponseSDKType {
-  accounts: GenesisAccountPermissionsSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryDisableListRequest is the request type for the Query/DisabledList RPC method.
@@ -183,13 +146,6 @@ export interface QueryDisabledListRequestAminoMsg {
   value: QueryDisabledListRequestAmino;
 }
 /**
- * QueryDisableListRequest is the request type for the Query/DisabledList RPC method.
- * @name QueryDisabledListRequestSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.QueryDisabledListRequest
- */
-export interface QueryDisabledListRequestSDKType {}
-/**
  * DisabledListResponse is the response type for the Query/DisabledList RPC method.
  * @name DisabledListResponse
  * @package cosmos.circuit.v1
@@ -209,20 +165,11 @@ export interface DisabledListResponseProtoMsg {
  * @see proto type: cosmos.circuit.v1.DisabledListResponse
  */
 export interface DisabledListResponseAmino {
-  disabled_list?: string[];
+  disabled_list: string[];
 }
 export interface DisabledListResponseAminoMsg {
   type: "cosmos-sdk/DisabledListResponse";
   value: DisabledListResponseAmino;
-}
-/**
- * DisabledListResponse is the response type for the Query/DisabledList RPC method.
- * @name DisabledListResponseSDKType
- * @package cosmos.circuit.v1
- * @see proto type: cosmos.circuit.v1.DisabledListResponse
- */
-export interface DisabledListResponseSDKType {
-  disabled_list: string[];
 }
 function createBaseQueryAccountRequest(): QueryAccountRequest {
   return {
@@ -239,9 +186,6 @@ export const QueryAccountRequest = {
   typeUrl: "/cosmos.circuit.v1.QueryAccountRequest",
   aminoType: "cosmos-sdk/QueryAccountRequest",
   is(o: any): o is QueryAccountRequest {
-    return o && (o.$typeUrl === QueryAccountRequest.typeUrl || typeof o.address === "string");
-  },
-  isSDK(o: any): o is QueryAccountRequestSDKType {
     return o && (o.$typeUrl === QueryAccountRequest.typeUrl || typeof o.address === "string");
   },
   isAmino(o: any): o is QueryAccountRequestAmino {
@@ -270,7 +214,7 @@ export const QueryAccountRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAccountRequest>, I>>(object: I): QueryAccountRequest {
+  fromPartial(object: DeepPartial<QueryAccountRequest>): QueryAccountRequest {
     const message = createBaseQueryAccountRequest();
     message.address = object.address ?? "";
     return message;
@@ -327,9 +271,6 @@ export const AccountResponse = {
   is(o: any): o is AccountResponse {
     return o && o.$typeUrl === AccountResponse.typeUrl;
   },
-  isSDK(o: any): o is AccountResponseSDKType {
-    return o && o.$typeUrl === AccountResponse.typeUrl;
-  },
   isAmino(o: any): o is AccountResponseAmino {
     return o && o.$typeUrl === AccountResponse.typeUrl;
   },
@@ -356,7 +297,7 @@ export const AccountResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AccountResponse>, I>>(object: I): AccountResponse {
+  fromPartial(object: DeepPartial<AccountResponse>): AccountResponse {
     const message = createBaseAccountResponse();
     message.permission = object.permission !== undefined && object.permission !== null ? Permissions.fromPartial(object.permission) : undefined;
     return message;
@@ -418,9 +359,6 @@ export const QueryAccountsRequest = {
   is(o: any): o is QueryAccountsRequest {
     return o && o.$typeUrl === QueryAccountsRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryAccountsRequestSDKType {
-    return o && o.$typeUrl === QueryAccountsRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryAccountsRequestAmino {
     return o && o.$typeUrl === QueryAccountsRequest.typeUrl;
   },
@@ -447,7 +385,7 @@ export const QueryAccountsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAccountsRequest>, I>>(object: I): QueryAccountsRequest {
+  fromPartial(object: DeepPartial<QueryAccountsRequest>): QueryAccountsRequest {
     const message = createBaseQueryAccountsRequest();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -510,9 +448,6 @@ export const AccountsResponse = {
   is(o: any): o is AccountsResponse {
     return o && (o.$typeUrl === AccountsResponse.typeUrl || Array.isArray(o.accounts) && (!o.accounts.length || GenesisAccountPermissions.is(o.accounts[0])));
   },
-  isSDK(o: any): o is AccountsResponseSDKType {
-    return o && (o.$typeUrl === AccountsResponse.typeUrl || Array.isArray(o.accounts) && (!o.accounts.length || GenesisAccountPermissions.isSDK(o.accounts[0])));
-  },
   isAmino(o: any): o is AccountsResponseAmino {
     return o && (o.$typeUrl === AccountsResponse.typeUrl || Array.isArray(o.accounts) && (!o.accounts.length || GenesisAccountPermissions.isAmino(o.accounts[0])));
   },
@@ -545,7 +480,7 @@ export const AccountsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AccountsResponse>, I>>(object: I): AccountsResponse {
+  fromPartial(object: DeepPartial<AccountsResponse>): AccountsResponse {
     const message = createBaseAccountsResponse();
     message.accounts = object.accounts?.map(e => GenesisAccountPermissions.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -613,9 +548,6 @@ export const QueryDisabledListRequest = {
   is(o: any): o is QueryDisabledListRequest {
     return o && o.$typeUrl === QueryDisabledListRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryDisabledListRequestSDKType {
-    return o && o.$typeUrl === QueryDisabledListRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryDisabledListRequestAmino {
     return o && o.$typeUrl === QueryDisabledListRequest.typeUrl;
   },
@@ -636,7 +568,7 @@ export const QueryDisabledListRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryDisabledListRequest>, I>>(_: I): QueryDisabledListRequest {
+  fromPartial(_: DeepPartial<QueryDisabledListRequest>): QueryDisabledListRequest {
     const message = createBaseQueryDisabledListRequest();
     return message;
   },
@@ -688,9 +620,6 @@ export const DisabledListResponse = {
   is(o: any): o is DisabledListResponse {
     return o && (o.$typeUrl === DisabledListResponse.typeUrl || Array.isArray(o.disabledList) && (!o.disabledList.length || typeof o.disabledList[0] === "string"));
   },
-  isSDK(o: any): o is DisabledListResponseSDKType {
-    return o && (o.$typeUrl === DisabledListResponse.typeUrl || Array.isArray(o.disabled_list) && (!o.disabled_list.length || typeof o.disabled_list[0] === "string"));
-  },
   isAmino(o: any): o is DisabledListResponseAmino {
     return o && (o.$typeUrl === DisabledListResponse.typeUrl || Array.isArray(o.disabled_list) && (!o.disabled_list.length || typeof o.disabled_list[0] === "string"));
   },
@@ -717,7 +646,7 @@ export const DisabledListResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DisabledListResponse>, I>>(object: I): DisabledListResponse {
+  fromPartial(object: DeepPartial<DisabledListResponse>): DisabledListResponse {
     const message = createBaseDisabledListResponse();
     message.disabledList = object.disabledList?.map(e => e) || [];
     return message;

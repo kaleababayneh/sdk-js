@@ -1,11 +1,11 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../../base/query/v1beta1/pagination";
-import { Any, AnyAmino, AnySDKType } from "../../../../google/protobuf/any";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../../base/query/v1beta1/pagination";
+import { Any, AnyAmino } from "../../../../google/protobuf/any";
 import { Timestamp } from "../../../../google/protobuf/timestamp";
-import { Duration, DurationAmino, DurationSDKType } from "../../../../google/protobuf/duration";
+import { Duration, DurationAmino } from "../../../../google/protobuf/duration";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes } from "../../../../helpers";
+import { DeepPartial, toTimestamp, fromTimestamp, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 import { GlobalDecoderRegistry } from "../../../../registry";
 /**
  * GetRequest is the Query/Get request type.
@@ -45,34 +45,23 @@ export interface GetRequestAmino {
   /**
    * message_name is the fully-qualified message name of the ORM table being queried.
    */
-  message_name?: string;
+  message_name: string;
   /**
    * index is the index fields expression used in orm definitions. If it
    * is empty, the table's primary key is assumed. If it is non-empty, it must
    * refer to an unique index.
    */
-  index?: string;
+  index: string;
   /**
    * values are the values of the fields corresponding to the requested index.
    * There must be as many values provided as there are fields in the index and
    * these values must correspond to the index field types.
    */
-  values?: IndexValueAmino[];
+  values: IndexValueAmino[];
 }
 export interface GetRequestAminoMsg {
   type: "cosmos-sdk/GetRequest";
   value: GetRequestAmino;
-}
-/**
- * GetRequest is the Query/Get request type.
- * @name GetRequestSDKType
- * @package cosmos.orm.query.v1alpha1
- * @see proto type: cosmos.orm.query.v1alpha1.GetRequest
- */
-export interface GetRequestSDKType {
-  message_name: string;
-  index: string;
-  values: IndexValueSDKType[];
 }
 /**
  * GetResponse is the Query/Get response type.
@@ -107,15 +96,6 @@ export interface GetResponseAmino {
 export interface GetResponseAminoMsg {
   type: "cosmos-sdk/GetResponse";
   value: GetResponseAmino;
-}
-/**
- * GetResponse is the Query/Get response type.
- * @name GetResponseSDKType
- * @package cosmos.orm.query.v1alpha1
- * @see proto type: cosmos.orm.query.v1alpha1.GetResponse
- */
-export interface GetResponseSDKType {
-  result?: AnySDKType;
 }
 /**
  * ListRequest is the Query/List request type.
@@ -160,12 +140,12 @@ export interface ListRequestAmino {
   /**
    * message_name is the fully-qualified message name of the ORM table being queried.
    */
-  message_name?: string;
+  message_name: string;
   /**
    * index is the index fields expression used in orm definitions. If it
    * is empty, the table's primary key is assumed.
    */
-  index?: string;
+  index: string;
   /**
    * prefix defines a prefix query.
    */
@@ -182,19 +162,6 @@ export interface ListRequestAmino {
 export interface ListRequestAminoMsg {
   type: "cosmos-sdk/ListRequest";
   value: ListRequestAmino;
-}
-/**
- * ListRequest is the Query/List request type.
- * @name ListRequestSDKType
- * @package cosmos.orm.query.v1alpha1
- * @see proto type: cosmos.orm.query.v1alpha1.ListRequest
- */
-export interface ListRequestSDKType {
-  message_name: string;
-  index: string;
-  prefix?: ListRequest_PrefixSDKType;
-  range?: ListRequest_RangeSDKType;
-  pagination?: PageRequestSDKType;
 }
 /**
  * Prefix specifies the arguments to a prefix query.
@@ -226,20 +193,11 @@ export interface ListRequest_PrefixAmino {
    * It is valid to special a partial prefix with fewer values than
    * the number of fields in the index.
    */
-  values?: IndexValueAmino[];
+  values: IndexValueAmino[];
 }
 export interface ListRequest_PrefixAminoMsg {
   type: "cosmos-sdk/Prefix";
   value: ListRequest_PrefixAmino;
-}
-/**
- * Prefix specifies the arguments to a prefix query.
- * @name ListRequest_PrefixSDKType
- * @package cosmos.orm.query.v1alpha1
- * @see proto type: cosmos.orm.query.v1alpha1.Prefix
- */
-export interface ListRequest_PrefixSDKType {
-  values: IndexValueSDKType[];
 }
 /**
  * Range specifies the arguments to a range query.
@@ -277,27 +235,17 @@ export interface ListRequest_RangeAmino {
    * It is valid to provide fewer values than the number of fields in the
    * index.
    */
-  start?: IndexValueAmino[];
+  start: IndexValueAmino[];
   /**
    * end specifies the inclusive ending index values for the range query.
    * It is valid to provide fewer values than the number of fields in the
    * index.
    */
-  end?: IndexValueAmino[];
+  end: IndexValueAmino[];
 }
 export interface ListRequest_RangeAminoMsg {
   type: "cosmos-sdk/Range";
   value: ListRequest_RangeAmino;
-}
-/**
- * Range specifies the arguments to a range query.
- * @name ListRequest_RangeSDKType
- * @package cosmos.orm.query.v1alpha1
- * @see proto type: cosmos.orm.query.v1alpha1.Range
- */
-export interface ListRequest_RangeSDKType {
-  start: IndexValueSDKType[];
-  end: IndexValueSDKType[];
 }
 /**
  * ListResponse is the Query/List response type.
@@ -329,7 +277,7 @@ export interface ListResponseAmino {
   /**
    * results are the results of the query.
    */
-  results?: AnyAmino[];
+  results: AnyAmino[];
   /**
    * pagination is the pagination response.
    */
@@ -338,16 +286,6 @@ export interface ListResponseAmino {
 export interface ListResponseAminoMsg {
   type: "cosmos-sdk/ListResponse";
   value: ListResponseAmino;
-}
-/**
- * ListResponse is the Query/List response type.
- * @name ListResponseSDKType
- * @package cosmos.orm.query.v1alpha1
- * @see proto type: cosmos.orm.query.v1alpha1.ListResponse
- */
-export interface ListResponseSDKType {
-  results: AnySDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * IndexValue represents the value of a field in an ORM index expression.
@@ -441,22 +379,6 @@ export interface IndexValueAminoMsg {
   type: "cosmos-sdk/IndexValue";
   value: IndexValueAmino;
 }
-/**
- * IndexValue represents the value of a field in an ORM index expression.
- * @name IndexValueSDKType
- * @package cosmos.orm.query.v1alpha1
- * @see proto type: cosmos.orm.query.v1alpha1.IndexValue
- */
-export interface IndexValueSDKType {
-  uint?: bigint;
-  int?: bigint;
-  str?: string;
-  bytes?: Uint8Array;
-  enum?: string;
-  bool?: boolean;
-  timestamp?: Date;
-  duration?: DurationSDKType;
-}
 function createBaseGetRequest(): GetRequest {
   return {
     messageName: "",
@@ -475,9 +397,6 @@ export const GetRequest = {
   aminoType: "cosmos-sdk/GetRequest",
   is(o: any): o is GetRequest {
     return o && (o.$typeUrl === GetRequest.typeUrl || typeof o.messageName === "string" && typeof o.index === "string" && Array.isArray(o.values) && (!o.values.length || IndexValue.is(o.values[0])));
-  },
-  isSDK(o: any): o is GetRequestSDKType {
-    return o && (o.$typeUrl === GetRequest.typeUrl || typeof o.message_name === "string" && typeof o.index === "string" && Array.isArray(o.values) && (!o.values.length || IndexValue.isSDK(o.values[0])));
   },
   isAmino(o: any): o is GetRequestAmino {
     return o && (o.$typeUrl === GetRequest.typeUrl || typeof o.message_name === "string" && typeof o.index === "string" && Array.isArray(o.values) && (!o.values.length || IndexValue.isAmino(o.values[0])));
@@ -517,7 +436,7 @@ export const GetRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetRequest>, I>>(object: I): GetRequest {
+  fromPartial(object: DeepPartial<GetRequest>): GetRequest {
     const message = createBaseGetRequest();
     message.messageName = object.messageName ?? "";
     message.index = object.index ?? "";
@@ -591,9 +510,6 @@ export const GetResponse = {
   is(o: any): o is GetResponse {
     return o && o.$typeUrl === GetResponse.typeUrl;
   },
-  isSDK(o: any): o is GetResponseSDKType {
-    return o && o.$typeUrl === GetResponse.typeUrl;
-  },
   isAmino(o: any): o is GetResponseAmino {
     return o && o.$typeUrl === GetResponse.typeUrl;
   },
@@ -620,7 +536,7 @@ export const GetResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GetResponse>, I>>(object: I): GetResponse {
+  fromPartial(object: DeepPartial<GetResponse>): GetResponse {
     const message = createBaseGetResponse();
     message.result = object.result !== undefined && object.result !== null ? Any.fromPartial(object.result) : undefined;
     return message;
@@ -681,9 +597,6 @@ export const ListRequest = {
   is(o: any): o is ListRequest {
     return o && (o.$typeUrl === ListRequest.typeUrl || typeof o.messageName === "string" && typeof o.index === "string");
   },
-  isSDK(o: any): o is ListRequestSDKType {
-    return o && (o.$typeUrl === ListRequest.typeUrl || typeof o.message_name === "string" && typeof o.index === "string");
-  },
   isAmino(o: any): o is ListRequestAmino {
     return o && (o.$typeUrl === ListRequest.typeUrl || typeof o.message_name === "string" && typeof o.index === "string");
   },
@@ -734,7 +647,7 @@ export const ListRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListRequest>, I>>(object: I): ListRequest {
+  fromPartial(object: DeepPartial<ListRequest>): ListRequest {
     const message = createBaseListRequest();
     message.messageName = object.messageName ?? "";
     message.index = object.index ?? "";
@@ -818,9 +731,6 @@ export const ListRequest_Prefix = {
   is(o: any): o is ListRequest_Prefix {
     return o && (o.$typeUrl === ListRequest_Prefix.typeUrl || Array.isArray(o.values) && (!o.values.length || IndexValue.is(o.values[0])));
   },
-  isSDK(o: any): o is ListRequest_PrefixSDKType {
-    return o && (o.$typeUrl === ListRequest_Prefix.typeUrl || Array.isArray(o.values) && (!o.values.length || IndexValue.isSDK(o.values[0])));
-  },
   isAmino(o: any): o is ListRequest_PrefixAmino {
     return o && (o.$typeUrl === ListRequest_Prefix.typeUrl || Array.isArray(o.values) && (!o.values.length || IndexValue.isAmino(o.values[0])));
   },
@@ -847,7 +757,7 @@ export const ListRequest_Prefix = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListRequest_Prefix>, I>>(object: I): ListRequest_Prefix {
+  fromPartial(object: DeepPartial<ListRequest_Prefix>): ListRequest_Prefix {
     const message = createBaseListRequest_Prefix();
     message.values = object.values?.map(e => IndexValue.fromPartial(e)) || [];
     return message;
@@ -912,9 +822,6 @@ export const ListRequest_Range = {
   is(o: any): o is ListRequest_Range {
     return o && (o.$typeUrl === ListRequest_Range.typeUrl || Array.isArray(o.start) && (!o.start.length || IndexValue.is(o.start[0])) && Array.isArray(o.end) && (!o.end.length || IndexValue.is(o.end[0])));
   },
-  isSDK(o: any): o is ListRequest_RangeSDKType {
-    return o && (o.$typeUrl === ListRequest_Range.typeUrl || Array.isArray(o.start) && (!o.start.length || IndexValue.isSDK(o.start[0])) && Array.isArray(o.end) && (!o.end.length || IndexValue.isSDK(o.end[0])));
-  },
   isAmino(o: any): o is ListRequest_RangeAmino {
     return o && (o.$typeUrl === ListRequest_Range.typeUrl || Array.isArray(o.start) && (!o.start.length || IndexValue.isAmino(o.start[0])) && Array.isArray(o.end) && (!o.end.length || IndexValue.isAmino(o.end[0])));
   },
@@ -947,7 +854,7 @@ export const ListRequest_Range = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListRequest_Range>, I>>(object: I): ListRequest_Range {
+  fromPartial(object: DeepPartial<ListRequest_Range>): ListRequest_Range {
     const message = createBaseListRequest_Range();
     message.start = object.start?.map(e => IndexValue.fromPartial(e)) || [];
     message.end = object.end?.map(e => IndexValue.fromPartial(e)) || [];
@@ -1019,9 +926,6 @@ export const ListResponse = {
   is(o: any): o is ListResponse {
     return o && (o.$typeUrl === ListResponse.typeUrl || Array.isArray(o.results) && (!o.results.length || Any.is(o.results[0])));
   },
-  isSDK(o: any): o is ListResponseSDKType {
-    return o && (o.$typeUrl === ListResponse.typeUrl || Array.isArray(o.results) && (!o.results.length || Any.isSDK(o.results[0])));
-  },
   isAmino(o: any): o is ListResponseAmino {
     return o && (o.$typeUrl === ListResponse.typeUrl || Array.isArray(o.results) && (!o.results.length || Any.isAmino(o.results[0])));
   },
@@ -1054,7 +958,7 @@ export const ListResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListResponse>, I>>(object: I): ListResponse {
+  fromPartial(object: DeepPartial<ListResponse>): ListResponse {
     const message = createBaseListResponse();
     message.results = object.results?.map(e => Any.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -1130,9 +1034,6 @@ export const IndexValue = {
   is(o: any): o is IndexValue {
     return o && o.$typeUrl === IndexValue.typeUrl;
   },
-  isSDK(o: any): o is IndexValueSDKType {
-    return o && o.$typeUrl === IndexValue.typeUrl;
-  },
   isAmino(o: any): o is IndexValueAmino {
     return o && o.$typeUrl === IndexValue.typeUrl;
   },
@@ -1201,7 +1102,7 @@ export const IndexValue = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<IndexValue>, I>>(object: I): IndexValue {
+  fromPartial(object: DeepPartial<IndexValue>): IndexValue {
     const message = createBaseIndexValue();
     message.uint = object.uint !== undefined && object.uint !== null ? BigInt(object.uint.toString()) : undefined;
     message.int = object.int !== undefined && object.int !== null ? BigInt(object.int.toString()) : undefined;

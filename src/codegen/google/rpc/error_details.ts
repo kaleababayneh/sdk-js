@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Duration, DurationAmino, DurationSDKType } from "../protobuf/duration";
+import { Duration, DurationAmino } from "../protobuf/duration";
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, isSet } from "../../helpers";
+import { DeepPartial, isSet } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
  * @name ErrorInfo_MetadataEntry
@@ -23,21 +23,12 @@ export interface ErrorInfo_MetadataEntryProtoMsg {
  * @see proto type: google.rpc.ErrorInfo_MetadataEntry
  */
 export interface ErrorInfo_MetadataEntryAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
 }
 export interface ErrorInfo_MetadataEntryAminoMsg {
   type: string;
   value: ErrorInfo_MetadataEntryAmino;
-}
-/**
- * @name ErrorInfo_MetadataEntrySDKType
- * @package google.rpc
- * @see proto type: google.rpc.undefined
- */
-export interface ErrorInfo_MetadataEntrySDKType {
-  key: string;
-  value: string;
 }
 /**
  * Describes the cause of the error with structured details.
@@ -142,7 +133,7 @@ export interface ErrorInfoAmino {
    * regular expression of `[A-Z][A-Z0-9_]+[A-Z0-9]`, which represents
    * UPPER_SNAKE_CASE.
    */
-  reason?: string;
+  reason: string;
   /**
    * The logical grouping to which the "reason" belongs. The error domain
    * is typically the registered service name of the tool or product that
@@ -151,7 +142,7 @@ export interface ErrorInfoAmino {
    * globally unique value that identifies the infrastructure. For Google API
    * infrastructure, the error domain is "googleapis.com".
    */
-  domain?: string;
+  domain: string;
   /**
    * Additional structured details about this error.
    * 
@@ -163,49 +154,13 @@ export interface ErrorInfoAmino {
    * `{"instanceLimitPerRequest": "100"}`, if the client exceeds the number of
    * instances that can be created in a single (batch) request.
    */
-  metadata?: {
+  metadata: {
     [key: string]: string;
   };
 }
 export interface ErrorInfoAminoMsg {
   type: "/google.rpc.ErrorInfo";
   value: ErrorInfoAmino;
-}
-/**
- * Describes the cause of the error with structured details.
- * 
- * Example of an error when contacting the "pubsub.googleapis.com" API when it
- * is not enabled:
- * 
- *     { "reason": "API_DISABLED"
- *       "domain": "googleapis.com"
- *       "metadata": {
- *         "resource": "projects/123",
- *         "service": "pubsub.googleapis.com"
- *       }
- *     }
- * 
- * This response indicates that the pubsub.googleapis.com API is not enabled.
- * 
- * Example of an error that is returned when attempting to create a Spanner
- * instance in a region that is out of stock:
- * 
- *     { "reason": "STOCKOUT"
- *       "domain": "spanner.googleapis.com",
- *       "metadata": {
- *         "availableRegions": "us-central1,us-east2"
- *       }
- *     }
- * @name ErrorInfoSDKType
- * @package google.rpc
- * @see proto type: google.rpc.ErrorInfo
- */
-export interface ErrorInfoSDKType {
-  reason: string;
-  domain: string;
-  metadata: {
-    [key: string]: string;
-  };
 }
 /**
  * Describes when the clients can retry a failed request. Clients could ignore
@@ -264,27 +219,6 @@ export interface RetryInfoAminoMsg {
   value: RetryInfoAmino;
 }
 /**
- * Describes when the clients can retry a failed request. Clients could ignore
- * the recommendation here or retry when this information is missing from error
- * responses.
- * 
- * It's always recommended that clients should use exponential backoff when
- * retrying.
- * 
- * Clients should wait until `retry_delay` amount of time has passed since
- * receiving the error response before retrying.  If retrying requests also
- * fail, clients should use an exponential backoff scheme to gradually increase
- * the delay between retries based on `retry_delay`, until either a maximum
- * number of retries have been reached or a maximum retry delay cap has been
- * reached.
- * @name RetryInfoSDKType
- * @package google.rpc
- * @see proto type: google.rpc.RetryInfo
- */
-export interface RetryInfoSDKType {
-  retry_delay?: DurationSDKType;
-}
-/**
  * Describes additional debugging info.
  * @name DebugInfo
  * @package google.rpc
@@ -314,25 +248,15 @@ export interface DebugInfoAmino {
   /**
    * The stack trace entries indicating where the error occurred.
    */
-  stack_entries?: string[];
+  stack_entries: string[];
   /**
    * Additional debugging information provided by the server.
    */
-  detail?: string;
+  detail: string;
 }
 export interface DebugInfoAminoMsg {
   type: "/google.rpc.DebugInfo";
   value: DebugInfoAmino;
-}
-/**
- * Describes additional debugging info.
- * @name DebugInfoSDKType
- * @package google.rpc
- * @see proto type: google.rpc.DebugInfo
- */
-export interface DebugInfoSDKType {
-  stack_entries: string[];
-  detail: string;
 }
 /**
  * Describes how a quota check failed.
@@ -380,30 +304,11 @@ export interface QuotaFailureAmino {
   /**
    * Describes all quota violations.
    */
-  violations?: QuotaFailure_ViolationAmino[];
+  violations: QuotaFailure_ViolationAmino[];
 }
 export interface QuotaFailureAminoMsg {
   type: "/google.rpc.QuotaFailure";
   value: QuotaFailureAmino;
-}
-/**
- * Describes how a quota check failed.
- * 
- * For example if a daily limit was exceeded for the calling project,
- * a service could respond with a QuotaFailure detail containing the project
- * id and the description of the quota limit that was exceeded.  If the
- * calling project hasn't enabled the service in the developer console, then
- * a service could respond with the project id and set `service_disabled`
- * to true.
- * 
- * Also see RetryInfo and Help types for other details about handling a
- * quota failure.
- * @name QuotaFailureSDKType
- * @package google.rpc
- * @see proto type: google.rpc.QuotaFailure
- */
-export interface QuotaFailureSDKType {
-  violations: QuotaFailure_ViolationSDKType[];
 }
 /**
  * @name QuotaFailure_Violation_QuotaDimensionsEntry
@@ -424,21 +329,12 @@ export interface QuotaFailure_Violation_QuotaDimensionsEntryProtoMsg {
  * @see proto type: google.rpc.QuotaFailure_Violation_QuotaDimensionsEntry
  */
 export interface QuotaFailure_Violation_QuotaDimensionsEntryAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
 }
 export interface QuotaFailure_Violation_QuotaDimensionsEntryAminoMsg {
   type: string;
   value: QuotaFailure_Violation_QuotaDimensionsEntryAmino;
-}
-/**
- * @name QuotaFailure_Violation_QuotaDimensionsEntrySDKType
- * @package google.rpc
- * @see proto type: google.rpc.undefined
- */
-export interface QuotaFailure_Violation_QuotaDimensionsEntrySDKType {
-  key: string;
-  value: string;
 }
 /**
  * A message type used to describe a single quota violation.  For example, a
@@ -555,7 +451,7 @@ export interface QuotaFailure_ViolationAmino {
    * For example, "clientip:<ip address of client>" or "project:<Google
    * developer project id>".
    */
-  subject?: string;
+  subject: string;
   /**
    * A description of how the quota check failed. Clients can use this
    * description to find more about the quota configuration in the service's
@@ -565,7 +461,7 @@ export interface QuotaFailure_ViolationAmino {
    * For example: "Service disabled" or "Daily Limit for read operations
    * exceeded".
    */
-  description?: string;
+  description: string;
   /**
    * The API Service from which the `QuotaFailure.Violation` orginates. In
    * some cases, Quota issues originate from an API Service other than the one
@@ -581,7 +477,7 @@ export interface QuotaFailure_ViolationAmino {
    * API (compute.googleapis.com), this field would be
    * "compute.googleapis.com".
    */
-  api_service?: string;
+  api_service: string;
   /**
    * The metric of the violated quota. A quota metric is a named counter to
    * measure usage, such as API requests or CPUs. When an activity occurs in a
@@ -591,14 +487,14 @@ export interface QuotaFailure_ViolationAmino {
    * For example, "compute.googleapis.com/cpus_per_vm_family",
    * "storage.googleapis.com/internet_egress_bandwidth".
    */
-  quota_metric?: string;
+  quota_metric: string;
   /**
    * The id of the violated quota. Also know as "limit name", this is the
    * unique identifier of a quota in the context of an API service.
    * 
    * For example, "CPUS-PER-VM-FAMILY-per-project-region".
    */
-  quota_id?: string;
+  quota_id: string;
   /**
    * The dimensions of the violated quota. Every non-global quota is enforced
    * on a set of dimensions. While quota metric defines what to count, the
@@ -617,7 +513,7 @@ export interface QuotaFailure_ViolationAmino {
    * When a quota is enforced globally, the quota_dimensions would always be
    * empty.
    */
-  quota_dimensions?: {
+  quota_dimensions: {
     [key: string]: string;
   };
   /**
@@ -627,7 +523,7 @@ export interface QuotaFailure_ViolationAmino {
    * `QuotaFailure` on the number of CPUs is "10", then the value of this
    * field would reflect this quantity.
    */
-  quota_value?: string;
+  quota_value: string;
   /**
    * The new quota value being rolled out at the time of the violation. At the
    * completion of the rollout, this value will be enforced in place of
@@ -643,25 +539,6 @@ export interface QuotaFailure_ViolationAmino {
 export interface QuotaFailure_ViolationAminoMsg {
   type: "/google.rpc.Violation";
   value: QuotaFailure_ViolationAmino;
-}
-/**
- * A message type used to describe a single quota violation.  For example, a
- * daily quota or a custom quota that was exceeded.
- * @name QuotaFailure_ViolationSDKType
- * @package google.rpc
- * @see proto type: google.rpc.Violation
- */
-export interface QuotaFailure_ViolationSDKType {
-  subject: string;
-  description: string;
-  api_service: string;
-  quota_metric: string;
-  quota_id: string;
-  quota_dimensions: {
-    [key: string]: string;
-  };
-  quota_value: bigint;
-  future_quota_value?: bigint;
 }
 /**
  * Describes what preconditions have failed.
@@ -697,24 +574,11 @@ export interface PreconditionFailureAmino {
   /**
    * Describes all precondition violations.
    */
-  violations?: PreconditionFailure_ViolationAmino[];
+  violations: PreconditionFailure_ViolationAmino[];
 }
 export interface PreconditionFailureAminoMsg {
   type: "/google.rpc.PreconditionFailure";
   value: PreconditionFailureAmino;
-}
-/**
- * Describes what preconditions have failed.
- * 
- * For example, if an RPC failed because it required the Terms of Service to be
- * acknowledged, it could list the terms of service violation in the
- * PreconditionFailure message.
- * @name PreconditionFailureSDKType
- * @package google.rpc
- * @see proto type: google.rpc.PreconditionFailure
- */
-export interface PreconditionFailureSDKType {
-  violations: PreconditionFailure_ViolationSDKType[];
 }
 /**
  * A message type used to describe a single precondition failure.
@@ -759,35 +623,24 @@ export interface PreconditionFailure_ViolationAmino {
    * enum type to define the supported precondition violation subjects. For
    * example, "TOS" for "Terms of Service violation".
    */
-  type?: string;
+  type: string;
   /**
    * The subject, relative to the type, that failed.
    * For example, "google.com/cloud" relative to the "TOS" type would indicate
    * which terms of service is being referenced.
    */
-  subject?: string;
+  subject: string;
   /**
    * A description of how the precondition failed. Developers can use this
    * description to understand how to fix the failure.
    * 
    * For example: "Terms of service not accepted".
    */
-  description?: string;
+  description: string;
 }
 export interface PreconditionFailure_ViolationAminoMsg {
   type: "/google.rpc.Violation";
   value: PreconditionFailure_ViolationAmino;
-}
-/**
- * A message type used to describe a single precondition failure.
- * @name PreconditionFailure_ViolationSDKType
- * @package google.rpc
- * @see proto type: google.rpc.Violation
- */
-export interface PreconditionFailure_ViolationSDKType {
-  type: string;
-  subject: string;
-  description: string;
 }
 /**
  * Describes violations in a client request. This error type focuses on the
@@ -817,21 +670,11 @@ export interface BadRequestAmino {
   /**
    * Describes all violations in a client request.
    */
-  field_violations?: BadRequest_FieldViolationAmino[];
+  field_violations: BadRequest_FieldViolationAmino[];
 }
 export interface BadRequestAminoMsg {
   type: "/google.rpc.BadRequest";
   value: BadRequestAmino;
-}
-/**
- * Describes violations in a client request. This error type focuses on the
- * syntactic aspects of the request.
- * @name BadRequestSDKType
- * @package google.rpc
- * @see proto type: google.rpc.BadRequest
- */
-export interface BadRequestSDKType {
-  field_violations: BadRequest_FieldViolationSDKType[];
 }
 /**
  * A message type used to describe a single bad request field.
@@ -949,11 +792,11 @@ export interface BadRequest_FieldViolationAmino {
    * * `emailAddresses[3].type[2]` for a violation in the second `type`
    *   value in the third `emailAddresses` message.
    */
-  field?: string;
+  field: string;
   /**
    * A description of why the request element is bad.
    */
-  description?: string;
+  description: string;
   /**
    * The reason of the field-level error. This is a constant value that
    * identifies the proximate cause of the field-level error. It should
@@ -962,7 +805,7 @@ export interface BadRequest_FieldViolationAmino {
    * characters and match a regular expression of `[A-Z][A-Z0-9_]+[A-Z0-9]`,
    * which represents UPPER_SNAKE_CASE.
    */
-  reason?: string;
+  reason: string;
   /**
    * Provides a localized error message for field-level errors that is safe to
    * return to the API consumer.
@@ -972,18 +815,6 @@ export interface BadRequest_FieldViolationAmino {
 export interface BadRequest_FieldViolationAminoMsg {
   type: "/google.rpc.FieldViolation";
   value: BadRequest_FieldViolationAmino;
-}
-/**
- * A message type used to describe a single bad request field.
- * @name BadRequest_FieldViolationSDKType
- * @package google.rpc
- * @see proto type: google.rpc.FieldViolation
- */
-export interface BadRequest_FieldViolationSDKType {
-  field: string;
-  description: string;
-  reason: string;
-  localized_message?: LocalizedMessageSDKType;
 }
 /**
  * Contains metadata about the request that clients can attach when filing a bug
@@ -1020,27 +851,16 @@ export interface RequestInfoAmino {
    * An opaque string that should only be interpreted by the service generating
    * it. For example, it can be used to identify requests in the service's logs.
    */
-  request_id?: string;
+  request_id: string;
   /**
    * Any data that was used to serve this request. For example, an encrypted
    * stack trace that can be sent back to the service provider for debugging.
    */
-  serving_data?: string;
+  serving_data: string;
 }
 export interface RequestInfoAminoMsg {
   type: "/google.rpc.RequestInfo";
   value: RequestInfoAmino;
-}
-/**
- * Contains metadata about the request that clients can attach when filing a bug
- * or providing other forms of feedback.
- * @name RequestInfoSDKType
- * @package google.rpc
- * @see proto type: google.rpc.RequestInfo
- */
-export interface RequestInfoSDKType {
-  request_id: string;
-  serving_data: string;
 }
 /**
  * Describes the resource that is being accessed.
@@ -1091,42 +911,30 @@ export interface ResourceInfoAmino {
    * "cloud storage bucket", "file", "Google calendar"; or the type URL
    * of the resource: e.g. "type.googleapis.com/google.pubsub.v1.Topic".
    */
-  resource_type?: string;
+  resource_type: string;
   /**
    * The name of the resource being accessed.  For example, a shared calendar
    * name: "example.com_4fghdhgsrgh@group.calendar.google.com", if the current
    * error is
    * [google.rpc.Code.PERMISSION_DENIED][google.rpc.Code.PERMISSION_DENIED].
    */
-  resource_name?: string;
+  resource_name: string;
   /**
    * The owner of the resource (optional).
    * For example, "user:<owner email>" or "project:<Google developer project
    * id>".
    */
-  owner?: string;
+  owner: string;
   /**
    * Describes what error is encountered when accessing this resource.
    * For example, updating a cloud project may require the `writer` permission
    * on the developer console project.
    */
-  description?: string;
+  description: string;
 }
 export interface ResourceInfoAminoMsg {
   type: "/google.rpc.ResourceInfo";
   value: ResourceInfoAmino;
-}
-/**
- * Describes the resource that is being accessed.
- * @name ResourceInfoSDKType
- * @package google.rpc
- * @see proto type: google.rpc.ResourceInfo
- */
-export interface ResourceInfoSDKType {
-  resource_type: string;
-  resource_name: string;
-  owner: string;
-  description: string;
 }
 /**
  * Provides links to documentation or for performing an out of band action.
@@ -1162,24 +970,11 @@ export interface HelpAmino {
   /**
    * URL(s) pointing to additional information on handling the current error.
    */
-  links?: Help_LinkAmino[];
+  links: Help_LinkAmino[];
 }
 export interface HelpAminoMsg {
   type: "/google.rpc.Help";
   value: HelpAmino;
-}
-/**
- * Provides links to documentation or for performing an out of band action.
- * 
- * For example, if a quota check failed with an error indicating the calling
- * project hasn't enabled the accessed service, this can contain a URL pointing
- * directly to the right place in the developer console to flip the bit.
- * @name HelpSDKType
- * @package google.rpc
- * @see proto type: google.rpc.Help
- */
-export interface HelpSDKType {
-  links: Help_LinkSDKType[];
 }
 /**
  * Describes a URL link.
@@ -1211,25 +1006,15 @@ export interface Help_LinkAmino {
   /**
    * Describes what the link offers.
    */
-  description?: string;
+  description: string;
   /**
    * The URL of the link.
    */
-  url?: string;
+  url: string;
 }
 export interface Help_LinkAminoMsg {
   type: "/google.rpc.Link";
   value: Help_LinkAmino;
-}
-/**
- * Describes a URL link.
- * @name Help_LinkSDKType
- * @package google.rpc
- * @see proto type: google.rpc.Link
- */
-export interface Help_LinkSDKType {
-  description: string;
-  url: string;
 }
 /**
  * Provides a localized error message that is safe to return to the user
@@ -1267,26 +1052,15 @@ export interface LocalizedMessageAmino {
    * https://www.rfc-editor.org/rfc/bcp/bcp47.txt.
    * Examples are: "en-US", "fr-CH", "es-MX"
    */
-  locale?: string;
+  locale: string;
   /**
    * The localized error message in the above locale.
    */
-  message?: string;
+  message: string;
 }
 export interface LocalizedMessageAminoMsg {
   type: "/google.rpc.LocalizedMessage";
   value: LocalizedMessageAmino;
-}
-/**
- * Provides a localized error message that is safe to return to the user
- * which can be attached to an RPC error.
- * @name LocalizedMessageSDKType
- * @package google.rpc
- * @see proto type: google.rpc.LocalizedMessage
- */
-export interface LocalizedMessageSDKType {
-  locale: string;
-  message: string;
 }
 function createBaseErrorInfo_MetadataEntry(): ErrorInfo_MetadataEntry {
   return {
@@ -1329,7 +1103,7 @@ export const ErrorInfo_MetadataEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ErrorInfo_MetadataEntry>, I>>(object: I): ErrorInfo_MetadataEntry {
+  fromPartial(object: DeepPartial<ErrorInfo_MetadataEntry>): ErrorInfo_MetadataEntry {
     const message = createBaseErrorInfo_MetadataEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
@@ -1403,9 +1177,6 @@ export const ErrorInfo = {
   is(o: any): o is ErrorInfo {
     return o && (o.$typeUrl === ErrorInfo.typeUrl || typeof o.reason === "string" && typeof o.domain === "string" && isSet(o.metadata));
   },
-  isSDK(o: any): o is ErrorInfoSDKType {
-    return o && (o.$typeUrl === ErrorInfo.typeUrl || typeof o.reason === "string" && typeof o.domain === "string" && isSet(o.metadata));
-  },
   isAmino(o: any): o is ErrorInfoAmino {
     return o && (o.$typeUrl === ErrorInfo.typeUrl || typeof o.reason === "string" && typeof o.domain === "string" && isSet(o.metadata));
   },
@@ -1450,7 +1221,7 @@ export const ErrorInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ErrorInfo>, I>>(object: I): ErrorInfo {
+  fromPartial(object: DeepPartial<ErrorInfo>): ErrorInfo {
     const message = createBaseErrorInfo();
     message.reason = object.reason ?? "";
     message.domain = object.domain ?? "";
@@ -1539,9 +1310,6 @@ export const RetryInfo = {
   is(o: any): o is RetryInfo {
     return o && o.$typeUrl === RetryInfo.typeUrl;
   },
-  isSDK(o: any): o is RetryInfoSDKType {
-    return o && o.$typeUrl === RetryInfo.typeUrl;
-  },
   isAmino(o: any): o is RetryInfoAmino {
     return o && o.$typeUrl === RetryInfo.typeUrl;
   },
@@ -1568,7 +1336,7 @@ export const RetryInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RetryInfo>, I>>(object: I): RetryInfo {
+  fromPartial(object: DeepPartial<RetryInfo>): RetryInfo {
     const message = createBaseRetryInfo();
     message.retryDelay = object.retryDelay !== undefined && object.retryDelay !== null ? Duration.fromPartial(object.retryDelay) : undefined;
     return message;
@@ -1619,9 +1387,6 @@ export const DebugInfo = {
   is(o: any): o is DebugInfo {
     return o && (o.$typeUrl === DebugInfo.typeUrl || Array.isArray(o.stackEntries) && (!o.stackEntries.length || typeof o.stackEntries[0] === "string") && typeof o.detail === "string");
   },
-  isSDK(o: any): o is DebugInfoSDKType {
-    return o && (o.$typeUrl === DebugInfo.typeUrl || Array.isArray(o.stack_entries) && (!o.stack_entries.length || typeof o.stack_entries[0] === "string") && typeof o.detail === "string");
-  },
   isAmino(o: any): o is DebugInfoAmino {
     return o && (o.$typeUrl === DebugInfo.typeUrl || Array.isArray(o.stack_entries) && (!o.stack_entries.length || typeof o.stack_entries[0] === "string") && typeof o.detail === "string");
   },
@@ -1654,7 +1419,7 @@ export const DebugInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DebugInfo>, I>>(object: I): DebugInfo {
+  fromPartial(object: DeepPartial<DebugInfo>): DebugInfo {
     const message = createBaseDebugInfo();
     message.stackEntries = object.stackEntries?.map(e => e) || [];
     message.detail = object.detail ?? "";
@@ -1721,9 +1486,6 @@ export const QuotaFailure = {
   is(o: any): o is QuotaFailure {
     return o && (o.$typeUrl === QuotaFailure.typeUrl || Array.isArray(o.violations) && (!o.violations.length || QuotaFailure_Violation.is(o.violations[0])));
   },
-  isSDK(o: any): o is QuotaFailureSDKType {
-    return o && (o.$typeUrl === QuotaFailure.typeUrl || Array.isArray(o.violations) && (!o.violations.length || QuotaFailure_Violation.isSDK(o.violations[0])));
-  },
   isAmino(o: any): o is QuotaFailureAmino {
     return o && (o.$typeUrl === QuotaFailure.typeUrl || Array.isArray(o.violations) && (!o.violations.length || QuotaFailure_Violation.isAmino(o.violations[0])));
   },
@@ -1750,7 +1512,7 @@ export const QuotaFailure = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuotaFailure>, I>>(object: I): QuotaFailure {
+  fromPartial(object: DeepPartial<QuotaFailure>): QuotaFailure {
     const message = createBaseQuotaFailure();
     message.violations = object.violations?.map(e => QuotaFailure_Violation.fromPartial(e)) || [];
     return message;
@@ -1832,7 +1594,7 @@ export const QuotaFailure_Violation_QuotaDimensionsEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuotaFailure_Violation_QuotaDimensionsEntry>, I>>(object: I): QuotaFailure_Violation_QuotaDimensionsEntry {
+  fromPartial(object: DeepPartial<QuotaFailure_Violation_QuotaDimensionsEntry>): QuotaFailure_Violation_QuotaDimensionsEntry {
     const message = createBaseQuotaFailure_Violation_QuotaDimensionsEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
@@ -1888,9 +1650,6 @@ export const QuotaFailure_Violation = {
   typeUrl: "/google.rpc.Violation",
   is(o: any): o is QuotaFailure_Violation {
     return o && (o.$typeUrl === QuotaFailure_Violation.typeUrl || typeof o.subject === "string" && typeof o.description === "string" && typeof o.apiService === "string" && typeof o.quotaMetric === "string" && typeof o.quotaId === "string" && isSet(o.quotaDimensions) && typeof o.quotaValue === "bigint");
-  },
-  isSDK(o: any): o is QuotaFailure_ViolationSDKType {
-    return o && (o.$typeUrl === QuotaFailure_Violation.typeUrl || typeof o.subject === "string" && typeof o.description === "string" && typeof o.api_service === "string" && typeof o.quota_metric === "string" && typeof o.quota_id === "string" && isSet(o.quota_dimensions) && typeof o.quota_value === "bigint");
   },
   isAmino(o: any): o is QuotaFailure_ViolationAmino {
     return o && (o.$typeUrl === QuotaFailure_Violation.typeUrl || typeof o.subject === "string" && typeof o.description === "string" && typeof o.api_service === "string" && typeof o.quota_metric === "string" && typeof o.quota_id === "string" && isSet(o.quota_dimensions) && typeof o.quota_value === "bigint");
@@ -1966,7 +1725,7 @@ export const QuotaFailure_Violation = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QuotaFailure_Violation>, I>>(object: I): QuotaFailure_Violation {
+  fromPartial(object: DeepPartial<QuotaFailure_Violation>): QuotaFailure_Violation {
     const message = createBaseQuotaFailure_Violation();
     message.subject = object.subject ?? "";
     message.description = object.description ?? "";
@@ -2072,9 +1831,6 @@ export const PreconditionFailure = {
   is(o: any): o is PreconditionFailure {
     return o && (o.$typeUrl === PreconditionFailure.typeUrl || Array.isArray(o.violations) && (!o.violations.length || PreconditionFailure_Violation.is(o.violations[0])));
   },
-  isSDK(o: any): o is PreconditionFailureSDKType {
-    return o && (o.$typeUrl === PreconditionFailure.typeUrl || Array.isArray(o.violations) && (!o.violations.length || PreconditionFailure_Violation.isSDK(o.violations[0])));
-  },
   isAmino(o: any): o is PreconditionFailureAmino {
     return o && (o.$typeUrl === PreconditionFailure.typeUrl || Array.isArray(o.violations) && (!o.violations.length || PreconditionFailure_Violation.isAmino(o.violations[0])));
   },
@@ -2101,7 +1857,7 @@ export const PreconditionFailure = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PreconditionFailure>, I>>(object: I): PreconditionFailure {
+  fromPartial(object: DeepPartial<PreconditionFailure>): PreconditionFailure {
     const message = createBasePreconditionFailure();
     message.violations = object.violations?.map(e => PreconditionFailure_Violation.fromPartial(e)) || [];
     return message;
@@ -2160,9 +1916,6 @@ export const PreconditionFailure_Violation = {
   is(o: any): o is PreconditionFailure_Violation {
     return o && (o.$typeUrl === PreconditionFailure_Violation.typeUrl || typeof o.type === "string" && typeof o.subject === "string" && typeof o.description === "string");
   },
-  isSDK(o: any): o is PreconditionFailure_ViolationSDKType {
-    return o && (o.$typeUrl === PreconditionFailure_Violation.typeUrl || typeof o.type === "string" && typeof o.subject === "string" && typeof o.description === "string");
-  },
   isAmino(o: any): o is PreconditionFailure_ViolationAmino {
     return o && (o.$typeUrl === PreconditionFailure_Violation.typeUrl || typeof o.type === "string" && typeof o.subject === "string" && typeof o.description === "string");
   },
@@ -2201,7 +1954,7 @@ export const PreconditionFailure_Violation = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PreconditionFailure_Violation>, I>>(object: I): PreconditionFailure_Violation {
+  fromPartial(object: DeepPartial<PreconditionFailure_Violation>): PreconditionFailure_Violation {
     const message = createBasePreconditionFailure_Violation();
     message.type = object.type ?? "";
     message.subject = object.subject ?? "";
@@ -2262,9 +2015,6 @@ export const BadRequest = {
   is(o: any): o is BadRequest {
     return o && (o.$typeUrl === BadRequest.typeUrl || Array.isArray(o.fieldViolations) && (!o.fieldViolations.length || BadRequest_FieldViolation.is(o.fieldViolations[0])));
   },
-  isSDK(o: any): o is BadRequestSDKType {
-    return o && (o.$typeUrl === BadRequest.typeUrl || Array.isArray(o.field_violations) && (!o.field_violations.length || BadRequest_FieldViolation.isSDK(o.field_violations[0])));
-  },
   isAmino(o: any): o is BadRequestAmino {
     return o && (o.$typeUrl === BadRequest.typeUrl || Array.isArray(o.field_violations) && (!o.field_violations.length || BadRequest_FieldViolation.isAmino(o.field_violations[0])));
   },
@@ -2291,7 +2041,7 @@ export const BadRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BadRequest>, I>>(object: I): BadRequest {
+  fromPartial(object: DeepPartial<BadRequest>): BadRequest {
     const message = createBaseBadRequest();
     message.fieldViolations = object.fieldViolations?.map(e => BadRequest_FieldViolation.fromPartial(e)) || [];
     return message;
@@ -2351,9 +2101,6 @@ export const BadRequest_FieldViolation = {
   is(o: any): o is BadRequest_FieldViolation {
     return o && (o.$typeUrl === BadRequest_FieldViolation.typeUrl || typeof o.field === "string" && typeof o.description === "string" && typeof o.reason === "string");
   },
-  isSDK(o: any): o is BadRequest_FieldViolationSDKType {
-    return o && (o.$typeUrl === BadRequest_FieldViolation.typeUrl || typeof o.field === "string" && typeof o.description === "string" && typeof o.reason === "string");
-  },
   isAmino(o: any): o is BadRequest_FieldViolationAmino {
     return o && (o.$typeUrl === BadRequest_FieldViolation.typeUrl || typeof o.field === "string" && typeof o.description === "string" && typeof o.reason === "string");
   },
@@ -2398,7 +2145,7 @@ export const BadRequest_FieldViolation = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BadRequest_FieldViolation>, I>>(object: I): BadRequest_FieldViolation {
+  fromPartial(object: DeepPartial<BadRequest_FieldViolation>): BadRequest_FieldViolation {
     const message = createBaseBadRequest_FieldViolation();
     message.field = object.field ?? "";
     message.description = object.description ?? "";
@@ -2470,9 +2217,6 @@ export const RequestInfo = {
   is(o: any): o is RequestInfo {
     return o && (o.$typeUrl === RequestInfo.typeUrl || typeof o.requestId === "string" && typeof o.servingData === "string");
   },
-  isSDK(o: any): o is RequestInfoSDKType {
-    return o && (o.$typeUrl === RequestInfo.typeUrl || typeof o.request_id === "string" && typeof o.serving_data === "string");
-  },
   isAmino(o: any): o is RequestInfoAmino {
     return o && (o.$typeUrl === RequestInfo.typeUrl || typeof o.request_id === "string" && typeof o.serving_data === "string");
   },
@@ -2505,7 +2249,7 @@ export const RequestInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RequestInfo>, I>>(object: I): RequestInfo {
+  fromPartial(object: DeepPartial<RequestInfo>): RequestInfo {
     const message = createBaseRequestInfo();
     message.requestId = object.requestId ?? "";
     message.servingData = object.servingData ?? "";
@@ -2563,9 +2307,6 @@ export const ResourceInfo = {
   is(o: any): o is ResourceInfo {
     return o && (o.$typeUrl === ResourceInfo.typeUrl || typeof o.resourceType === "string" && typeof o.resourceName === "string" && typeof o.owner === "string" && typeof o.description === "string");
   },
-  isSDK(o: any): o is ResourceInfoSDKType {
-    return o && (o.$typeUrl === ResourceInfo.typeUrl || typeof o.resource_type === "string" && typeof o.resource_name === "string" && typeof o.owner === "string" && typeof o.description === "string");
-  },
   isAmino(o: any): o is ResourceInfoAmino {
     return o && (o.$typeUrl === ResourceInfo.typeUrl || typeof o.resource_type === "string" && typeof o.resource_name === "string" && typeof o.owner === "string" && typeof o.description === "string");
   },
@@ -2610,7 +2351,7 @@ export const ResourceInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ResourceInfo>, I>>(object: I): ResourceInfo {
+  fromPartial(object: DeepPartial<ResourceInfo>): ResourceInfo {
     const message = createBaseResourceInfo();
     message.resourceType = object.resourceType ?? "";
     message.resourceName = object.resourceName ?? "";
@@ -2679,9 +2420,6 @@ export const Help = {
   is(o: any): o is Help {
     return o && (o.$typeUrl === Help.typeUrl || Array.isArray(o.links) && (!o.links.length || Help_Link.is(o.links[0])));
   },
-  isSDK(o: any): o is HelpSDKType {
-    return o && (o.$typeUrl === Help.typeUrl || Array.isArray(o.links) && (!o.links.length || Help_Link.isSDK(o.links[0])));
-  },
   isAmino(o: any): o is HelpAmino {
     return o && (o.$typeUrl === Help.typeUrl || Array.isArray(o.links) && (!o.links.length || Help_Link.isAmino(o.links[0])));
   },
@@ -2708,7 +2446,7 @@ export const Help = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Help>, I>>(object: I): Help {
+  fromPartial(object: DeepPartial<Help>): Help {
     const message = createBaseHelp();
     message.links = object.links?.map(e => Help_Link.fromPartial(e)) || [];
     return message;
@@ -2766,9 +2504,6 @@ export const Help_Link = {
   is(o: any): o is Help_Link {
     return o && (o.$typeUrl === Help_Link.typeUrl || typeof o.description === "string" && typeof o.url === "string");
   },
-  isSDK(o: any): o is Help_LinkSDKType {
-    return o && (o.$typeUrl === Help_Link.typeUrl || typeof o.description === "string" && typeof o.url === "string");
-  },
   isAmino(o: any): o is Help_LinkAmino {
     return o && (o.$typeUrl === Help_Link.typeUrl || typeof o.description === "string" && typeof o.url === "string");
   },
@@ -2801,7 +2536,7 @@ export const Help_Link = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Help_Link>, I>>(object: I): Help_Link {
+  fromPartial(object: DeepPartial<Help_Link>): Help_Link {
     const message = createBaseHelp_Link();
     message.description = object.description ?? "";
     message.url = object.url ?? "";
@@ -2858,9 +2593,6 @@ export const LocalizedMessage = {
   is(o: any): o is LocalizedMessage {
     return o && (o.$typeUrl === LocalizedMessage.typeUrl || typeof o.locale === "string" && typeof o.message === "string");
   },
-  isSDK(o: any): o is LocalizedMessageSDKType {
-    return o && (o.$typeUrl === LocalizedMessage.typeUrl || typeof o.locale === "string" && typeof o.message === "string");
-  },
   isAmino(o: any): o is LocalizedMessageAmino {
     return o && (o.$typeUrl === LocalizedMessage.typeUrl || typeof o.locale === "string" && typeof o.message === "string");
   },
@@ -2893,7 +2625,7 @@ export const LocalizedMessage = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<LocalizedMessage>, I>>(object: I): LocalizedMessage {
+  fromPartial(object: DeepPartial<LocalizedMessage>): LocalizedMessage {
     const message = createBaseLocalizedMessage();
     message.locale = object.locale ?? "";
     message.message = object.message ?? "";

@@ -15,19 +15,19 @@ export class ServiceClientImpl implements Service {
   private readonly rpc: TxRpc;
   constructor(rpc: TxRpc) {
     this.rpc = rpc;
-    this.config = this.config.bind(this);
-    this.status = this.status.bind(this);
   }
-  config(request: ConfigRequest = {}): Promise<ConfigResponse> {
+  /* Config queries for the operator configuration. */
+  config = async (request: ConfigRequest = {}): Promise<ConfigResponse> => {
     const data = ConfigRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.base.node.v1beta1.Service", "Config", data);
     return promise.then(data => ConfigResponse.decode(new BinaryReader(data)));
-  }
-  status(request: StatusRequest = {}): Promise<StatusResponse> {
+  };
+  /* Status queries for the node status. */
+  status = async (request: StatusRequest = {}): Promise<StatusResponse> => {
     const data = StatusRequest.encode(request).finish();
     const promise = this.rpc.request("cosmos.base.node.v1beta1.Service", "Status", data);
     return promise.then(data => StatusResponse.decode(new BinaryReader(data)));
-  }
+  };
 }
 export const createRpcQueryExtension = (base: QueryClient) => {
   const rpc = createProtobufRpcClient(base);

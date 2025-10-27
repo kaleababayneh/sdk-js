@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
-import { Grant, GrantAmino, GrantSDKType, GrantAuthorization, GrantAuthorizationAmino, GrantAuthorizationSDKType } from "./authz";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
+import { Grant, GrantAmino, GrantAuthorization, GrantAuthorizationAmino } from "./authz";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * QueryGrantsRequest is the request type for the Query/Grants RPC method.
  * @name QueryGrantsRequest
@@ -34,12 +34,12 @@ export interface QueryGrantsRequestProtoMsg {
  * @see proto type: cosmos.authz.v1beta1.QueryGrantsRequest
  */
 export interface QueryGrantsRequestAmino {
-  granter?: string;
-  grantee?: string;
+  granter: string;
+  grantee: string;
   /**
    * Optional, msg_type_url, when set, will query only grants matching given msg type.
    */
-  msg_type_url?: string;
+  msg_type_url: string;
   /**
    * pagination defines an pagination for the request.
    */
@@ -48,18 +48,6 @@ export interface QueryGrantsRequestAmino {
 export interface QueryGrantsRequestAminoMsg {
   type: "cosmos-sdk/QueryGrantsRequest";
   value: QueryGrantsRequestAmino;
-}
-/**
- * QueryGrantsRequest is the request type for the Query/Grants RPC method.
- * @name QueryGrantsRequestSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.QueryGrantsRequest
- */
-export interface QueryGrantsRequestSDKType {
-  granter: string;
-  grantee: string;
-  msg_type_url: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryGrantsResponse is the response type for the Query/Authorizations RPC method.
@@ -91,7 +79,7 @@ export interface QueryGrantsResponseAmino {
   /**
    * authorizations is a list of grants granted for grantee by granter.
    */
-  grants?: GrantAmino[];
+  grants: GrantAmino[];
   /**
    * pagination defines an pagination for the response.
    */
@@ -100,16 +88,6 @@ export interface QueryGrantsResponseAmino {
 export interface QueryGrantsResponseAminoMsg {
   type: "cosmos-sdk/QueryGrantsResponse";
   value: QueryGrantsResponseAmino;
-}
-/**
- * QueryGrantsResponse is the response type for the Query/Authorizations RPC method.
- * @name QueryGrantsResponseSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.QueryGrantsResponse
- */
-export interface QueryGrantsResponseSDKType {
-  grants: GrantSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryGranterGrantsRequest is the request type for the Query/GranterGrants RPC method.
@@ -135,7 +113,7 @@ export interface QueryGranterGrantsRequestProtoMsg {
  * @see proto type: cosmos.authz.v1beta1.QueryGranterGrantsRequest
  */
 export interface QueryGranterGrantsRequestAmino {
-  granter?: string;
+  granter: string;
   /**
    * pagination defines an pagination for the request.
    */
@@ -144,16 +122,6 @@ export interface QueryGranterGrantsRequestAmino {
 export interface QueryGranterGrantsRequestAminoMsg {
   type: "cosmos-sdk/QueryGranterGrantsRequest";
   value: QueryGranterGrantsRequestAmino;
-}
-/**
- * QueryGranterGrantsRequest is the request type for the Query/GranterGrants RPC method.
- * @name QueryGranterGrantsRequestSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.QueryGranterGrantsRequest
- */
-export interface QueryGranterGrantsRequestSDKType {
-  granter: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryGranterGrantsResponse is the response type for the Query/GranterGrants RPC method.
@@ -185,7 +153,7 @@ export interface QueryGranterGrantsResponseAmino {
   /**
    * grants is a list of grants granted by the granter.
    */
-  grants?: GrantAuthorizationAmino[];
+  grants: GrantAuthorizationAmino[];
   /**
    * pagination defines an pagination for the response.
    */
@@ -194,16 +162,6 @@ export interface QueryGranterGrantsResponseAmino {
 export interface QueryGranterGrantsResponseAminoMsg {
   type: "cosmos-sdk/QueryGranterGrantsResponse";
   value: QueryGranterGrantsResponseAmino;
-}
-/**
- * QueryGranterGrantsResponse is the response type for the Query/GranterGrants RPC method.
- * @name QueryGranterGrantsResponseSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.QueryGranterGrantsResponse
- */
-export interface QueryGranterGrantsResponseSDKType {
-  grants: GrantAuthorizationSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryGranteeGrantsRequest is the request type for the Query/GranteeGrants RPC method.
@@ -229,7 +187,7 @@ export interface QueryGranteeGrantsRequestProtoMsg {
  * @see proto type: cosmos.authz.v1beta1.QueryGranteeGrantsRequest
  */
 export interface QueryGranteeGrantsRequestAmino {
-  grantee?: string;
+  grantee: string;
   /**
    * pagination defines an pagination for the request.
    */
@@ -238,16 +196,6 @@ export interface QueryGranteeGrantsRequestAmino {
 export interface QueryGranteeGrantsRequestAminoMsg {
   type: "cosmos-sdk/QueryGranteeGrantsRequest";
   value: QueryGranteeGrantsRequestAmino;
-}
-/**
- * QueryGranteeGrantsRequest is the request type for the Query/GranteeGrants RPC method.
- * @name QueryGranteeGrantsRequestSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.QueryGranteeGrantsRequest
- */
-export interface QueryGranteeGrantsRequestSDKType {
-  grantee: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryGranteeGrantsResponse is the response type for the Query/GranteeGrants RPC method.
@@ -279,7 +227,7 @@ export interface QueryGranteeGrantsResponseAmino {
   /**
    * grants is a list of grants granted to the grantee.
    */
-  grants?: GrantAuthorizationAmino[];
+  grants: GrantAuthorizationAmino[];
   /**
    * pagination defines an pagination for the response.
    */
@@ -288,16 +236,6 @@ export interface QueryGranteeGrantsResponseAmino {
 export interface QueryGranteeGrantsResponseAminoMsg {
   type: "cosmos-sdk/QueryGranteeGrantsResponse";
   value: QueryGranteeGrantsResponseAmino;
-}
-/**
- * QueryGranteeGrantsResponse is the response type for the Query/GranteeGrants RPC method.
- * @name QueryGranteeGrantsResponseSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.QueryGranteeGrantsResponse
- */
-export interface QueryGranteeGrantsResponseSDKType {
-  grants: GrantAuthorizationSDKType[];
-  pagination?: PageResponseSDKType;
 }
 function createBaseQueryGrantsRequest(): QueryGrantsRequest {
   return {
@@ -318,9 +256,6 @@ export const QueryGrantsRequest = {
   aminoType: "cosmos-sdk/QueryGrantsRequest",
   is(o: any): o is QueryGrantsRequest {
     return o && (o.$typeUrl === QueryGrantsRequest.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string" && typeof o.msgTypeUrl === "string");
-  },
-  isSDK(o: any): o is QueryGrantsRequestSDKType {
-    return o && (o.$typeUrl === QueryGrantsRequest.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string" && typeof o.msg_type_url === "string");
   },
   isAmino(o: any): o is QueryGrantsRequestAmino {
     return o && (o.$typeUrl === QueryGrantsRequest.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string" && typeof o.msg_type_url === "string");
@@ -366,7 +301,7 @@ export const QueryGrantsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGrantsRequest>, I>>(object: I): QueryGrantsRequest {
+  fromPartial(object: DeepPartial<QueryGrantsRequest>): QueryGrantsRequest {
     const message = createBaseQueryGrantsRequest();
     message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
@@ -444,9 +379,6 @@ export const QueryGrantsResponse = {
   is(o: any): o is QueryGrantsResponse {
     return o && (o.$typeUrl === QueryGrantsResponse.typeUrl || Array.isArray(o.grants) && (!o.grants.length || Grant.is(o.grants[0])));
   },
-  isSDK(o: any): o is QueryGrantsResponseSDKType {
-    return o && (o.$typeUrl === QueryGrantsResponse.typeUrl || Array.isArray(o.grants) && (!o.grants.length || Grant.isSDK(o.grants[0])));
-  },
   isAmino(o: any): o is QueryGrantsResponseAmino {
     return o && (o.$typeUrl === QueryGrantsResponse.typeUrl || Array.isArray(o.grants) && (!o.grants.length || Grant.isAmino(o.grants[0])));
   },
@@ -479,7 +411,7 @@ export const QueryGrantsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGrantsResponse>, I>>(object: I): QueryGrantsResponse {
+  fromPartial(object: DeepPartial<QueryGrantsResponse>): QueryGrantsResponse {
     const message = createBaseQueryGrantsResponse();
     message.grants = object.grants?.map(e => Grant.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -550,9 +482,6 @@ export const QueryGranterGrantsRequest = {
   is(o: any): o is QueryGranterGrantsRequest {
     return o && (o.$typeUrl === QueryGranterGrantsRequest.typeUrl || typeof o.granter === "string");
   },
-  isSDK(o: any): o is QueryGranterGrantsRequestSDKType {
-    return o && (o.$typeUrl === QueryGranterGrantsRequest.typeUrl || typeof o.granter === "string");
-  },
   isAmino(o: any): o is QueryGranterGrantsRequestAmino {
     return o && (o.$typeUrl === QueryGranterGrantsRequest.typeUrl || typeof o.granter === "string");
   },
@@ -585,7 +514,7 @@ export const QueryGranterGrantsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGranterGrantsRequest>, I>>(object: I): QueryGranterGrantsRequest {
+  fromPartial(object: DeepPartial<QueryGranterGrantsRequest>): QueryGranterGrantsRequest {
     const message = createBaseQueryGranterGrantsRequest();
     message.granter = object.granter ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -653,9 +582,6 @@ export const QueryGranterGrantsResponse = {
   is(o: any): o is QueryGranterGrantsResponse {
     return o && (o.$typeUrl === QueryGranterGrantsResponse.typeUrl || Array.isArray(o.grants) && (!o.grants.length || GrantAuthorization.is(o.grants[0])));
   },
-  isSDK(o: any): o is QueryGranterGrantsResponseSDKType {
-    return o && (o.$typeUrl === QueryGranterGrantsResponse.typeUrl || Array.isArray(o.grants) && (!o.grants.length || GrantAuthorization.isSDK(o.grants[0])));
-  },
   isAmino(o: any): o is QueryGranterGrantsResponseAmino {
     return o && (o.$typeUrl === QueryGranterGrantsResponse.typeUrl || Array.isArray(o.grants) && (!o.grants.length || GrantAuthorization.isAmino(o.grants[0])));
   },
@@ -688,7 +614,7 @@ export const QueryGranterGrantsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGranterGrantsResponse>, I>>(object: I): QueryGranterGrantsResponse {
+  fromPartial(object: DeepPartial<QueryGranterGrantsResponse>): QueryGranterGrantsResponse {
     const message = createBaseQueryGranterGrantsResponse();
     message.grants = object.grants?.map(e => GrantAuthorization.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -759,9 +685,6 @@ export const QueryGranteeGrantsRequest = {
   is(o: any): o is QueryGranteeGrantsRequest {
     return o && (o.$typeUrl === QueryGranteeGrantsRequest.typeUrl || typeof o.grantee === "string");
   },
-  isSDK(o: any): o is QueryGranteeGrantsRequestSDKType {
-    return o && (o.$typeUrl === QueryGranteeGrantsRequest.typeUrl || typeof o.grantee === "string");
-  },
   isAmino(o: any): o is QueryGranteeGrantsRequestAmino {
     return o && (o.$typeUrl === QueryGranteeGrantsRequest.typeUrl || typeof o.grantee === "string");
   },
@@ -794,7 +717,7 @@ export const QueryGranteeGrantsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGranteeGrantsRequest>, I>>(object: I): QueryGranteeGrantsRequest {
+  fromPartial(object: DeepPartial<QueryGranteeGrantsRequest>): QueryGranteeGrantsRequest {
     const message = createBaseQueryGranteeGrantsRequest();
     message.grantee = object.grantee ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -862,9 +785,6 @@ export const QueryGranteeGrantsResponse = {
   is(o: any): o is QueryGranteeGrantsResponse {
     return o && (o.$typeUrl === QueryGranteeGrantsResponse.typeUrl || Array.isArray(o.grants) && (!o.grants.length || GrantAuthorization.is(o.grants[0])));
   },
-  isSDK(o: any): o is QueryGranteeGrantsResponseSDKType {
-    return o && (o.$typeUrl === QueryGranteeGrantsResponse.typeUrl || Array.isArray(o.grants) && (!o.grants.length || GrantAuthorization.isSDK(o.grants[0])));
-  },
   isAmino(o: any): o is QueryGranteeGrantsResponseAmino {
     return o && (o.$typeUrl === QueryGranteeGrantsResponse.typeUrl || Array.isArray(o.grants) && (!o.grants.length || GrantAuthorization.isAmino(o.grants[0])));
   },
@@ -897,7 +817,7 @@ export const QueryGranteeGrantsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGranteeGrantsResponse>, I>>(object: I): QueryGranteeGrantsResponse {
+  fromPartial(object: DeepPartial<QueryGranteeGrantsResponse>): QueryGranteeGrantsResponse {
     const message = createBaseQueryGranteeGrantsResponse();
     message.grants = object.grants?.map(e => GrantAuthorization.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;

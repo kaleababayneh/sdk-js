@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
-import { Grant, GrantAmino, GrantSDKType } from "./feegrant";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
+import { Grant, GrantAmino } from "./feegrant";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryAllowanceRequest is the request type for the Query/Allowance RPC method.
@@ -35,25 +35,15 @@ export interface QueryAllowanceRequestAmino {
   /**
    * granter is the address of the user granting an allowance of their funds.
    */
-  granter?: string;
+  granter: string;
   /**
    * grantee is the address of the user being granted an allowance of another user's funds.
    */
-  grantee?: string;
+  grantee: string;
 }
 export interface QueryAllowanceRequestAminoMsg {
   type: "cosmos-sdk/QueryAllowanceRequest";
   value: QueryAllowanceRequestAmino;
-}
-/**
- * QueryAllowanceRequest is the request type for the Query/Allowance RPC method.
- * @name QueryAllowanceRequestSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.QueryAllowanceRequest
- */
-export interface QueryAllowanceRequestSDKType {
-  granter: string;
-  grantee: string;
 }
 /**
  * QueryAllowanceResponse is the response type for the Query/Allowance RPC method.
@@ -88,15 +78,6 @@ export interface QueryAllowanceResponseAminoMsg {
   value: QueryAllowanceResponseAmino;
 }
 /**
- * QueryAllowanceResponse is the response type for the Query/Allowance RPC method.
- * @name QueryAllowanceResponseSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.QueryAllowanceResponse
- */
-export interface QueryAllowanceResponseSDKType {
-  allowance?: GrantSDKType;
-}
-/**
  * QueryAllowancesRequest is the request type for the Query/Allowances RPC method.
  * @name QueryAllowancesRequest
  * @package cosmos.feegrant.v1beta1
@@ -120,7 +101,7 @@ export interface QueryAllowancesRequestProtoMsg {
  * @see proto type: cosmos.feegrant.v1beta1.QueryAllowancesRequest
  */
 export interface QueryAllowancesRequestAmino {
-  grantee?: string;
+  grantee: string;
   /**
    * pagination defines an pagination for the request.
    */
@@ -129,16 +110,6 @@ export interface QueryAllowancesRequestAmino {
 export interface QueryAllowancesRequestAminoMsg {
   type: "cosmos-sdk/QueryAllowancesRequest";
   value: QueryAllowancesRequestAmino;
-}
-/**
- * QueryAllowancesRequest is the request type for the Query/Allowances RPC method.
- * @name QueryAllowancesRequestSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.QueryAllowancesRequest
- */
-export interface QueryAllowancesRequestSDKType {
-  grantee: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryAllowancesResponse is the response type for the Query/Allowances RPC method.
@@ -170,7 +141,7 @@ export interface QueryAllowancesResponseAmino {
   /**
    * allowances are allowance's granted for grantee by granter.
    */
-  allowances?: GrantAmino[];
+  allowances: GrantAmino[];
   /**
    * pagination defines an pagination for the response.
    */
@@ -179,16 +150,6 @@ export interface QueryAllowancesResponseAmino {
 export interface QueryAllowancesResponseAminoMsg {
   type: "cosmos-sdk/QueryAllowancesResponse";
   value: QueryAllowancesResponseAmino;
-}
-/**
- * QueryAllowancesResponse is the response type for the Query/Allowances RPC method.
- * @name QueryAllowancesResponseSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.QueryAllowancesResponse
- */
-export interface QueryAllowancesResponseSDKType {
-  allowances: GrantSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryAllowancesByGranterRequest is the request type for the Query/AllowancesByGranter RPC method.
@@ -218,7 +179,7 @@ export interface QueryAllowancesByGranterRequestProtoMsg {
  * @see proto type: cosmos.feegrant.v1beta1.QueryAllowancesByGranterRequest
  */
 export interface QueryAllowancesByGranterRequestAmino {
-  granter?: string;
+  granter: string;
   /**
    * pagination defines an pagination for the request.
    */
@@ -227,18 +188,6 @@ export interface QueryAllowancesByGranterRequestAmino {
 export interface QueryAllowancesByGranterRequestAminoMsg {
   type: "cosmos-sdk/QueryAllowancesByGranterRequest";
   value: QueryAllowancesByGranterRequestAmino;
-}
-/**
- * QueryAllowancesByGranterRequest is the request type for the Query/AllowancesByGranter RPC method.
- * 
- * Since: cosmos-sdk 0.46
- * @name QueryAllowancesByGranterRequestSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.QueryAllowancesByGranterRequest
- */
-export interface QueryAllowancesByGranterRequestSDKType {
-  granter: string;
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryAllowancesByGranterResponse is the response type for the Query/AllowancesByGranter RPC method.
@@ -274,7 +223,7 @@ export interface QueryAllowancesByGranterResponseAmino {
   /**
    * allowances that have been issued by the granter.
    */
-  allowances?: GrantAmino[];
+  allowances: GrantAmino[];
   /**
    * pagination defines an pagination for the response.
    */
@@ -283,18 +232,6 @@ export interface QueryAllowancesByGranterResponseAmino {
 export interface QueryAllowancesByGranterResponseAminoMsg {
   type: "cosmos-sdk/QueryAllowancesByGranterResponse";
   value: QueryAllowancesByGranterResponseAmino;
-}
-/**
- * QueryAllowancesByGranterResponse is the response type for the Query/AllowancesByGranter RPC method.
- * 
- * Since: cosmos-sdk 0.46
- * @name QueryAllowancesByGranterResponseSDKType
- * @package cosmos.feegrant.v1beta1
- * @see proto type: cosmos.feegrant.v1beta1.QueryAllowancesByGranterResponse
- */
-export interface QueryAllowancesByGranterResponseSDKType {
-  allowances: GrantSDKType[];
-  pagination?: PageResponseSDKType;
 }
 function createBaseQueryAllowanceRequest(): QueryAllowanceRequest {
   return {
@@ -312,9 +249,6 @@ export const QueryAllowanceRequest = {
   typeUrl: "/cosmos.feegrant.v1beta1.QueryAllowanceRequest",
   aminoType: "cosmos-sdk/QueryAllowanceRequest",
   is(o: any): o is QueryAllowanceRequest {
-    return o && (o.$typeUrl === QueryAllowanceRequest.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
-  },
-  isSDK(o: any): o is QueryAllowanceRequestSDKType {
     return o && (o.$typeUrl === QueryAllowanceRequest.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string");
   },
   isAmino(o: any): o is QueryAllowanceRequestAmino {
@@ -349,7 +283,7 @@ export const QueryAllowanceRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAllowanceRequest>, I>>(object: I): QueryAllowanceRequest {
+  fromPartial(object: DeepPartial<QueryAllowanceRequest>): QueryAllowanceRequest {
     const message = createBaseQueryAllowanceRequest();
     message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
@@ -411,9 +345,6 @@ export const QueryAllowanceResponse = {
   is(o: any): o is QueryAllowanceResponse {
     return o && o.$typeUrl === QueryAllowanceResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryAllowanceResponseSDKType {
-    return o && o.$typeUrl === QueryAllowanceResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryAllowanceResponseAmino {
     return o && o.$typeUrl === QueryAllowanceResponse.typeUrl;
   },
@@ -440,7 +371,7 @@ export const QueryAllowanceResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAllowanceResponse>, I>>(object: I): QueryAllowanceResponse {
+  fromPartial(object: DeepPartial<QueryAllowanceResponse>): QueryAllowanceResponse {
     const message = createBaseQueryAllowanceResponse();
     message.allowance = object.allowance !== undefined && object.allowance !== null ? Grant.fromPartial(object.allowance) : undefined;
     return message;
@@ -503,9 +434,6 @@ export const QueryAllowancesRequest = {
   is(o: any): o is QueryAllowancesRequest {
     return o && (o.$typeUrl === QueryAllowancesRequest.typeUrl || typeof o.grantee === "string");
   },
-  isSDK(o: any): o is QueryAllowancesRequestSDKType {
-    return o && (o.$typeUrl === QueryAllowancesRequest.typeUrl || typeof o.grantee === "string");
-  },
   isAmino(o: any): o is QueryAllowancesRequestAmino {
     return o && (o.$typeUrl === QueryAllowancesRequest.typeUrl || typeof o.grantee === "string");
   },
@@ -538,7 +466,7 @@ export const QueryAllowancesRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAllowancesRequest>, I>>(object: I): QueryAllowancesRequest {
+  fromPartial(object: DeepPartial<QueryAllowancesRequest>): QueryAllowancesRequest {
     const message = createBaseQueryAllowancesRequest();
     message.grantee = object.grantee ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -606,9 +534,6 @@ export const QueryAllowancesResponse = {
   is(o: any): o is QueryAllowancesResponse {
     return o && (o.$typeUrl === QueryAllowancesResponse.typeUrl || Array.isArray(o.allowances) && (!o.allowances.length || Grant.is(o.allowances[0])));
   },
-  isSDK(o: any): o is QueryAllowancesResponseSDKType {
-    return o && (o.$typeUrl === QueryAllowancesResponse.typeUrl || Array.isArray(o.allowances) && (!o.allowances.length || Grant.isSDK(o.allowances[0])));
-  },
   isAmino(o: any): o is QueryAllowancesResponseAmino {
     return o && (o.$typeUrl === QueryAllowancesResponse.typeUrl || Array.isArray(o.allowances) && (!o.allowances.length || Grant.isAmino(o.allowances[0])));
   },
@@ -641,7 +566,7 @@ export const QueryAllowancesResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAllowancesResponse>, I>>(object: I): QueryAllowancesResponse {
+  fromPartial(object: DeepPartial<QueryAllowancesResponse>): QueryAllowancesResponse {
     const message = createBaseQueryAllowancesResponse();
     message.allowances = object.allowances?.map(e => Grant.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -714,9 +639,6 @@ export const QueryAllowancesByGranterRequest = {
   is(o: any): o is QueryAllowancesByGranterRequest {
     return o && (o.$typeUrl === QueryAllowancesByGranterRequest.typeUrl || typeof o.granter === "string");
   },
-  isSDK(o: any): o is QueryAllowancesByGranterRequestSDKType {
-    return o && (o.$typeUrl === QueryAllowancesByGranterRequest.typeUrl || typeof o.granter === "string");
-  },
   isAmino(o: any): o is QueryAllowancesByGranterRequestAmino {
     return o && (o.$typeUrl === QueryAllowancesByGranterRequest.typeUrl || typeof o.granter === "string");
   },
@@ -749,7 +671,7 @@ export const QueryAllowancesByGranterRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAllowancesByGranterRequest>, I>>(object: I): QueryAllowancesByGranterRequest {
+  fromPartial(object: DeepPartial<QueryAllowancesByGranterRequest>): QueryAllowancesByGranterRequest {
     const message = createBaseQueryAllowancesByGranterRequest();
     message.granter = object.granter ?? "";
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
@@ -819,9 +741,6 @@ export const QueryAllowancesByGranterResponse = {
   is(o: any): o is QueryAllowancesByGranterResponse {
     return o && (o.$typeUrl === QueryAllowancesByGranterResponse.typeUrl || Array.isArray(o.allowances) && (!o.allowances.length || Grant.is(o.allowances[0])));
   },
-  isSDK(o: any): o is QueryAllowancesByGranterResponseSDKType {
-    return o && (o.$typeUrl === QueryAllowancesByGranterResponse.typeUrl || Array.isArray(o.allowances) && (!o.allowances.length || Grant.isSDK(o.allowances[0])));
-  },
   isAmino(o: any): o is QueryAllowancesByGranterResponseAmino {
     return o && (o.$typeUrl === QueryAllowancesByGranterResponse.typeUrl || Array.isArray(o.allowances) && (!o.allowances.length || Grant.isAmino(o.allowances[0])));
   },
@@ -854,7 +773,7 @@ export const QueryAllowancesByGranterResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAllowancesByGranterResponse>, I>>(object: I): QueryAllowancesByGranterResponse {
+  fromPartial(object: DeepPartial<QueryAllowancesByGranterResponse>): QueryAllowancesByGranterResponse {
     const message = createBaseQueryAllowancesByGranterResponse();
     message.allowances = object.allowances?.map(e => Grant.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;

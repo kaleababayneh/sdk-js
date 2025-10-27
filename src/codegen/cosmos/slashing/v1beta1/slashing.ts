@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
 import { Timestamp } from "../../../google/protobuf/timestamp";
-import { Duration, DurationAmino, DurationSDKType } from "../../../google/protobuf/duration";
+import { Duration, DurationAmino } from "../../../google/protobuf/duration";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { toTimestamp, fromTimestamp, Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { toTimestamp, fromTimestamp, DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 /**
  * ValidatorSigningInfo defines a validator's signing info for monitoring their
  * liveness activity.
@@ -51,17 +51,17 @@ export interface ValidatorSigningInfoProtoMsg {
  * @see proto type: cosmos.slashing.v1beta1.ValidatorSigningInfo
  */
 export interface ValidatorSigningInfoAmino {
-  address?: string;
+  address: string;
   /**
    * Height at which validator was first a candidate OR was un-jailed
    */
-  start_height?: string;
+  start_height: string;
   /**
    * Index which is incremented every time a validator is bonded in a block and
    * _may_ have signed a pre-commit or not. This in conjunction with the
    * signed_blocks_window param determines the index in the missed block bitmap.
    */
-  index_offset?: string;
+  index_offset: string;
   /**
    * Timestamp until which the validator is jailed due to liveness downtime.
    */
@@ -71,31 +71,16 @@ export interface ValidatorSigningInfoAmino {
    * set). It is set once the validator commits an equivocation or for any other
    * configured misbehavior.
    */
-  tombstoned?: boolean;
+  tombstoned: boolean;
   /**
    * A counter of missed (unsigned) blocks. It is used to avoid unnecessary
    * reads in the missed block bitmap.
    */
-  missed_blocks_counter?: string;
+  missed_blocks_counter: string;
 }
 export interface ValidatorSigningInfoAminoMsg {
   type: "cosmos-sdk/ValidatorSigningInfo";
   value: ValidatorSigningInfoAmino;
-}
-/**
- * ValidatorSigningInfo defines a validator's signing info for monitoring their
- * liveness activity.
- * @name ValidatorSigningInfoSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.ValidatorSigningInfo
- */
-export interface ValidatorSigningInfoSDKType {
-  address: string;
-  start_height: bigint;
-  index_offset: bigint;
-  jailed_until: Date;
-  tombstoned: boolean;
-  missed_blocks_counter: bigint;
 }
 /**
  * Params represents the parameters used for by the slashing module.
@@ -121,7 +106,7 @@ export interface ParamsProtoMsg {
  * @see proto type: cosmos.slashing.v1beta1.Params
  */
 export interface ParamsAmino {
-  signed_blocks_window?: string;
+  signed_blocks_window: string;
   min_signed_per_window: string;
   downtime_jail_duration: DurationAmino;
   slash_fraction_double_sign: string;
@@ -130,19 +115,6 @@ export interface ParamsAmino {
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/x/slashing/Params";
   value: ParamsAmino;
-}
-/**
- * Params represents the parameters used for by the slashing module.
- * @name ParamsSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.Params
- */
-export interface ParamsSDKType {
-  signed_blocks_window: bigint;
-  min_signed_per_window: Uint8Array;
-  downtime_jail_duration: DurationSDKType;
-  slash_fraction_double_sign: Uint8Array;
-  slash_fraction_downtime: Uint8Array;
 }
 function createBaseValidatorSigningInfo(): ValidatorSigningInfo {
   return {
@@ -166,9 +138,6 @@ export const ValidatorSigningInfo = {
   aminoType: "cosmos-sdk/ValidatorSigningInfo",
   is(o: any): o is ValidatorSigningInfo {
     return o && (o.$typeUrl === ValidatorSigningInfo.typeUrl || typeof o.address === "string" && typeof o.startHeight === "bigint" && typeof o.indexOffset === "bigint" && Timestamp.is(o.jailedUntil) && typeof o.tombstoned === "boolean" && typeof o.missedBlocksCounter === "bigint");
-  },
-  isSDK(o: any): o is ValidatorSigningInfoSDKType {
-    return o && (o.$typeUrl === ValidatorSigningInfo.typeUrl || typeof o.address === "string" && typeof o.start_height === "bigint" && typeof o.index_offset === "bigint" && Timestamp.isSDK(o.jailed_until) && typeof o.tombstoned === "boolean" && typeof o.missed_blocks_counter === "bigint");
   },
   isAmino(o: any): o is ValidatorSigningInfoAmino {
     return o && (o.$typeUrl === ValidatorSigningInfo.typeUrl || typeof o.address === "string" && typeof o.start_height === "bigint" && typeof o.index_offset === "bigint" && Timestamp.isAmino(o.jailed_until) && typeof o.tombstoned === "boolean" && typeof o.missed_blocks_counter === "bigint");
@@ -226,7 +195,7 @@ export const ValidatorSigningInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorSigningInfo>, I>>(object: I): ValidatorSigningInfo {
+  fromPartial(object: DeepPartial<ValidatorSigningInfo>): ValidatorSigningInfo {
     const message = createBaseValidatorSigningInfo();
     message.address = object.address ?? "";
     message.startHeight = object.startHeight !== undefined && object.startHeight !== null ? BigInt(object.startHeight.toString()) : BigInt(0);
@@ -312,9 +281,6 @@ export const Params = {
   is(o: any): o is Params {
     return o && (o.$typeUrl === Params.typeUrl || typeof o.signedBlocksWindow === "bigint" && (o.minSignedPerWindow instanceof Uint8Array || typeof o.minSignedPerWindow === "string") && Duration.is(o.downtimeJailDuration) && (o.slashFractionDoubleSign instanceof Uint8Array || typeof o.slashFractionDoubleSign === "string") && (o.slashFractionDowntime instanceof Uint8Array || typeof o.slashFractionDowntime === "string"));
   },
-  isSDK(o: any): o is ParamsSDKType {
-    return o && (o.$typeUrl === Params.typeUrl || typeof o.signed_blocks_window === "bigint" && (o.min_signed_per_window instanceof Uint8Array || typeof o.min_signed_per_window === "string") && Duration.isSDK(o.downtime_jail_duration) && (o.slash_fraction_double_sign instanceof Uint8Array || typeof o.slash_fraction_double_sign === "string") && (o.slash_fraction_downtime instanceof Uint8Array || typeof o.slash_fraction_downtime === "string"));
-  },
   isAmino(o: any): o is ParamsAmino {
     return o && (o.$typeUrl === Params.typeUrl || typeof o.signed_blocks_window === "bigint" && (o.min_signed_per_window instanceof Uint8Array || typeof o.min_signed_per_window === "string") && Duration.isAmino(o.downtime_jail_duration) && (o.slash_fraction_double_sign instanceof Uint8Array || typeof o.slash_fraction_double_sign === "string") && (o.slash_fraction_downtime instanceof Uint8Array || typeof o.slash_fraction_downtime === "string"));
   },
@@ -365,7 +331,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(object: I): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.signedBlocksWindow = object.signedBlocksWindow !== undefined && object.signedBlocksWindow !== null ? BigInt(object.signedBlocksWindow.toString()) : BigInt(0);
     message.minSignedPerWindow = object.minSignedPerWindow ?? new Uint8Array();

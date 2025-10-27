@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyAmino, AnySDKType } from "../protobuf/any";
+import { Any, AnyAmino } from "../protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * The `Status` type defines a logical error model that is suitable for
  * different programming environments, including REST APIs and RPC APIs. It is
@@ -55,40 +55,23 @@ export interface StatusAmino {
    * The status code, which should be an enum value of
    * [google.rpc.Code][google.rpc.Code].
    */
-  code?: number;
+  code: number;
   /**
    * A developer-facing error message, which should be in English. Any
    * user-facing error message should be localized and sent in the
    * [google.rpc.Status.details][google.rpc.Status.details] field, or localized
    * by the client.
    */
-  message?: string;
+  message: string;
   /**
    * A list of messages that carry the error details.  There is a common set of
    * message types for APIs to use.
    */
-  details?: AnyAmino[];
+  details: AnyAmino[];
 }
 export interface StatusAminoMsg {
   type: "/google.rpc.Status";
   value: StatusAmino;
-}
-/**
- * The `Status` type defines a logical error model that is suitable for
- * different programming environments, including REST APIs and RPC APIs. It is
- * used by [gRPC](https://github.com/grpc). Each `Status` message contains
- * three pieces of data: error code, error message, and error details.
- * 
- * You can find out more about this error model and how to work with it in the
- * [API Design Guide](https://cloud.google.com/apis/design/errors).
- * @name StatusSDKType
- * @package google.rpc
- * @see proto type: google.rpc.Status
- */
-export interface StatusSDKType {
-  code: number;
-  message: string;
-  details: AnySDKType[];
 }
 function createBaseStatus(): Status {
   return {
@@ -113,9 +96,6 @@ export const Status = {
   typeUrl: "/google.rpc.Status",
   is(o: any): o is Status {
     return o && (o.$typeUrl === Status.typeUrl || typeof o.code === "number" && typeof o.message === "string" && Array.isArray(o.details) && (!o.details.length || Any.is(o.details[0])));
-  },
-  isSDK(o: any): o is StatusSDKType {
-    return o && (o.$typeUrl === Status.typeUrl || typeof o.code === "number" && typeof o.message === "string" && Array.isArray(o.details) && (!o.details.length || Any.isSDK(o.details[0])));
   },
   isAmino(o: any): o is StatusAmino {
     return o && (o.$typeUrl === Status.typeUrl || typeof o.code === "number" && typeof o.message === "string" && Array.isArray(o.details) && (!o.details.length || Any.isAmino(o.details[0])));
@@ -155,7 +135,7 @@ export const Status = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Status>, I>>(object: I): Status {
+  fromPartial(object: DeepPartial<Status>): Status {
     const message = createBaseStatus();
     message.code = object.code ?? 0;
     message.message = object.message ?? "";

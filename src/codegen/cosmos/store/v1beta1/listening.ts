@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { ResponseCommit, ResponseCommitAmino, ResponseCommitSDKType, RequestFinalizeBlock, RequestFinalizeBlockAmino, RequestFinalizeBlockSDKType, ResponseFinalizeBlock, ResponseFinalizeBlockAmino, ResponseFinalizeBlockSDKType } from "../../../tendermint/abci/types";
+import { ResponseCommit, ResponseCommitAmino, RequestFinalizeBlock, RequestFinalizeBlockAmino, ResponseFinalizeBlock, ResponseFinalizeBlockAmino } from "../../../tendermint/abci/types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * StoreKVPair is a KVStore KVPair used for listening to state changes (Sets and Deletes)
@@ -44,33 +44,17 @@ export interface StoreKVPairAmino {
   /**
    * the store key for the KVStore this pair originates from
    */
-  store_key?: string;
+  store_key: string;
   /**
    * true indicates a delete operation, false indicates a set operation
    */
-  delete?: boolean;
-  key?: string;
-  value?: string;
+  delete: boolean;
+  key: string;
+  value: string;
 }
 export interface StoreKVPairAminoMsg {
   type: "cosmos-sdk/StoreKVPair";
   value: StoreKVPairAmino;
-}
-/**
- * StoreKVPair is a KVStore KVPair used for listening to state changes (Sets and Deletes)
- * It optionally includes the StoreKey for the originating KVStore and a Boolean flag to distinguish between Sets and
- * Deletes
- * 
- * Since: cosmos-sdk 0.43
- * @name StoreKVPairSDKType
- * @package cosmos.store.v1beta1
- * @see proto type: cosmos.store.v1beta1.StoreKVPair
- */
-export interface StoreKVPairSDKType {
-  store_key: string;
-  delete: boolean;
-  key: Uint8Array;
-  value: Uint8Array;
 }
 /**
  * BlockMetadata contains all the abci event data of a block
@@ -110,18 +94,6 @@ export interface BlockMetadataAminoMsg {
   type: "cosmos-sdk/BlockMetadata";
   value: BlockMetadataAmino;
 }
-/**
- * BlockMetadata contains all the abci event data of a block
- * the file streamer dump them into files together with the state changes.
- * @name BlockMetadataSDKType
- * @package cosmos.store.v1beta1
- * @see proto type: cosmos.store.v1beta1.BlockMetadata
- */
-export interface BlockMetadataSDKType {
-  response_commit?: ResponseCommitSDKType;
-  request_finalize_block?: RequestFinalizeBlockSDKType;
-  response_finalize_block?: ResponseFinalizeBlockSDKType;
-}
 function createBaseStoreKVPair(): StoreKVPair {
   return {
     storeKey: "",
@@ -145,9 +117,6 @@ export const StoreKVPair = {
   aminoType: "cosmos-sdk/StoreKVPair",
   is(o: any): o is StoreKVPair {
     return o && (o.$typeUrl === StoreKVPair.typeUrl || typeof o.storeKey === "string" && typeof o.delete === "boolean" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string"));
-  },
-  isSDK(o: any): o is StoreKVPairSDKType {
-    return o && (o.$typeUrl === StoreKVPair.typeUrl || typeof o.store_key === "string" && typeof o.delete === "boolean" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string"));
   },
   isAmino(o: any): o is StoreKVPairAmino {
     return o && (o.$typeUrl === StoreKVPair.typeUrl || typeof o.store_key === "string" && typeof o.delete === "boolean" && (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string"));
@@ -193,7 +162,7 @@ export const StoreKVPair = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<StoreKVPair>, I>>(object: I): StoreKVPair {
+  fromPartial(object: DeepPartial<StoreKVPair>): StoreKVPair {
     const message = createBaseStoreKVPair();
     message.storeKey = object.storeKey ?? "";
     message.delete = object.delete ?? false;
@@ -268,9 +237,6 @@ export const BlockMetadata = {
   is(o: any): o is BlockMetadata {
     return o && o.$typeUrl === BlockMetadata.typeUrl;
   },
-  isSDK(o: any): o is BlockMetadataSDKType {
-    return o && o.$typeUrl === BlockMetadata.typeUrl;
-  },
   isAmino(o: any): o is BlockMetadataAmino {
     return o && o.$typeUrl === BlockMetadata.typeUrl;
   },
@@ -309,7 +275,7 @@ export const BlockMetadata = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BlockMetadata>, I>>(object: I): BlockMetadata {
+  fromPartial(object: DeepPartial<BlockMetadata>): BlockMetadata {
     const message = createBaseBlockMetadata();
     message.responseCommit = object.responseCommit !== undefined && object.responseCommit !== null ? ResponseCommit.fromPartial(object.responseCommit) : undefined;
     message.requestFinalizeBlock = object.requestFinalizeBlock !== undefined && object.requestFinalizeBlock !== null ? RequestFinalizeBlock.fromPartial(object.requestFinalizeBlock) : undefined;

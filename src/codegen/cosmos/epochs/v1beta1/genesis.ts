@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
 import { Timestamp } from "../../../google/protobuf/timestamp";
-import { Duration, DurationAmino, DurationSDKType } from "../../../google/protobuf/duration";
+import { Duration, DurationAmino } from "../../../google/protobuf/duration";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { toTimestamp, fromTimestamp, Exact } from "../../../helpers";
+import { toTimestamp, fromTimestamp, DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * EpochInfo is a struct that describes the data going into
@@ -83,27 +83,27 @@ export interface EpochInfoAmino {
   /**
    * identifier is a unique reference to this particular timer.
    */
-  identifier?: string;
+  identifier: string;
   /**
    * start_time is the time at which the timer first ever ticks.
    * If start_time is in the future, the epoch will not begin until the start
    * time.
    */
-  start_time?: string;
+  start_time: string;
   /**
    * duration is the time in between epoch ticks.
    * In order for intended behavior to be met, duration should
    * be greater than the chains expected block time.
    * Duration must be non-zero.
    */
-  duration?: DurationAmino;
+  duration: DurationAmino;
   /**
    * current_epoch is the current epoch number, or in other words,
    * how many times has the timer 'ticked'.
    * The first tick (current_epoch=1) is defined as
    * the first block whose blocktime is greater than the EpochInfo start_time.
    */
-  current_epoch?: string;
+  current_epoch: string;
   /**
    * current_epoch_start_time describes the start time of the current timer
    * interval. The interval is (current_epoch_start_time,
@@ -123,37 +123,21 @@ export interface EpochInfoAmino {
    * * The t=34 block will start the epoch for (30, 35]
    * * The **t=36** block will start the epoch for (35, 40]
    */
-  current_epoch_start_time?: string;
+  current_epoch_start_time: string;
   /**
    * epoch_counting_started is a boolean, that indicates whether this
    * epoch timer has began yet.
    */
-  epoch_counting_started?: boolean;
+  epoch_counting_started: boolean;
   /**
    * current_epoch_start_height is the block height at which the current epoch
    * started. (The block height at which the timer last ticked)
    */
-  current_epoch_start_height?: string;
+  current_epoch_start_height: string;
 }
 export interface EpochInfoAminoMsg {
   type: "cosmos-sdk/EpochInfo";
   value: EpochInfoAmino;
-}
-/**
- * EpochInfo is a struct that describes the data going into
- * a timer defined by the x/epochs module.
- * @name EpochInfoSDKType
- * @package cosmos.epochs.v1beta1
- * @see proto type: cosmos.epochs.v1beta1.EpochInfo
- */
-export interface EpochInfoSDKType {
-  identifier: string;
-  start_time: Date;
-  duration: DurationSDKType;
-  current_epoch: bigint;
-  current_epoch_start_time: Date;
-  epoch_counting_started: boolean;
-  current_epoch_start_height: bigint;
 }
 /**
  * GenesisState defines the epochs module's genesis state.
@@ -175,20 +159,11 @@ export interface GenesisStateProtoMsg {
  * @see proto type: cosmos.epochs.v1beta1.GenesisState
  */
 export interface GenesisStateAmino {
-  epochs?: EpochInfoAmino[];
+  epochs: EpochInfoAmino[];
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
-}
-/**
- * GenesisState defines the epochs module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.epochs.v1beta1
- * @see proto type: cosmos.epochs.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  epochs: EpochInfoSDKType[];
 }
 function createBaseEpochInfo(): EpochInfo {
   return {
@@ -213,9 +188,6 @@ export const EpochInfo = {
   aminoType: "cosmos-sdk/EpochInfo",
   is(o: any): o is EpochInfo {
     return o && (o.$typeUrl === EpochInfo.typeUrl || typeof o.identifier === "string" && Timestamp.is(o.startTime) && Duration.is(o.duration) && typeof o.currentEpoch === "bigint" && Timestamp.is(o.currentEpochStartTime) && typeof o.epochCountingStarted === "boolean" && typeof o.currentEpochStartHeight === "bigint");
-  },
-  isSDK(o: any): o is EpochInfoSDKType {
-    return o && (o.$typeUrl === EpochInfo.typeUrl || typeof o.identifier === "string" && Timestamp.isSDK(o.start_time) && Duration.isSDK(o.duration) && typeof o.current_epoch === "bigint" && Timestamp.isSDK(o.current_epoch_start_time) && typeof o.epoch_counting_started === "boolean" && typeof o.current_epoch_start_height === "bigint");
   },
   isAmino(o: any): o is EpochInfoAmino {
     return o && (o.$typeUrl === EpochInfo.typeUrl || typeof o.identifier === "string" && Timestamp.isAmino(o.start_time) && Duration.isAmino(o.duration) && typeof o.current_epoch === "bigint" && Timestamp.isAmino(o.current_epoch_start_time) && typeof o.epoch_counting_started === "boolean" && typeof o.current_epoch_start_height === "bigint");
@@ -279,7 +251,7 @@ export const EpochInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<EpochInfo>, I>>(object: I): EpochInfo {
+  fromPartial(object: DeepPartial<EpochInfo>): EpochInfo {
     const message = createBaseEpochInfo();
     message.identifier = object.identifier ?? "";
     message.startTime = object.startTime ?? undefined;
@@ -366,9 +338,6 @@ export const GenesisState = {
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.epochs) && (!o.epochs.length || EpochInfo.is(o.epochs[0])));
   },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.epochs) && (!o.epochs.length || EpochInfo.isSDK(o.epochs[0])));
-  },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.epochs) && (!o.epochs.length || EpochInfo.isAmino(o.epochs[0])));
   },
@@ -395,7 +364,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.epochs = object.epochs?.map(e => EpochInfo.fromPartial(e)) || [];
     return message;

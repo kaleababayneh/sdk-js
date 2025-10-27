@@ -1,14 +1,14 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Header, HeaderAmino, HeaderSDKType } from "../../../tendermint/types/types";
+import { Header, HeaderAmino } from "../../../tendermint/types/types";
 import { Timestamp } from "../../../google/protobuf/timestamp";
-import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
-import { Duration, DurationAmino, DurationSDKType } from "../../../google/protobuf/duration";
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
-import { ValidatorUpdate, ValidatorUpdateAmino, ValidatorUpdateSDKType } from "../../../tendermint/abci/types";
+import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
+import { Duration, DurationAmino } from "../../../google/protobuf/duration";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
+import { ValidatorUpdate, ValidatorUpdateAmino } from "../../../tendermint/abci/types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact, toTimestamp, fromTimestamp, isSet } from "../../../helpers";
+import { DeepPartial, toTimestamp, fromTimestamp, isSet } from "../../../helpers";
 import { Decimal } from "@interchainjs/math";
 import { encodePubkey, decodePubkey } from "@interchainjs/pubkey";
 /** BondStatus is the status of a validator. */
@@ -23,7 +23,6 @@ export enum BondStatus {
   BOND_STATUS_BONDED = 3,
   UNRECOGNIZED = -1,
 }
-export const BondStatusSDKType = BondStatus;
 export const BondStatusAmino = BondStatus;
 export function bondStatusFromJSON(object: any): BondStatus {
   switch (object) {
@@ -70,7 +69,6 @@ export enum Infraction {
   INFRACTION_DOWNTIME = 2,
   UNRECOGNIZED = -1,
 }
-export const InfractionSDKType = Infraction;
 export const InfractionAmino = Infraction;
 export function infractionFromJSON(object: any): Infraction {
   switch (object) {
@@ -137,19 +135,6 @@ export interface HistoricalInfoAminoMsg {
   value: HistoricalInfoAmino;
 }
 /**
- * HistoricalInfo contains header and validator information for a given block.
- * It is stored as part of staking module's state, which persists the `n` most
- * recent HistoricalInfo
- * (`n` is set by the staking module's `historical_entries` parameter).
- * @name HistoricalInfoSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.HistoricalInfo
- */
-export interface HistoricalInfoSDKType {
-  header: HeaderSDKType;
-  valset: ValidatorSDKType[];
-}
-/**
  * CommissionRates defines the initial commission rates to be used for creating
  * a validator.
  * @name CommissionRates
@@ -200,18 +185,6 @@ export interface CommissionRatesAminoMsg {
   value: CommissionRatesAmino;
 }
 /**
- * CommissionRates defines the initial commission rates to be used for creating
- * a validator.
- * @name CommissionRatesSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.CommissionRates
- */
-export interface CommissionRatesSDKType {
-  rate: string;
-  max_rate: string;
-  max_change_rate: string;
-}
-/**
  * Commission defines commission parameters for a given validator.
  * @name Commission
  * @package cosmos.staking.v1beta1
@@ -250,16 +223,6 @@ export interface CommissionAmino {
 export interface CommissionAminoMsg {
   type: "cosmos-sdk/Commission";
   value: CommissionAmino;
-}
-/**
- * Commission defines commission parameters for a given validator.
- * @name CommissionSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.Commission
- */
-export interface CommissionSDKType {
-  commission_rates: CommissionRatesSDKType;
-  update_time: Date;
 }
 /**
  * Description defines a validator description.
@@ -303,40 +266,27 @@ export interface DescriptionAmino {
   /**
    * moniker defines a human-readable name for the validator.
    */
-  moniker?: string;
+  moniker: string;
   /**
    * identity defines an optional identity signature (ex. UPort or Keybase).
    */
-  identity?: string;
+  identity: string;
   /**
    * website defines an optional website link.
    */
-  website?: string;
+  website: string;
   /**
    * security_contact defines an optional email for security contact.
    */
-  security_contact?: string;
+  security_contact: string;
   /**
    * details define other optional details.
    */
-  details?: string;
+  details: string;
 }
 export interface DescriptionAminoMsg {
   type: "cosmos-sdk/Description";
   value: DescriptionAmino;
-}
-/**
- * Description defines a validator description.
- * @name DescriptionSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.Description
- */
-export interface DescriptionSDKType {
-  moniker: string;
-  identity: string;
-  website: string;
-  security_contact: string;
-  details: string;
 }
 /**
  * Validator defines a validator, together with the total amount of the
@@ -434,7 +384,7 @@ export interface ValidatorAmino {
   /**
    * operator_address defines the address of the validator's operator; bech encoded in JSON.
    */
-  operator_address?: string;
+  operator_address: string;
   /**
    * consensus_pubkey is the consensus public key of the validator, as a Protobuf Any.
    */
@@ -442,19 +392,19 @@ export interface ValidatorAmino {
   /**
    * jailed defined whether the validator has been jailed from bonded status or not.
    */
-  jailed?: boolean;
+  jailed: boolean;
   /**
    * status is the validator status (bonded/unbonding/unbonded).
    */
-  status?: BondStatus;
+  status: BondStatus;
   /**
    * tokens define the delegated tokens (incl. self-delegation).
    */
-  tokens?: string;
+  tokens: string;
   /**
    * delegator_shares defines total shares issued to a validator's delegators.
    */
-  delegator_shares?: string;
+  delegator_shares: string;
   /**
    * description defines the description terms for the validator.
    */
@@ -462,7 +412,7 @@ export interface ValidatorAmino {
   /**
    * unbonding_height defines, if unbonding, the height at which this validator has begun unbonding.
    */
-  unbonding_height?: string;
+  unbonding_height: string;
   /**
    * unbonding_time defines, if unbonding, the min time for the validator to complete unbonding.
    */
@@ -476,47 +426,19 @@ export interface ValidatorAmino {
    * 
    * Since: cosmos-sdk 0.46
    */
-  min_self_delegation?: string;
+  min_self_delegation: string;
   /**
    * strictly positive if this validator's unbonding has been stopped by external modules
    */
-  unbonding_on_hold_ref_count?: string;
+  unbonding_on_hold_ref_count: string;
   /**
    * list of unbonding ids, each uniquely identifing an unbonding of this validator
    */
-  unbonding_ids?: string[];
+  unbonding_ids: string[];
 }
 export interface ValidatorAminoMsg {
   type: "cosmos-sdk/Validator";
   value: ValidatorAmino;
-}
-/**
- * Validator defines a validator, together with the total amount of the
- * Validator's bond shares and their exchange rate to coins. Slashing results in
- * a decrease in the exchange rate, allowing correct calculation of future
- * undelegations without iterating over delegators. When coins are delegated to
- * this validator, the validator is credited with a delegation whose number of
- * bond shares is based on the amount of coins delegated divided by the current
- * exchange rate. Voting power can be calculated as total bonded shares
- * multiplied by exchange rate.
- * @name ValidatorSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.Validator
- */
-export interface ValidatorSDKType {
-  operator_address: string;
-  consensus_pubkey?: AnySDKType | undefined;
-  jailed: boolean;
-  status: BondStatus;
-  tokens: string;
-  delegator_shares: string;
-  description: DescriptionSDKType;
-  unbonding_height: bigint;
-  unbonding_time: Date;
-  commission: CommissionSDKType;
-  min_self_delegation: string;
-  unbonding_on_hold_ref_count: bigint;
-  unbonding_ids: bigint[];
 }
 /**
  * ValAddresses defines a repeated set of validator addresses.
@@ -538,20 +460,11 @@ export interface ValAddressesProtoMsg {
  * @see proto type: cosmos.staking.v1beta1.ValAddresses
  */
 export interface ValAddressesAmino {
-  addresses?: string[];
+  addresses: string[];
 }
 export interface ValAddressesAminoMsg {
   type: "cosmos-sdk/ValAddresses";
   value: ValAddressesAmino;
-}
-/**
- * ValAddresses defines a repeated set of validator addresses.
- * @name ValAddressesSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.ValAddresses
- */
-export interface ValAddressesSDKType {
-  addresses: string[];
 }
 /**
  * DVPair is struct that just has a delegator-validator pair with no other data.
@@ -578,24 +491,12 @@ export interface DVPairProtoMsg {
  * @see proto type: cosmos.staking.v1beta1.DVPair
  */
 export interface DVPairAmino {
-  delegator_address?: string;
-  validator_address?: string;
+  delegator_address: string;
+  validator_address: string;
 }
 export interface DVPairAminoMsg {
   type: "cosmos-sdk/DVPair";
   value: DVPairAmino;
-}
-/**
- * DVPair is struct that just has a delegator-validator pair with no other data.
- * It is intended to be used as a marshalable pointer. For example, a DVPair can
- * be used to construct the key to getting an UnbondingDelegation from state.
- * @name DVPairSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.DVPair
- */
-export interface DVPairSDKType {
-  delegator_address: string;
-  validator_address: string;
 }
 /**
  * DVPairs defines an array of DVPair objects.
@@ -622,15 +523,6 @@ export interface DVPairsAmino {
 export interface DVPairsAminoMsg {
   type: "cosmos-sdk/DVPairs";
   value: DVPairsAmino;
-}
-/**
- * DVPairs defines an array of DVPair objects.
- * @name DVPairsSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.DVPairs
- */
-export interface DVPairsSDKType {
-  pairs: DVPairSDKType[];
 }
 /**
  * DVVTriplet is struct that just has a delegator-validator-validator triplet
@@ -660,27 +552,13 @@ export interface DVVTripletProtoMsg {
  * @see proto type: cosmos.staking.v1beta1.DVVTriplet
  */
 export interface DVVTripletAmino {
-  delegator_address?: string;
-  validator_src_address?: string;
-  validator_dst_address?: string;
+  delegator_address: string;
+  validator_src_address: string;
+  validator_dst_address: string;
 }
 export interface DVVTripletAminoMsg {
   type: "cosmos-sdk/DVVTriplet";
   value: DVVTripletAmino;
-}
-/**
- * DVVTriplet is struct that just has a delegator-validator-validator triplet
- * with no other data. It is intended to be used as a marshalable pointer. For
- * example, a DVVTriplet can be used to construct the key to getting a
- * Redelegation from state.
- * @name DVVTripletSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.DVVTriplet
- */
-export interface DVVTripletSDKType {
-  delegator_address: string;
-  validator_src_address: string;
-  validator_dst_address: string;
 }
 /**
  * DVVTriplets defines an array of DVVTriplet objects.
@@ -707,15 +585,6 @@ export interface DVVTripletsAmino {
 export interface DVVTripletsAminoMsg {
   type: "cosmos-sdk/DVVTriplets";
   value: DVVTripletsAmino;
-}
-/**
- * DVVTriplets defines an array of DVVTriplet objects.
- * @name DVVTripletsSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.DVVTriplets
- */
-export interface DVVTripletsSDKType {
-  triplets: DVVTripletSDKType[];
 }
 /**
  * Delegation represents the bond with tokens held by an account. It is
@@ -755,32 +624,19 @@ export interface DelegationAmino {
   /**
    * delegator_address is the encoded address of the delegator.
    */
-  delegator_address?: string;
+  delegator_address: string;
   /**
    * validator_address is the encoded address of the validator.
    */
-  validator_address?: string;
+  validator_address: string;
   /**
    * shares define the delegation shares received.
    */
-  shares?: string;
+  shares: string;
 }
 export interface DelegationAminoMsg {
   type: "cosmos-sdk/Delegation";
   value: DelegationAmino;
-}
-/**
- * Delegation represents the bond with tokens held by an account. It is
- * owned by one delegator, and is associated with the voting power of one
- * validator.
- * @name DelegationSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.Delegation
- */
-export interface DelegationSDKType {
-  delegator_address: string;
-  validator_address: string;
-  shares: string;
 }
 /**
  * UnbondingDelegation stores all of a single delegator's unbonding bonds
@@ -818,11 +674,11 @@ export interface UnbondingDelegationAmino {
   /**
    * delegator_address is the encoded address of the delegator.
    */
-  delegator_address?: string;
+  delegator_address: string;
   /**
    * validator_address is the encoded address of the validator.
    */
-  validator_address?: string;
+  validator_address: string;
   /**
    * entries are the unbonding delegation entries.
    */
@@ -831,18 +687,6 @@ export interface UnbondingDelegationAmino {
 export interface UnbondingDelegationAminoMsg {
   type: "cosmos-sdk/UnbondingDelegation";
   value: UnbondingDelegationAmino;
-}
-/**
- * UnbondingDelegation stores all of a single delegator's unbonding bonds
- * for a single validator in an time-ordered list.
- * @name UnbondingDelegationSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.UnbondingDelegation
- */
-export interface UnbondingDelegationSDKType {
-  delegator_address: string;
-  validator_address: string;
-  entries: UnbondingDelegationEntrySDKType[];
 }
 /**
  * UnbondingDelegationEntry defines an unbonding object with relevant metadata.
@@ -890,7 +734,7 @@ export interface UnbondingDelegationEntryAmino {
   /**
    * creation_height is the height which the unbonding took place.
    */
-  creation_height?: string;
+  creation_height: string;
   /**
    * completion_time is the unix time for unbonding completion.
    */
@@ -898,37 +742,23 @@ export interface UnbondingDelegationEntryAmino {
   /**
    * initial_balance defines the tokens initially scheduled to receive at completion.
    */
-  initial_balance?: string;
+  initial_balance: string;
   /**
    * balance defines the tokens to receive at completion.
    */
-  balance?: string;
+  balance: string;
   /**
    * Incrementing id that uniquely identifies this entry
    */
-  unbonding_id?: string;
+  unbonding_id: string;
   /**
    * Strictly positive if this entry's unbonding has been stopped by external modules
    */
-  unbonding_on_hold_ref_count?: string;
+  unbonding_on_hold_ref_count: string;
 }
 export interface UnbondingDelegationEntryAminoMsg {
   type: "cosmos-sdk/UnbondingDelegationEntry";
   value: UnbondingDelegationEntryAmino;
-}
-/**
- * UnbondingDelegationEntry defines an unbonding object with relevant metadata.
- * @name UnbondingDelegationEntrySDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.UnbondingDelegationEntry
- */
-export interface UnbondingDelegationEntrySDKType {
-  creation_height: bigint;
-  completion_time: Date;
-  initial_balance: string;
-  balance: string;
-  unbonding_id: bigint;
-  unbonding_on_hold_ref_count: bigint;
 }
 /**
  * RedelegationEntry defines a redelegation object with relevant metadata.
@@ -976,7 +806,7 @@ export interface RedelegationEntryAmino {
   /**
    * creation_height  defines the height which the redelegation took place.
    */
-  creation_height?: string;
+  creation_height: string;
   /**
    * completion_time defines the unix time for redelegation completion.
    */
@@ -984,37 +814,23 @@ export interface RedelegationEntryAmino {
   /**
    * initial_balance defines the initial balance when redelegation started.
    */
-  initial_balance?: string;
+  initial_balance: string;
   /**
    * shares_dst is the amount of destination-validator shares created by redelegation.
    */
-  shares_dst?: string;
+  shares_dst: string;
   /**
    * Incrementing id that uniquely identifies this entry
    */
-  unbonding_id?: string;
+  unbonding_id: string;
   /**
    * Strictly positive if this entry's unbonding has been stopped by external modules
    */
-  unbonding_on_hold_ref_count?: string;
+  unbonding_on_hold_ref_count: string;
 }
 export interface RedelegationEntryAminoMsg {
   type: "cosmos-sdk/RedelegationEntry";
   value: RedelegationEntryAmino;
-}
-/**
- * RedelegationEntry defines a redelegation object with relevant metadata.
- * @name RedelegationEntrySDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.RedelegationEntry
- */
-export interface RedelegationEntrySDKType {
-  creation_height: bigint;
-  completion_time: Date;
-  initial_balance: string;
-  shares_dst: string;
-  unbonding_id: bigint;
-  unbonding_on_hold_ref_count: bigint;
 }
 /**
  * Redelegation contains the list of a particular delegator's redelegating bonds
@@ -1056,15 +872,15 @@ export interface RedelegationAmino {
   /**
    * delegator_address is the bech32-encoded address of the delegator.
    */
-  delegator_address?: string;
+  delegator_address: string;
   /**
    * validator_src_address is the validator redelegation source operator address.
    */
-  validator_src_address?: string;
+  validator_src_address: string;
   /**
    * validator_dst_address is the validator redelegation destination operator address.
    */
-  validator_dst_address?: string;
+  validator_dst_address: string;
   /**
    * entries are the redelegation entries.
    */
@@ -1073,19 +889,6 @@ export interface RedelegationAmino {
 export interface RedelegationAminoMsg {
   type: "cosmos-sdk/Redelegation";
   value: RedelegationAmino;
-}
-/**
- * Redelegation contains the list of a particular delegator's redelegating bonds
- * from a particular source validator to a particular destination validator.
- * @name RedelegationSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.Redelegation
- */
-export interface RedelegationSDKType {
-  delegator_address: string;
-  validator_src_address: string;
-  validator_dst_address: string;
-  entries: RedelegationEntrySDKType[];
 }
 /**
  * Params defines the parameters for the x/staking module.
@@ -1137,19 +940,19 @@ export interface ParamsAmino {
   /**
    * max_validators is the maximum number of validators.
    */
-  max_validators?: number;
+  max_validators: number;
   /**
    * max_entries is the max entries for either unbonding delegation or redelegation (per pair/trio).
    */
-  max_entries?: number;
+  max_entries: number;
   /**
    * historical_entries is the number of historical entries to persist.
    */
-  historical_entries?: number;
+  historical_entries: number;
   /**
    * bond_denom defines the bondable coin denomination.
    */
-  bond_denom?: string;
+  bond_denom: string;
   /**
    * min_commission_rate is the chain-wide minimum commission rate that a validator can charge their delegators
    */
@@ -1158,20 +961,6 @@ export interface ParamsAmino {
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/x/staking/Params";
   value: ParamsAmino;
-}
-/**
- * Params defines the parameters for the x/staking module.
- * @name ParamsSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.Params
- */
-export interface ParamsSDKType {
-  unbonding_time: DurationSDKType;
-  max_validators: number;
-  max_entries: number;
-  historical_entries: number;
-  bond_denom: string;
-  min_commission_rate: string;
 }
 /**
  * DelegationResponse is equivalent to Delegation except that it contains a
@@ -1204,17 +993,6 @@ export interface DelegationResponseAminoMsg {
   value: DelegationResponseAmino;
 }
 /**
- * DelegationResponse is equivalent to Delegation except that it contains a
- * balance in addition to shares which is more suitable for client responses.
- * @name DelegationResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.DelegationResponse
- */
-export interface DelegationResponseSDKType {
-  delegation: DelegationSDKType;
-  balance: CoinSDKType;
-}
-/**
  * RedelegationEntryResponse is equivalent to a RedelegationEntry except that it
  * contains a balance in addition to shares which is more suitable for client
  * responses.
@@ -1240,23 +1018,11 @@ export interface RedelegationEntryResponseProtoMsg {
  */
 export interface RedelegationEntryResponseAmino {
   redelegation_entry: RedelegationEntryAmino;
-  balance?: string;
+  balance: string;
 }
 export interface RedelegationEntryResponseAminoMsg {
   type: "cosmos-sdk/RedelegationEntryResponse";
   value: RedelegationEntryResponseAmino;
-}
-/**
- * RedelegationEntryResponse is equivalent to a RedelegationEntry except that it
- * contains a balance in addition to shares which is more suitable for client
- * responses.
- * @name RedelegationEntryResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.RedelegationEntryResponse
- */
-export interface RedelegationEntryResponseSDKType {
-  redelegation_entry: RedelegationEntrySDKType;
-  balance: string;
 }
 /**
  * RedelegationResponse is equivalent to a Redelegation except that its entries
@@ -1291,18 +1057,6 @@ export interface RedelegationResponseAminoMsg {
   value: RedelegationResponseAmino;
 }
 /**
- * RedelegationResponse is equivalent to a Redelegation except that its entries
- * contain a balance in addition to shares which is more suitable for client
- * responses.
- * @name RedelegationResponseSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.RedelegationResponse
- */
-export interface RedelegationResponseSDKType {
-  redelegation: RedelegationSDKType;
-  entries: RedelegationEntryResponseSDKType[];
-}
-/**
  * Pool is used for tracking bonded and not-bonded token supply of the bond
  * denomination.
  * @name Pool
@@ -1333,17 +1087,6 @@ export interface PoolAminoMsg {
   value: PoolAmino;
 }
 /**
- * Pool is used for tracking bonded and not-bonded token supply of the bond
- * denomination.
- * @name PoolSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.Pool
- */
-export interface PoolSDKType {
-  not_bonded_tokens: string;
-  bonded_tokens: string;
-}
-/**
  * ValidatorUpdates defines an array of abci.ValidatorUpdate objects.
  * TODO: explore moving this to proto/cosmos/base to separate modules from tendermint dependence
  * @name ValidatorUpdates
@@ -1371,16 +1114,6 @@ export interface ValidatorUpdatesAminoMsg {
   type: "cosmos-sdk/ValidatorUpdates";
   value: ValidatorUpdatesAmino;
 }
-/**
- * ValidatorUpdates defines an array of abci.ValidatorUpdate objects.
- * TODO: explore moving this to proto/cosmos/base to separate modules from tendermint dependence
- * @name ValidatorUpdatesSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.ValidatorUpdates
- */
-export interface ValidatorUpdatesSDKType {
-  updates: ValidatorUpdateSDKType[];
-}
 function createBaseHistoricalInfo(): HistoricalInfo {
   return {
     header: Header.fromPartial({}),
@@ -1401,9 +1134,6 @@ export const HistoricalInfo = {
   aminoType: "cosmos-sdk/HistoricalInfo",
   is(o: any): o is HistoricalInfo {
     return o && (o.$typeUrl === HistoricalInfo.typeUrl || Header.is(o.header) && Array.isArray(o.valset) && (!o.valset.length || Validator.is(o.valset[0])));
-  },
-  isSDK(o: any): o is HistoricalInfoSDKType {
-    return o && (o.$typeUrl === HistoricalInfo.typeUrl || Header.isSDK(o.header) && Array.isArray(o.valset) && (!o.valset.length || Validator.isSDK(o.valset[0])));
   },
   isAmino(o: any): o is HistoricalInfoAmino {
     return o && (o.$typeUrl === HistoricalInfo.typeUrl || Header.isAmino(o.header) && Array.isArray(o.valset) && (!o.valset.length || Validator.isAmino(o.valset[0])));
@@ -1437,7 +1167,7 @@ export const HistoricalInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<HistoricalInfo>, I>>(object: I): HistoricalInfo {
+  fromPartial(object: DeepPartial<HistoricalInfo>): HistoricalInfo {
     const message = createBaseHistoricalInfo();
     message.header = object.header !== undefined && object.header !== null ? Header.fromPartial(object.header) : undefined;
     message.valset = object.valset?.map(e => Validator.fromPartial(e)) || [];
@@ -1510,9 +1240,6 @@ export const CommissionRates = {
   is(o: any): o is CommissionRates {
     return o && (o.$typeUrl === CommissionRates.typeUrl || typeof o.rate === "string" && typeof o.maxRate === "string" && typeof o.maxChangeRate === "string");
   },
-  isSDK(o: any): o is CommissionRatesSDKType {
-    return o && (o.$typeUrl === CommissionRates.typeUrl || typeof o.rate === "string" && typeof o.max_rate === "string" && typeof o.max_change_rate === "string");
-  },
   isAmino(o: any): o is CommissionRatesAmino {
     return o && (o.$typeUrl === CommissionRates.typeUrl || typeof o.rate === "string" && typeof o.max_rate === "string" && typeof o.max_change_rate === "string");
   },
@@ -1551,7 +1278,7 @@ export const CommissionRates = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CommissionRates>, I>>(object: I): CommissionRates {
+  fromPartial(object: DeepPartial<CommissionRates>): CommissionRates {
     const message = createBaseCommissionRates();
     message.rate = object.rate ?? "";
     message.maxRate = object.maxRate ?? "";
@@ -1619,9 +1346,6 @@ export const Commission = {
   is(o: any): o is Commission {
     return o && (o.$typeUrl === Commission.typeUrl || CommissionRates.is(o.commissionRates) && Timestamp.is(o.updateTime));
   },
-  isSDK(o: any): o is CommissionSDKType {
-    return o && (o.$typeUrl === Commission.typeUrl || CommissionRates.isSDK(o.commission_rates) && Timestamp.isSDK(o.update_time));
-  },
   isAmino(o: any): o is CommissionAmino {
     return o && (o.$typeUrl === Commission.typeUrl || CommissionRates.isAmino(o.commission_rates) && Timestamp.isAmino(o.update_time));
   },
@@ -1654,7 +1378,7 @@ export const Commission = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Commission>, I>>(object: I): Commission {
+  fromPartial(object: DeepPartial<Commission>): Commission {
     const message = createBaseCommission();
     message.commissionRates = object.commissionRates !== undefined && object.commissionRates !== null ? CommissionRates.fromPartial(object.commissionRates) : undefined;
     message.updateTime = object.updateTime ?? undefined;
@@ -1725,9 +1449,6 @@ export const Description = {
   is(o: any): o is Description {
     return o && (o.$typeUrl === Description.typeUrl || typeof o.moniker === "string" && typeof o.identity === "string" && typeof o.website === "string" && typeof o.securityContact === "string" && typeof o.details === "string");
   },
-  isSDK(o: any): o is DescriptionSDKType {
-    return o && (o.$typeUrl === Description.typeUrl || typeof o.moniker === "string" && typeof o.identity === "string" && typeof o.website === "string" && typeof o.security_contact === "string" && typeof o.details === "string");
-  },
   isAmino(o: any): o is DescriptionAmino {
     return o && (o.$typeUrl === Description.typeUrl || typeof o.moniker === "string" && typeof o.identity === "string" && typeof o.website === "string" && typeof o.security_contact === "string" && typeof o.details === "string");
   },
@@ -1778,7 +1499,7 @@ export const Description = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Description>, I>>(object: I): Description {
+  fromPartial(object: DeepPartial<Description>): Description {
     const message = createBaseDescription();
     message.moniker = object.moniker ?? "";
     message.identity = object.identity ?? "";
@@ -1873,9 +1594,6 @@ export const Validator = {
   aminoType: "cosmos-sdk/Validator",
   is(o: any): o is Validator {
     return o && (o.$typeUrl === Validator.typeUrl || typeof o.operatorAddress === "string" && typeof o.jailed === "boolean" && isSet(o.status) && typeof o.tokens === "string" && typeof o.delegatorShares === "string" && Description.is(o.description) && typeof o.unbondingHeight === "bigint" && Timestamp.is(o.unbondingTime) && Commission.is(o.commission) && typeof o.minSelfDelegation === "string" && typeof o.unbondingOnHoldRefCount === "bigint" && Array.isArray(o.unbondingIds) && (!o.unbondingIds.length || typeof o.unbondingIds[0] === "bigint"));
-  },
-  isSDK(o: any): o is ValidatorSDKType {
-    return o && (o.$typeUrl === Validator.typeUrl || typeof o.operator_address === "string" && typeof o.jailed === "boolean" && isSet(o.status) && typeof o.tokens === "string" && typeof o.delegator_shares === "string" && Description.isSDK(o.description) && typeof o.unbonding_height === "bigint" && Timestamp.isSDK(o.unbonding_time) && Commission.isSDK(o.commission) && typeof o.min_self_delegation === "string" && typeof o.unbonding_on_hold_ref_count === "bigint" && Array.isArray(o.unbonding_ids) && (!o.unbonding_ids.length || typeof o.unbonding_ids[0] === "bigint"));
   },
   isAmino(o: any): o is ValidatorAmino {
     return o && (o.$typeUrl === Validator.typeUrl || typeof o.operator_address === "string" && typeof o.jailed === "boolean" && isSet(o.status) && typeof o.tokens === "string" && typeof o.delegator_shares === "string" && Description.isAmino(o.description) && typeof o.unbonding_height === "bigint" && Timestamp.isAmino(o.unbonding_time) && Commission.isAmino(o.commission) && typeof o.min_self_delegation === "string" && typeof o.unbonding_on_hold_ref_count === "bigint" && Array.isArray(o.unbonding_ids) && (!o.unbonding_ids.length || typeof o.unbonding_ids[0] === "bigint"));
@@ -1984,7 +1702,7 @@ export const Validator = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Validator>, I>>(object: I): Validator {
+  fromPartial(object: DeepPartial<Validator>): Validator {
     const message = createBaseValidator();
     message.operatorAddress = object.operatorAddress ?? "";
     message.consensusPubkey = object.consensusPubkey !== undefined && object.consensusPubkey !== null ? GlobalDecoderRegistry.fromPartial(object.consensusPubkey) : undefined;
@@ -2109,9 +1827,6 @@ export const ValAddresses = {
   is(o: any): o is ValAddresses {
     return o && (o.$typeUrl === ValAddresses.typeUrl || Array.isArray(o.addresses) && (!o.addresses.length || typeof o.addresses[0] === "string"));
   },
-  isSDK(o: any): o is ValAddressesSDKType {
-    return o && (o.$typeUrl === ValAddresses.typeUrl || Array.isArray(o.addresses) && (!o.addresses.length || typeof o.addresses[0] === "string"));
-  },
   isAmino(o: any): o is ValAddressesAmino {
     return o && (o.$typeUrl === ValAddresses.typeUrl || Array.isArray(o.addresses) && (!o.addresses.length || typeof o.addresses[0] === "string"));
   },
@@ -2138,7 +1853,7 @@ export const ValAddresses = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValAddresses>, I>>(object: I): ValAddresses {
+  fromPartial(object: DeepPartial<ValAddresses>): ValAddresses {
     const message = createBaseValAddresses();
     message.addresses = object.addresses?.map(e => e) || [];
     return message;
@@ -2200,9 +1915,6 @@ export const DVPair = {
   is(o: any): o is DVPair {
     return o && (o.$typeUrl === DVPair.typeUrl || typeof o.delegatorAddress === "string" && typeof o.validatorAddress === "string");
   },
-  isSDK(o: any): o is DVPairSDKType {
-    return o && (o.$typeUrl === DVPair.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_address === "string");
-  },
   isAmino(o: any): o is DVPairAmino {
     return o && (o.$typeUrl === DVPair.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_address === "string");
   },
@@ -2235,7 +1947,7 @@ export const DVPair = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DVPair>, I>>(object: I): DVPair {
+  fromPartial(object: DeepPartial<DVPair>): DVPair {
     const message = createBaseDVPair();
     message.delegatorAddress = object.delegatorAddress ?? "";
     message.validatorAddress = object.validatorAddress ?? "";
@@ -2297,9 +2009,6 @@ export const DVPairs = {
   is(o: any): o is DVPairs {
     return o && (o.$typeUrl === DVPairs.typeUrl || Array.isArray(o.pairs) && (!o.pairs.length || DVPair.is(o.pairs[0])));
   },
-  isSDK(o: any): o is DVPairsSDKType {
-    return o && (o.$typeUrl === DVPairs.typeUrl || Array.isArray(o.pairs) && (!o.pairs.length || DVPair.isSDK(o.pairs[0])));
-  },
   isAmino(o: any): o is DVPairsAmino {
     return o && (o.$typeUrl === DVPairs.typeUrl || Array.isArray(o.pairs) && (!o.pairs.length || DVPair.isAmino(o.pairs[0])));
   },
@@ -2326,7 +2035,7 @@ export const DVPairs = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DVPairs>, I>>(object: I): DVPairs {
+  fromPartial(object: DeepPartial<DVPairs>): DVPairs {
     const message = createBaseDVPairs();
     message.pairs = object.pairs?.map(e => DVPair.fromPartial(e)) || [];
     return message;
@@ -2395,9 +2104,6 @@ export const DVVTriplet = {
   is(o: any): o is DVVTriplet {
     return o && (o.$typeUrl === DVVTriplet.typeUrl || typeof o.delegatorAddress === "string" && typeof o.validatorSrcAddress === "string" && typeof o.validatorDstAddress === "string");
   },
-  isSDK(o: any): o is DVVTripletSDKType {
-    return o && (o.$typeUrl === DVVTriplet.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_src_address === "string" && typeof o.validator_dst_address === "string");
-  },
   isAmino(o: any): o is DVVTripletAmino {
     return o && (o.$typeUrl === DVVTriplet.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_src_address === "string" && typeof o.validator_dst_address === "string");
   },
@@ -2436,7 +2142,7 @@ export const DVVTriplet = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DVVTriplet>, I>>(object: I): DVVTriplet {
+  fromPartial(object: DeepPartial<DVVTriplet>): DVVTriplet {
     const message = createBaseDVVTriplet();
     message.delegatorAddress = object.delegatorAddress ?? "";
     message.validatorSrcAddress = object.validatorSrcAddress ?? "";
@@ -2503,9 +2209,6 @@ export const DVVTriplets = {
   is(o: any): o is DVVTriplets {
     return o && (o.$typeUrl === DVVTriplets.typeUrl || Array.isArray(o.triplets) && (!o.triplets.length || DVVTriplet.is(o.triplets[0])));
   },
-  isSDK(o: any): o is DVVTripletsSDKType {
-    return o && (o.$typeUrl === DVVTriplets.typeUrl || Array.isArray(o.triplets) && (!o.triplets.length || DVVTriplet.isSDK(o.triplets[0])));
-  },
   isAmino(o: any): o is DVVTripletsAmino {
     return o && (o.$typeUrl === DVVTriplets.typeUrl || Array.isArray(o.triplets) && (!o.triplets.length || DVVTriplet.isAmino(o.triplets[0])));
   },
@@ -2532,7 +2235,7 @@ export const DVVTriplets = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DVVTriplets>, I>>(object: I): DVVTriplets {
+  fromPartial(object: DeepPartial<DVVTriplets>): DVVTriplets {
     const message = createBaseDVVTriplets();
     message.triplets = object.triplets?.map(e => DVVTriplet.fromPartial(e)) || [];
     return message;
@@ -2600,9 +2303,6 @@ export const Delegation = {
   is(o: any): o is Delegation {
     return o && (o.$typeUrl === Delegation.typeUrl || typeof o.delegatorAddress === "string" && typeof o.validatorAddress === "string" && typeof o.shares === "string");
   },
-  isSDK(o: any): o is DelegationSDKType {
-    return o && (o.$typeUrl === Delegation.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_address === "string" && typeof o.shares === "string");
-  },
   isAmino(o: any): o is DelegationAmino {
     return o && (o.$typeUrl === Delegation.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_address === "string" && typeof o.shares === "string");
   },
@@ -2641,7 +2341,7 @@ export const Delegation = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Delegation>, I>>(object: I): Delegation {
+  fromPartial(object: DeepPartial<Delegation>): Delegation {
     const message = createBaseDelegation();
     message.delegatorAddress = object.delegatorAddress ?? "";
     message.validatorAddress = object.validatorAddress ?? "";
@@ -2711,9 +2411,6 @@ export const UnbondingDelegation = {
   is(o: any): o is UnbondingDelegation {
     return o && (o.$typeUrl === UnbondingDelegation.typeUrl || typeof o.delegatorAddress === "string" && typeof o.validatorAddress === "string" && Array.isArray(o.entries) && (!o.entries.length || UnbondingDelegationEntry.is(o.entries[0])));
   },
-  isSDK(o: any): o is UnbondingDelegationSDKType {
-    return o && (o.$typeUrl === UnbondingDelegation.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_address === "string" && Array.isArray(o.entries) && (!o.entries.length || UnbondingDelegationEntry.isSDK(o.entries[0])));
-  },
   isAmino(o: any): o is UnbondingDelegationAmino {
     return o && (o.$typeUrl === UnbondingDelegation.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_address === "string" && Array.isArray(o.entries) && (!o.entries.length || UnbondingDelegationEntry.isAmino(o.entries[0])));
   },
@@ -2752,7 +2449,7 @@ export const UnbondingDelegation = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<UnbondingDelegation>, I>>(object: I): UnbondingDelegation {
+  fromPartial(object: DeepPartial<UnbondingDelegation>): UnbondingDelegation {
     const message = createBaseUnbondingDelegation();
     message.delegatorAddress = object.delegatorAddress ?? "";
     message.validatorAddress = object.validatorAddress ?? "";
@@ -2831,9 +2528,6 @@ export const UnbondingDelegationEntry = {
   is(o: any): o is UnbondingDelegationEntry {
     return o && (o.$typeUrl === UnbondingDelegationEntry.typeUrl || typeof o.creationHeight === "bigint" && Timestamp.is(o.completionTime) && typeof o.initialBalance === "string" && typeof o.balance === "string" && typeof o.unbondingId === "bigint" && typeof o.unbondingOnHoldRefCount === "bigint");
   },
-  isSDK(o: any): o is UnbondingDelegationEntrySDKType {
-    return o && (o.$typeUrl === UnbondingDelegationEntry.typeUrl || typeof o.creation_height === "bigint" && Timestamp.isSDK(o.completion_time) && typeof o.initial_balance === "string" && typeof o.balance === "string" && typeof o.unbonding_id === "bigint" && typeof o.unbonding_on_hold_ref_count === "bigint");
-  },
   isAmino(o: any): o is UnbondingDelegationEntryAmino {
     return o && (o.$typeUrl === UnbondingDelegationEntry.typeUrl || typeof o.creation_height === "bigint" && Timestamp.isAmino(o.completion_time) && typeof o.initial_balance === "string" && typeof o.balance === "string" && typeof o.unbonding_id === "bigint" && typeof o.unbonding_on_hold_ref_count === "bigint");
   },
@@ -2890,7 +2584,7 @@ export const UnbondingDelegationEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<UnbondingDelegationEntry>, I>>(object: I): UnbondingDelegationEntry {
+  fromPartial(object: DeepPartial<UnbondingDelegationEntry>): UnbondingDelegationEntry {
     const message = createBaseUnbondingDelegationEntry();
     message.creationHeight = object.creationHeight !== undefined && object.creationHeight !== null ? BigInt(object.creationHeight.toString()) : BigInt(0);
     message.completionTime = object.completionTime ?? undefined;
@@ -2977,9 +2671,6 @@ export const RedelegationEntry = {
   is(o: any): o is RedelegationEntry {
     return o && (o.$typeUrl === RedelegationEntry.typeUrl || typeof o.creationHeight === "bigint" && Timestamp.is(o.completionTime) && typeof o.initialBalance === "string" && typeof o.sharesDst === "string" && typeof o.unbondingId === "bigint" && typeof o.unbondingOnHoldRefCount === "bigint");
   },
-  isSDK(o: any): o is RedelegationEntrySDKType {
-    return o && (o.$typeUrl === RedelegationEntry.typeUrl || typeof o.creation_height === "bigint" && Timestamp.isSDK(o.completion_time) && typeof o.initial_balance === "string" && typeof o.shares_dst === "string" && typeof o.unbonding_id === "bigint" && typeof o.unbonding_on_hold_ref_count === "bigint");
-  },
   isAmino(o: any): o is RedelegationEntryAmino {
     return o && (o.$typeUrl === RedelegationEntry.typeUrl || typeof o.creation_height === "bigint" && Timestamp.isAmino(o.completion_time) && typeof o.initial_balance === "string" && typeof o.shares_dst === "string" && typeof o.unbonding_id === "bigint" && typeof o.unbonding_on_hold_ref_count === "bigint");
   },
@@ -3036,7 +2727,7 @@ export const RedelegationEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RedelegationEntry>, I>>(object: I): RedelegationEntry {
+  fromPartial(object: DeepPartial<RedelegationEntry>): RedelegationEntry {
     const message = createBaseRedelegationEntry();
     message.creationHeight = object.creationHeight !== undefined && object.creationHeight !== null ? BigInt(object.creationHeight.toString()) : BigInt(0);
     message.completionTime = object.completionTime ?? undefined;
@@ -3122,9 +2813,6 @@ export const Redelegation = {
   is(o: any): o is Redelegation {
     return o && (o.$typeUrl === Redelegation.typeUrl || typeof o.delegatorAddress === "string" && typeof o.validatorSrcAddress === "string" && typeof o.validatorDstAddress === "string" && Array.isArray(o.entries) && (!o.entries.length || RedelegationEntry.is(o.entries[0])));
   },
-  isSDK(o: any): o is RedelegationSDKType {
-    return o && (o.$typeUrl === Redelegation.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_src_address === "string" && typeof o.validator_dst_address === "string" && Array.isArray(o.entries) && (!o.entries.length || RedelegationEntry.isSDK(o.entries[0])));
-  },
   isAmino(o: any): o is RedelegationAmino {
     return o && (o.$typeUrl === Redelegation.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_src_address === "string" && typeof o.validator_dst_address === "string" && Array.isArray(o.entries) && (!o.entries.length || RedelegationEntry.isAmino(o.entries[0])));
   },
@@ -3169,7 +2857,7 @@ export const Redelegation = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Redelegation>, I>>(object: I): Redelegation {
+  fromPartial(object: DeepPartial<Redelegation>): Redelegation {
     const message = createBaseRedelegation();
     message.delegatorAddress = object.delegatorAddress ?? "";
     message.validatorSrcAddress = object.validatorSrcAddress ?? "";
@@ -3253,9 +2941,6 @@ export const Params = {
   is(o: any): o is Params {
     return o && (o.$typeUrl === Params.typeUrl || Duration.is(o.unbondingTime) && typeof o.maxValidators === "number" && typeof o.maxEntries === "number" && typeof o.historicalEntries === "number" && typeof o.bondDenom === "string" && typeof o.minCommissionRate === "string");
   },
-  isSDK(o: any): o is ParamsSDKType {
-    return o && (o.$typeUrl === Params.typeUrl || Duration.isSDK(o.unbonding_time) && typeof o.max_validators === "number" && typeof o.max_entries === "number" && typeof o.historical_entries === "number" && typeof o.bond_denom === "string" && typeof o.min_commission_rate === "string");
-  },
   isAmino(o: any): o is ParamsAmino {
     return o && (o.$typeUrl === Params.typeUrl || Duration.isAmino(o.unbonding_time) && typeof o.max_validators === "number" && typeof o.max_entries === "number" && typeof o.historical_entries === "number" && typeof o.bond_denom === "string" && typeof o.min_commission_rate === "string");
   },
@@ -3312,7 +2997,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(object: I): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.unbondingTime = object.unbondingTime !== undefined && object.unbondingTime !== null ? Duration.fromPartial(object.unbondingTime) : undefined;
     message.maxValidators = object.maxValidators ?? 0;
@@ -3396,9 +3081,6 @@ export const DelegationResponse = {
   is(o: any): o is DelegationResponse {
     return o && (o.$typeUrl === DelegationResponse.typeUrl || Delegation.is(o.delegation) && Coin.is(o.balance));
   },
-  isSDK(o: any): o is DelegationResponseSDKType {
-    return o && (o.$typeUrl === DelegationResponse.typeUrl || Delegation.isSDK(o.delegation) && Coin.isSDK(o.balance));
-  },
   isAmino(o: any): o is DelegationResponseAmino {
     return o && (o.$typeUrl === DelegationResponse.typeUrl || Delegation.isAmino(o.delegation) && Coin.isAmino(o.balance));
   },
@@ -3431,7 +3113,7 @@ export const DelegationResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DelegationResponse>, I>>(object: I): DelegationResponse {
+  fromPartial(object: DeepPartial<DelegationResponse>): DelegationResponse {
     const message = createBaseDelegationResponse();
     message.delegation = object.delegation !== undefined && object.delegation !== null ? Delegation.fromPartial(object.delegation) : undefined;
     message.balance = object.balance !== undefined && object.balance !== null ? Coin.fromPartial(object.balance) : undefined;
@@ -3502,9 +3184,6 @@ export const RedelegationEntryResponse = {
   is(o: any): o is RedelegationEntryResponse {
     return o && (o.$typeUrl === RedelegationEntryResponse.typeUrl || RedelegationEntry.is(o.redelegationEntry) && typeof o.balance === "string");
   },
-  isSDK(o: any): o is RedelegationEntryResponseSDKType {
-    return o && (o.$typeUrl === RedelegationEntryResponse.typeUrl || RedelegationEntry.isSDK(o.redelegation_entry) && typeof o.balance === "string");
-  },
   isAmino(o: any): o is RedelegationEntryResponseAmino {
     return o && (o.$typeUrl === RedelegationEntryResponse.typeUrl || RedelegationEntry.isAmino(o.redelegation_entry) && typeof o.balance === "string");
   },
@@ -3537,7 +3216,7 @@ export const RedelegationEntryResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RedelegationEntryResponse>, I>>(object: I): RedelegationEntryResponse {
+  fromPartial(object: DeepPartial<RedelegationEntryResponse>): RedelegationEntryResponse {
     const message = createBaseRedelegationEntryResponse();
     message.redelegationEntry = object.redelegationEntry !== undefined && object.redelegationEntry !== null ? RedelegationEntry.fromPartial(object.redelegationEntry) : undefined;
     message.balance = object.balance ?? "";
@@ -3607,9 +3286,6 @@ export const RedelegationResponse = {
   is(o: any): o is RedelegationResponse {
     return o && (o.$typeUrl === RedelegationResponse.typeUrl || Redelegation.is(o.redelegation) && Array.isArray(o.entries) && (!o.entries.length || RedelegationEntryResponse.is(o.entries[0])));
   },
-  isSDK(o: any): o is RedelegationResponseSDKType {
-    return o && (o.$typeUrl === RedelegationResponse.typeUrl || Redelegation.isSDK(o.redelegation) && Array.isArray(o.entries) && (!o.entries.length || RedelegationEntryResponse.isSDK(o.entries[0])));
-  },
   isAmino(o: any): o is RedelegationResponseAmino {
     return o && (o.$typeUrl === RedelegationResponse.typeUrl || Redelegation.isAmino(o.redelegation) && Array.isArray(o.entries) && (!o.entries.length || RedelegationEntryResponse.isAmino(o.entries[0])));
   },
@@ -3642,7 +3318,7 @@ export const RedelegationResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RedelegationResponse>, I>>(object: I): RedelegationResponse {
+  fromPartial(object: DeepPartial<RedelegationResponse>): RedelegationResponse {
     const message = createBaseRedelegationResponse();
     message.redelegation = object.redelegation !== undefined && object.redelegation !== null ? Redelegation.fromPartial(object.redelegation) : undefined;
     message.entries = object.entries?.map(e => RedelegationEntryResponse.fromPartial(e)) || [];
@@ -3714,9 +3390,6 @@ export const Pool = {
   is(o: any): o is Pool {
     return o && (o.$typeUrl === Pool.typeUrl || typeof o.notBondedTokens === "string" && typeof o.bondedTokens === "string");
   },
-  isSDK(o: any): o is PoolSDKType {
-    return o && (o.$typeUrl === Pool.typeUrl || typeof o.not_bonded_tokens === "string" && typeof o.bonded_tokens === "string");
-  },
   isAmino(o: any): o is PoolAmino {
     return o && (o.$typeUrl === Pool.typeUrl || typeof o.not_bonded_tokens === "string" && typeof o.bonded_tokens === "string");
   },
@@ -3749,7 +3422,7 @@ export const Pool = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Pool>, I>>(object: I): Pool {
+  fromPartial(object: DeepPartial<Pool>): Pool {
     const message = createBasePool();
     message.notBondedTokens = object.notBondedTokens ?? "";
     message.bondedTokens = object.bondedTokens ?? "";
@@ -3812,9 +3485,6 @@ export const ValidatorUpdates = {
   is(o: any): o is ValidatorUpdates {
     return o && (o.$typeUrl === ValidatorUpdates.typeUrl || Array.isArray(o.updates) && (!o.updates.length || ValidatorUpdate.is(o.updates[0])));
   },
-  isSDK(o: any): o is ValidatorUpdatesSDKType {
-    return o && (o.$typeUrl === ValidatorUpdates.typeUrl || Array.isArray(o.updates) && (!o.updates.length || ValidatorUpdate.isSDK(o.updates[0])));
-  },
   isAmino(o: any): o is ValidatorUpdatesAmino {
     return o && (o.$typeUrl === ValidatorUpdates.typeUrl || Array.isArray(o.updates) && (!o.updates.length || ValidatorUpdate.isAmino(o.updates[0])));
   },
@@ -3841,7 +3511,7 @@ export const ValidatorUpdates = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorUpdates>, I>>(object: I): ValidatorUpdates {
+  fromPartial(object: DeepPartial<ValidatorUpdates>): ValidatorUpdates {
     const message = createBaseValidatorUpdates();
     message.updates = object.updates?.map(e => ValidatorUpdate.fromPartial(e)) || [];
     return message;

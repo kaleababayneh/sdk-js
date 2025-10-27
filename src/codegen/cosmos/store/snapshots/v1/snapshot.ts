@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 /**
  * Snapshot contains Tendermint state sync snapshot info.
  * @name Snapshot
@@ -27,28 +27,15 @@ export interface SnapshotProtoMsg {
  * @see proto type: cosmos.store.snapshots.v1.Snapshot
  */
 export interface SnapshotAmino {
-  height?: string;
-  format?: number;
-  chunks?: number;
-  hash?: string;
-  metadata?: MetadataAmino;
+  height: string;
+  format: number;
+  chunks: number;
+  hash: string;
+  metadata: MetadataAmino;
 }
 export interface SnapshotAminoMsg {
   type: "cosmos-sdk/Snapshot";
   value: SnapshotAmino;
-}
-/**
- * Snapshot contains Tendermint state sync snapshot info.
- * @name SnapshotSDKType
- * @package cosmos.store.snapshots.v1
- * @see proto type: cosmos.store.snapshots.v1.Snapshot
- */
-export interface SnapshotSDKType {
-  height: bigint;
-  format: number;
-  chunks: number;
-  hash: Uint8Array;
-  metadata: MetadataSDKType;
 }
 /**
  * Metadata contains SDK-specific snapshot metadata.
@@ -76,20 +63,11 @@ export interface MetadataAmino {
   /**
    * SHA-256 chunk hashes
    */
-  chunk_hashes?: string[];
+  chunk_hashes: string[];
 }
 export interface MetadataAminoMsg {
   type: "cosmos-sdk/Metadata";
   value: MetadataAmino;
-}
-/**
- * Metadata contains SDK-specific snapshot metadata.
- * @name MetadataSDKType
- * @package cosmos.store.snapshots.v1
- * @see proto type: cosmos.store.snapshots.v1.Metadata
- */
-export interface MetadataSDKType {
-  chunk_hashes: Uint8Array[];
 }
 /**
  * SnapshotItem is an item contained in a rootmulti.Store snapshot.
@@ -128,20 +106,6 @@ export interface SnapshotItemAminoMsg {
   value: SnapshotItemAmino;
 }
 /**
- * SnapshotItem is an item contained in a rootmulti.Store snapshot.
- * 
- * Since: cosmos-sdk 0.46
- * @name SnapshotItemSDKType
- * @package cosmos.store.snapshots.v1
- * @see proto type: cosmos.store.snapshots.v1.SnapshotItem
- */
-export interface SnapshotItemSDKType {
-  store?: SnapshotStoreItemSDKType;
-  iavl?: SnapshotIAVLItemSDKType;
-  extension?: SnapshotExtensionMetaSDKType;
-  extension_payload?: SnapshotExtensionPayloadSDKType;
-}
-/**
  * SnapshotStoreItem contains metadata about a snapshotted store.
  * 
  * Since: cosmos-sdk 0.46
@@ -165,22 +129,11 @@ export interface SnapshotStoreItemProtoMsg {
  * @see proto type: cosmos.store.snapshots.v1.SnapshotStoreItem
  */
 export interface SnapshotStoreItemAmino {
-  name?: string;
+  name: string;
 }
 export interface SnapshotStoreItemAminoMsg {
   type: "cosmos-sdk/SnapshotStoreItem";
   value: SnapshotStoreItemAmino;
-}
-/**
- * SnapshotStoreItem contains metadata about a snapshotted store.
- * 
- * Since: cosmos-sdk 0.46
- * @name SnapshotStoreItemSDKType
- * @package cosmos.store.snapshots.v1
- * @see proto type: cosmos.store.snapshots.v1.SnapshotStoreItem
- */
-export interface SnapshotStoreItemSDKType {
-  name: string;
 }
 /**
  * SnapshotIAVLItem is an exported IAVL node.
@@ -215,34 +168,20 @@ export interface SnapshotIAVLItemProtoMsg {
  * @see proto type: cosmos.store.snapshots.v1.SnapshotIAVLItem
  */
 export interface SnapshotIAVLItemAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
   /**
    * version is block height
    */
-  version?: string;
+  version: string;
   /**
    * height is depth of the tree.
    */
-  height?: number;
+  height: number;
 }
 export interface SnapshotIAVLItemAminoMsg {
   type: "cosmos-sdk/SnapshotIAVLItem";
   value: SnapshotIAVLItemAmino;
-}
-/**
- * SnapshotIAVLItem is an exported IAVL node.
- * 
- * Since: cosmos-sdk 0.46
- * @name SnapshotIAVLItemSDKType
- * @package cosmos.store.snapshots.v1
- * @see proto type: cosmos.store.snapshots.v1.SnapshotIAVLItem
- */
-export interface SnapshotIAVLItemSDKType {
-  key: Uint8Array;
-  value: Uint8Array;
-  version: bigint;
-  height: number;
 }
 /**
  * SnapshotExtensionMeta contains metadata about an external snapshotter.
@@ -269,24 +208,12 @@ export interface SnapshotExtensionMetaProtoMsg {
  * @see proto type: cosmos.store.snapshots.v1.SnapshotExtensionMeta
  */
 export interface SnapshotExtensionMetaAmino {
-  name?: string;
-  format?: number;
+  name: string;
+  format: number;
 }
 export interface SnapshotExtensionMetaAminoMsg {
   type: "cosmos-sdk/SnapshotExtensionMeta";
   value: SnapshotExtensionMetaAmino;
-}
-/**
- * SnapshotExtensionMeta contains metadata about an external snapshotter.
- * 
- * Since: cosmos-sdk 0.46
- * @name SnapshotExtensionMetaSDKType
- * @package cosmos.store.snapshots.v1
- * @see proto type: cosmos.store.snapshots.v1.SnapshotExtensionMeta
- */
-export interface SnapshotExtensionMetaSDKType {
-  name: string;
-  format: number;
 }
 /**
  * SnapshotExtensionPayload contains payloads of an external snapshotter.
@@ -312,22 +239,11 @@ export interface SnapshotExtensionPayloadProtoMsg {
  * @see proto type: cosmos.store.snapshots.v1.SnapshotExtensionPayload
  */
 export interface SnapshotExtensionPayloadAmino {
-  payload?: string;
+  payload: string;
 }
 export interface SnapshotExtensionPayloadAminoMsg {
   type: "cosmos-sdk/SnapshotExtensionPayload";
   value: SnapshotExtensionPayloadAmino;
-}
-/**
- * SnapshotExtensionPayload contains payloads of an external snapshotter.
- * 
- * Since: cosmos-sdk 0.46
- * @name SnapshotExtensionPayloadSDKType
- * @package cosmos.store.snapshots.v1
- * @see proto type: cosmos.store.snapshots.v1.SnapshotExtensionPayload
- */
-export interface SnapshotExtensionPayloadSDKType {
-  payload: Uint8Array;
 }
 function createBaseSnapshot(): Snapshot {
   return {
@@ -349,9 +265,6 @@ export const Snapshot = {
   aminoType: "cosmos-sdk/Snapshot",
   is(o: any): o is Snapshot {
     return o && (o.$typeUrl === Snapshot.typeUrl || typeof o.height === "bigint" && typeof o.format === "number" && typeof o.chunks === "number" && (o.hash instanceof Uint8Array || typeof o.hash === "string") && Metadata.is(o.metadata));
-  },
-  isSDK(o: any): o is SnapshotSDKType {
-    return o && (o.$typeUrl === Snapshot.typeUrl || typeof o.height === "bigint" && typeof o.format === "number" && typeof o.chunks === "number" && (o.hash instanceof Uint8Array || typeof o.hash === "string") && Metadata.isSDK(o.metadata));
   },
   isAmino(o: any): o is SnapshotAmino {
     return o && (o.$typeUrl === Snapshot.typeUrl || typeof o.height === "bigint" && typeof o.format === "number" && typeof o.chunks === "number" && (o.hash instanceof Uint8Array || typeof o.hash === "string") && Metadata.isAmino(o.metadata));
@@ -403,7 +316,7 @@ export const Snapshot = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Snapshot>, I>>(object: I): Snapshot {
+  fromPartial(object: DeepPartial<Snapshot>): Snapshot {
     const message = createBaseSnapshot();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     message.format = object.format ?? 0;
@@ -485,9 +398,6 @@ export const Metadata = {
   is(o: any): o is Metadata {
     return o && (o.$typeUrl === Metadata.typeUrl || Array.isArray(o.chunkHashes) && (!o.chunkHashes.length || o.chunkHashes[0] instanceof Uint8Array || typeof o.chunkHashes[0] === "string"));
   },
-  isSDK(o: any): o is MetadataSDKType {
-    return o && (o.$typeUrl === Metadata.typeUrl || Array.isArray(o.chunk_hashes) && (!o.chunk_hashes.length || o.chunk_hashes[0] instanceof Uint8Array || typeof o.chunk_hashes[0] === "string"));
-  },
   isAmino(o: any): o is MetadataAmino {
     return o && (o.$typeUrl === Metadata.typeUrl || Array.isArray(o.chunk_hashes) && (!o.chunk_hashes.length || o.chunk_hashes[0] instanceof Uint8Array || typeof o.chunk_hashes[0] === "string"));
   },
@@ -514,7 +424,7 @@ export const Metadata = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Metadata>, I>>(object: I): Metadata {
+  fromPartial(object: DeepPartial<Metadata>): Metadata {
     const message = createBaseMetadata();
     message.chunkHashes = object.chunkHashes?.map(e => e) || [];
     return message;
@@ -578,9 +488,6 @@ export const SnapshotItem = {
   is(o: any): o is SnapshotItem {
     return o && o.$typeUrl === SnapshotItem.typeUrl;
   },
-  isSDK(o: any): o is SnapshotItemSDKType {
-    return o && o.$typeUrl === SnapshotItem.typeUrl;
-  },
   isAmino(o: any): o is SnapshotItemAmino {
     return o && o.$typeUrl === SnapshotItem.typeUrl;
   },
@@ -625,7 +532,7 @@ export const SnapshotItem = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SnapshotItem>, I>>(object: I): SnapshotItem {
+  fromPartial(object: DeepPartial<SnapshotItem>): SnapshotItem {
     const message = createBaseSnapshotItem();
     message.store = object.store !== undefined && object.store !== null ? SnapshotStoreItem.fromPartial(object.store) : undefined;
     message.iavl = object.iavl !== undefined && object.iavl !== null ? SnapshotIAVLItem.fromPartial(object.iavl) : undefined;
@@ -707,9 +614,6 @@ export const SnapshotStoreItem = {
   is(o: any): o is SnapshotStoreItem {
     return o && (o.$typeUrl === SnapshotStoreItem.typeUrl || typeof o.name === "string");
   },
-  isSDK(o: any): o is SnapshotStoreItemSDKType {
-    return o && (o.$typeUrl === SnapshotStoreItem.typeUrl || typeof o.name === "string");
-  },
   isAmino(o: any): o is SnapshotStoreItemAmino {
     return o && (o.$typeUrl === SnapshotStoreItem.typeUrl || typeof o.name === "string");
   },
@@ -736,7 +640,7 @@ export const SnapshotStoreItem = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SnapshotStoreItem>, I>>(object: I): SnapshotStoreItem {
+  fromPartial(object: DeepPartial<SnapshotStoreItem>): SnapshotStoreItem {
     const message = createBaseSnapshotStoreItem();
     message.name = object.name ?? "";
     return message;
@@ -798,9 +702,6 @@ export const SnapshotIAVLItem = {
   is(o: any): o is SnapshotIAVLItem {
     return o && (o.$typeUrl === SnapshotIAVLItem.typeUrl || (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string") && typeof o.version === "bigint" && typeof o.height === "number");
   },
-  isSDK(o: any): o is SnapshotIAVLItemSDKType {
-    return o && (o.$typeUrl === SnapshotIAVLItem.typeUrl || (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string") && typeof o.version === "bigint" && typeof o.height === "number");
-  },
   isAmino(o: any): o is SnapshotIAVLItemAmino {
     return o && (o.$typeUrl === SnapshotIAVLItem.typeUrl || (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string") && typeof o.version === "bigint" && typeof o.height === "number");
   },
@@ -845,7 +746,7 @@ export const SnapshotIAVLItem = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SnapshotIAVLItem>, I>>(object: I): SnapshotIAVLItem {
+  fromPartial(object: DeepPartial<SnapshotIAVLItem>): SnapshotIAVLItem {
     const message = createBaseSnapshotIAVLItem();
     message.key = object.key ?? new Uint8Array();
     message.value = object.value ?? new Uint8Array();
@@ -920,9 +821,6 @@ export const SnapshotExtensionMeta = {
   is(o: any): o is SnapshotExtensionMeta {
     return o && (o.$typeUrl === SnapshotExtensionMeta.typeUrl || typeof o.name === "string" && typeof o.format === "number");
   },
-  isSDK(o: any): o is SnapshotExtensionMetaSDKType {
-    return o && (o.$typeUrl === SnapshotExtensionMeta.typeUrl || typeof o.name === "string" && typeof o.format === "number");
-  },
   isAmino(o: any): o is SnapshotExtensionMetaAmino {
     return o && (o.$typeUrl === SnapshotExtensionMeta.typeUrl || typeof o.name === "string" && typeof o.format === "number");
   },
@@ -955,7 +853,7 @@ export const SnapshotExtensionMeta = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SnapshotExtensionMeta>, I>>(object: I): SnapshotExtensionMeta {
+  fromPartial(object: DeepPartial<SnapshotExtensionMeta>): SnapshotExtensionMeta {
     const message = createBaseSnapshotExtensionMeta();
     message.name = object.name ?? "";
     message.format = object.format ?? 0;
@@ -1019,9 +917,6 @@ export const SnapshotExtensionPayload = {
   is(o: any): o is SnapshotExtensionPayload {
     return o && (o.$typeUrl === SnapshotExtensionPayload.typeUrl || o.payload instanceof Uint8Array || typeof o.payload === "string");
   },
-  isSDK(o: any): o is SnapshotExtensionPayloadSDKType {
-    return o && (o.$typeUrl === SnapshotExtensionPayload.typeUrl || o.payload instanceof Uint8Array || typeof o.payload === "string");
-  },
   isAmino(o: any): o is SnapshotExtensionPayloadAmino {
     return o && (o.$typeUrl === SnapshotExtensionPayload.typeUrl || o.payload instanceof Uint8Array || typeof o.payload === "string");
   },
@@ -1048,7 +943,7 @@ export const SnapshotExtensionPayload = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SnapshotExtensionPayload>, I>>(object: I): SnapshotExtensionPayload {
+  fromPartial(object: DeepPartial<SnapshotExtensionPayload>): SnapshotExtensionPayload {
     const message = createBaseSnapshotExtensionPayload();
     message.payload = object.payload ?? new Uint8Array();
     return message;

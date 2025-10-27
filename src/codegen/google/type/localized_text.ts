@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Localized variant of a text in a particular language.
  * @name LocalizedText
@@ -35,28 +35,18 @@ export interface LocalizedTextAmino {
   /**
    * Localized string in the language corresponding to `language_code' below.
    */
-  text?: string;
+  text: string;
   /**
    * The text's BCP-47 language code, such as "en-US" or "sr-Latn".
    * 
    * For more information, see
    * http://www.unicode.org/reports/tr35/#Unicode_locale_identifier.
    */
-  language_code?: string;
+  language_code: string;
 }
 export interface LocalizedTextAminoMsg {
   type: "/google.type.LocalizedText";
   value: LocalizedTextAmino;
-}
-/**
- * Localized variant of a text in a particular language.
- * @name LocalizedTextSDKType
- * @package google.type
- * @see proto type: google.type.LocalizedText
- */
-export interface LocalizedTextSDKType {
-  text: string;
-  language_code: string;
 }
 function createBaseLocalizedText(): LocalizedText {
   return {
@@ -74,9 +64,6 @@ export const LocalizedText = {
   typeUrl: "/google.type.LocalizedText",
   is(o: any): o is LocalizedText {
     return o && (o.$typeUrl === LocalizedText.typeUrl || typeof o.text === "string" && typeof o.languageCode === "string");
-  },
-  isSDK(o: any): o is LocalizedTextSDKType {
-    return o && (o.$typeUrl === LocalizedText.typeUrl || typeof o.text === "string" && typeof o.language_code === "string");
   },
   isAmino(o: any): o is LocalizedTextAmino {
     return o && (o.$typeUrl === LocalizedText.typeUrl || typeof o.text === "string" && typeof o.language_code === "string");
@@ -110,7 +97,7 @@ export const LocalizedText = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<LocalizedText>, I>>(object: I): LocalizedText {
+  fromPartial(object: DeepPartial<LocalizedText>): LocalizedText {
     const message = createBaseLocalizedText();
     message.text = object.text ?? "";
     message.languageCode = object.languageCode ?? "";

@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 /**
  * GenesisState defines the raw genesis transaction in JSON.
  * @name GenesisState
@@ -34,15 +34,6 @@ export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
 }
-/**
- * GenesisState defines the raw genesis transaction in JSON.
- * @name GenesisStateSDKType
- * @package cosmos.genutil.v1beta1
- * @see proto type: cosmos.genutil.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  gen_txs: Uint8Array[];
-}
 function createBaseGenesisState(): GenesisState {
   return {
     genTxs: []
@@ -59,9 +50,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.genTxs) && (!o.genTxs.length || o.genTxs[0] instanceof Uint8Array || typeof o.genTxs[0] === "string"));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.gen_txs) && (!o.gen_txs.length || o.gen_txs[0] instanceof Uint8Array || typeof o.gen_txs[0] === "string"));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Array.isArray(o.gen_txs) && (!o.gen_txs.length || o.gen_txs[0] instanceof Uint8Array || typeof o.gen_txs[0] === "string"));
@@ -89,7 +77,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.genTxs = object.genTxs?.map(e => e) || [];
     return message;

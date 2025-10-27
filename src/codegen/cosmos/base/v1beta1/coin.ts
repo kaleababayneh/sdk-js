@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { Decimal } from "@interchainjs/math";
 /**
  * Coin defines a token with a denomination and an amount.
@@ -30,25 +30,12 @@ export interface CoinProtoMsg {
  * @see proto type: cosmos.base.v1beta1.Coin
  */
 export interface CoinAmino {
-  denom?: string;
+  denom: string;
   amount: string;
 }
 export interface CoinAminoMsg {
   type: "cosmos-sdk/Coin";
   value: CoinAmino;
-}
-/**
- * Coin defines a token with a denomination and an amount.
- * 
- * NOTE: The amount field is an Int which implements the custom method
- * signatures required by gogoproto.
- * @name CoinSDKType
- * @package cosmos.base.v1beta1
- * @see proto type: cosmos.base.v1beta1.Coin
- */
-export interface CoinSDKType {
-  denom: string;
-  amount: string;
 }
 /**
  * DecCoin defines a token with a denomination and a decimal amount.
@@ -77,25 +64,12 @@ export interface DecCoinProtoMsg {
  * @see proto type: cosmos.base.v1beta1.DecCoin
  */
 export interface DecCoinAmino {
-  denom?: string;
-  amount?: string;
+  denom: string;
+  amount: string;
 }
 export interface DecCoinAminoMsg {
   type: "cosmos-sdk/DecCoin";
   value: DecCoinAmino;
-}
-/**
- * DecCoin defines a token with a denomination and a decimal amount.
- * 
- * NOTE: The amount field is an Dec which implements the custom method
- * signatures required by gogoproto.
- * @name DecCoinSDKType
- * @package cosmos.base.v1beta1
- * @see proto type: cosmos.base.v1beta1.DecCoin
- */
-export interface DecCoinSDKType {
-  denom: string;
-  amount: string;
 }
 /**
  * IntProto defines a Protobuf wrapper around an Int object.
@@ -119,21 +93,11 @@ export interface IntProtoProtoMsg {
  * @see proto type: cosmos.base.v1beta1.IntProto
  */
 export interface IntProtoAmino {
-  int?: string;
+  int: string;
 }
 export interface IntProtoAminoMsg {
   type: "cosmos-sdk/IntProto";
   value: IntProtoAmino;
-}
-/**
- * IntProto defines a Protobuf wrapper around an Int object.
- * Deprecated: Prefer to use math.Int directly. It supports binary Marshal and Unmarshal.
- * @name IntProtoSDKType
- * @package cosmos.base.v1beta1
- * @see proto type: cosmos.base.v1beta1.IntProto
- */
-export interface IntProtoSDKType {
-  int: string;
 }
 /**
  * DecProto defines a Protobuf wrapper around a Dec object.
@@ -157,21 +121,11 @@ export interface DecProtoProtoMsg {
  * @see proto type: cosmos.base.v1beta1.DecProto
  */
 export interface DecProtoAmino {
-  dec?: string;
+  dec: string;
 }
 export interface DecProtoAminoMsg {
   type: "cosmos-sdk/DecProto";
   value: DecProtoAmino;
-}
-/**
- * DecProto defines a Protobuf wrapper around a Dec object.
- * Deprecated: Prefer to use math.LegacyDec directly. It supports binary Marshal and Unmarshal.
- * @name DecProtoSDKType
- * @package cosmos.base.v1beta1
- * @see proto type: cosmos.base.v1beta1.DecProto
- */
-export interface DecProtoSDKType {
-  dec: string;
 }
 function createBaseCoin(): Coin {
   return {
@@ -192,9 +146,6 @@ export const Coin = {
   typeUrl: "/cosmos.base.v1beta1.Coin",
   aminoType: "cosmos-sdk/Coin",
   is(o: any): o is Coin {
-    return o && (o.$typeUrl === Coin.typeUrl || typeof o.denom === "string" && typeof o.amount === "string");
-  },
-  isSDK(o: any): o is CoinSDKType {
     return o && (o.$typeUrl === Coin.typeUrl || typeof o.denom === "string" && typeof o.amount === "string");
   },
   isAmino(o: any): o is CoinAmino {
@@ -229,7 +180,7 @@ export const Coin = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Coin>, I>>(object: I): Coin {
+  fromPartial(object: DeepPartial<Coin>): Coin {
     const message = createBaseCoin();
     message.denom = object.denom ?? "";
     message.amount = object.amount ?? "";
@@ -295,9 +246,6 @@ export const DecCoin = {
   is(o: any): o is DecCoin {
     return o && (o.$typeUrl === DecCoin.typeUrl || typeof o.denom === "string" && typeof o.amount === "string");
   },
-  isSDK(o: any): o is DecCoinSDKType {
-    return o && (o.$typeUrl === DecCoin.typeUrl || typeof o.denom === "string" && typeof o.amount === "string");
-  },
   isAmino(o: any): o is DecCoinAmino {
     return o && (o.$typeUrl === DecCoin.typeUrl || typeof o.denom === "string" && typeof o.amount === "string");
   },
@@ -330,7 +278,7 @@ export const DecCoin = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DecCoin>, I>>(object: I): DecCoin {
+  fromPartial(object: DeepPartial<DecCoin>): DecCoin {
     const message = createBaseDecCoin();
     message.denom = object.denom ?? "";
     message.amount = object.amount ?? "";
@@ -393,9 +341,6 @@ export const IntProto = {
   is(o: any): o is IntProto {
     return o && (o.$typeUrl === IntProto.typeUrl || typeof o.int === "string");
   },
-  isSDK(o: any): o is IntProtoSDKType {
-    return o && (o.$typeUrl === IntProto.typeUrl || typeof o.int === "string");
-  },
   isAmino(o: any): o is IntProtoAmino {
     return o && (o.$typeUrl === IntProto.typeUrl || typeof o.int === "string");
   },
@@ -422,7 +367,7 @@ export const IntProto = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<IntProto>, I>>(object: I): IntProto {
+  fromPartial(object: DeepPartial<IntProto>): IntProto {
     const message = createBaseIntProto();
     message.int = object.int ?? "";
     return message;
@@ -480,9 +425,6 @@ export const DecProto = {
   is(o: any): o is DecProto {
     return o && (o.$typeUrl === DecProto.typeUrl || typeof o.dec === "string");
   },
-  isSDK(o: any): o is DecProtoSDKType {
-    return o && (o.$typeUrl === DecProto.typeUrl || typeof o.dec === "string");
-  },
   isAmino(o: any): o is DecProtoAmino {
     return o && (o.$typeUrl === DecProto.typeUrl || typeof o.dec === "string");
   },
@@ -509,7 +451,7 @@ export const DecProto = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DecProto>, I>>(object: I): DecProto {
+  fromPartial(object: DeepPartial<DecProto>): DecProto {
     const message = createBaseDecProto();
     message.dec = object.dec ?? "";
     return message;

@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Expr, ExprAmino, ExprSDKType } from "./expr";
+import { Expr, ExprAmino } from "./expr";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact } from "../../../../helpers";
+import { DeepPartial } from "../../../../helpers";
 /**
  * A declaration.
  * @name Decl
@@ -46,15 +46,15 @@ export interface DeclAmino {
   /**
    * The id of the declaration.
    */
-  id?: number;
+  id: number;
   /**
    * The name of the declaration.
    */
-  name?: string;
+  name: string;
   /**
    * The documentation string for the declaration.
    */
-  doc?: string;
+  doc: string;
   /**
    * An identifier declaration.
    */
@@ -67,19 +67,6 @@ export interface DeclAmino {
 export interface DeclAminoMsg {
   type: "/google.api.expr.v1beta1.Decl";
   value: DeclAmino;
-}
-/**
- * A declaration.
- * @name DeclSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.Decl
- */
-export interface DeclSDKType {
-  id: number;
-  name: string;
-  doc: string;
-  ident?: IdentDeclSDKType;
-  function?: FunctionDeclSDKType;
 }
 /**
  * The declared type of a variable.
@@ -122,34 +109,20 @@ export interface DeclTypeAmino {
   /**
    * The expression id of the declared type, if applicable.
    */
-  id?: number;
+  id: number;
   /**
    * The type name, e.g. 'int', 'my.type.Type' or 'T'
    */
-  type?: string;
+  type: string;
   /**
    * An ordered list of type parameters, e.g. `<string, int>`.
    * Only applies to a subset of types, e.g. `map`, `list`.
    */
-  type_params?: DeclTypeAmino[];
+  type_params: DeclTypeAmino[];
 }
 export interface DeclTypeAminoMsg {
   type: "/google.api.expr.v1beta1.DeclType";
   value: DeclTypeAmino;
-}
-/**
- * The declared type of a variable.
- * 
- * Extends runtime type values with extra information used for type checking
- * and dispatching.
- * @name DeclTypeSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.DeclType
- */
-export interface DeclTypeSDKType {
-  id: number;
-  type: string;
-  type_params: DeclTypeSDKType[];
 }
 /**
  * An identifier declaration.
@@ -192,16 +165,6 @@ export interface IdentDeclAminoMsg {
   value: IdentDeclAmino;
 }
 /**
- * An identifier declaration.
- * @name IdentDeclSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.IdentDecl
- */
-export interface IdentDeclSDKType {
-  type?: DeclTypeSDKType;
-  value?: ExprSDKType;
-}
-/**
  * A function declaration.
  * @name FunctionDecl
  * @package google.api.expr.v1beta1
@@ -235,7 +198,7 @@ export interface FunctionDeclAmino {
   /**
    * The function arguments.
    */
-  args?: IdentDeclAmino[];
+  args: IdentDeclAmino[];
   /**
    * Optional declared return type.
    */
@@ -243,22 +206,11 @@ export interface FunctionDeclAmino {
   /**
    * If the first argument of the function is the receiver.
    */
-  receiver_function?: boolean;
+  receiver_function: boolean;
 }
 export interface FunctionDeclAminoMsg {
   type: "/google.api.expr.v1beta1.FunctionDecl";
   value: FunctionDeclAmino;
-}
-/**
- * A function declaration.
- * @name FunctionDeclSDKType
- * @package google.api.expr.v1beta1
- * @see proto type: google.api.expr.v1beta1.FunctionDecl
- */
-export interface FunctionDeclSDKType {
-  args: IdentDeclSDKType[];
-  return_type?: DeclTypeSDKType;
-  receiver_function: boolean;
 }
 function createBaseDecl(): Decl {
   return {
@@ -278,9 +230,6 @@ function createBaseDecl(): Decl {
 export const Decl = {
   typeUrl: "/google.api.expr.v1beta1.Decl",
   is(o: any): o is Decl {
-    return o && (o.$typeUrl === Decl.typeUrl || typeof o.id === "number" && typeof o.name === "string" && typeof o.doc === "string");
-  },
-  isSDK(o: any): o is DeclSDKType {
     return o && (o.$typeUrl === Decl.typeUrl || typeof o.id === "number" && typeof o.name === "string" && typeof o.doc === "string");
   },
   isAmino(o: any): o is DeclAmino {
@@ -333,7 +282,7 @@ export const Decl = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Decl>, I>>(object: I): Decl {
+  fromPartial(object: DeepPartial<Decl>): Decl {
     const message = createBaseDecl();
     message.id = object.id ?? 0;
     message.name = object.name ?? "";
@@ -414,9 +363,6 @@ export const DeclType = {
   is(o: any): o is DeclType {
     return o && (o.$typeUrl === DeclType.typeUrl || typeof o.id === "number" && typeof o.type === "string" && Array.isArray(o.typeParams) && (!o.typeParams.length || DeclType.is(o.typeParams[0])));
   },
-  isSDK(o: any): o is DeclTypeSDKType {
-    return o && (o.$typeUrl === DeclType.typeUrl || typeof o.id === "number" && typeof o.type === "string" && Array.isArray(o.type_params) && (!o.type_params.length || DeclType.isSDK(o.type_params[0])));
-  },
   isAmino(o: any): o is DeclTypeAmino {
     return o && (o.$typeUrl === DeclType.typeUrl || typeof o.id === "number" && typeof o.type === "string" && Array.isArray(o.type_params) && (!o.type_params.length || DeclType.isAmino(o.type_params[0])));
   },
@@ -455,7 +401,7 @@ export const DeclType = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DeclType>, I>>(object: I): DeclType {
+  fromPartial(object: DeepPartial<DeclType>): DeclType {
     const message = createBaseDeclType();
     message.id = object.id ?? 0;
     message.type = object.type ?? "";
@@ -523,9 +469,6 @@ export const IdentDecl = {
   is(o: any): o is IdentDecl {
     return o && o.$typeUrl === IdentDecl.typeUrl;
   },
-  isSDK(o: any): o is IdentDeclSDKType {
-    return o && o.$typeUrl === IdentDecl.typeUrl;
-  },
   isAmino(o: any): o is IdentDeclAmino {
     return o && o.$typeUrl === IdentDecl.typeUrl;
   },
@@ -558,7 +501,7 @@ export const IdentDecl = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<IdentDecl>, I>>(object: I): IdentDecl {
+  fromPartial(object: DeepPartial<IdentDecl>): IdentDecl {
     const message = createBaseIdentDecl();
     message.type = object.type !== undefined && object.type !== null ? DeclType.fromPartial(object.type) : undefined;
     message.value = object.value !== undefined && object.value !== null ? Expr.fromPartial(object.value) : undefined;
@@ -621,9 +564,6 @@ export const FunctionDecl = {
   is(o: any): o is FunctionDecl {
     return o && (o.$typeUrl === FunctionDecl.typeUrl || Array.isArray(o.args) && (!o.args.length || IdentDecl.is(o.args[0])) && typeof o.receiverFunction === "boolean");
   },
-  isSDK(o: any): o is FunctionDeclSDKType {
-    return o && (o.$typeUrl === FunctionDecl.typeUrl || Array.isArray(o.args) && (!o.args.length || IdentDecl.isSDK(o.args[0])) && typeof o.receiver_function === "boolean");
-  },
   isAmino(o: any): o is FunctionDeclAmino {
     return o && (o.$typeUrl === FunctionDecl.typeUrl || Array.isArray(o.args) && (!o.args.length || IdentDecl.isAmino(o.args[0])) && typeof o.receiver_function === "boolean");
   },
@@ -662,7 +602,7 @@ export const FunctionDecl = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FunctionDecl>, I>>(object: I): FunctionDecl {
+  fromPartial(object: DeepPartial<FunctionDecl>): FunctionDecl {
     const message = createBaseFunctionDecl();
     message.args = object.args?.map(e => IdentDecl.fromPartial(e)) || [];
     message.returnType = object.returnType !== undefined && object.returnType !== null ? DeclType.fromPartial(object.returnType) : undefined;

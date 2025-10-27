@@ -1,11 +1,11 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyAmino, AnySDKType } from "../../../../google/protobuf/any";
-import { Event, EventAmino, EventSDKType } from "../../../../tendermint/abci/types";
-import { Block, BlockAmino, BlockSDKType } from "../../../../tendermint/types/block";
+import { Any, AnyAmino } from "../../../../google/protobuf/any";
+import { Event, EventAmino } from "../../../../tendermint/abci/types";
+import { Block, BlockAmino } from "../../../../tendermint/types/block";
 import { BinaryReader, BinaryWriter } from "../../../../binary";
 import { GlobalDecoderRegistry } from "../../../../registry";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 /**
  * TxResponse defines a structure containing relevant tx data and metadata. The
  * tags are stringified and the log is JSON decoded.
@@ -90,44 +90,44 @@ export interface TxResponseAmino {
   /**
    * The block height
    */
-  height?: string;
+  height: string;
   /**
    * The transaction hash.
    */
-  txhash?: string;
+  txhash: string;
   /**
    * Namespace for the Code
    */
-  codespace?: string;
+  codespace: string;
   /**
    * Response code.
    */
-  code?: number;
+  code: number;
   /**
    * Result bytes, if any.
    */
-  data?: string;
+  data: string;
   /**
    * The output of the application's logger (raw string). May be
    * non-deterministic.
    */
-  raw_log?: string;
+  raw_log: string;
   /**
    * The output of the application's logger (typed). May be non-deterministic.
    */
-  logs?: ABCIMessageLogAmino[];
+  logs: ABCIMessageLogAmino[];
   /**
    * Additional information. May be non-deterministic.
    */
-  info?: string;
+  info: string;
   /**
    * Amount of gas requested for transaction.
    */
-  gas_wanted?: string;
+  gas_wanted: string;
   /**
    * Amount of gas consumed by transaction.
    */
-  gas_used?: string;
+  gas_used: string;
   /**
    * The request transaction bytes.
    */
@@ -137,7 +137,7 @@ export interface TxResponseAmino {
    * the timestamps of the valid votes in the block.LastCommit. For height == 1,
    * it's genesis time.
    */
-  timestamp?: string;
+  timestamp: string;
   /**
    * Events defines all the events emitted by processing a transaction. Note,
    * these events include those emitted by processing all the messages and those
@@ -146,33 +146,11 @@ export interface TxResponseAmino {
    * 
    * Since: cosmos-sdk 0.42.11, 0.44.5, 0.45
    */
-  events?: EventAmino[];
+  events: EventAmino[];
 }
 export interface TxResponseAminoMsg {
   type: "cosmos-sdk/TxResponse";
   value: TxResponseAmino;
-}
-/**
- * TxResponse defines a structure containing relevant tx data and metadata. The
- * tags are stringified and the log is JSON decoded.
- * @name TxResponseSDKType
- * @package cosmos.base.abci.v1beta1
- * @see proto type: cosmos.base.abci.v1beta1.TxResponse
- */
-export interface TxResponseSDKType {
-  height: bigint;
-  txhash: string;
-  codespace: string;
-  code: number;
-  data: string;
-  raw_log: string;
-  logs: ABCIMessageLogSDKType[];
-  info: string;
-  gas_wanted: bigint;
-  gas_used: bigint;
-  tx?: AnySDKType;
-  timestamp: string;
-  events: EventSDKType[];
 }
 /**
  * ABCIMessageLog defines a structure containing an indexed tx ABCI message log.
@@ -201,27 +179,16 @@ export interface ABCIMessageLogProtoMsg {
  */
 export interface ABCIMessageLogAmino {
   msg_index: number;
-  log?: string;
+  log: string;
   /**
    * Events contains a slice of Event objects that were emitted during some
    * execution.
    */
-  events?: StringEventAmino[];
+  events: StringEventAmino[];
 }
 export interface ABCIMessageLogAminoMsg {
   type: "cosmos-sdk/ABCIMessageLog";
   value: ABCIMessageLogAmino;
-}
-/**
- * ABCIMessageLog defines a structure containing an indexed tx ABCI message log.
- * @name ABCIMessageLogSDKType
- * @package cosmos.base.abci.v1beta1
- * @see proto type: cosmos.base.abci.v1beta1.ABCIMessageLog
- */
-export interface ABCIMessageLogSDKType {
-  msg_index: number;
-  log: string;
-  events: StringEventSDKType[];
 }
 /**
  * StringEvent defines en Event object wrapper where all the attributes
@@ -246,23 +213,12 @@ export interface StringEventProtoMsg {
  * @see proto type: cosmos.base.abci.v1beta1.StringEvent
  */
 export interface StringEventAmino {
-  type?: string;
-  attributes?: AttributeAmino[];
+  type: string;
+  attributes: AttributeAmino[];
 }
 export interface StringEventAminoMsg {
   type: "cosmos-sdk/StringEvent";
   value: StringEventAmino;
-}
-/**
- * StringEvent defines en Event object wrapper where all the attributes
- * contain key/value pairs that are strings instead of raw bytes.
- * @name StringEventSDKType
- * @package cosmos.base.abci.v1beta1
- * @see proto type: cosmos.base.abci.v1beta1.StringEvent
- */
-export interface StringEventSDKType {
-  type: string;
-  attributes: AttributeSDKType[];
 }
 /**
  * Attribute defines an attribute wrapper where the key and value are
@@ -287,23 +243,12 @@ export interface AttributeProtoMsg {
  * @see proto type: cosmos.base.abci.v1beta1.Attribute
  */
 export interface AttributeAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
 }
 export interface AttributeAminoMsg {
   type: "cosmos-sdk/Attribute";
   value: AttributeAmino;
-}
-/**
- * Attribute defines an attribute wrapper where the key and value are
- * strings instead of raw bytes.
- * @name AttributeSDKType
- * @package cosmos.base.abci.v1beta1
- * @see proto type: cosmos.base.abci.v1beta1.Attribute
- */
-export interface AttributeSDKType {
-  key: string;
-  value: string;
 }
 /**
  * GasInfo defines tx execution gas context.
@@ -335,25 +280,15 @@ export interface GasInfoAmino {
   /**
    * GasWanted is the maximum units of work we allow this tx to perform.
    */
-  gas_wanted?: string;
+  gas_wanted: string;
   /**
    * GasUsed is the amount of gas actually consumed.
    */
-  gas_used?: string;
+  gas_used: string;
 }
 export interface GasInfoAminoMsg {
   type: "cosmos-sdk/GasInfo";
   value: GasInfoAmino;
-}
-/**
- * GasInfo defines tx execution gas context.
- * @name GasInfoSDKType
- * @package cosmos.base.abci.v1beta1
- * @see proto type: cosmos.base.abci.v1beta1.GasInfo
- */
-export interface GasInfoSDKType {
-  gas_wanted: bigint;
-  gas_used: bigint;
 }
 /**
  * Result is the union of ResponseFormat and ResponseCheckTx.
@@ -404,41 +339,26 @@ export interface ResultAmino {
    * because it also contains the Msg response typeURL.
    * @deprecated
    */
-  data?: string;
+  data: string;
   /**
    * Log contains the log information from message or handler execution.
    */
-  log?: string;
+  log: string;
   /**
    * Events contains a slice of Event objects that were emitted during message
    * or handler execution.
    */
-  events?: EventAmino[];
+  events: EventAmino[];
   /**
    * msg_responses contains the Msg handler responses type packed in Anys.
    * 
    * Since: cosmos-sdk 0.46
    */
-  msg_responses?: AnyAmino[];
+  msg_responses: AnyAmino[];
 }
 export interface ResultAminoMsg {
   type: "cosmos-sdk/Result";
   value: ResultAmino;
-}
-/**
- * Result is the union of ResponseFormat and ResponseCheckTx.
- * @name ResultSDKType
- * @package cosmos.base.abci.v1beta1
- * @see proto type: cosmos.base.abci.v1beta1.Result
- */
-export interface ResultSDKType {
-  /**
-   * @deprecated
-   */
-  data: Uint8Array;
-  log: string;
-  events: EventSDKType[];
-  msg_responses: AnySDKType[];
 }
 /**
  * SimulationResponse defines the response generated when a transaction is
@@ -463,23 +383,12 @@ export interface SimulationResponseProtoMsg {
  * @see proto type: cosmos.base.abci.v1beta1.SimulationResponse
  */
 export interface SimulationResponseAmino {
-  gas_info?: GasInfoAmino;
+  gas_info: GasInfoAmino;
   result?: ResultAmino;
 }
 export interface SimulationResponseAminoMsg {
   type: "cosmos-sdk/SimulationResponse";
   value: SimulationResponseAmino;
-}
-/**
- * SimulationResponse defines the response generated when a transaction is
- * successfully simulated.
- * @name SimulationResponseSDKType
- * @package cosmos.base.abci.v1beta1
- * @see proto type: cosmos.base.abci.v1beta1.SimulationResponse
- */
-export interface SimulationResponseSDKType {
-  gas_info: GasInfoSDKType;
-  result?: ResultSDKType;
 }
 /**
  * MsgData defines the data returned in a Result object during message
@@ -506,24 +415,12 @@ export interface MsgDataProtoMsg {
  * @deprecated
  */
 export interface MsgDataAmino {
-  msg_type?: string;
-  data?: string;
+  msg_type: string;
+  data: string;
 }
 export interface MsgDataAminoMsg {
   type: "cosmos-sdk/MsgData";
   value: MsgDataAmino;
-}
-/**
- * MsgData defines the data returned in a Result object during message
- * execution.
- * @name MsgDataSDKType
- * @package cosmos.base.abci.v1beta1
- * @see proto type: cosmos.base.abci.v1beta1.MsgData
- * @deprecated
- */
-export interface MsgDataSDKType {
-  msg_type: string;
-  data: Uint8Array;
 }
 /**
  * TxMsgData defines a list of MsgData. A transaction will have a MsgData object
@@ -561,31 +458,17 @@ export interface TxMsgDataAmino {
    * data field is deprecated and not populated.
    * @deprecated
    */
-  data?: MsgDataAmino[];
+  data: MsgDataAmino[];
   /**
    * msg_responses contains the Msg handler responses packed into Anys.
    * 
    * Since: cosmos-sdk 0.46
    */
-  msg_responses?: AnyAmino[];
+  msg_responses: AnyAmino[];
 }
 export interface TxMsgDataAminoMsg {
   type: "cosmos-sdk/TxMsgData";
   value: TxMsgDataAmino;
-}
-/**
- * TxMsgData defines a list of MsgData. A transaction will have a MsgData object
- * for each message.
- * @name TxMsgDataSDKType
- * @package cosmos.base.abci.v1beta1
- * @see proto type: cosmos.base.abci.v1beta1.TxMsgData
- */
-export interface TxMsgDataSDKType {
-  /**
-   * @deprecated
-   */
-  data: MsgDataSDKType[];
-  msg_responses: AnySDKType[];
 }
 /**
  * SearchTxsResult defines a structure for querying txs pageable
@@ -633,45 +516,31 @@ export interface SearchTxsResultAmino {
   /**
    * Count of all txs
    */
-  total_count?: string;
+  total_count: string;
   /**
    * Count of txs in current page
    */
-  count?: string;
+  count: string;
   /**
    * Index of current page, start from 1
    */
-  page_number?: string;
+  page_number: string;
   /**
    * Count of total pages
    */
-  page_total?: string;
+  page_total: string;
   /**
    * Max count txs per page
    */
-  limit?: string;
+  limit: string;
   /**
    * List of txs in current page
    */
-  txs?: TxResponseAmino[];
+  txs: TxResponseAmino[];
 }
 export interface SearchTxsResultAminoMsg {
   type: "cosmos-sdk/SearchTxsResult";
   value: SearchTxsResultAmino;
-}
-/**
- * SearchTxsResult defines a structure for querying txs pageable
- * @name SearchTxsResultSDKType
- * @package cosmos.base.abci.v1beta1
- * @see proto type: cosmos.base.abci.v1beta1.SearchTxsResult
- */
-export interface SearchTxsResultSDKType {
-  total_count: bigint;
-  count: bigint;
-  page_number: bigint;
-  page_total: bigint;
-  limit: bigint;
-  txs: TxResponseSDKType[];
 }
 /**
  * SearchBlocksResult defines a structure for querying blocks pageable
@@ -719,45 +588,31 @@ export interface SearchBlocksResultAmino {
   /**
    * Count of all blocks
    */
-  total_count?: string;
+  total_count: string;
   /**
    * Count of blocks in current page
    */
-  count?: string;
+  count: string;
   /**
    * Index of current page, start from 1
    */
-  page_number?: string;
+  page_number: string;
   /**
    * Count of total pages
    */
-  page_total?: string;
+  page_total: string;
   /**
    * Max count blocks per page
    */
-  limit?: string;
+  limit: string;
   /**
    * List of blocks in current page
    */
-  blocks?: BlockAmino[];
+  blocks: BlockAmino[];
 }
 export interface SearchBlocksResultAminoMsg {
   type: "cosmos-sdk/SearchBlocksResult";
   value: SearchBlocksResultAmino;
-}
-/**
- * SearchBlocksResult defines a structure for querying blocks pageable
- * @name SearchBlocksResultSDKType
- * @package cosmos.base.abci.v1beta1
- * @see proto type: cosmos.base.abci.v1beta1.SearchBlocksResult
- */
-export interface SearchBlocksResultSDKType {
-  total_count: bigint;
-  count: bigint;
-  page_number: bigint;
-  page_total: bigint;
-  limit: bigint;
-  blocks: BlockSDKType[];
 }
 function createBaseTxResponse(): TxResponse {
   return {
@@ -788,9 +643,6 @@ export const TxResponse = {
   aminoType: "cosmos-sdk/TxResponse",
   is(o: any): o is TxResponse {
     return o && (o.$typeUrl === TxResponse.typeUrl || typeof o.height === "bigint" && typeof o.txhash === "string" && typeof o.codespace === "string" && typeof o.code === "number" && typeof o.data === "string" && typeof o.rawLog === "string" && Array.isArray(o.logs) && (!o.logs.length || ABCIMessageLog.is(o.logs[0])) && typeof o.info === "string" && typeof o.gasWanted === "bigint" && typeof o.gasUsed === "bigint" && typeof o.timestamp === "string" && Array.isArray(o.events) && (!o.events.length || Event.is(o.events[0])));
-  },
-  isSDK(o: any): o is TxResponseSDKType {
-    return o && (o.$typeUrl === TxResponse.typeUrl || typeof o.height === "bigint" && typeof o.txhash === "string" && typeof o.codespace === "string" && typeof o.code === "number" && typeof o.data === "string" && typeof o.raw_log === "string" && Array.isArray(o.logs) && (!o.logs.length || ABCIMessageLog.isSDK(o.logs[0])) && typeof o.info === "string" && typeof o.gas_wanted === "bigint" && typeof o.gas_used === "bigint" && typeof o.timestamp === "string" && Array.isArray(o.events) && (!o.events.length || Event.isSDK(o.events[0])));
   },
   isAmino(o: any): o is TxResponseAmino {
     return o && (o.$typeUrl === TxResponse.typeUrl || typeof o.height === "bigint" && typeof o.txhash === "string" && typeof o.codespace === "string" && typeof o.code === "number" && typeof o.data === "string" && typeof o.raw_log === "string" && Array.isArray(o.logs) && (!o.logs.length || ABCIMessageLog.isAmino(o.logs[0])) && typeof o.info === "string" && typeof o.gas_wanted === "bigint" && typeof o.gas_used === "bigint" && typeof o.timestamp === "string" && Array.isArray(o.events) && (!o.events.length || Event.isAmino(o.events[0])));
@@ -890,7 +742,7 @@ export const TxResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxResponse>, I>>(object: I): TxResponse {
+  fromPartial(object: DeepPartial<TxResponse>): TxResponse {
     const message = createBaseTxResponse();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     message.txhash = object.txhash ?? "";
@@ -1018,9 +870,6 @@ export const ABCIMessageLog = {
   is(o: any): o is ABCIMessageLog {
     return o && (o.$typeUrl === ABCIMessageLog.typeUrl || typeof o.msgIndex === "number" && typeof o.log === "string" && Array.isArray(o.events) && (!o.events.length || StringEvent.is(o.events[0])));
   },
-  isSDK(o: any): o is ABCIMessageLogSDKType {
-    return o && (o.$typeUrl === ABCIMessageLog.typeUrl || typeof o.msg_index === "number" && typeof o.log === "string" && Array.isArray(o.events) && (!o.events.length || StringEvent.isSDK(o.events[0])));
-  },
   isAmino(o: any): o is ABCIMessageLogAmino {
     return o && (o.$typeUrl === ABCIMessageLog.typeUrl || typeof o.msg_index === "number" && typeof o.log === "string" && Array.isArray(o.events) && (!o.events.length || StringEvent.isAmino(o.events[0])));
   },
@@ -1059,7 +908,7 @@ export const ABCIMessageLog = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ABCIMessageLog>, I>>(object: I): ABCIMessageLog {
+  fromPartial(object: DeepPartial<ABCIMessageLog>): ABCIMessageLog {
     const message = createBaseABCIMessageLog();
     message.msgIndex = object.msgIndex ?? 0;
     message.log = object.log ?? "";
@@ -1135,9 +984,6 @@ export const StringEvent = {
   is(o: any): o is StringEvent {
     return o && (o.$typeUrl === StringEvent.typeUrl || typeof o.type === "string" && Array.isArray(o.attributes) && (!o.attributes.length || Attribute.is(o.attributes[0])));
   },
-  isSDK(o: any): o is StringEventSDKType {
-    return o && (o.$typeUrl === StringEvent.typeUrl || typeof o.type === "string" && Array.isArray(o.attributes) && (!o.attributes.length || Attribute.isSDK(o.attributes[0])));
-  },
   isAmino(o: any): o is StringEventAmino {
     return o && (o.$typeUrl === StringEvent.typeUrl || typeof o.type === "string" && Array.isArray(o.attributes) && (!o.attributes.length || Attribute.isAmino(o.attributes[0])));
   },
@@ -1170,7 +1016,7 @@ export const StringEvent = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<StringEvent>, I>>(object: I): StringEvent {
+  fromPartial(object: DeepPartial<StringEvent>): StringEvent {
     const message = createBaseStringEvent();
     message.type = object.type ?? "";
     message.attributes = object.attributes?.map(e => Attribute.fromPartial(e)) || [];
@@ -1241,9 +1087,6 @@ export const Attribute = {
   is(o: any): o is Attribute {
     return o && (o.$typeUrl === Attribute.typeUrl || typeof o.key === "string" && typeof o.value === "string");
   },
-  isSDK(o: any): o is AttributeSDKType {
-    return o && (o.$typeUrl === Attribute.typeUrl || typeof o.key === "string" && typeof o.value === "string");
-  },
   isAmino(o: any): o is AttributeAmino {
     return o && (o.$typeUrl === Attribute.typeUrl || typeof o.key === "string" && typeof o.value === "string");
   },
@@ -1276,7 +1119,7 @@ export const Attribute = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Attribute>, I>>(object: I): Attribute {
+  fromPartial(object: DeepPartial<Attribute>): Attribute {
     const message = createBaseAttribute();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
@@ -1339,9 +1182,6 @@ export const GasInfo = {
   is(o: any): o is GasInfo {
     return o && (o.$typeUrl === GasInfo.typeUrl || typeof o.gasWanted === "bigint" && typeof o.gasUsed === "bigint");
   },
-  isSDK(o: any): o is GasInfoSDKType {
-    return o && (o.$typeUrl === GasInfo.typeUrl || typeof o.gas_wanted === "bigint" && typeof o.gas_used === "bigint");
-  },
   isAmino(o: any): o is GasInfoAmino {
     return o && (o.$typeUrl === GasInfo.typeUrl || typeof o.gas_wanted === "bigint" && typeof o.gas_used === "bigint");
   },
@@ -1374,7 +1214,7 @@ export const GasInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GasInfo>, I>>(object: I): GasInfo {
+  fromPartial(object: DeepPartial<GasInfo>): GasInfo {
     const message = createBaseGasInfo();
     message.gasWanted = object.gasWanted !== undefined && object.gasWanted !== null ? BigInt(object.gasWanted.toString()) : BigInt(0);
     message.gasUsed = object.gasUsed !== undefined && object.gasUsed !== null ? BigInt(object.gasUsed.toString()) : BigInt(0);
@@ -1439,9 +1279,6 @@ export const Result = {
   is(o: any): o is Result {
     return o && (o.$typeUrl === Result.typeUrl || (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.log === "string" && Array.isArray(o.events) && (!o.events.length || Event.is(o.events[0])) && Array.isArray(o.msgResponses) && (!o.msgResponses.length || Any.is(o.msgResponses[0])));
   },
-  isSDK(o: any): o is ResultSDKType {
-    return o && (o.$typeUrl === Result.typeUrl || (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.log === "string" && Array.isArray(o.events) && (!o.events.length || Event.isSDK(o.events[0])) && Array.isArray(o.msg_responses) && (!o.msg_responses.length || Any.isSDK(o.msg_responses[0])));
-  },
   isAmino(o: any): o is ResultAmino {
     return o && (o.$typeUrl === Result.typeUrl || (o.data instanceof Uint8Array || typeof o.data === "string") && typeof o.log === "string" && Array.isArray(o.events) && (!o.events.length || Event.isAmino(o.events[0])) && Array.isArray(o.msg_responses) && (!o.msg_responses.length || Any.isAmino(o.msg_responses[0])));
   },
@@ -1486,7 +1323,7 @@ export const Result = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Result>, I>>(object: I): Result {
+  fromPartial(object: DeepPartial<Result>): Result {
     const message = createBaseResult();
     message.data = object.data ?? new Uint8Array();
     message.log = object.log ?? "";
@@ -1564,9 +1401,6 @@ export const SimulationResponse = {
   is(o: any): o is SimulationResponse {
     return o && (o.$typeUrl === SimulationResponse.typeUrl || GasInfo.is(o.gasInfo));
   },
-  isSDK(o: any): o is SimulationResponseSDKType {
-    return o && (o.$typeUrl === SimulationResponse.typeUrl || GasInfo.isSDK(o.gas_info));
-  },
   isAmino(o: any): o is SimulationResponseAmino {
     return o && (o.$typeUrl === SimulationResponse.typeUrl || GasInfo.isAmino(o.gas_info));
   },
@@ -1599,7 +1433,7 @@ export const SimulationResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SimulationResponse>, I>>(object: I): SimulationResponse {
+  fromPartial(object: DeepPartial<SimulationResponse>): SimulationResponse {
     const message = createBaseSimulationResponse();
     message.gasInfo = object.gasInfo !== undefined && object.gasInfo !== null ? GasInfo.fromPartial(object.gasInfo) : undefined;
     message.result = object.result !== undefined && object.result !== null ? Result.fromPartial(object.result) : undefined;
@@ -1670,9 +1504,6 @@ export const MsgData = {
   is(o: any): o is MsgData {
     return o && (o.$typeUrl === MsgData.typeUrl || typeof o.msgType === "string" && (o.data instanceof Uint8Array || typeof o.data === "string"));
   },
-  isSDK(o: any): o is MsgDataSDKType {
-    return o && (o.$typeUrl === MsgData.typeUrl || typeof o.msg_type === "string" && (o.data instanceof Uint8Array || typeof o.data === "string"));
-  },
   isAmino(o: any): o is MsgDataAmino {
     return o && (o.$typeUrl === MsgData.typeUrl || typeof o.msg_type === "string" && (o.data instanceof Uint8Array || typeof o.data === "string"));
   },
@@ -1705,7 +1536,7 @@ export const MsgData = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgData>, I>>(object: I): MsgData {
+  fromPartial(object: DeepPartial<MsgData>): MsgData {
     const message = createBaseMsgData();
     message.msgType = object.msgType ?? "";
     message.data = object.data ?? new Uint8Array();
@@ -1769,9 +1600,6 @@ export const TxMsgData = {
   is(o: any): o is TxMsgData {
     return o && (o.$typeUrl === TxMsgData.typeUrl || Array.isArray(o.data) && (!o.data.length || MsgData.is(o.data[0])) && Array.isArray(o.msgResponses) && (!o.msgResponses.length || Any.is(o.msgResponses[0])));
   },
-  isSDK(o: any): o is TxMsgDataSDKType {
-    return o && (o.$typeUrl === TxMsgData.typeUrl || Array.isArray(o.data) && (!o.data.length || MsgData.isSDK(o.data[0])) && Array.isArray(o.msg_responses) && (!o.msg_responses.length || Any.isSDK(o.msg_responses[0])));
-  },
   isAmino(o: any): o is TxMsgDataAmino {
     return o && (o.$typeUrl === TxMsgData.typeUrl || Array.isArray(o.data) && (!o.data.length || MsgData.isAmino(o.data[0])) && Array.isArray(o.msg_responses) && (!o.msg_responses.length || Any.isAmino(o.msg_responses[0])));
   },
@@ -1804,7 +1632,7 @@ export const TxMsgData = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxMsgData>, I>>(object: I): TxMsgData {
+  fromPartial(object: DeepPartial<TxMsgData>): TxMsgData {
     const message = createBaseTxMsgData();
     message.data = object.data?.map(e => MsgData.fromPartial(e)) || [];
     message.msgResponses = object.msgResponses?.map(e => Any.fromPartial(e)) || [];
@@ -1875,9 +1703,6 @@ export const SearchTxsResult = {
   is(o: any): o is SearchTxsResult {
     return o && (o.$typeUrl === SearchTxsResult.typeUrl || typeof o.totalCount === "bigint" && typeof o.count === "bigint" && typeof o.pageNumber === "bigint" && typeof o.pageTotal === "bigint" && typeof o.limit === "bigint" && Array.isArray(o.txs) && (!o.txs.length || TxResponse.is(o.txs[0])));
   },
-  isSDK(o: any): o is SearchTxsResultSDKType {
-    return o && (o.$typeUrl === SearchTxsResult.typeUrl || typeof o.total_count === "bigint" && typeof o.count === "bigint" && typeof o.page_number === "bigint" && typeof o.page_total === "bigint" && typeof o.limit === "bigint" && Array.isArray(o.txs) && (!o.txs.length || TxResponse.isSDK(o.txs[0])));
-  },
   isAmino(o: any): o is SearchTxsResultAmino {
     return o && (o.$typeUrl === SearchTxsResult.typeUrl || typeof o.total_count === "bigint" && typeof o.count === "bigint" && typeof o.page_number === "bigint" && typeof o.page_total === "bigint" && typeof o.limit === "bigint" && Array.isArray(o.txs) && (!o.txs.length || TxResponse.isAmino(o.txs[0])));
   },
@@ -1934,7 +1759,7 @@ export const SearchTxsResult = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SearchTxsResult>, I>>(object: I): SearchTxsResult {
+  fromPartial(object: DeepPartial<SearchTxsResult>): SearchTxsResult {
     const message = createBaseSearchTxsResult();
     message.totalCount = object.totalCount !== undefined && object.totalCount !== null ? BigInt(object.totalCount.toString()) : BigInt(0);
     message.count = object.count !== undefined && object.count !== null ? BigInt(object.count.toString()) : BigInt(0);
@@ -2028,9 +1853,6 @@ export const SearchBlocksResult = {
   is(o: any): o is SearchBlocksResult {
     return o && (o.$typeUrl === SearchBlocksResult.typeUrl || typeof o.totalCount === "bigint" && typeof o.count === "bigint" && typeof o.pageNumber === "bigint" && typeof o.pageTotal === "bigint" && typeof o.limit === "bigint" && Array.isArray(o.blocks) && (!o.blocks.length || Block.is(o.blocks[0])));
   },
-  isSDK(o: any): o is SearchBlocksResultSDKType {
-    return o && (o.$typeUrl === SearchBlocksResult.typeUrl || typeof o.total_count === "bigint" && typeof o.count === "bigint" && typeof o.page_number === "bigint" && typeof o.page_total === "bigint" && typeof o.limit === "bigint" && Array.isArray(o.blocks) && (!o.blocks.length || Block.isSDK(o.blocks[0])));
-  },
   isAmino(o: any): o is SearchBlocksResultAmino {
     return o && (o.$typeUrl === SearchBlocksResult.typeUrl || typeof o.total_count === "bigint" && typeof o.count === "bigint" && typeof o.page_number === "bigint" && typeof o.page_total === "bigint" && typeof o.limit === "bigint" && Array.isArray(o.blocks) && (!o.blocks.length || Block.isAmino(o.blocks[0])));
   },
@@ -2087,7 +1909,7 @@ export const SearchBlocksResult = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SearchBlocksResult>, I>>(object: I): SearchBlocksResult {
+  fromPartial(object: DeepPartial<SearchBlocksResult>): SearchBlocksResult {
     const message = createBaseSearchBlocksResult();
     message.totalCount = object.totalCount !== undefined && object.totalCount !== null ? BigInt(object.totalCount.toString()) : BigInt(0);
     message.count = object.count !== undefined && object.count !== null ? BigInt(object.count.toString()) : BigInt(0);

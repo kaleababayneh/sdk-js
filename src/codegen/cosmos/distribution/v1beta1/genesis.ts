@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { DecCoin, DecCoinAmino, DecCoinSDKType } from "../../base/v1beta1/coin";
-import { ValidatorAccumulatedCommission, ValidatorAccumulatedCommissionAmino, ValidatorAccumulatedCommissionSDKType, ValidatorHistoricalRewards, ValidatorHistoricalRewardsAmino, ValidatorHistoricalRewardsSDKType, ValidatorCurrentRewards, ValidatorCurrentRewardsAmino, ValidatorCurrentRewardsSDKType, DelegatorStartingInfo, DelegatorStartingInfoAmino, DelegatorStartingInfoSDKType, ValidatorSlashEvent, ValidatorSlashEventAmino, ValidatorSlashEventSDKType, Params, ParamsAmino, ParamsSDKType, FeePool, FeePoolAmino, FeePoolSDKType } from "./distribution";
+import { DecCoin, DecCoinAmino } from "../../base/v1beta1/coin";
+import { ValidatorAccumulatedCommission, ValidatorAccumulatedCommissionAmino, ValidatorHistoricalRewards, ValidatorHistoricalRewardsAmino, ValidatorCurrentRewards, ValidatorCurrentRewardsAmino, DelegatorStartingInfo, DelegatorStartingInfoAmino, ValidatorSlashEvent, ValidatorSlashEventAmino, Params, ParamsAmino, FeePool, FeePoolAmino } from "./distribution";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * DelegatorWithdrawInfo is the address for where distributions rewards are
@@ -39,27 +39,15 @@ export interface DelegatorWithdrawInfoAmino {
   /**
    * delegator_address is the address of the delegator.
    */
-  delegator_address?: string;
+  delegator_address: string;
   /**
    * withdraw_address is the address to withdraw the delegation rewards to.
    */
-  withdraw_address?: string;
+  withdraw_address: string;
 }
 export interface DelegatorWithdrawInfoAminoMsg {
   type: "cosmos-sdk/DelegatorWithdrawInfo";
   value: DelegatorWithdrawInfoAmino;
-}
-/**
- * DelegatorWithdrawInfo is the address for where distributions rewards are
- * withdrawn to by default this struct is only used at genesis to feed in
- * default withdraw addresses.
- * @name DelegatorWithdrawInfoSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.DelegatorWithdrawInfo
- */
-export interface DelegatorWithdrawInfoSDKType {
-  delegator_address: string;
-  withdraw_address: string;
 }
 /**
  * ValidatorOutstandingRewardsRecord is used for import/export via genesis json.
@@ -91,7 +79,7 @@ export interface ValidatorOutstandingRewardsRecordAmino {
   /**
    * validator_address is the address of the validator.
    */
-  validator_address?: string;
+  validator_address: string;
   /**
    * outstanding_rewards represents the outstanding rewards of a validator.
    */
@@ -100,16 +88,6 @@ export interface ValidatorOutstandingRewardsRecordAmino {
 export interface ValidatorOutstandingRewardsRecordAminoMsg {
   type: "cosmos-sdk/ValidatorOutstandingRewardsRecord";
   value: ValidatorOutstandingRewardsRecordAmino;
-}
-/**
- * ValidatorOutstandingRewardsRecord is used for import/export via genesis json.
- * @name ValidatorOutstandingRewardsRecordSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.ValidatorOutstandingRewardsRecord
- */
-export interface ValidatorOutstandingRewardsRecordSDKType {
-  validator_address: string;
-  outstanding_rewards: DecCoinSDKType[];
 }
 /**
  * ValidatorAccumulatedCommissionRecord is used for import / export via genesis
@@ -143,7 +121,7 @@ export interface ValidatorAccumulatedCommissionRecordAmino {
   /**
    * validator_address is the address of the validator.
    */
-  validator_address?: string;
+  validator_address: string;
   /**
    * accumulated is the accumulated commission of a validator.
    */
@@ -152,17 +130,6 @@ export interface ValidatorAccumulatedCommissionRecordAmino {
 export interface ValidatorAccumulatedCommissionRecordAminoMsg {
   type: "cosmos-sdk/ValidatorAccumulatedCommissionRecord";
   value: ValidatorAccumulatedCommissionRecordAmino;
-}
-/**
- * ValidatorAccumulatedCommissionRecord is used for import / export via genesis
- * json.
- * @name ValidatorAccumulatedCommissionRecordSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.ValidatorAccumulatedCommissionRecord
- */
-export interface ValidatorAccumulatedCommissionRecordSDKType {
-  validator_address: string;
-  accumulated: ValidatorAccumulatedCommissionSDKType;
 }
 /**
  * ValidatorHistoricalRewardsRecord is used for import / export via genesis
@@ -200,11 +167,11 @@ export interface ValidatorHistoricalRewardsRecordAmino {
   /**
    * validator_address is the address of the validator.
    */
-  validator_address?: string;
+  validator_address: string;
   /**
    * period defines the period the historical rewards apply to.
    */
-  period?: string;
+  period: string;
   /**
    * rewards defines the historical rewards of a validator.
    */
@@ -213,18 +180,6 @@ export interface ValidatorHistoricalRewardsRecordAmino {
 export interface ValidatorHistoricalRewardsRecordAminoMsg {
   type: "cosmos-sdk/ValidatorHistoricalRewardsRecord";
   value: ValidatorHistoricalRewardsRecordAmino;
-}
-/**
- * ValidatorHistoricalRewardsRecord is used for import / export via genesis
- * json.
- * @name ValidatorHistoricalRewardsRecordSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.ValidatorHistoricalRewardsRecord
- */
-export interface ValidatorHistoricalRewardsRecordSDKType {
-  validator_address: string;
-  period: bigint;
-  rewards: ValidatorHistoricalRewardsSDKType;
 }
 /**
  * ValidatorCurrentRewardsRecord is used for import / export via genesis json.
@@ -256,7 +211,7 @@ export interface ValidatorCurrentRewardsRecordAmino {
   /**
    * validator_address is the address of the validator.
    */
-  validator_address?: string;
+  validator_address: string;
   /**
    * rewards defines the current rewards of a validator.
    */
@@ -265,16 +220,6 @@ export interface ValidatorCurrentRewardsRecordAmino {
 export interface ValidatorCurrentRewardsRecordAminoMsg {
   type: "cosmos-sdk/ValidatorCurrentRewardsRecord";
   value: ValidatorCurrentRewardsRecordAmino;
-}
-/**
- * ValidatorCurrentRewardsRecord is used for import / export via genesis json.
- * @name ValidatorCurrentRewardsRecordSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.ValidatorCurrentRewardsRecord
- */
-export interface ValidatorCurrentRewardsRecordSDKType {
-  validator_address: string;
-  rewards: ValidatorCurrentRewardsSDKType;
 }
 /**
  * DelegatorStartingInfoRecord used for import / export via genesis json.
@@ -310,11 +255,11 @@ export interface DelegatorStartingInfoRecordAmino {
   /**
    * delegator_address is the address of the delegator.
    */
-  delegator_address?: string;
+  delegator_address: string;
   /**
    * validator_address is the address of the validator.
    */
-  validator_address?: string;
+  validator_address: string;
   /**
    * starting_info defines the starting info of a delegator.
    */
@@ -323,17 +268,6 @@ export interface DelegatorStartingInfoRecordAmino {
 export interface DelegatorStartingInfoRecordAminoMsg {
   type: "cosmos-sdk/DelegatorStartingInfoRecord";
   value: DelegatorStartingInfoRecordAmino;
-}
-/**
- * DelegatorStartingInfoRecord used for import / export via genesis json.
- * @name DelegatorStartingInfoRecordSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.DelegatorStartingInfoRecord
- */
-export interface DelegatorStartingInfoRecordSDKType {
-  delegator_address: string;
-  validator_address: string;
-  starting_info: DelegatorStartingInfoSDKType;
 }
 /**
  * ValidatorSlashEventRecord is used for import / export via genesis json.
@@ -373,15 +307,15 @@ export interface ValidatorSlashEventRecordAmino {
   /**
    * validator_address is the address of the validator.
    */
-  validator_address?: string;
+  validator_address: string;
   /**
    * height defines the block height at which the slash event occurred.
    */
-  height?: string;
+  height: string;
   /**
    * period is the period of the slash event.
    */
-  period?: string;
+  period: string;
   /**
    * validator_slash_event describes the slash event.
    */
@@ -390,18 +324,6 @@ export interface ValidatorSlashEventRecordAmino {
 export interface ValidatorSlashEventRecordAminoMsg {
   type: "cosmos-sdk/ValidatorSlashEventRecord";
   value: ValidatorSlashEventRecordAmino;
-}
-/**
- * ValidatorSlashEventRecord is used for import / export via genesis json.
- * @name ValidatorSlashEventRecordSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.ValidatorSlashEventRecord
- */
-export interface ValidatorSlashEventRecordSDKType {
-  validator_address: string;
-  height: bigint;
-  period: bigint;
-  validator_slash_event: ValidatorSlashEventSDKType;
 }
 /**
  * GenesisState defines the distribution module's genesis state.
@@ -477,7 +399,7 @@ export interface GenesisStateAmino {
   /**
    * fee_pool defines the previous proposer at genesis.
    */
-  previous_proposer?: string;
+  previous_proposer: string;
   /**
    * fee_pool defines the outstanding rewards of all validators at genesis.
    */
@@ -507,24 +429,6 @@ export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
 }
-/**
- * GenesisState defines the distribution module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  params: ParamsSDKType;
-  fee_pool: FeePoolSDKType;
-  delegator_withdraw_infos: DelegatorWithdrawInfoSDKType[];
-  previous_proposer: string;
-  outstanding_rewards: ValidatorOutstandingRewardsRecordSDKType[];
-  validator_accumulated_commissions: ValidatorAccumulatedCommissionRecordSDKType[];
-  validator_historical_rewards: ValidatorHistoricalRewardsRecordSDKType[];
-  validator_current_rewards: ValidatorCurrentRewardsRecordSDKType[];
-  delegator_starting_infos: DelegatorStartingInfoRecordSDKType[];
-  validator_slash_events: ValidatorSlashEventRecordSDKType[];
-}
 function createBaseDelegatorWithdrawInfo(): DelegatorWithdrawInfo {
   return {
     delegatorAddress: "",
@@ -544,9 +448,6 @@ export const DelegatorWithdrawInfo = {
   aminoType: "cosmos-sdk/DelegatorWithdrawInfo",
   is(o: any): o is DelegatorWithdrawInfo {
     return o && (o.$typeUrl === DelegatorWithdrawInfo.typeUrl || typeof o.delegatorAddress === "string" && typeof o.withdrawAddress === "string");
-  },
-  isSDK(o: any): o is DelegatorWithdrawInfoSDKType {
-    return o && (o.$typeUrl === DelegatorWithdrawInfo.typeUrl || typeof o.delegator_address === "string" && typeof o.withdraw_address === "string");
   },
   isAmino(o: any): o is DelegatorWithdrawInfoAmino {
     return o && (o.$typeUrl === DelegatorWithdrawInfo.typeUrl || typeof o.delegator_address === "string" && typeof o.withdraw_address === "string");
@@ -580,7 +481,7 @@ export const DelegatorWithdrawInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DelegatorWithdrawInfo>, I>>(object: I): DelegatorWithdrawInfo {
+  fromPartial(object: DeepPartial<DelegatorWithdrawInfo>): DelegatorWithdrawInfo {
     const message = createBaseDelegatorWithdrawInfo();
     message.delegatorAddress = object.delegatorAddress ?? "";
     message.withdrawAddress = object.withdrawAddress ?? "";
@@ -643,9 +544,6 @@ export const ValidatorOutstandingRewardsRecord = {
   is(o: any): o is ValidatorOutstandingRewardsRecord {
     return o && (o.$typeUrl === ValidatorOutstandingRewardsRecord.typeUrl || typeof o.validatorAddress === "string" && Array.isArray(o.outstandingRewards) && (!o.outstandingRewards.length || DecCoin.is(o.outstandingRewards[0])));
   },
-  isSDK(o: any): o is ValidatorOutstandingRewardsRecordSDKType {
-    return o && (o.$typeUrl === ValidatorOutstandingRewardsRecord.typeUrl || typeof o.validator_address === "string" && Array.isArray(o.outstanding_rewards) && (!o.outstanding_rewards.length || DecCoin.isSDK(o.outstanding_rewards[0])));
-  },
   isAmino(o: any): o is ValidatorOutstandingRewardsRecordAmino {
     return o && (o.$typeUrl === ValidatorOutstandingRewardsRecord.typeUrl || typeof o.validator_address === "string" && Array.isArray(o.outstanding_rewards) && (!o.outstanding_rewards.length || DecCoin.isAmino(o.outstanding_rewards[0])));
   },
@@ -678,7 +576,7 @@ export const ValidatorOutstandingRewardsRecord = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorOutstandingRewardsRecord>, I>>(object: I): ValidatorOutstandingRewardsRecord {
+  fromPartial(object: DeepPartial<ValidatorOutstandingRewardsRecord>): ValidatorOutstandingRewardsRecord {
     const message = createBaseValidatorOutstandingRewardsRecord();
     message.validatorAddress = object.validatorAddress ?? "";
     message.outstandingRewards = object.outstandingRewards?.map(e => DecCoin.fromPartial(e)) || [];
@@ -749,9 +647,6 @@ export const ValidatorAccumulatedCommissionRecord = {
   is(o: any): o is ValidatorAccumulatedCommissionRecord {
     return o && (o.$typeUrl === ValidatorAccumulatedCommissionRecord.typeUrl || typeof o.validatorAddress === "string" && ValidatorAccumulatedCommission.is(o.accumulated));
   },
-  isSDK(o: any): o is ValidatorAccumulatedCommissionRecordSDKType {
-    return o && (o.$typeUrl === ValidatorAccumulatedCommissionRecord.typeUrl || typeof o.validator_address === "string" && ValidatorAccumulatedCommission.isSDK(o.accumulated));
-  },
   isAmino(o: any): o is ValidatorAccumulatedCommissionRecordAmino {
     return o && (o.$typeUrl === ValidatorAccumulatedCommissionRecord.typeUrl || typeof o.validator_address === "string" && ValidatorAccumulatedCommission.isAmino(o.accumulated));
   },
@@ -784,7 +679,7 @@ export const ValidatorAccumulatedCommissionRecord = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorAccumulatedCommissionRecord>, I>>(object: I): ValidatorAccumulatedCommissionRecord {
+  fromPartial(object: DeepPartial<ValidatorAccumulatedCommissionRecord>): ValidatorAccumulatedCommissionRecord {
     const message = createBaseValidatorAccumulatedCommissionRecord();
     message.validatorAddress = object.validatorAddress ?? "";
     message.accumulated = object.accumulated !== undefined && object.accumulated !== null ? ValidatorAccumulatedCommission.fromPartial(object.accumulated) : undefined;
@@ -854,9 +749,6 @@ export const ValidatorHistoricalRewardsRecord = {
   is(o: any): o is ValidatorHistoricalRewardsRecord {
     return o && (o.$typeUrl === ValidatorHistoricalRewardsRecord.typeUrl || typeof o.validatorAddress === "string" && typeof o.period === "bigint" && ValidatorHistoricalRewards.is(o.rewards));
   },
-  isSDK(o: any): o is ValidatorHistoricalRewardsRecordSDKType {
-    return o && (o.$typeUrl === ValidatorHistoricalRewardsRecord.typeUrl || typeof o.validator_address === "string" && typeof o.period === "bigint" && ValidatorHistoricalRewards.isSDK(o.rewards));
-  },
   isAmino(o: any): o is ValidatorHistoricalRewardsRecordAmino {
     return o && (o.$typeUrl === ValidatorHistoricalRewardsRecord.typeUrl || typeof o.validator_address === "string" && typeof o.period === "bigint" && ValidatorHistoricalRewards.isAmino(o.rewards));
   },
@@ -895,7 +787,7 @@ export const ValidatorHistoricalRewardsRecord = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorHistoricalRewardsRecord>, I>>(object: I): ValidatorHistoricalRewardsRecord {
+  fromPartial(object: DeepPartial<ValidatorHistoricalRewardsRecord>): ValidatorHistoricalRewardsRecord {
     const message = createBaseValidatorHistoricalRewardsRecord();
     message.validatorAddress = object.validatorAddress ?? "";
     message.period = object.period !== undefined && object.period !== null ? BigInt(object.period.toString()) : BigInt(0);
@@ -968,9 +860,6 @@ export const ValidatorCurrentRewardsRecord = {
   is(o: any): o is ValidatorCurrentRewardsRecord {
     return o && (o.$typeUrl === ValidatorCurrentRewardsRecord.typeUrl || typeof o.validatorAddress === "string" && ValidatorCurrentRewards.is(o.rewards));
   },
-  isSDK(o: any): o is ValidatorCurrentRewardsRecordSDKType {
-    return o && (o.$typeUrl === ValidatorCurrentRewardsRecord.typeUrl || typeof o.validator_address === "string" && ValidatorCurrentRewards.isSDK(o.rewards));
-  },
   isAmino(o: any): o is ValidatorCurrentRewardsRecordAmino {
     return o && (o.$typeUrl === ValidatorCurrentRewardsRecord.typeUrl || typeof o.validator_address === "string" && ValidatorCurrentRewards.isAmino(o.rewards));
   },
@@ -1003,7 +892,7 @@ export const ValidatorCurrentRewardsRecord = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorCurrentRewardsRecord>, I>>(object: I): ValidatorCurrentRewardsRecord {
+  fromPartial(object: DeepPartial<ValidatorCurrentRewardsRecord>): ValidatorCurrentRewardsRecord {
     const message = createBaseValidatorCurrentRewardsRecord();
     message.validatorAddress = object.validatorAddress ?? "";
     message.rewards = object.rewards !== undefined && object.rewards !== null ? ValidatorCurrentRewards.fromPartial(object.rewards) : undefined;
@@ -1072,9 +961,6 @@ export const DelegatorStartingInfoRecord = {
   is(o: any): o is DelegatorStartingInfoRecord {
     return o && (o.$typeUrl === DelegatorStartingInfoRecord.typeUrl || typeof o.delegatorAddress === "string" && typeof o.validatorAddress === "string" && DelegatorStartingInfo.is(o.startingInfo));
   },
-  isSDK(o: any): o is DelegatorStartingInfoRecordSDKType {
-    return o && (o.$typeUrl === DelegatorStartingInfoRecord.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_address === "string" && DelegatorStartingInfo.isSDK(o.starting_info));
-  },
   isAmino(o: any): o is DelegatorStartingInfoRecordAmino {
     return o && (o.$typeUrl === DelegatorStartingInfoRecord.typeUrl || typeof o.delegator_address === "string" && typeof o.validator_address === "string" && DelegatorStartingInfo.isAmino(o.starting_info));
   },
@@ -1113,7 +999,7 @@ export const DelegatorStartingInfoRecord = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DelegatorStartingInfoRecord>, I>>(object: I): DelegatorStartingInfoRecord {
+  fromPartial(object: DeepPartial<DelegatorStartingInfoRecord>): DelegatorStartingInfoRecord {
     const message = createBaseDelegatorStartingInfoRecord();
     message.delegatorAddress = object.delegatorAddress ?? "";
     message.validatorAddress = object.validatorAddress ?? "";
@@ -1188,9 +1074,6 @@ export const ValidatorSlashEventRecord = {
   is(o: any): o is ValidatorSlashEventRecord {
     return o && (o.$typeUrl === ValidatorSlashEventRecord.typeUrl || typeof o.validatorAddress === "string" && typeof o.height === "bigint" && typeof o.period === "bigint" && ValidatorSlashEvent.is(o.validatorSlashEvent));
   },
-  isSDK(o: any): o is ValidatorSlashEventRecordSDKType {
-    return o && (o.$typeUrl === ValidatorSlashEventRecord.typeUrl || typeof o.validator_address === "string" && typeof o.height === "bigint" && typeof o.period === "bigint" && ValidatorSlashEvent.isSDK(o.validator_slash_event));
-  },
   isAmino(o: any): o is ValidatorSlashEventRecordAmino {
     return o && (o.$typeUrl === ValidatorSlashEventRecord.typeUrl || typeof o.validator_address === "string" && typeof o.height === "bigint" && typeof o.period === "bigint" && ValidatorSlashEvent.isAmino(o.validator_slash_event));
   },
@@ -1235,7 +1118,7 @@ export const ValidatorSlashEventRecord = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorSlashEventRecord>, I>>(object: I): ValidatorSlashEventRecord {
+  fromPartial(object: DeepPartial<ValidatorSlashEventRecord>): ValidatorSlashEventRecord {
     const message = createBaseValidatorSlashEventRecord();
     message.validatorAddress = object.validatorAddress ?? "";
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
@@ -1321,9 +1204,6 @@ export const GenesisState = {
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.is(o.params) && FeePool.is(o.feePool) && Array.isArray(o.delegatorWithdrawInfos) && (!o.delegatorWithdrawInfos.length || DelegatorWithdrawInfo.is(o.delegatorWithdrawInfos[0])) && typeof o.previousProposer === "string" && Array.isArray(o.outstandingRewards) && (!o.outstandingRewards.length || ValidatorOutstandingRewardsRecord.is(o.outstandingRewards[0])) && Array.isArray(o.validatorAccumulatedCommissions) && (!o.validatorAccumulatedCommissions.length || ValidatorAccumulatedCommissionRecord.is(o.validatorAccumulatedCommissions[0])) && Array.isArray(o.validatorHistoricalRewards) && (!o.validatorHistoricalRewards.length || ValidatorHistoricalRewardsRecord.is(o.validatorHistoricalRewards[0])) && Array.isArray(o.validatorCurrentRewards) && (!o.validatorCurrentRewards.length || ValidatorCurrentRewardsRecord.is(o.validatorCurrentRewards[0])) && Array.isArray(o.delegatorStartingInfos) && (!o.delegatorStartingInfos.length || DelegatorStartingInfoRecord.is(o.delegatorStartingInfos[0])) && Array.isArray(o.validatorSlashEvents) && (!o.validatorSlashEvents.length || ValidatorSlashEventRecord.is(o.validatorSlashEvents[0])));
   },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Params.isSDK(o.params) && FeePool.isSDK(o.fee_pool) && Array.isArray(o.delegator_withdraw_infos) && (!o.delegator_withdraw_infos.length || DelegatorWithdrawInfo.isSDK(o.delegator_withdraw_infos[0])) && typeof o.previous_proposer === "string" && Array.isArray(o.outstanding_rewards) && (!o.outstanding_rewards.length || ValidatorOutstandingRewardsRecord.isSDK(o.outstanding_rewards[0])) && Array.isArray(o.validator_accumulated_commissions) && (!o.validator_accumulated_commissions.length || ValidatorAccumulatedCommissionRecord.isSDK(o.validator_accumulated_commissions[0])) && Array.isArray(o.validator_historical_rewards) && (!o.validator_historical_rewards.length || ValidatorHistoricalRewardsRecord.isSDK(o.validator_historical_rewards[0])) && Array.isArray(o.validator_current_rewards) && (!o.validator_current_rewards.length || ValidatorCurrentRewardsRecord.isSDK(o.validator_current_rewards[0])) && Array.isArray(o.delegator_starting_infos) && (!o.delegator_starting_infos.length || DelegatorStartingInfoRecord.isSDK(o.delegator_starting_infos[0])) && Array.isArray(o.validator_slash_events) && (!o.validator_slash_events.length || ValidatorSlashEventRecord.isSDK(o.validator_slash_events[0])));
-  },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.isAmino(o.params) && FeePool.isAmino(o.fee_pool) && Array.isArray(o.delegator_withdraw_infos) && (!o.delegator_withdraw_infos.length || DelegatorWithdrawInfo.isAmino(o.delegator_withdraw_infos[0])) && typeof o.previous_proposer === "string" && Array.isArray(o.outstanding_rewards) && (!o.outstanding_rewards.length || ValidatorOutstandingRewardsRecord.isAmino(o.outstanding_rewards[0])) && Array.isArray(o.validator_accumulated_commissions) && (!o.validator_accumulated_commissions.length || ValidatorAccumulatedCommissionRecord.isAmino(o.validator_accumulated_commissions[0])) && Array.isArray(o.validator_historical_rewards) && (!o.validator_historical_rewards.length || ValidatorHistoricalRewardsRecord.isAmino(o.validator_historical_rewards[0])) && Array.isArray(o.validator_current_rewards) && (!o.validator_current_rewards.length || ValidatorCurrentRewardsRecord.isAmino(o.validator_current_rewards[0])) && Array.isArray(o.delegator_starting_infos) && (!o.delegator_starting_infos.length || DelegatorStartingInfoRecord.isAmino(o.delegator_starting_infos[0])) && Array.isArray(o.validator_slash_events) && (!o.validator_slash_events.length || ValidatorSlashEventRecord.isAmino(o.validator_slash_events[0])));
   },
@@ -1404,7 +1284,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     message.feePool = object.feePool !== undefined && object.feePool !== null ? FeePool.fromPartial(object.feePool) : undefined;

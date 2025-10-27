@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { ConsensusParams, ConsensusParamsAmino, ConsensusParamsSDKType } from "../../../tendermint/types/params";
+import { ConsensusParams, ConsensusParamsAmino } from "../../../tendermint/types/params";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryParamsRequest defines the request type for querying x/consensus parameters.
@@ -26,13 +26,6 @@ export interface QueryParamsRequestAminoMsg {
   type: "cosmos-sdk/QueryParamsRequest";
   value: QueryParamsRequestAmino;
 }
-/**
- * QueryParamsRequest defines the request type for querying x/consensus parameters.
- * @name QueryParamsRequestSDKType
- * @package cosmos.consensus.v1
- * @see proto type: cosmos.consensus.v1.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {}
 /**
  * QueryParamsResponse defines the response type for querying x/consensus parameters.
  * @name QueryParamsResponse
@@ -69,15 +62,6 @@ export interface QueryParamsResponseAminoMsg {
   type: "cosmos-sdk/QueryParamsResponse";
   value: QueryParamsResponseAmino;
 }
-/**
- * QueryParamsResponse defines the response type for querying x/consensus parameters.
- * @name QueryParamsResponseSDKType
- * @package cosmos.consensus.v1
- * @see proto type: cosmos.consensus.v1.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  params?: ConsensusParamsSDKType;
-}
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
 }
@@ -91,9 +75,6 @@ export const QueryParamsRequest = {
   typeUrl: "/cosmos.consensus.v1.QueryParamsRequest",
   aminoType: "cosmos-sdk/QueryParamsRequest",
   is(o: any): o is QueryParamsRequest {
-    return o && o.$typeUrl === QueryParamsRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
   isAmino(o: any): o is QueryParamsRequestAmino {
@@ -116,7 +97,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(_: I): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -168,9 +149,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && o.$typeUrl === QueryParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && o.$typeUrl === QueryParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && o.$typeUrl === QueryParamsResponse.typeUrl;
   },
@@ -197,7 +175,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? ConsensusParams.fromPartial(object.params) : undefined;
     return message;

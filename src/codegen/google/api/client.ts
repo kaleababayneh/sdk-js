@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
 import { LaunchStage } from "./launch_stage";
-import { Duration, DurationAmino, DurationSDKType } from "../protobuf/duration";
+import { Duration, DurationAmino } from "../protobuf/duration";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact, isSet } from "../../helpers";
+import { DeepPartial, isSet } from "../../helpers";
 /**
  * The organization for which the client libraries are being published.
  * Affects the url where generated docs are published, etc.
@@ -28,7 +28,6 @@ export enum ClientLibraryOrganization {
   GENERATIVE_AI = 7,
   UNRECOGNIZED = -1,
 }
-export const ClientLibraryOrganizationSDKType = ClientLibraryOrganization;
 export const ClientLibraryOrganizationAmino = ClientLibraryOrganization;
 export function clientLibraryOrganizationFromJSON(object: any): ClientLibraryOrganization {
   switch (object) {
@@ -101,7 +100,6 @@ export enum ClientLibraryDestination {
   PACKAGE_MANAGER = 20,
   UNRECOGNIZED = -1,
 }
-export const ClientLibraryDestinationSDKType = ClientLibraryDestination;
 export const ClientLibraryDestinationAmino = ClientLibraryDestination;
 export function clientLibraryDestinationFromJSON(object: any): ClientLibraryDestination {
   switch (object) {
@@ -171,11 +169,11 @@ export interface CommonLanguageSettingsAmino {
    * https://cloud.google.com/nodejs/docs/reference/asset/latest
    * @deprecated
    */
-  reference_docs_uri?: string;
+  reference_docs_uri: string;
   /**
    * The destination where API teams want this client library to be published.
    */
-  destinations?: ClientLibraryDestination[];
+  destinations: ClientLibraryDestination[];
   /**
    * Configuration for which RPCs should be generated in the GAPIC client.
    */
@@ -184,20 +182,6 @@ export interface CommonLanguageSettingsAmino {
 export interface CommonLanguageSettingsAminoMsg {
   type: "/google.api.CommonLanguageSettings";
   value: CommonLanguageSettingsAmino;
-}
-/**
- * Required information for every language.
- * @name CommonLanguageSettingsSDKType
- * @package google.api
- * @see proto type: google.api.CommonLanguageSettings
- */
-export interface CommonLanguageSettingsSDKType {
-  /**
-   * @deprecated
-   */
-  reference_docs_uri: string;
-  destinations: ClientLibraryDestination[];
-  selective_gapic_generation?: SelectiveGapicGenerationSDKType;
 }
 /**
  * Details about how and where to publish client libraries.
@@ -270,16 +254,16 @@ export interface ClientLibrarySettingsAmino {
    * package for the API, ending in the version element.
    * Examples: "google.cloud.speech.v1" and "google.spanner.admin.database.v1".
    */
-  version?: string;
+  version: string;
   /**
    * Launch stage of this version of the API.
    */
-  launch_stage?: LaunchStage;
+  launch_stage: LaunchStage;
   /**
    * When using transport=rest, the client request will encode enums as
    * numbers rather than strings.
    */
-  rest_numeric_enums?: boolean;
+  rest_numeric_enums: boolean;
   /**
    * Settings for legacy Java features, supported in the Service YAML.
    */
@@ -316,25 +300,6 @@ export interface ClientLibrarySettingsAmino {
 export interface ClientLibrarySettingsAminoMsg {
   type: "/google.api.ClientLibrarySettings";
   value: ClientLibrarySettingsAmino;
-}
-/**
- * Details about how and where to publish client libraries.
- * @name ClientLibrarySettingsSDKType
- * @package google.api
- * @see proto type: google.api.ClientLibrarySettings
- */
-export interface ClientLibrarySettingsSDKType {
-  version: string;
-  launch_stage: LaunchStage;
-  rest_numeric_enums: boolean;
-  java_settings?: JavaSettingsSDKType;
-  cpp_settings?: CppSettingsSDKType;
-  php_settings?: PhpSettingsSDKType;
-  python_settings?: PythonSettingsSDKType;
-  node_settings?: NodeSettingsSDKType;
-  dotnet_settings?: DotnetSettingsSDKType;
-  ruby_settings?: RubySettingsSDKType;
-  go_settings?: GoSettingsSDKType;
 }
 /**
  * This message configures the settings for publishing [Google Cloud Client
@@ -418,82 +383,61 @@ export interface PublishingAmino {
    * A list of API method settings, e.g. the behavior for methods that use the
    * long-running operation pattern.
    */
-  method_settings?: MethodSettingsAmino[];
+  method_settings: MethodSettingsAmino[];
   /**
    * Link to a *public* URI where users can report issues.  Example:
    * https://issuetracker.google.com/issues/new?component=190865&template=1161103
    */
-  new_issue_uri?: string;
+  new_issue_uri: string;
   /**
    * Link to product home page.  Example:
    * https://cloud.google.com/asset-inventory/docs/overview
    */
-  documentation_uri?: string;
+  documentation_uri: string;
   /**
    * Used as a tracking tag when collecting data about the APIs developer
    * relations artifacts like docs, packages delivered to package managers,
    * etc.  Example: "speech".
    */
-  api_short_name?: string;
+  api_short_name: string;
   /**
    * GitHub label to apply to issues and pull requests opened for this API.
    */
-  github_label?: string;
+  github_label: string;
   /**
    * GitHub teams to be added to CODEOWNERS in the directory in GitHub
    * containing source code for the client libraries for this API.
    */
-  codeowner_github_teams?: string[];
+  codeowner_github_teams: string[];
   /**
    * A prefix used in sample code when demarking regions to be included in
    * documentation.
    */
-  doc_tag_prefix?: string;
+  doc_tag_prefix: string;
   /**
    * For whom the client library is being published.
    */
-  organization?: ClientLibraryOrganization;
+  organization: ClientLibraryOrganization;
   /**
    * Client library settings.  If the same version string appears multiple
    * times in this list, then the last one wins.  Settings from earlier
    * settings with the same version string are discarded.
    */
-  library_settings?: ClientLibrarySettingsAmino[];
+  library_settings: ClientLibrarySettingsAmino[];
   /**
    * Optional link to proto reference documentation.  Example:
    * https://cloud.google.com/pubsub/lite/docs/reference/rpc
    */
-  proto_reference_documentation_uri?: string;
+  proto_reference_documentation_uri: string;
   /**
    * Optional link to REST reference documentation.  Example:
    * https://cloud.google.com/pubsub/lite/docs/reference/rest
    */
-  rest_reference_documentation_uri?: string;
+  rest_reference_documentation_uri: string;
 }
 export interface PublishingAminoMsg {
   type: "/google.api.Publishing";
   value: PublishingAmino;
-}
-/**
- * This message configures the settings for publishing [Google Cloud Client
- * libraries](https://cloud.google.com/apis/docs/cloud-client-libraries)
- * generated from the service config.
- * @name PublishingSDKType
- * @package google.api
- * @see proto type: google.api.Publishing
- */
-export interface PublishingSDKType {
-  method_settings: MethodSettingsSDKType[];
-  new_issue_uri: string;
-  documentation_uri: string;
-  api_short_name: string;
-  github_label: string;
-  codeowner_github_teams: string[];
-  doc_tag_prefix: string;
-  organization: ClientLibraryOrganization;
-  library_settings: ClientLibrarySettingsSDKType[];
-  proto_reference_documentation_uri: string;
-  rest_reference_documentation_uri: string;
 }
 /**
  * @name JavaSettings_ServiceClassNamesEntry
@@ -514,21 +458,12 @@ export interface JavaSettings_ServiceClassNamesEntryProtoMsg {
  * @see proto type: google.api.JavaSettings_ServiceClassNamesEntry
  */
 export interface JavaSettings_ServiceClassNamesEntryAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
 }
 export interface JavaSettings_ServiceClassNamesEntryAminoMsg {
   type: string;
   value: JavaSettings_ServiceClassNamesEntryAmino;
-}
-/**
- * @name JavaSettings_ServiceClassNamesEntrySDKType
- * @package google.api
- * @see proto type: google.api.undefined
- */
-export interface JavaSettings_ServiceClassNamesEntrySDKType {
-  key: string;
-  value: string;
 }
 /**
  * Settings for Java client libraries.
@@ -599,7 +534,7 @@ export interface JavaSettingsAmino {
    *    java_settings:
    *      library_package: com.google.cloud.pubsub.v1
    */
-  library_package?: string;
+  library_package: string;
   /**
    * Configure the Java class name to use instead of the service's for its
    * corresponding generated GAPIC client. Keys are fully-qualified
@@ -616,7 +551,7 @@ export interface JavaSettingsAmino {
    *        - google.pubsub.v1.Publisher: TopicAdmin
    *        - google.pubsub.v1.Subscriber: SubscriptionAdmin
    */
-  service_class_names?: {
+  service_class_names: {
     [key: string]: string;
   };
   /**
@@ -627,19 +562,6 @@ export interface JavaSettingsAmino {
 export interface JavaSettingsAminoMsg {
   type: "/google.api.JavaSettings";
   value: JavaSettingsAmino;
-}
-/**
- * Settings for Java client libraries.
- * @name JavaSettingsSDKType
- * @package google.api
- * @see proto type: google.api.JavaSettings
- */
-export interface JavaSettingsSDKType {
-  library_package: string;
-  service_class_names: {
-    [key: string]: string;
-  };
-  common?: CommonLanguageSettingsSDKType;
 }
 /**
  * Settings for C++ client libraries.
@@ -674,15 +596,6 @@ export interface CppSettingsAminoMsg {
   value: CppSettingsAmino;
 }
 /**
- * Settings for C++ client libraries.
- * @name CppSettingsSDKType
- * @package google.api
- * @see proto type: google.api.CppSettings
- */
-export interface CppSettingsSDKType {
-  common?: CommonLanguageSettingsSDKType;
-}
-/**
  * Settings for Php client libraries.
  * @name PhpSettings
  * @package google.api
@@ -713,15 +626,6 @@ export interface PhpSettingsAmino {
 export interface PhpSettingsAminoMsg {
   type: "/google.api.PhpSettings";
   value: PhpSettingsAmino;
-}
-/**
- * Settings for Php client libraries.
- * @name PhpSettingsSDKType
- * @package google.api
- * @see proto type: google.api.PhpSettings
- */
-export interface PhpSettingsSDKType {
-  common?: CommonLanguageSettingsSDKType;
 }
 /**
  * Settings for Python client libraries.
@@ -762,16 +666,6 @@ export interface PythonSettingsAmino {
 export interface PythonSettingsAminoMsg {
   type: "/google.api.PythonSettings";
   value: PythonSettingsAmino;
-}
-/**
- * Settings for Python client libraries.
- * @name PythonSettingsSDKType
- * @package google.api
- * @see proto type: google.api.PythonSettings
- */
-export interface PythonSettingsSDKType {
-  common?: CommonLanguageSettingsSDKType;
-  experimental_features?: PythonSettings_ExperimentalFeaturesSDKType;
 }
 /**
  * Experimental features to be included during client library generation.
@@ -823,38 +717,25 @@ export interface PythonSettings_ExperimentalFeaturesAmino {
    * This feature will be enabled by default 1 month after launching the
    * feature in preview packages.
    */
-  rest_async_io_enabled?: boolean;
+  rest_async_io_enabled: boolean;
   /**
    * Enables generation of protobuf code using new types that are more
    * Pythonic which are included in `protobuf>=5.29.x`. This feature will be
    * enabled by default 1 month after launching the feature in preview
    * packages.
    */
-  protobuf_pythonic_types_enabled?: boolean;
+  protobuf_pythonic_types_enabled: boolean;
   /**
    * Disables generation of an unversioned Python package for this client
    * library. This means that the module names will need to be versioned in
    * import statements. For example `import google.cloud.library_v2` instead
    * of `import google.cloud.library`.
    */
-  unversioned_package_disabled?: boolean;
+  unversioned_package_disabled: boolean;
 }
 export interface PythonSettings_ExperimentalFeaturesAminoMsg {
   type: "/google.api.ExperimentalFeatures";
   value: PythonSettings_ExperimentalFeaturesAmino;
-}
-/**
- * Experimental features to be included during client library generation.
- * These fields will be deprecated once the feature graduates and is enabled
- * by default.
- * @name PythonSettings_ExperimentalFeaturesSDKType
- * @package google.api
- * @see proto type: google.api.ExperimentalFeatures
- */
-export interface PythonSettings_ExperimentalFeaturesSDKType {
-  rest_async_io_enabled: boolean;
-  protobuf_pythonic_types_enabled: boolean;
-  unversioned_package_disabled: boolean;
 }
 /**
  * Settings for Node client libraries.
@@ -889,15 +770,6 @@ export interface NodeSettingsAminoMsg {
   value: NodeSettingsAmino;
 }
 /**
- * Settings for Node client libraries.
- * @name NodeSettingsSDKType
- * @package google.api
- * @see proto type: google.api.NodeSettings
- */
-export interface NodeSettingsSDKType {
-  common?: CommonLanguageSettingsSDKType;
-}
-/**
  * @name DotnetSettings_RenamedServicesEntry
  * @package google.api
  * @see proto type: google.api.undefined
@@ -916,21 +788,12 @@ export interface DotnetSettings_RenamedServicesEntryProtoMsg {
  * @see proto type: google.api.DotnetSettings_RenamedServicesEntry
  */
 export interface DotnetSettings_RenamedServicesEntryAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
 }
 export interface DotnetSettings_RenamedServicesEntryAminoMsg {
   type: string;
   value: DotnetSettings_RenamedServicesEntryAmino;
-}
-/**
- * @name DotnetSettings_RenamedServicesEntrySDKType
- * @package google.api
- * @see proto type: google.api.undefined
- */
-export interface DotnetSettings_RenamedServicesEntrySDKType {
-  key: string;
-  value: string;
 }
 /**
  * @name DotnetSettings_RenamedResourcesEntry
@@ -951,21 +814,12 @@ export interface DotnetSettings_RenamedResourcesEntryProtoMsg {
  * @see proto type: google.api.DotnetSettings_RenamedResourcesEntry
  */
 export interface DotnetSettings_RenamedResourcesEntryAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
 }
 export interface DotnetSettings_RenamedResourcesEntryAminoMsg {
   type: string;
   value: DotnetSettings_RenamedResourcesEntryAmino;
-}
-/**
- * @name DotnetSettings_RenamedResourcesEntrySDKType
- * @package google.api
- * @see proto type: google.api.undefined
- */
-export interface DotnetSettings_RenamedResourcesEntrySDKType {
-  key: string;
-  value: string;
 }
 /**
  * Settings for Dotnet client libraries.
@@ -1040,7 +894,7 @@ export interface DotnetSettingsAmino {
    * fully-qualified.)
    * Example: Subscriber to SubscriberServiceApi.
    */
-  renamed_services?: {
+  renamed_services: {
     [key: string]: string;
   };
   /**
@@ -1050,7 +904,7 @@ export interface DotnetSettingsAmino {
    * Example entry:
    * "datalabeling.googleapis.com/Dataset": "DataLabelingDataset"
    */
-  renamed_resources?: {
+  renamed_resources: {
     [key: string]: string;
   };
   /**
@@ -1060,40 +914,22 @@ export interface DotnetSettingsAmino {
    * the common Location resources.
    * Example entry: "documentai.googleapis.com/Location"
    */
-  ignored_resources?: string[];
+  ignored_resources: string[];
   /**
    * Namespaces which must be aliased in snippets due to
    * a known (but non-generator-predictable) naming collision
    */
-  forced_namespace_aliases?: string[];
+  forced_namespace_aliases: string[];
   /**
    * Method signatures (in the form "service.method(signature)")
    * which are provided separately, so shouldn't be generated.
    * Snippets *calling* these methods are still generated, however.
    */
-  handwritten_signatures?: string[];
+  handwritten_signatures: string[];
 }
 export interface DotnetSettingsAminoMsg {
   type: "/google.api.DotnetSettings";
   value: DotnetSettingsAmino;
-}
-/**
- * Settings for Dotnet client libraries.
- * @name DotnetSettingsSDKType
- * @package google.api
- * @see proto type: google.api.DotnetSettings
- */
-export interface DotnetSettingsSDKType {
-  common?: CommonLanguageSettingsSDKType;
-  renamed_services: {
-    [key: string]: string;
-  };
-  renamed_resources: {
-    [key: string]: string;
-  };
-  ignored_resources: string[];
-  forced_namespace_aliases: string[];
-  handwritten_signatures: string[];
 }
 /**
  * Settings for Ruby client libraries.
@@ -1128,15 +964,6 @@ export interface RubySettingsAminoMsg {
   value: RubySettingsAmino;
 }
 /**
- * Settings for Ruby client libraries.
- * @name RubySettingsSDKType
- * @package google.api
- * @see proto type: google.api.RubySettings
- */
-export interface RubySettingsSDKType {
-  common?: CommonLanguageSettingsSDKType;
-}
-/**
  * @name GoSettings_RenamedServicesEntry
  * @package google.api
  * @see proto type: google.api.undefined
@@ -1155,21 +982,12 @@ export interface GoSettings_RenamedServicesEntryProtoMsg {
  * @see proto type: google.api.GoSettings_RenamedServicesEntry
  */
 export interface GoSettings_RenamedServicesEntryAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
 }
 export interface GoSettings_RenamedServicesEntryAminoMsg {
   type: string;
   value: GoSettings_RenamedServicesEntryAmino;
-}
-/**
- * @name GoSettings_RenamedServicesEntrySDKType
- * @package google.api
- * @see proto type: google.api.undefined
- */
-export interface GoSettings_RenamedServicesEntrySDKType {
-  key: string;
-  value: string;
 }
 /**
  * Settings for Go client libraries.
@@ -1221,25 +1039,13 @@ export interface GoSettingsAmino {
    *     renamed_services:
    *       Publisher: TopicAdmin
    */
-  renamed_services?: {
+  renamed_services: {
     [key: string]: string;
   };
 }
 export interface GoSettingsAminoMsg {
   type: "/google.api.GoSettings";
   value: GoSettingsAmino;
-}
-/**
- * Settings for Go client libraries.
- * @name GoSettingsSDKType
- * @package google.api
- * @see proto type: google.api.GoSettings
- */
-export interface GoSettingsSDKType {
-  common?: CommonLanguageSettingsSDKType;
-  renamed_services: {
-    [key: string]: string;
-  };
 }
 /**
  * Describes the generator configuration for a method.
@@ -1314,7 +1120,7 @@ export interface MethodSettingsAmino {
    *      - selector: google.storage.control.v2.StorageControl.CreateFolder
    *        # method settings for CreateFolder...
    */
-  selector?: string;
+  selector: string;
   /**
    * Describes settings to use for long-running operations when generating
    * API methods for RPCs. Complements RPCs that use the annotations in
@@ -1345,22 +1151,11 @@ export interface MethodSettingsAmino {
    *        auto_populated_fields:
    *        - request_id
    */
-  auto_populated_fields?: string[];
+  auto_populated_fields: string[];
 }
 export interface MethodSettingsAminoMsg {
   type: "/google.api.MethodSettings";
   value: MethodSettingsAmino;
-}
-/**
- * Describes the generator configuration for a method.
- * @name MethodSettingsSDKType
- * @package google.api
- * @see proto type: google.api.MethodSettings
- */
-export interface MethodSettingsSDKType {
-  selector: string;
-  long_running?: MethodSettings_LongRunningSDKType;
-  auto_populated_fields: string[];
 }
 /**
  * Describes settings to use when generating API methods that use the
@@ -1420,7 +1215,7 @@ export interface MethodSettings_LongRunningAmino {
    * reaches max_poll_delay.
    * Default value: 1.5.
    */
-  poll_delay_multiplier?: number;
+  poll_delay_multiplier: number;
   /**
    * Maximum time between two subsequent poll requests.
    * Default value: 45 seconds.
@@ -1435,22 +1230,6 @@ export interface MethodSettings_LongRunningAmino {
 export interface MethodSettings_LongRunningAminoMsg {
   type: "/google.api.LongRunning";
   value: MethodSettings_LongRunningAmino;
-}
-/**
- * Describes settings to use when generating API methods that use the
- * long-running operation pattern.
- * All default values below are from those used in the client library
- * generators (e.g.
- * [Java](https://github.com/googleapis/gapic-generator-java/blob/04c2faa191a9b5a10b92392fe8482279c4404803/src/main/java/com/google/api/generator/gapic/composer/common/RetrySettingsComposer.java)).
- * @name MethodSettings_LongRunningSDKType
- * @package google.api
- * @see proto type: google.api.LongRunning
- */
-export interface MethodSettings_LongRunningSDKType {
-  initial_poll_delay?: DurationSDKType;
-  poll_delay_multiplier: number;
-  max_poll_delay?: DurationSDKType;
-  total_poll_timeout?: DurationSDKType;
 }
 /**
  * This message is used to configure the generation of a subset of the RPCs in
@@ -1491,7 +1270,7 @@ export interface SelectiveGapicGenerationAmino {
    * An allowlist of the fully qualified names of RPCs that should be included
    * on public client surfaces.
    */
-  methods?: string[];
+  methods: string[];
   /**
    * Setting this to true indicates to the client generators that methods
    * that would be excluded from the generation should instead be generated
@@ -1500,22 +1279,11 @@ export interface SelectiveGapicGenerationAmino {
    * implementations to decide. Some examples may be: added annotations,
    * obfuscated identifiers, or other language idiomatic patterns.
    */
-  generate_omitted_as_internal?: boolean;
+  generate_omitted_as_internal: boolean;
 }
 export interface SelectiveGapicGenerationAminoMsg {
   type: "/google.api.SelectiveGapicGeneration";
   value: SelectiveGapicGenerationAmino;
-}
-/**
- * This message is used to configure the generation of a subset of the RPCs in
- * a service for client libraries.
- * @name SelectiveGapicGenerationSDKType
- * @package google.api
- * @see proto type: google.api.SelectiveGapicGeneration
- */
-export interface SelectiveGapicGenerationSDKType {
-  methods: string[];
-  generate_omitted_as_internal: boolean;
 }
 function createBaseCommonLanguageSettings(): CommonLanguageSettings {
   return {
@@ -1534,9 +1302,6 @@ export const CommonLanguageSettings = {
   typeUrl: "/google.api.CommonLanguageSettings",
   is(o: any): o is CommonLanguageSettings {
     return o && (o.$typeUrl === CommonLanguageSettings.typeUrl || typeof o.referenceDocsUri === "string" && Array.isArray(o.destinations));
-  },
-  isSDK(o: any): o is CommonLanguageSettingsSDKType {
-    return o && (o.$typeUrl === CommonLanguageSettings.typeUrl || typeof o.reference_docs_uri === "string" && Array.isArray(o.destinations));
   },
   isAmino(o: any): o is CommonLanguageSettingsAmino {
     return o && (o.$typeUrl === CommonLanguageSettings.typeUrl || typeof o.reference_docs_uri === "string" && Array.isArray(o.destinations));
@@ -1585,7 +1350,7 @@ export const CommonLanguageSettings = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CommonLanguageSettings>, I>>(object: I): CommonLanguageSettings {
+  fromPartial(object: DeepPartial<CommonLanguageSettings>): CommonLanguageSettings {
     const message = createBaseCommonLanguageSettings();
     message.referenceDocsUri = object.referenceDocsUri ?? "";
     message.destinations = object.destinations?.map(e => e) || [];
@@ -1661,9 +1426,6 @@ export const ClientLibrarySettings = {
   typeUrl: "/google.api.ClientLibrarySettings",
   is(o: any): o is ClientLibrarySettings {
     return o && (o.$typeUrl === ClientLibrarySettings.typeUrl || typeof o.version === "string" && isSet(o.launchStage) && typeof o.restNumericEnums === "boolean");
-  },
-  isSDK(o: any): o is ClientLibrarySettingsSDKType {
-    return o && (o.$typeUrl === ClientLibrarySettings.typeUrl || typeof o.version === "string" && isSet(o.launch_stage) && typeof o.rest_numeric_enums === "boolean");
   },
   isAmino(o: any): o is ClientLibrarySettingsAmino {
     return o && (o.$typeUrl === ClientLibrarySettings.typeUrl || typeof o.version === "string" && isSet(o.launch_stage) && typeof o.rest_numeric_enums === "boolean");
@@ -1751,7 +1513,7 @@ export const ClientLibrarySettings = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ClientLibrarySettings>, I>>(object: I): ClientLibrarySettings {
+  fromPartial(object: DeepPartial<ClientLibrarySettings>): ClientLibrarySettings {
     const message = createBaseClientLibrarySettings();
     message.version = object.version ?? "";
     message.launchStage = object.launchStage ?? 0;
@@ -1875,9 +1637,6 @@ export const Publishing = {
   is(o: any): o is Publishing {
     return o && (o.$typeUrl === Publishing.typeUrl || Array.isArray(o.methodSettings) && (!o.methodSettings.length || MethodSettings.is(o.methodSettings[0])) && typeof o.newIssueUri === "string" && typeof o.documentationUri === "string" && typeof o.apiShortName === "string" && typeof o.githubLabel === "string" && Array.isArray(o.codeownerGithubTeams) && (!o.codeownerGithubTeams.length || typeof o.codeownerGithubTeams[0] === "string") && typeof o.docTagPrefix === "string" && isSet(o.organization) && Array.isArray(o.librarySettings) && (!o.librarySettings.length || ClientLibrarySettings.is(o.librarySettings[0])) && typeof o.protoReferenceDocumentationUri === "string" && typeof o.restReferenceDocumentationUri === "string");
   },
-  isSDK(o: any): o is PublishingSDKType {
-    return o && (o.$typeUrl === Publishing.typeUrl || Array.isArray(o.method_settings) && (!o.method_settings.length || MethodSettings.isSDK(o.method_settings[0])) && typeof o.new_issue_uri === "string" && typeof o.documentation_uri === "string" && typeof o.api_short_name === "string" && typeof o.github_label === "string" && Array.isArray(o.codeowner_github_teams) && (!o.codeowner_github_teams.length || typeof o.codeowner_github_teams[0] === "string") && typeof o.doc_tag_prefix === "string" && isSet(o.organization) && Array.isArray(o.library_settings) && (!o.library_settings.length || ClientLibrarySettings.isSDK(o.library_settings[0])) && typeof o.proto_reference_documentation_uri === "string" && typeof o.rest_reference_documentation_uri === "string");
-  },
   isAmino(o: any): o is PublishingAmino {
     return o && (o.$typeUrl === Publishing.typeUrl || Array.isArray(o.method_settings) && (!o.method_settings.length || MethodSettings.isAmino(o.method_settings[0])) && typeof o.new_issue_uri === "string" && typeof o.documentation_uri === "string" && typeof o.api_short_name === "string" && typeof o.github_label === "string" && Array.isArray(o.codeowner_github_teams) && (!o.codeowner_github_teams.length || typeof o.codeowner_github_teams[0] === "string") && typeof o.doc_tag_prefix === "string" && isSet(o.organization) && Array.isArray(o.library_settings) && (!o.library_settings.length || ClientLibrarySettings.isAmino(o.library_settings[0])) && typeof o.proto_reference_documentation_uri === "string" && typeof o.rest_reference_documentation_uri === "string");
   },
@@ -1964,7 +1723,7 @@ export const Publishing = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Publishing>, I>>(object: I): Publishing {
+  fromPartial(object: DeepPartial<Publishing>): Publishing {
     const message = createBasePublishing();
     message.methodSettings = object.methodSettings?.map(e => MethodSettings.fromPartial(e)) || [];
     message.newIssueUri = object.newIssueUri ?? "";
@@ -2101,7 +1860,7 @@ export const JavaSettings_ServiceClassNamesEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<JavaSettings_ServiceClassNamesEntry>, I>>(object: I): JavaSettings_ServiceClassNamesEntry {
+  fromPartial(object: DeepPartial<JavaSettings_ServiceClassNamesEntry>): JavaSettings_ServiceClassNamesEntry {
     const message = createBaseJavaSettings_ServiceClassNamesEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
@@ -2152,9 +1911,6 @@ export const JavaSettings = {
   is(o: any): o is JavaSettings {
     return o && (o.$typeUrl === JavaSettings.typeUrl || typeof o.libraryPackage === "string" && isSet(o.serviceClassNames));
   },
-  isSDK(o: any): o is JavaSettingsSDKType {
-    return o && (o.$typeUrl === JavaSettings.typeUrl || typeof o.library_package === "string" && isSet(o.service_class_names));
-  },
   isAmino(o: any): o is JavaSettingsAmino {
     return o && (o.$typeUrl === JavaSettings.typeUrl || typeof o.library_package === "string" && isSet(o.service_class_names));
   },
@@ -2199,7 +1955,7 @@ export const JavaSettings = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<JavaSettings>, I>>(object: I): JavaSettings {
+  fromPartial(object: DeepPartial<JavaSettings>): JavaSettings {
     const message = createBaseJavaSettings();
     message.libraryPackage = object.libraryPackage ?? "";
     message.serviceClassNames = Object.entries(object.serviceClassNames ?? {}).reduce<{
@@ -2281,9 +2037,6 @@ export const CppSettings = {
   is(o: any): o is CppSettings {
     return o && o.$typeUrl === CppSettings.typeUrl;
   },
-  isSDK(o: any): o is CppSettingsSDKType {
-    return o && o.$typeUrl === CppSettings.typeUrl;
-  },
   isAmino(o: any): o is CppSettingsAmino {
     return o && o.$typeUrl === CppSettings.typeUrl;
   },
@@ -2310,7 +2063,7 @@ export const CppSettings = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CppSettings>, I>>(object: I): CppSettings {
+  fromPartial(object: DeepPartial<CppSettings>): CppSettings {
     const message = createBaseCppSettings();
     message.common = object.common !== undefined && object.common !== null ? CommonLanguageSettings.fromPartial(object.common) : undefined;
     return message;
@@ -2365,9 +2118,6 @@ export const PhpSettings = {
   is(o: any): o is PhpSettings {
     return o && o.$typeUrl === PhpSettings.typeUrl;
   },
-  isSDK(o: any): o is PhpSettingsSDKType {
-    return o && o.$typeUrl === PhpSettings.typeUrl;
-  },
   isAmino(o: any): o is PhpSettingsAmino {
     return o && o.$typeUrl === PhpSettings.typeUrl;
   },
@@ -2394,7 +2144,7 @@ export const PhpSettings = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PhpSettings>, I>>(object: I): PhpSettings {
+  fromPartial(object: DeepPartial<PhpSettings>): PhpSettings {
     const message = createBasePhpSettings();
     message.common = object.common !== undefined && object.common !== null ? CommonLanguageSettings.fromPartial(object.common) : undefined;
     return message;
@@ -2450,9 +2200,6 @@ export const PythonSettings = {
   is(o: any): o is PythonSettings {
     return o && o.$typeUrl === PythonSettings.typeUrl;
   },
-  isSDK(o: any): o is PythonSettingsSDKType {
-    return o && o.$typeUrl === PythonSettings.typeUrl;
-  },
   isAmino(o: any): o is PythonSettingsAmino {
     return o && o.$typeUrl === PythonSettings.typeUrl;
   },
@@ -2485,7 +2232,7 @@ export const PythonSettings = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PythonSettings>, I>>(object: I): PythonSettings {
+  fromPartial(object: DeepPartial<PythonSettings>): PythonSettings {
     const message = createBasePythonSettings();
     message.common = object.common !== undefined && object.common !== null ? CommonLanguageSettings.fromPartial(object.common) : undefined;
     message.experimentalFeatures = object.experimentalFeatures !== undefined && object.experimentalFeatures !== null ? PythonSettings_ExperimentalFeatures.fromPartial(object.experimentalFeatures) : undefined;
@@ -2550,9 +2297,6 @@ export const PythonSettings_ExperimentalFeatures = {
   is(o: any): o is PythonSettings_ExperimentalFeatures {
     return o && (o.$typeUrl === PythonSettings_ExperimentalFeatures.typeUrl || typeof o.restAsyncIoEnabled === "boolean" && typeof o.protobufPythonicTypesEnabled === "boolean" && typeof o.unversionedPackageDisabled === "boolean");
   },
-  isSDK(o: any): o is PythonSettings_ExperimentalFeaturesSDKType {
-    return o && (o.$typeUrl === PythonSettings_ExperimentalFeatures.typeUrl || typeof o.rest_async_io_enabled === "boolean" && typeof o.protobuf_pythonic_types_enabled === "boolean" && typeof o.unversioned_package_disabled === "boolean");
-  },
   isAmino(o: any): o is PythonSettings_ExperimentalFeaturesAmino {
     return o && (o.$typeUrl === PythonSettings_ExperimentalFeatures.typeUrl || typeof o.rest_async_io_enabled === "boolean" && typeof o.protobuf_pythonic_types_enabled === "boolean" && typeof o.unversioned_package_disabled === "boolean");
   },
@@ -2591,7 +2335,7 @@ export const PythonSettings_ExperimentalFeatures = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PythonSettings_ExperimentalFeatures>, I>>(object: I): PythonSettings_ExperimentalFeatures {
+  fromPartial(object: DeepPartial<PythonSettings_ExperimentalFeatures>): PythonSettings_ExperimentalFeatures {
     const message = createBasePythonSettings_ExperimentalFeatures();
     message.restAsyncIoEnabled = object.restAsyncIoEnabled ?? false;
     message.protobufPythonicTypesEnabled = object.protobufPythonicTypesEnabled ?? false;
@@ -2651,9 +2395,6 @@ export const NodeSettings = {
   is(o: any): o is NodeSettings {
     return o && o.$typeUrl === NodeSettings.typeUrl;
   },
-  isSDK(o: any): o is NodeSettingsSDKType {
-    return o && o.$typeUrl === NodeSettings.typeUrl;
-  },
   isAmino(o: any): o is NodeSettingsAmino {
     return o && o.$typeUrl === NodeSettings.typeUrl;
   },
@@ -2680,7 +2421,7 @@ export const NodeSettings = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<NodeSettings>, I>>(object: I): NodeSettings {
+  fromPartial(object: DeepPartial<NodeSettings>): NodeSettings {
     const message = createBaseNodeSettings();
     message.common = object.common !== undefined && object.common !== null ? CommonLanguageSettings.fromPartial(object.common) : undefined;
     return message;
@@ -2760,7 +2501,7 @@ export const DotnetSettings_RenamedServicesEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DotnetSettings_RenamedServicesEntry>, I>>(object: I): DotnetSettings_RenamedServicesEntry {
+  fromPartial(object: DeepPartial<DotnetSettings_RenamedServicesEntry>): DotnetSettings_RenamedServicesEntry {
     const message = createBaseDotnetSettings_RenamedServicesEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
@@ -2834,7 +2575,7 @@ export const DotnetSettings_RenamedResourcesEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DotnetSettings_RenamedResourcesEntry>, I>>(object: I): DotnetSettings_RenamedResourcesEntry {
+  fromPartial(object: DeepPartial<DotnetSettings_RenamedResourcesEntry>): DotnetSettings_RenamedResourcesEntry {
     const message = createBaseDotnetSettings_RenamedResourcesEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
@@ -2887,9 +2628,6 @@ export const DotnetSettings = {
   typeUrl: "/google.api.DotnetSettings",
   is(o: any): o is DotnetSettings {
     return o && (o.$typeUrl === DotnetSettings.typeUrl || isSet(o.renamedServices) && isSet(o.renamedResources) && Array.isArray(o.ignoredResources) && (!o.ignoredResources.length || typeof o.ignoredResources[0] === "string") && Array.isArray(o.forcedNamespaceAliases) && (!o.forcedNamespaceAliases.length || typeof o.forcedNamespaceAliases[0] === "string") && Array.isArray(o.handwrittenSignatures) && (!o.handwrittenSignatures.length || typeof o.handwrittenSignatures[0] === "string"));
-  },
-  isSDK(o: any): o is DotnetSettingsSDKType {
-    return o && (o.$typeUrl === DotnetSettings.typeUrl || isSet(o.renamed_services) && isSet(o.renamed_resources) && Array.isArray(o.ignored_resources) && (!o.ignored_resources.length || typeof o.ignored_resources[0] === "string") && Array.isArray(o.forced_namespace_aliases) && (!o.forced_namespace_aliases.length || typeof o.forced_namespace_aliases[0] === "string") && Array.isArray(o.handwritten_signatures) && (!o.handwritten_signatures.length || typeof o.handwritten_signatures[0] === "string"));
   },
   isAmino(o: any): o is DotnetSettingsAmino {
     return o && (o.$typeUrl === DotnetSettings.typeUrl || isSet(o.renamed_services) && isSet(o.renamed_resources) && Array.isArray(o.ignored_resources) && (!o.ignored_resources.length || typeof o.ignored_resources[0] === "string") && Array.isArray(o.forced_namespace_aliases) && (!o.forced_namespace_aliases.length || typeof o.forced_namespace_aliases[0] === "string") && Array.isArray(o.handwritten_signatures) && (!o.handwritten_signatures.length || typeof o.handwritten_signatures[0] === "string"));
@@ -2959,7 +2697,7 @@ export const DotnetSettings = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DotnetSettings>, I>>(object: I): DotnetSettings {
+  fromPartial(object: DeepPartial<DotnetSettings>): DotnetSettings {
     const message = createBaseDotnetSettings();
     message.common = object.common !== undefined && object.common !== null ? CommonLanguageSettings.fromPartial(object.common) : undefined;
     message.renamedServices = Object.entries(object.renamedServices ?? {}).reduce<{
@@ -3079,9 +2817,6 @@ export const RubySettings = {
   is(o: any): o is RubySettings {
     return o && o.$typeUrl === RubySettings.typeUrl;
   },
-  isSDK(o: any): o is RubySettingsSDKType {
-    return o && o.$typeUrl === RubySettings.typeUrl;
-  },
   isAmino(o: any): o is RubySettingsAmino {
     return o && o.$typeUrl === RubySettings.typeUrl;
   },
@@ -3108,7 +2843,7 @@ export const RubySettings = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RubySettings>, I>>(object: I): RubySettings {
+  fromPartial(object: DeepPartial<RubySettings>): RubySettings {
     const message = createBaseRubySettings();
     message.common = object.common !== undefined && object.common !== null ? CommonLanguageSettings.fromPartial(object.common) : undefined;
     return message;
@@ -3188,7 +2923,7 @@ export const GoSettings_RenamedServicesEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GoSettings_RenamedServicesEntry>, I>>(object: I): GoSettings_RenamedServicesEntry {
+  fromPartial(object: DeepPartial<GoSettings_RenamedServicesEntry>): GoSettings_RenamedServicesEntry {
     const message = createBaseGoSettings_RenamedServicesEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? "";
@@ -3238,9 +2973,6 @@ export const GoSettings = {
   is(o: any): o is GoSettings {
     return o && (o.$typeUrl === GoSettings.typeUrl || isSet(o.renamedServices));
   },
-  isSDK(o: any): o is GoSettingsSDKType {
-    return o && (o.$typeUrl === GoSettings.typeUrl || isSet(o.renamed_services));
-  },
   isAmino(o: any): o is GoSettingsAmino {
     return o && (o.$typeUrl === GoSettings.typeUrl || isSet(o.renamed_services));
   },
@@ -3279,7 +3011,7 @@ export const GoSettings = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GoSettings>, I>>(object: I): GoSettings {
+  fromPartial(object: DeepPartial<GoSettings>): GoSettings {
     const message = createBaseGoSettings();
     message.common = object.common !== undefined && object.common !== null ? CommonLanguageSettings.fromPartial(object.common) : undefined;
     message.renamedServices = Object.entries(object.renamedServices ?? {}).reduce<{
@@ -3358,9 +3090,6 @@ export const MethodSettings = {
   is(o: any): o is MethodSettings {
     return o && (o.$typeUrl === MethodSettings.typeUrl || typeof o.selector === "string" && Array.isArray(o.autoPopulatedFields) && (!o.autoPopulatedFields.length || typeof o.autoPopulatedFields[0] === "string"));
   },
-  isSDK(o: any): o is MethodSettingsSDKType {
-    return o && (o.$typeUrl === MethodSettings.typeUrl || typeof o.selector === "string" && Array.isArray(o.auto_populated_fields) && (!o.auto_populated_fields.length || typeof o.auto_populated_fields[0] === "string"));
-  },
   isAmino(o: any): o is MethodSettingsAmino {
     return o && (o.$typeUrl === MethodSettings.typeUrl || typeof o.selector === "string" && Array.isArray(o.auto_populated_fields) && (!o.auto_populated_fields.length || typeof o.auto_populated_fields[0] === "string"));
   },
@@ -3399,7 +3128,7 @@ export const MethodSettings = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MethodSettings>, I>>(object: I): MethodSettings {
+  fromPartial(object: DeepPartial<MethodSettings>): MethodSettings {
     const message = createBaseMethodSettings();
     message.selector = object.selector ?? "";
     message.longRunning = object.longRunning !== undefined && object.longRunning !== null ? MethodSettings_LongRunning.fromPartial(object.longRunning) : undefined;
@@ -3473,9 +3202,6 @@ export const MethodSettings_LongRunning = {
   is(o: any): o is MethodSettings_LongRunning {
     return o && (o.$typeUrl === MethodSettings_LongRunning.typeUrl || typeof o.pollDelayMultiplier === "number");
   },
-  isSDK(o: any): o is MethodSettings_LongRunningSDKType {
-    return o && (o.$typeUrl === MethodSettings_LongRunning.typeUrl || typeof o.poll_delay_multiplier === "number");
-  },
   isAmino(o: any): o is MethodSettings_LongRunningAmino {
     return o && (o.$typeUrl === MethodSettings_LongRunning.typeUrl || typeof o.poll_delay_multiplier === "number");
   },
@@ -3520,7 +3246,7 @@ export const MethodSettings_LongRunning = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MethodSettings_LongRunning>, I>>(object: I): MethodSettings_LongRunning {
+  fromPartial(object: DeepPartial<MethodSettings_LongRunning>): MethodSettings_LongRunning {
     const message = createBaseMethodSettings_LongRunning();
     message.initialPollDelay = object.initialPollDelay !== undefined && object.initialPollDelay !== null ? Duration.fromPartial(object.initialPollDelay) : undefined;
     message.pollDelayMultiplier = object.pollDelayMultiplier ?? 0;
@@ -3587,9 +3313,6 @@ export const SelectiveGapicGeneration = {
   is(o: any): o is SelectiveGapicGeneration {
     return o && (o.$typeUrl === SelectiveGapicGeneration.typeUrl || Array.isArray(o.methods) && (!o.methods.length || typeof o.methods[0] === "string") && typeof o.generateOmittedAsInternal === "boolean");
   },
-  isSDK(o: any): o is SelectiveGapicGenerationSDKType {
-    return o && (o.$typeUrl === SelectiveGapicGeneration.typeUrl || Array.isArray(o.methods) && (!o.methods.length || typeof o.methods[0] === "string") && typeof o.generate_omitted_as_internal === "boolean");
-  },
   isAmino(o: any): o is SelectiveGapicGenerationAmino {
     return o && (o.$typeUrl === SelectiveGapicGeneration.typeUrl || Array.isArray(o.methods) && (!o.methods.length || typeof o.methods[0] === "string") && typeof o.generate_omitted_as_internal === "boolean");
   },
@@ -3622,7 +3345,7 @@ export const SelectiveGapicGeneration = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SelectiveGapicGeneration>, I>>(object: I): SelectiveGapicGeneration {
+  fromPartial(object: DeepPartial<SelectiveGapicGeneration>): SelectiveGapicGeneration {
     const message = createBaseSelectiveGapicGeneration();
     message.methods = object.methods?.map(e => e) || [];
     message.generateOmittedAsInternal = object.generateOmittedAsInternal ?? false;

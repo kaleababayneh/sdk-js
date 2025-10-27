@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * An object representing a phone number, suitable as an API wire format.
  * 
@@ -145,47 +145,11 @@ export interface PhoneNumberAmino {
    * separately from the E.164 number to allow for short code extensions in the
    * future.
    */
-  extension?: string;
+  extension: string;
 }
 export interface PhoneNumberAminoMsg {
   type: "/google.type.PhoneNumber";
   value: PhoneNumberAmino;
-}
-/**
- * An object representing a phone number, suitable as an API wire format.
- * 
- * This representation:
- * 
- *  - should not be used for locale-specific formatting of a phone number, such
- *    as "+1 (650) 253-0000 ext. 123"
- * 
- *  - is not designed for efficient storage
- *  - may not be suitable for dialing - specialized libraries (see references)
- *    should be used to parse the number for that purpose
- * 
- * To do something meaningful with this number, such as format it for various
- * use-cases, convert it to an `i18n.phonenumbers.PhoneNumber` object first.
- * 
- * For instance, in Java this would be:
- * 
- *    com.google.type.PhoneNumber wireProto =
- *        com.google.type.PhoneNumber.newBuilder().build();
- *    com.google.i18n.phonenumbers.Phonenumber.PhoneNumber phoneNumber =
- *        PhoneNumberUtil.getInstance().parse(wireProto.getE164Number(), "ZZ");
- *    if (!wireProto.getExtension().isEmpty()) {
- *      phoneNumber.setExtension(wireProto.getExtension());
- *    }
- * 
- *  Reference(s):
- *   - https://github.com/google/libphonenumber
- * @name PhoneNumberSDKType
- * @package google.type
- * @see proto type: google.type.PhoneNumber
- */
-export interface PhoneNumberSDKType {
-  e164_number?: string;
-  short_code?: PhoneNumber_ShortCodeSDKType;
-  extension: string;
 }
 /**
  * An object representing a short code, which is a phone number that is
@@ -242,34 +206,16 @@ export interface PhoneNumber_ShortCodeAmino {
    * Reference(s):
    *  - http://www.unicode.org/reports/tr35/#unicode_region_subtag
    */
-  region_code?: string;
+  region_code: string;
   /**
    * Required. The short code digits, without a leading plus ('+') or country
    * calling code, e.g. "611".
    */
-  number?: string;
+  number: string;
 }
 export interface PhoneNumber_ShortCodeAminoMsg {
   type: "/google.type.ShortCode";
   value: PhoneNumber_ShortCodeAmino;
-}
-/**
- * An object representing a short code, which is a phone number that is
- * typically much shorter than regular phone numbers and can be used to
- * address messages in MMS and SMS systems, as well as for abbreviated dialing
- * (e.g. "Text 611 to see how many minutes you have remaining on your plan.").
- * 
- * Short codes are restricted to a region and are not internationally
- * dialable, which means the same short code can exist in different regions,
- * with different usage and pricing, even if those regions share the same
- * country calling code (e.g. US and CA).
- * @name PhoneNumber_ShortCodeSDKType
- * @package google.type
- * @see proto type: google.type.ShortCode
- */
-export interface PhoneNumber_ShortCodeSDKType {
-  region_code: string;
-  number: string;
 }
 function createBasePhoneNumber(): PhoneNumber {
   return {
@@ -314,9 +260,6 @@ export const PhoneNumber = {
   is(o: any): o is PhoneNumber {
     return o && (o.$typeUrl === PhoneNumber.typeUrl || typeof o.extension === "string");
   },
-  isSDK(o: any): o is PhoneNumberSDKType {
-    return o && (o.$typeUrl === PhoneNumber.typeUrl || typeof o.extension === "string");
-  },
   isAmino(o: any): o is PhoneNumberAmino {
     return o && (o.$typeUrl === PhoneNumber.typeUrl || typeof o.extension === "string");
   },
@@ -355,7 +298,7 @@ export const PhoneNumber = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PhoneNumber>, I>>(object: I): PhoneNumber {
+  fromPartial(object: DeepPartial<PhoneNumber>): PhoneNumber {
     const message = createBasePhoneNumber();
     message.e164Number = object.e164Number ?? undefined;
     message.shortCode = object.shortCode !== undefined && object.shortCode !== null ? PhoneNumber_ShortCode.fromPartial(object.shortCode) : undefined;
@@ -429,9 +372,6 @@ export const PhoneNumber_ShortCode = {
   is(o: any): o is PhoneNumber_ShortCode {
     return o && (o.$typeUrl === PhoneNumber_ShortCode.typeUrl || typeof o.regionCode === "string" && typeof o.number === "string");
   },
-  isSDK(o: any): o is PhoneNumber_ShortCodeSDKType {
-    return o && (o.$typeUrl === PhoneNumber_ShortCode.typeUrl || typeof o.region_code === "string" && typeof o.number === "string");
-  },
   isAmino(o: any): o is PhoneNumber_ShortCodeAmino {
     return o && (o.$typeUrl === PhoneNumber_ShortCode.typeUrl || typeof o.region_code === "string" && typeof o.number === "string");
   },
@@ -464,7 +404,7 @@ export const PhoneNumber_ShortCode = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PhoneNumber_ShortCode>, I>>(object: I): PhoneNumber_ShortCode {
+  fromPartial(object: DeepPartial<PhoneNumber_ShortCode>): PhoneNumber_ShortCode {
     const message = createBasePhoneNumber_ShortCode();
     message.regionCode = object.regionCode ?? "";
     message.number = object.number ?? "";

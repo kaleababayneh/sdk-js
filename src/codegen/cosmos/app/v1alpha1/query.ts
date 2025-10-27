@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Config, ConfigAmino, ConfigSDKType } from "./config";
+import { Config, ConfigAmino } from "./config";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryConfigRequest is the Query/Config request type.
@@ -26,13 +26,6 @@ export interface QueryConfigRequestAminoMsg {
   type: "cosmos-sdk/QueryConfigRequest";
   value: QueryConfigRequestAmino;
 }
-/**
- * QueryConfigRequest is the Query/Config request type.
- * @name QueryConfigRequestSDKType
- * @package cosmos.app.v1alpha1
- * @see proto type: cosmos.app.v1alpha1.QueryConfigRequest
- */
-export interface QueryConfigRequestSDKType {}
 /**
  * QueryConfigRequest is the Query/Config response type.
  * @name QueryConfigResponse
@@ -65,15 +58,6 @@ export interface QueryConfigResponseAminoMsg {
   type: "cosmos-sdk/QueryConfigResponse";
   value: QueryConfigResponseAmino;
 }
-/**
- * QueryConfigRequest is the Query/Config response type.
- * @name QueryConfigResponseSDKType
- * @package cosmos.app.v1alpha1
- * @see proto type: cosmos.app.v1alpha1.QueryConfigResponse
- */
-export interface QueryConfigResponseSDKType {
-  config?: ConfigSDKType;
-}
 function createBaseQueryConfigRequest(): QueryConfigRequest {
   return {};
 }
@@ -87,9 +71,6 @@ export const QueryConfigRequest = {
   typeUrl: "/cosmos.app.v1alpha1.QueryConfigRequest",
   aminoType: "cosmos-sdk/QueryConfigRequest",
   is(o: any): o is QueryConfigRequest {
-    return o && o.$typeUrl === QueryConfigRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryConfigRequestSDKType {
     return o && o.$typeUrl === QueryConfigRequest.typeUrl;
   },
   isAmino(o: any): o is QueryConfigRequestAmino {
@@ -112,7 +93,7 @@ export const QueryConfigRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryConfigRequest>, I>>(_: I): QueryConfigRequest {
+  fromPartial(_: DeepPartial<QueryConfigRequest>): QueryConfigRequest {
     const message = createBaseQueryConfigRequest();
     return message;
   },
@@ -164,9 +145,6 @@ export const QueryConfigResponse = {
   is(o: any): o is QueryConfigResponse {
     return o && o.$typeUrl === QueryConfigResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryConfigResponseSDKType {
-    return o && o.$typeUrl === QueryConfigResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryConfigResponseAmino {
     return o && o.$typeUrl === QueryConfigResponse.typeUrl;
   },
@@ -193,7 +171,7 @@ export const QueryConfigResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryConfigResponse>, I>>(object: I): QueryConfigResponse {
+  fromPartial(object: DeepPartial<QueryConfigResponse>): QueryConfigResponse {
     const message = createBaseQueryConfigResponse();
     message.config = object.config !== undefined && object.config !== null ? Config.fromPartial(object.config) : undefined;
     return message;

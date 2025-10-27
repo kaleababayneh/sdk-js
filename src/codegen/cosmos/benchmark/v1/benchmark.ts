@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * Op is a message describing a benchmark operation.
  * @name Op
@@ -28,32 +28,17 @@ export interface OpProtoMsg {
  * @see proto type: cosmos.benchmark.v1.Op
  */
 export interface OpAmino {
-  seed?: string;
-  actor?: string;
-  key_length?: string;
-  value_length?: string;
-  iterations?: number;
-  delete?: boolean;
-  exists?: boolean;
+  seed: string;
+  actor: string;
+  key_length: string;
+  value_length: string;
+  iterations: number;
+  delete: boolean;
+  exists: boolean;
 }
 export interface OpAminoMsg {
   type: "cosmos-sdk/Op";
   value: OpAmino;
-}
-/**
- * Op is a message describing a benchmark operation.
- * @name OpSDKType
- * @package cosmos.benchmark.v1
- * @see proto type: cosmos.benchmark.v1.Op
- */
-export interface OpSDKType {
-  seed: bigint;
-  actor: string;
-  key_length: bigint;
-  value_length: bigint;
-  iterations: number;
-  delete: boolean;
-  exists: boolean;
 }
 function createBaseOp(): Op {
   return {
@@ -77,9 +62,6 @@ export const Op = {
   aminoType: "cosmos-sdk/Op",
   is(o: any): o is Op {
     return o && (o.$typeUrl === Op.typeUrl || typeof o.seed === "bigint" && typeof o.actor === "string" && typeof o.keyLength === "bigint" && typeof o.valueLength === "bigint" && typeof o.iterations === "number" && typeof o.delete === "boolean" && typeof o.exists === "boolean");
-  },
-  isSDK(o: any): o is OpSDKType {
-    return o && (o.$typeUrl === Op.typeUrl || typeof o.seed === "bigint" && typeof o.actor === "string" && typeof o.key_length === "bigint" && typeof o.value_length === "bigint" && typeof o.iterations === "number" && typeof o.delete === "boolean" && typeof o.exists === "boolean");
   },
   isAmino(o: any): o is OpAmino {
     return o && (o.$typeUrl === Op.typeUrl || typeof o.seed === "bigint" && typeof o.actor === "string" && typeof o.key_length === "bigint" && typeof o.value_length === "bigint" && typeof o.iterations === "number" && typeof o.delete === "boolean" && typeof o.exists === "boolean");
@@ -143,7 +125,7 @@ export const Op = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Op>, I>>(object: I): Op {
+  fromPartial(object: DeepPartial<Op>): Op {
     const message = createBaseOp();
     message.seed = object.seed !== undefined && object.seed !== null ? BigInt(object.seed.toString()) : BigInt(0);
     message.actor = object.actor ?? "";

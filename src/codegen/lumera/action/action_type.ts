@@ -6,7 +6,6 @@ export enum ActionType {
   ACTION_TYPE_CASCADE = 2,
   UNRECOGNIZED = -1,
 }
-export const ActionTypeSDKType = ActionType;
 export const ActionTypeAmino = ActionType;
 export function actionTypeFromJSON(object: any): ActionType {
   switch (object) {

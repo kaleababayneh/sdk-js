@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
-import { isSet, Exact } from "../../../helpers";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
+import { isSet, DeepPartial } from "../../../helpers";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
@@ -22,7 +22,6 @@ export enum AuthorizationType {
   AUTHORIZATION_TYPE_CANCEL_UNBONDING_DELEGATION = 4,
   UNRECOGNIZED = -1,
 }
-export const AuthorizationTypeSDKType = AuthorizationType;
 export const AuthorizationTypeAmino = AuthorizationType;
 export function authorizationTypeFromJSON(object: any): AuthorizationType {
   switch (object) {
@@ -73,7 +72,6 @@ export function authorizationTypeToJSON(object: AuthorizationType): string {
  * @see proto type: cosmos.staking.v1beta1.StakeAuthorization
  */
 export interface StakeAuthorization {
-  $typeUrl?: "/cosmos.staking.v1beta1.StakeAuthorization";
   /**
    * max_tokens specifies the maximum amount of tokens can be delegate to a validator. If it is
    * empty, there is no spend limit and any amount of coins can be delegated.
@@ -123,26 +121,11 @@ export interface StakeAuthorizationAmino {
   /**
    * authorization_type defines one of AuthorizationType.
    */
-  authorization_type?: AuthorizationType;
+  authorization_type: AuthorizationType;
 }
 export interface StakeAuthorizationAminoMsg {
   type: "cosmos-sdk/StakeAuthorization";
   value: StakeAuthorizationAmino;
-}
-/**
- * StakeAuthorization defines authorization for delegate/undelegate/redelegate.
- * 
- * Since: cosmos-sdk 0.43
- * @name StakeAuthorizationSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.StakeAuthorization
- */
-export interface StakeAuthorizationSDKType {
-  $typeUrl?: "/cosmos.staking.v1beta1.StakeAuthorization";
-  max_tokens?: CoinSDKType;
-  allow_list?: StakeAuthorization_ValidatorsSDKType;
-  deny_list?: StakeAuthorization_ValidatorsSDKType;
-  authorization_type: AuthorizationType;
 }
 /**
  * Validators defines list of validator addresses.
@@ -164,24 +147,14 @@ export interface StakeAuthorization_ValidatorsProtoMsg {
  * @see proto type: cosmos.staking.v1beta1.StakeAuthorization_Validators
  */
 export interface StakeAuthorization_ValidatorsAmino {
-  address?: string[];
+  address: string[];
 }
 export interface StakeAuthorization_ValidatorsAminoMsg {
   type: "cosmos-sdk/Validators";
   value: StakeAuthorization_ValidatorsAmino;
 }
-/**
- * Validators defines list of validator addresses.
- * @name StakeAuthorization_ValidatorsSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.Validators
- */
-export interface StakeAuthorization_ValidatorsSDKType {
-  address: string[];
-}
 function createBaseStakeAuthorization(): StakeAuthorization {
   return {
-    $typeUrl: "/cosmos.staking.v1beta1.StakeAuthorization",
     maxTokens: undefined,
     allowList: undefined,
     denyList: undefined,
@@ -201,9 +174,6 @@ export const StakeAuthorization = {
   aminoType: "cosmos-sdk/StakeAuthorization",
   is(o: any): o is StakeAuthorization {
     return o && (o.$typeUrl === StakeAuthorization.typeUrl || isSet(o.authorizationType));
-  },
-  isSDK(o: any): o is StakeAuthorizationSDKType {
-    return o && (o.$typeUrl === StakeAuthorization.typeUrl || isSet(o.authorization_type));
   },
   isAmino(o: any): o is StakeAuthorizationAmino {
     return o && (o.$typeUrl === StakeAuthorization.typeUrl || isSet(o.authorization_type));
@@ -249,7 +219,7 @@ export const StakeAuthorization = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<StakeAuthorization>, I>>(object: I): StakeAuthorization {
+  fromPartial(object: DeepPartial<StakeAuthorization>): StakeAuthorization {
     const message = createBaseStakeAuthorization();
     message.maxTokens = object.maxTokens !== undefined && object.maxTokens !== null ? Coin.fromPartial(object.maxTokens) : undefined;
     message.allowList = object.allowList !== undefined && object.allowList !== null ? StakeAuthorization_Validators.fromPartial(object.allowList) : undefined;
@@ -329,9 +299,6 @@ export const StakeAuthorization_Validators = {
   is(o: any): o is StakeAuthorization_Validators {
     return o && (o.$typeUrl === StakeAuthorization_Validators.typeUrl || Array.isArray(o.address) && (!o.address.length || typeof o.address[0] === "string"));
   },
-  isSDK(o: any): o is StakeAuthorization_ValidatorsSDKType {
-    return o && (o.$typeUrl === StakeAuthorization_Validators.typeUrl || Array.isArray(o.address) && (!o.address.length || typeof o.address[0] === "string"));
-  },
   isAmino(o: any): o is StakeAuthorization_ValidatorsAmino {
     return o && (o.$typeUrl === StakeAuthorization_Validators.typeUrl || Array.isArray(o.address) && (!o.address.length || typeof o.address[0] === "string"));
   },
@@ -358,7 +325,7 @@ export const StakeAuthorization_Validators = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<StakeAuthorization_Validators>, I>>(object: I): StakeAuthorization_Validators {
+  fromPartial(object: DeepPartial<StakeAuthorization_Validators>): StakeAuthorization_Validators {
     const message = createBaseStakeAuthorization_Validators();
     message.address = object.address?.map(e => e) || [];
     return message;

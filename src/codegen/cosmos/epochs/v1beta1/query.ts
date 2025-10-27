@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { EpochInfo, EpochInfoAmino, EpochInfoSDKType } from "./genesis";
+import { EpochInfo, EpochInfoAmino } from "./genesis";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryEpochInfosRequest defines the gRPC request structure for
@@ -29,14 +29,6 @@ export interface QueryEpochInfosRequestAminoMsg {
   value: QueryEpochInfosRequestAmino;
 }
 /**
- * QueryEpochInfosRequest defines the gRPC request structure for
- * querying all epoch info.
- * @name QueryEpochInfosRequestSDKType
- * @package cosmos.epochs.v1beta1
- * @see proto type: cosmos.epochs.v1beta1.QueryEpochInfosRequest
- */
-export interface QueryEpochInfosRequestSDKType {}
-/**
  * QueryEpochInfosRequest defines the gRPC response structure for
  * querying all epoch info.
  * @name QueryEpochInfosResponse
@@ -58,21 +50,11 @@ export interface QueryEpochInfosResponseProtoMsg {
  * @see proto type: cosmos.epochs.v1beta1.QueryEpochInfosResponse
  */
 export interface QueryEpochInfosResponseAmino {
-  epochs?: EpochInfoAmino[];
+  epochs: EpochInfoAmino[];
 }
 export interface QueryEpochInfosResponseAminoMsg {
   type: "cosmos-sdk/QueryEpochInfosResponse";
   value: QueryEpochInfosResponseAmino;
-}
-/**
- * QueryEpochInfosRequest defines the gRPC response structure for
- * querying all epoch info.
- * @name QueryEpochInfosResponseSDKType
- * @package cosmos.epochs.v1beta1
- * @see proto type: cosmos.epochs.v1beta1.QueryEpochInfosResponse
- */
-export interface QueryEpochInfosResponseSDKType {
-  epochs: EpochInfoSDKType[];
 }
 /**
  * QueryCurrentEpochRequest defines the gRPC request structure for
@@ -96,21 +78,11 @@ export interface QueryCurrentEpochRequestProtoMsg {
  * @see proto type: cosmos.epochs.v1beta1.QueryCurrentEpochRequest
  */
 export interface QueryCurrentEpochRequestAmino {
-  identifier?: string;
+  identifier: string;
 }
 export interface QueryCurrentEpochRequestAminoMsg {
   type: "cosmos-sdk/QueryCurrentEpochRequest";
   value: QueryCurrentEpochRequestAmino;
-}
-/**
- * QueryCurrentEpochRequest defines the gRPC request structure for
- * querying an epoch by its identifier.
- * @name QueryCurrentEpochRequestSDKType
- * @package cosmos.epochs.v1beta1
- * @see proto type: cosmos.epochs.v1beta1.QueryCurrentEpochRequest
- */
-export interface QueryCurrentEpochRequestSDKType {
-  identifier: string;
 }
 /**
  * QueryCurrentEpochResponse defines the gRPC response structure for
@@ -134,21 +106,11 @@ export interface QueryCurrentEpochResponseProtoMsg {
  * @see proto type: cosmos.epochs.v1beta1.QueryCurrentEpochResponse
  */
 export interface QueryCurrentEpochResponseAmino {
-  current_epoch?: string;
+  current_epoch: string;
 }
 export interface QueryCurrentEpochResponseAminoMsg {
   type: "cosmos-sdk/QueryCurrentEpochResponse";
   value: QueryCurrentEpochResponseAmino;
-}
-/**
- * QueryCurrentEpochResponse defines the gRPC response structure for
- * querying an epoch by its identifier.
- * @name QueryCurrentEpochResponseSDKType
- * @package cosmos.epochs.v1beta1
- * @see proto type: cosmos.epochs.v1beta1.QueryCurrentEpochResponse
- */
-export interface QueryCurrentEpochResponseSDKType {
-  current_epoch: bigint;
 }
 function createBaseQueryEpochInfosRequest(): QueryEpochInfosRequest {
   return {};
@@ -164,9 +126,6 @@ export const QueryEpochInfosRequest = {
   typeUrl: "/cosmos.epochs.v1beta1.QueryEpochInfosRequest",
   aminoType: "cosmos-sdk/QueryEpochInfosRequest",
   is(o: any): o is QueryEpochInfosRequest {
-    return o && o.$typeUrl === QueryEpochInfosRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryEpochInfosRequestSDKType {
     return o && o.$typeUrl === QueryEpochInfosRequest.typeUrl;
   },
   isAmino(o: any): o is QueryEpochInfosRequestAmino {
@@ -189,7 +148,7 @@ export const QueryEpochInfosRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryEpochInfosRequest>, I>>(_: I): QueryEpochInfosRequest {
+  fromPartial(_: DeepPartial<QueryEpochInfosRequest>): QueryEpochInfosRequest {
     const message = createBaseQueryEpochInfosRequest();
     return message;
   },
@@ -242,9 +201,6 @@ export const QueryEpochInfosResponse = {
   is(o: any): o is QueryEpochInfosResponse {
     return o && (o.$typeUrl === QueryEpochInfosResponse.typeUrl || Array.isArray(o.epochs) && (!o.epochs.length || EpochInfo.is(o.epochs[0])));
   },
-  isSDK(o: any): o is QueryEpochInfosResponseSDKType {
-    return o && (o.$typeUrl === QueryEpochInfosResponse.typeUrl || Array.isArray(o.epochs) && (!o.epochs.length || EpochInfo.isSDK(o.epochs[0])));
-  },
   isAmino(o: any): o is QueryEpochInfosResponseAmino {
     return o && (o.$typeUrl === QueryEpochInfosResponse.typeUrl || Array.isArray(o.epochs) && (!o.epochs.length || EpochInfo.isAmino(o.epochs[0])));
   },
@@ -271,7 +227,7 @@ export const QueryEpochInfosResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryEpochInfosResponse>, I>>(object: I): QueryEpochInfosResponse {
+  fromPartial(object: DeepPartial<QueryEpochInfosResponse>): QueryEpochInfosResponse {
     const message = createBaseQueryEpochInfosResponse();
     message.epochs = object.epochs?.map(e => EpochInfo.fromPartial(e)) || [];
     return message;
@@ -336,9 +292,6 @@ export const QueryCurrentEpochRequest = {
   is(o: any): o is QueryCurrentEpochRequest {
     return o && (o.$typeUrl === QueryCurrentEpochRequest.typeUrl || typeof o.identifier === "string");
   },
-  isSDK(o: any): o is QueryCurrentEpochRequestSDKType {
-    return o && (o.$typeUrl === QueryCurrentEpochRequest.typeUrl || typeof o.identifier === "string");
-  },
   isAmino(o: any): o is QueryCurrentEpochRequestAmino {
     return o && (o.$typeUrl === QueryCurrentEpochRequest.typeUrl || typeof o.identifier === "string");
   },
@@ -365,7 +318,7 @@ export const QueryCurrentEpochRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryCurrentEpochRequest>, I>>(object: I): QueryCurrentEpochRequest {
+  fromPartial(object: DeepPartial<QueryCurrentEpochRequest>): QueryCurrentEpochRequest {
     const message = createBaseQueryCurrentEpochRequest();
     message.identifier = object.identifier ?? "";
     return message;
@@ -423,9 +376,6 @@ export const QueryCurrentEpochResponse = {
   is(o: any): o is QueryCurrentEpochResponse {
     return o && (o.$typeUrl === QueryCurrentEpochResponse.typeUrl || typeof o.currentEpoch === "bigint");
   },
-  isSDK(o: any): o is QueryCurrentEpochResponseSDKType {
-    return o && (o.$typeUrl === QueryCurrentEpochResponse.typeUrl || typeof o.current_epoch === "bigint");
-  },
   isAmino(o: any): o is QueryCurrentEpochResponseAmino {
     return o && (o.$typeUrl === QueryCurrentEpochResponse.typeUrl || typeof o.current_epoch === "bigint");
   },
@@ -452,7 +402,7 @@ export const QueryCurrentEpochResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryCurrentEpochResponse>, I>>(object: I): QueryCurrentEpochResponse {
+  fromPartial(object: DeepPartial<QueryCurrentEpochResponse>): QueryCurrentEpochResponse {
     const message = createBaseQueryCurrentEpochResponse();
     message.currentEpoch = object.currentEpoch !== undefined && object.currentEpoch !== null ? BigInt(object.currentEpoch.toString()) : BigInt(0);
     return message;

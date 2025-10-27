@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../cosmos/base/v1beta1/coin";
-import { Duration, DurationAmino, DurationSDKType } from "../../google/protobuf/duration";
+import { Coin, CoinAmino } from "../../cosmos/base/v1beta1/coin";
+import { Duration, DurationAmino } from "../../google/protobuf/duration";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Params defines the parameters for the module.
  * @name Params
@@ -55,44 +55,25 @@ export interface ParamsAmino {
   /**
    * Limits
    */
-  max_actions_per_block?: string;
-  min_super_nodes?: string;
-  max_dd_and_fingerprints?: string;
-  max_raptor_q_symbols?: string;
+  max_actions_per_block: string;
+  min_super_nodes: string;
+  max_dd_and_fingerprints: string;
+  max_raptor_q_symbols: string;
   /**
    * Time Constraints
    */
-  expiration_duration?: DurationAmino;
-  min_processing_time?: DurationAmino;
+  expiration_duration: DurationAmino;
+  min_processing_time: DurationAmino;
   max_processing_time: DurationAmino;
   /**
    * Reward Distribution
    */
-  super_node_fee_share?: string;
-  foundation_fee_share?: string;
+  super_node_fee_share: string;
+  foundation_fee_share: string;
 }
 export interface ParamsAminoMsg {
   type: "/lumera.action.Params";
   value: ParamsAmino;
-}
-/**
- * Params defines the parameters for the module.
- * @name ParamsSDKType
- * @package lumera.action
- * @see proto type: lumera.action.Params
- */
-export interface ParamsSDKType {
-  base_action_fee: CoinSDKType;
-  fee_per_kbyte: CoinSDKType;
-  max_actions_per_block: bigint;
-  min_super_nodes: bigint;
-  max_dd_and_fingerprints: bigint;
-  max_raptor_q_symbols: bigint;
-  expiration_duration: DurationSDKType;
-  min_processing_time: DurationSDKType;
-  max_processing_time: DurationSDKType;
-  super_node_fee_share: string;
-  foundation_fee_share: string;
 }
 function createBaseParams(): Params {
   return {
@@ -119,9 +100,6 @@ export const Params = {
   typeUrl: "/lumera.action.Params",
   is(o: any): o is Params {
     return o && (o.$typeUrl === Params.typeUrl || Coin.is(o.baseActionFee) && Coin.is(o.feePerKbyte) && typeof o.maxActionsPerBlock === "bigint" && typeof o.minSuperNodes === "bigint" && typeof o.maxDdAndFingerprints === "bigint" && typeof o.maxRaptorQSymbols === "bigint" && Duration.is(o.expirationDuration) && Duration.is(o.minProcessingTime) && Duration.is(o.maxProcessingTime) && typeof o.superNodeFeeShare === "string" && typeof o.foundationFeeShare === "string");
-  },
-  isSDK(o: any): o is ParamsSDKType {
-    return o && (o.$typeUrl === Params.typeUrl || Coin.isSDK(o.base_action_fee) && Coin.isSDK(o.fee_per_kbyte) && typeof o.max_actions_per_block === "bigint" && typeof o.min_super_nodes === "bigint" && typeof o.max_dd_and_fingerprints === "bigint" && typeof o.max_raptor_q_symbols === "bigint" && Duration.isSDK(o.expiration_duration) && Duration.isSDK(o.min_processing_time) && Duration.isSDK(o.max_processing_time) && typeof o.super_node_fee_share === "string" && typeof o.foundation_fee_share === "string");
   },
   isAmino(o: any): o is ParamsAmino {
     return o && (o.$typeUrl === Params.typeUrl || Coin.isAmino(o.base_action_fee) && Coin.isAmino(o.fee_per_kbyte) && typeof o.max_actions_per_block === "bigint" && typeof o.min_super_nodes === "bigint" && typeof o.max_dd_and_fingerprints === "bigint" && typeof o.max_raptor_q_symbols === "bigint" && Duration.isAmino(o.expiration_duration) && Duration.isAmino(o.min_processing_time) && Duration.isAmino(o.max_processing_time) && typeof o.super_node_fee_share === "string" && typeof o.foundation_fee_share === "string");
@@ -209,7 +187,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(object: I): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.baseActionFee = object.baseActionFee !== undefined && object.baseActionFee !== null ? Coin.fromPartial(object.baseActionFee) : undefined;
     message.feePerKbyte = object.feePerKbyte !== undefined && object.feePerKbyte !== null ? Coin.fromPartial(object.feePerKbyte) : undefined;

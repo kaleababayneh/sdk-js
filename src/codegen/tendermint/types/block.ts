@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Header, HeaderAmino, HeaderSDKType, Data, DataAmino, DataSDKType, Commit, CommitAmino, CommitSDKType } from "./types";
-import { EvidenceList, EvidenceListAmino, EvidenceListSDKType } from "./evidence";
+import { Header, HeaderAmino, Data, DataAmino, Commit, CommitAmino } from "./types";
+import { EvidenceList, EvidenceListAmino } from "./evidence";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * @name Block
  * @package tendermint.types
@@ -26,25 +26,14 @@ export interface BlockProtoMsg {
  * @see proto type: tendermint.types.Block
  */
 export interface BlockAmino {
-  header?: HeaderAmino;
-  data?: DataAmino;
-  evidence?: EvidenceListAmino;
+  header: HeaderAmino;
+  data: DataAmino;
+  evidence: EvidenceListAmino;
   last_commit?: CommitAmino;
 }
 export interface BlockAminoMsg {
   type: "/tendermint.types.Block";
   value: BlockAmino;
-}
-/**
- * @name BlockSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.Block
- */
-export interface BlockSDKType {
-  header: HeaderSDKType;
-  data: DataSDKType;
-  evidence: EvidenceListSDKType;
-  last_commit?: CommitSDKType;
 }
 function createBaseBlock(): Block {
   return {
@@ -63,9 +52,6 @@ export const Block = {
   typeUrl: "/tendermint.types.Block",
   is(o: any): o is Block {
     return o && (o.$typeUrl === Block.typeUrl || Header.is(o.header) && Data.is(o.data) && EvidenceList.is(o.evidence));
-  },
-  isSDK(o: any): o is BlockSDKType {
-    return o && (o.$typeUrl === Block.typeUrl || Header.isSDK(o.header) && Data.isSDK(o.data) && EvidenceList.isSDK(o.evidence));
   },
   isAmino(o: any): o is BlockAmino {
     return o && (o.$typeUrl === Block.typeUrl || Header.isAmino(o.header) && Data.isAmino(o.data) && EvidenceList.isAmino(o.evidence));
@@ -111,7 +97,7 @@ export const Block = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Block>, I>>(object: I): Block {
+  fromPartial(object: DeepPartial<Block>): Block {
     const message = createBaseBlock();
     message.header = object.header !== undefined && object.header !== null ? Header.fromPartial(object.header) : undefined;
     message.data = object.data !== undefined && object.data !== null ? Data.fromPartial(object.data) : undefined;

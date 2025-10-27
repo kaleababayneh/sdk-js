@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType } from "./params";
+import { Params, ParamsAmino } from "./params";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * @name MsgUpdateParams
@@ -34,7 +34,7 @@ export interface MsgUpdateParamsAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * NOTE: All parameters must be supplied.
    */
@@ -43,16 +43,6 @@ export interface MsgUpdateParamsAmino {
 export interface MsgUpdateParamsAminoMsg {
   type: "lumera/x/action/v1/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
-}
-/**
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * @name MsgUpdateParamsSDKType
- * @package lumera.action
- * @see proto type: lumera.action.MsgUpdateParams
- */
-export interface MsgUpdateParamsSDKType {
-  authority: string;
-  params: ParamsSDKType;
 }
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
@@ -79,14 +69,6 @@ export interface MsgUpdateParamsResponseAminoMsg {
   value: MsgUpdateParamsResponseAmino;
 }
 /**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- * @name MsgUpdateParamsResponseSDKType
- * @package lumera.action
- * @see proto type: lumera.action.MsgUpdateParamsResponse
- */
-export interface MsgUpdateParamsResponseSDKType {}
-/**
  * @name MsgRequestAction
  * @package lumera.action
  * @see proto type: lumera.action.MsgRequestAction
@@ -108,27 +90,15 @@ export interface MsgRequestActionProtoMsg {
  * @see proto type: lumera.action.MsgRequestAction
  */
 export interface MsgRequestActionAmino {
-  creator?: string;
-  actionType?: string;
-  metadata?: string;
-  price?: string;
-  expirationTime?: string;
-}
-export interface MsgRequestActionAminoMsg {
-  type: "/lumera.action.MsgRequestAction";
-  value: MsgRequestActionAmino;
-}
-/**
- * @name MsgRequestActionSDKType
- * @package lumera.action
- * @see proto type: lumera.action.MsgRequestAction
- */
-export interface MsgRequestActionSDKType {
   creator: string;
   actionType: string;
   metadata: string;
   price: string;
   expirationTime: string;
+}
+export interface MsgRequestActionAminoMsg {
+  type: "/lumera.action.MsgRequestAction";
+  value: MsgRequestActionAmino;
 }
 /**
  * @name MsgRequestActionResponse
@@ -149,21 +119,12 @@ export interface MsgRequestActionResponseProtoMsg {
  * @see proto type: lumera.action.MsgRequestActionResponse
  */
 export interface MsgRequestActionResponseAmino {
-  actionId?: string;
-  status?: string;
+  actionId: string;
+  status: string;
 }
 export interface MsgRequestActionResponseAminoMsg {
   type: "/lumera.action.MsgRequestActionResponse";
   value: MsgRequestActionResponseAmino;
-}
-/**
- * @name MsgRequestActionResponseSDKType
- * @package lumera.action
- * @see proto type: lumera.action.MsgRequestActionResponse
- */
-export interface MsgRequestActionResponseSDKType {
-  actionId: string;
-  status: string;
 }
 /**
  * @name MsgFinalizeAction
@@ -192,25 +153,14 @@ export interface MsgFinalizeActionAmino {
   /**
    * must be supernode address
    */
-  creator?: string;
-  actionId?: string;
-  actionType?: string;
-  metadata?: string;
-}
-export interface MsgFinalizeActionAminoMsg {
-  type: "/lumera.action.MsgFinalizeAction";
-  value: MsgFinalizeActionAmino;
-}
-/**
- * @name MsgFinalizeActionSDKType
- * @package lumera.action
- * @see proto type: lumera.action.MsgFinalizeAction
- */
-export interface MsgFinalizeActionSDKType {
   creator: string;
   actionId: string;
   actionType: string;
   metadata: string;
+}
+export interface MsgFinalizeActionAminoMsg {
+  type: "/lumera.action.MsgFinalizeAction";
+  value: MsgFinalizeActionAmino;
 }
 /**
  * @name MsgFinalizeActionResponse
@@ -233,12 +183,6 @@ export interface MsgFinalizeActionResponseAminoMsg {
   value: MsgFinalizeActionResponseAmino;
 }
 /**
- * @name MsgFinalizeActionResponseSDKType
- * @package lumera.action
- * @see proto type: lumera.action.MsgFinalizeActionResponse
- */
-export interface MsgFinalizeActionResponseSDKType {}
-/**
  * @name MsgApproveAction
  * @package lumera.action
  * @see proto type: lumera.action.MsgApproveAction
@@ -257,21 +201,12 @@ export interface MsgApproveActionProtoMsg {
  * @see proto type: lumera.action.MsgApproveAction
  */
 export interface MsgApproveActionAmino {
-  creator?: string;
-  actionId?: string;
+  creator: string;
+  actionId: string;
 }
 export interface MsgApproveActionAminoMsg {
   type: "/lumera.action.MsgApproveAction";
   value: MsgApproveActionAmino;
-}
-/**
- * @name MsgApproveActionSDKType
- * @package lumera.action
- * @see proto type: lumera.action.MsgApproveAction
- */
-export interface MsgApproveActionSDKType {
-  creator: string;
-  actionId: string;
 }
 /**
  * @name MsgApproveActionResponse
@@ -293,12 +228,6 @@ export interface MsgApproveActionResponseAminoMsg {
   type: "/lumera.action.MsgApproveActionResponse";
   value: MsgApproveActionResponseAmino;
 }
-/**
- * @name MsgApproveActionResponseSDKType
- * @package lumera.action
- * @see proto type: lumera.action.MsgApproveActionResponse
- */
-export interface MsgApproveActionResponseSDKType {}
 function createBaseMsgUpdateParams(): MsgUpdateParams {
   return {
     authority: "",
@@ -316,9 +245,6 @@ export const MsgUpdateParams = {
   aminoType: "lumera/x/action/v1/MsgUpdateParams",
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.is(o.params));
-  },
-  isSDK(o: any): o is MsgUpdateParamsSDKType {
-    return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isSDK(o.params));
   },
   isAmino(o: any): o is MsgUpdateParamsAmino {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isAmino(o.params));
@@ -352,7 +278,7 @@ export const MsgUpdateParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParams>, I>>(object: I): MsgUpdateParams {
+  fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
@@ -417,9 +343,6 @@ export const MsgUpdateParamsResponse = {
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateParamsResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateParamsResponseAmino {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -440,7 +363,7 @@ export const MsgUpdateParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParamsResponse>, I>>(_: I): MsgUpdateParamsResponse {
+  fromPartial(_: DeepPartial<MsgUpdateParamsResponse>): MsgUpdateParamsResponse {
     const message = createBaseMsgUpdateParamsResponse();
     return message;
   },
@@ -486,9 +409,6 @@ function createBaseMsgRequestAction(): MsgRequestAction {
 export const MsgRequestAction = {
   typeUrl: "/lumera.action.MsgRequestAction",
   is(o: any): o is MsgRequestAction {
-    return o && (o.$typeUrl === MsgRequestAction.typeUrl || typeof o.creator === "string" && typeof o.actionType === "string" && typeof o.metadata === "string" && typeof o.price === "string" && typeof o.expirationTime === "string");
-  },
-  isSDK(o: any): o is MsgRequestActionSDKType {
     return o && (o.$typeUrl === MsgRequestAction.typeUrl || typeof o.creator === "string" && typeof o.actionType === "string" && typeof o.metadata === "string" && typeof o.price === "string" && typeof o.expirationTime === "string");
   },
   isAmino(o: any): o is MsgRequestActionAmino {
@@ -541,7 +461,7 @@ export const MsgRequestAction = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgRequestAction>, I>>(object: I): MsgRequestAction {
+  fromPartial(object: DeepPartial<MsgRequestAction>): MsgRequestAction {
     const message = createBaseMsgRequestAction();
     message.creator = object.creator ?? "";
     message.actionType = object.actionType ?? "";
@@ -611,9 +531,6 @@ export const MsgRequestActionResponse = {
   is(o: any): o is MsgRequestActionResponse {
     return o && (o.$typeUrl === MsgRequestActionResponse.typeUrl || typeof o.actionId === "string" && typeof o.status === "string");
   },
-  isSDK(o: any): o is MsgRequestActionResponseSDKType {
-    return o && (o.$typeUrl === MsgRequestActionResponse.typeUrl || typeof o.actionId === "string" && typeof o.status === "string");
-  },
   isAmino(o: any): o is MsgRequestActionResponseAmino {
     return o && (o.$typeUrl === MsgRequestActionResponse.typeUrl || typeof o.actionId === "string" && typeof o.status === "string");
   },
@@ -646,7 +563,7 @@ export const MsgRequestActionResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgRequestActionResponse>, I>>(object: I): MsgRequestActionResponse {
+  fromPartial(object: DeepPartial<MsgRequestActionResponse>): MsgRequestActionResponse {
     const message = createBaseMsgRequestActionResponse();
     message.actionId = object.actionId ?? "";
     message.status = object.status ?? "";
@@ -703,9 +620,6 @@ export const MsgFinalizeAction = {
   is(o: any): o is MsgFinalizeAction {
     return o && (o.$typeUrl === MsgFinalizeAction.typeUrl || typeof o.creator === "string" && typeof o.actionId === "string" && typeof o.actionType === "string" && typeof o.metadata === "string");
   },
-  isSDK(o: any): o is MsgFinalizeActionSDKType {
-    return o && (o.$typeUrl === MsgFinalizeAction.typeUrl || typeof o.creator === "string" && typeof o.actionId === "string" && typeof o.actionType === "string" && typeof o.metadata === "string");
-  },
   isAmino(o: any): o is MsgFinalizeActionAmino {
     return o && (o.$typeUrl === MsgFinalizeAction.typeUrl || typeof o.creator === "string" && typeof o.actionId === "string" && typeof o.actionType === "string" && typeof o.metadata === "string");
   },
@@ -750,7 +664,7 @@ export const MsgFinalizeAction = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgFinalizeAction>, I>>(object: I): MsgFinalizeAction {
+  fromPartial(object: DeepPartial<MsgFinalizeAction>): MsgFinalizeAction {
     const message = createBaseMsgFinalizeAction();
     message.creator = object.creator ?? "";
     message.actionId = object.actionId ?? "";
@@ -812,9 +726,6 @@ export const MsgFinalizeActionResponse = {
   is(o: any): o is MsgFinalizeActionResponse {
     return o && o.$typeUrl === MsgFinalizeActionResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgFinalizeActionResponseSDKType {
-    return o && o.$typeUrl === MsgFinalizeActionResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgFinalizeActionResponseAmino {
     return o && o.$typeUrl === MsgFinalizeActionResponse.typeUrl;
   },
@@ -835,7 +746,7 @@ export const MsgFinalizeActionResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgFinalizeActionResponse>, I>>(_: I): MsgFinalizeActionResponse {
+  fromPartial(_: DeepPartial<MsgFinalizeActionResponse>): MsgFinalizeActionResponse {
     const message = createBaseMsgFinalizeActionResponse();
     return message;
   },
@@ -880,9 +791,6 @@ export const MsgApproveAction = {
   is(o: any): o is MsgApproveAction {
     return o && (o.$typeUrl === MsgApproveAction.typeUrl || typeof o.creator === "string" && typeof o.actionId === "string");
   },
-  isSDK(o: any): o is MsgApproveActionSDKType {
-    return o && (o.$typeUrl === MsgApproveAction.typeUrl || typeof o.creator === "string" && typeof o.actionId === "string");
-  },
   isAmino(o: any): o is MsgApproveActionAmino {
     return o && (o.$typeUrl === MsgApproveAction.typeUrl || typeof o.creator === "string" && typeof o.actionId === "string");
   },
@@ -915,7 +823,7 @@ export const MsgApproveAction = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgApproveAction>, I>>(object: I): MsgApproveAction {
+  fromPartial(object: DeepPartial<MsgApproveAction>): MsgApproveAction {
     const message = createBaseMsgApproveAction();
     message.creator = object.creator ?? "";
     message.actionId = object.actionId ?? "";
@@ -967,9 +875,6 @@ export const MsgApproveActionResponse = {
   is(o: any): o is MsgApproveActionResponse {
     return o && o.$typeUrl === MsgApproveActionResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgApproveActionResponseSDKType {
-    return o && o.$typeUrl === MsgApproveActionResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgApproveActionResponseAmino {
     return o && o.$typeUrl === MsgApproveActionResponse.typeUrl;
   },
@@ -990,7 +895,7 @@ export const MsgApproveActionResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgApproveActionResponse>, I>>(_: I): MsgApproveActionResponse {
+  fromPartial(_: DeepPartial<MsgApproveActionResponse>): MsgApproveActionResponse {
     const message = createBaseMsgApproveActionResponse();
     return message;
   },

@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * Represents a whole or partial calendar date, such as a birthday. The time of
  * day and time zone are either specified elsewhere or are insignificant. The
@@ -65,45 +65,22 @@ export interface DateAmino {
    * Year of the date. Must be from 1 to 9999, or 0 to specify a date without
    * a year.
    */
-  year?: number;
+  year: number;
   /**
    * Month of a year. Must be from 1 to 12, or 0 to specify a year without a
    * month and day.
    */
-  month?: number;
+  month: number;
   /**
    * Day of a month. Must be from 1 to 31 and valid for the year and month, or 0
    * to specify a year by itself or a year and month where the day isn't
    * significant.
    */
-  day?: number;
+  day: number;
 }
 export interface DateAminoMsg {
   type: "/google.type.Date";
   value: DateAmino;
-}
-/**
- * Represents a whole or partial calendar date, such as a birthday. The time of
- * day and time zone are either specified elsewhere or are insignificant. The
- * date is relative to the Gregorian Calendar. This can represent one of the
- * following:
- * 
- * * A full date, with non-zero year, month, and day values
- * * A month and day value, with a zero year, such as an anniversary
- * * A year on its own, with zero month and day values
- * * A year and month value, with a zero day, such as a credit card expiration
- * date
- * 
- * Related types are [google.type.TimeOfDay][google.type.TimeOfDay] and
- * `google.protobuf.Timestamp`.
- * @name DateSDKType
- * @package google.type
- * @see proto type: google.type.Date
- */
-export interface DateSDKType {
-  year: number;
-  month: number;
-  day: number;
 }
 function createBaseDate(): Date {
   return {
@@ -133,9 +110,6 @@ function createBaseDate(): Date {
 export const Date = {
   typeUrl: "/google.type.Date",
   is(o: any): o is Date {
-    return o && (o.$typeUrl === Date.typeUrl || typeof o.year === "number" && typeof o.month === "number" && typeof o.day === "number");
-  },
-  isSDK(o: any): o is DateSDKType {
     return o && (o.$typeUrl === Date.typeUrl || typeof o.year === "number" && typeof o.month === "number" && typeof o.day === "number");
   },
   isAmino(o: any): o is DateAmino {
@@ -176,7 +150,7 @@ export const Date = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Date>, I>>(object: I): Date {
+  fromPartial(object: DeepPartial<Date>): Date {
     const message = createBaseDate();
     message.year = object.year ?? 0;
     message.month = object.month ?? 0;

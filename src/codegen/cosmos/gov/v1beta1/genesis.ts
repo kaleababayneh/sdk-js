@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Deposit, DepositAmino, DepositSDKType, Vote, VoteAmino, VoteSDKType, Proposal, ProposalAmino, ProposalSDKType, DepositParams, DepositParamsAmino, DepositParamsSDKType, VotingParams, VotingParamsAmino, VotingParamsSDKType, TallyParams, TallyParamsAmino, TallyParamsSDKType } from "./gov";
+import { Deposit, DepositAmino, Vote, VoteAmino, Proposal, ProposalAmino, DepositParams, DepositParamsAmino, VotingParams, VotingParamsAmino, TallyParams, TallyParamsAmino } from "./gov";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * GenesisState defines the gov module's genesis state.
  * @name GenesisState
@@ -54,7 +54,7 @@ export interface GenesisStateAmino {
   /**
    * starting_proposal_id is the ID of the starting proposal.
    */
-  starting_proposal_id?: string;
+  starting_proposal_id: string;
   /**
    * deposits defines all the deposits present at genesis.
    */
@@ -84,21 +84,6 @@ export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
 }
-/**
- * GenesisState defines the gov module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.gov.v1beta1
- * @see proto type: cosmos.gov.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  starting_proposal_id: bigint;
-  deposits: DepositSDKType[];
-  votes: VoteSDKType[];
-  proposals: ProposalSDKType[];
-  deposit_params: DepositParamsSDKType;
-  voting_params: VotingParamsSDKType;
-  tally_params: TallyParamsSDKType;
-}
 function createBaseGenesisState(): GenesisState {
   return {
     startingProposalId: BigInt(0),
@@ -121,9 +106,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || typeof o.startingProposalId === "bigint" && Array.isArray(o.deposits) && (!o.deposits.length || Deposit.is(o.deposits[0])) && Array.isArray(o.votes) && (!o.votes.length || Vote.is(o.votes[0])) && Array.isArray(o.proposals) && (!o.proposals.length || Proposal.is(o.proposals[0])) && DepositParams.is(o.depositParams) && VotingParams.is(o.votingParams) && TallyParams.is(o.tallyParams));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || typeof o.starting_proposal_id === "bigint" && Array.isArray(o.deposits) && (!o.deposits.length || Deposit.isSDK(o.deposits[0])) && Array.isArray(o.votes) && (!o.votes.length || Vote.isSDK(o.votes[0])) && Array.isArray(o.proposals) && (!o.proposals.length || Proposal.isSDK(o.proposals[0])) && DepositParams.isSDK(o.deposit_params) && VotingParams.isSDK(o.voting_params) && TallyParams.isSDK(o.tally_params));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || typeof o.starting_proposal_id === "bigint" && Array.isArray(o.deposits) && (!o.deposits.length || Deposit.isAmino(o.deposits[0])) && Array.isArray(o.votes) && (!o.votes.length || Vote.isAmino(o.votes[0])) && Array.isArray(o.proposals) && (!o.proposals.length || Proposal.isAmino(o.proposals[0])) && DepositParams.isAmino(o.deposit_params) && VotingParams.isAmino(o.voting_params) && TallyParams.isAmino(o.tally_params));
@@ -187,7 +169,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.startingProposalId = object.startingProposalId !== undefined && object.startingProposalId !== null ? BigInt(object.startingProposalId.toString()) : BigInt(0);
     message.deposits = object.deposits?.map(e => Deposit.fromPartial(e)) || [];

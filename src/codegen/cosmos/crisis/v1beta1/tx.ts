@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * MsgVerifyInvariant represents a message to verify a particular invariance.
@@ -38,30 +38,19 @@ export interface MsgVerifyInvariantAmino {
   /**
    * sender is the account address of private key to send coins to fee collector account.
    */
-  sender?: string;
+  sender: string;
   /**
    * name of the invariant module.
    */
-  invariant_module_name?: string;
+  invariant_module_name: string;
   /**
    * invariant_route is the msg's invariant route.
    */
-  invariant_route?: string;
+  invariant_route: string;
 }
 export interface MsgVerifyInvariantAminoMsg {
   type: "cosmos-sdk/MsgVerifyInvariant";
   value: MsgVerifyInvariantAmino;
-}
-/**
- * MsgVerifyInvariant represents a message to verify a particular invariance.
- * @name MsgVerifyInvariantSDKType
- * @package cosmos.crisis.v1beta1
- * @see proto type: cosmos.crisis.v1beta1.MsgVerifyInvariant
- */
-export interface MsgVerifyInvariantSDKType {
-  sender: string;
-  invariant_module_name: string;
-  invariant_route: string;
 }
 /**
  * MsgVerifyInvariantResponse defines the Msg/VerifyInvariant response type.
@@ -85,13 +74,6 @@ export interface MsgVerifyInvariantResponseAminoMsg {
   type: "cosmos-sdk/MsgVerifyInvariantResponse";
   value: MsgVerifyInvariantResponseAmino;
 }
-/**
- * MsgVerifyInvariantResponse defines the Msg/VerifyInvariant response type.
- * @name MsgVerifyInvariantResponseSDKType
- * @package cosmos.crisis.v1beta1
- * @see proto type: cosmos.crisis.v1beta1.MsgVerifyInvariantResponse
- */
-export interface MsgVerifyInvariantResponseSDKType {}
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * 
@@ -126,7 +108,7 @@ export interface MsgUpdateParamsAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * constant_fee defines the x/crisis parameter.
    */
@@ -135,18 +117,6 @@ export interface MsgUpdateParamsAmino {
 export interface MsgUpdateParamsAminoMsg {
   type: "cosmos-sdk/x/crisis/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
-}
-/**
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsSDKType
- * @package cosmos.crisis.v1beta1
- * @see proto type: cosmos.crisis.v1beta1.MsgUpdateParams
- */
-export interface MsgUpdateParamsSDKType {
-  authority: string;
-  constant_fee: CoinSDKType;
 }
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
@@ -176,16 +146,6 @@ export interface MsgUpdateParamsResponseAminoMsg {
   type: "cosmos-sdk/MsgUpdateParamsResponse";
   value: MsgUpdateParamsResponseAmino;
 }
-/**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsResponseSDKType
- * @package cosmos.crisis.v1beta1
- * @see proto type: cosmos.crisis.v1beta1.MsgUpdateParamsResponse
- */
-export interface MsgUpdateParamsResponseSDKType {}
 function createBaseMsgVerifyInvariant(): MsgVerifyInvariant {
   return {
     sender: "",
@@ -204,9 +164,6 @@ export const MsgVerifyInvariant = {
   aminoType: "cosmos-sdk/MsgVerifyInvariant",
   is(o: any): o is MsgVerifyInvariant {
     return o && (o.$typeUrl === MsgVerifyInvariant.typeUrl || typeof o.sender === "string" && typeof o.invariantModuleName === "string" && typeof o.invariantRoute === "string");
-  },
-  isSDK(o: any): o is MsgVerifyInvariantSDKType {
-    return o && (o.$typeUrl === MsgVerifyInvariant.typeUrl || typeof o.sender === "string" && typeof o.invariant_module_name === "string" && typeof o.invariant_route === "string");
   },
   isAmino(o: any): o is MsgVerifyInvariantAmino {
     return o && (o.$typeUrl === MsgVerifyInvariant.typeUrl || typeof o.sender === "string" && typeof o.invariant_module_name === "string" && typeof o.invariant_route === "string");
@@ -246,7 +203,7 @@ export const MsgVerifyInvariant = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgVerifyInvariant>, I>>(object: I): MsgVerifyInvariant {
+  fromPartial(object: DeepPartial<MsgVerifyInvariant>): MsgVerifyInvariant {
     const message = createBaseMsgVerifyInvariant();
     message.sender = object.sender ?? "";
     message.invariantModuleName = object.invariantModuleName ?? "";
@@ -311,9 +268,6 @@ export const MsgVerifyInvariantResponse = {
   is(o: any): o is MsgVerifyInvariantResponse {
     return o && o.$typeUrl === MsgVerifyInvariantResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgVerifyInvariantResponseSDKType {
-    return o && o.$typeUrl === MsgVerifyInvariantResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgVerifyInvariantResponseAmino {
     return o && o.$typeUrl === MsgVerifyInvariantResponse.typeUrl;
   },
@@ -334,7 +288,7 @@ export const MsgVerifyInvariantResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgVerifyInvariantResponse>, I>>(_: I): MsgVerifyInvariantResponse {
+  fromPartial(_: DeepPartial<MsgVerifyInvariantResponse>): MsgVerifyInvariantResponse {
     const message = createBaseMsgVerifyInvariantResponse();
     return message;
   },
@@ -389,9 +343,6 @@ export const MsgUpdateParams = {
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Coin.is(o.constantFee));
   },
-  isSDK(o: any): o is MsgUpdateParamsSDKType {
-    return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Coin.isSDK(o.constant_fee));
-  },
   isAmino(o: any): o is MsgUpdateParamsAmino {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Coin.isAmino(o.constant_fee));
   },
@@ -424,7 +375,7 @@ export const MsgUpdateParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParams>, I>>(object: I): MsgUpdateParams {
+  fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
     message.constantFee = object.constantFee !== undefined && object.constantFee !== null ? Coin.fromPartial(object.constantFee) : undefined;
@@ -492,9 +443,6 @@ export const MsgUpdateParamsResponse = {
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateParamsResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateParamsResponseAmino {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -515,7 +463,7 @@ export const MsgUpdateParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParamsResponse>, I>>(_: I): MsgUpdateParamsResponse {
+  fromPartial(_: DeepPartial<MsgUpdateParamsResponse>): MsgUpdateParamsResponse {
     const message = createBaseMsgUpdateParamsResponse();
     return message;
   },

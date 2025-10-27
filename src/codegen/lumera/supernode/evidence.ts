@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * @name Evidence
  * @package lumera.supernode
@@ -26,31 +26,17 @@ export interface EvidenceProtoMsg {
  * @see proto type: lumera.supernode.Evidence
  */
 export interface EvidenceAmino {
-  reporter_address?: string;
-  validator_address?: string;
-  action_id?: string;
-  evidence_type?: string;
-  description?: string;
-  severity?: string;
-  height?: number;
-}
-export interface EvidenceAminoMsg {
-  type: "/lumera.supernode.Evidence";
-  value: EvidenceAmino;
-}
-/**
- * @name EvidenceSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.Evidence
- */
-export interface EvidenceSDKType {
   reporter_address: string;
   validator_address: string;
   action_id: string;
   evidence_type: string;
   description: string;
-  severity: bigint;
+  severity: string;
   height: number;
+}
+export interface EvidenceAminoMsg {
+  type: "/lumera.supernode.Evidence";
+  value: EvidenceAmino;
 }
 function createBaseEvidence(): Evidence {
   return {
@@ -72,9 +58,6 @@ export const Evidence = {
   typeUrl: "/lumera.supernode.Evidence",
   is(o: any): o is Evidence {
     return o && (o.$typeUrl === Evidence.typeUrl || typeof o.reporterAddress === "string" && typeof o.validatorAddress === "string" && typeof o.actionId === "string" && typeof o.evidenceType === "string" && typeof o.description === "string" && typeof o.severity === "bigint" && typeof o.height === "number");
-  },
-  isSDK(o: any): o is EvidenceSDKType {
-    return o && (o.$typeUrl === Evidence.typeUrl || typeof o.reporter_address === "string" && typeof o.validator_address === "string" && typeof o.action_id === "string" && typeof o.evidence_type === "string" && typeof o.description === "string" && typeof o.severity === "bigint" && typeof o.height === "number");
   },
   isAmino(o: any): o is EvidenceAmino {
     return o && (o.$typeUrl === Evidence.typeUrl || typeof o.reporter_address === "string" && typeof o.validator_address === "string" && typeof o.action_id === "string" && typeof o.evidence_type === "string" && typeof o.description === "string" && typeof o.severity === "bigint" && typeof o.height === "number");
@@ -138,7 +121,7 @@ export const Evidence = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Evidence>, I>>(object: I): Evidence {
+  fromPartial(object: DeepPartial<Evidence>): Evidence {
     const message = createBaseEvidence();
     message.reporterAddress = object.reporterAddress ?? "";
     message.validatorAddress = object.validatorAddress ?? "";

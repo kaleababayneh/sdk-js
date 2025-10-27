@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../helpers";
 /**
  * MultiSignature wraps the signatures from a multisig.LegacyAminoPubKey.
  * See cosmos.tx.v1betata1.ModeInfo.Multi for how to specify which signers
@@ -26,22 +26,11 @@ export interface MultiSignatureProtoMsg {
  * @see proto type: cosmos.crypto.multisig.v1beta1.MultiSignature
  */
 export interface MultiSignatureAmino {
-  signatures?: string[];
+  signatures: string[];
 }
 export interface MultiSignatureAminoMsg {
   type: "cosmos-sdk/MultiSignature";
   value: MultiSignatureAmino;
-}
-/**
- * MultiSignature wraps the signatures from a multisig.LegacyAminoPubKey.
- * See cosmos.tx.v1betata1.ModeInfo.Multi for how to specify which signers
- * signed and with which modes.
- * @name MultiSignatureSDKType
- * @package cosmos.crypto.multisig.v1beta1
- * @see proto type: cosmos.crypto.multisig.v1beta1.MultiSignature
- */
-export interface MultiSignatureSDKType {
-  signatures: Uint8Array[];
 }
 /**
  * CompactBitArray is an implementation of a space efficient bit array.
@@ -70,25 +59,12 @@ export interface CompactBitArrayProtoMsg {
  * @see proto type: cosmos.crypto.multisig.v1beta1.CompactBitArray
  */
 export interface CompactBitArrayAmino {
-  extra_bits_stored?: number;
-  elems?: string;
+  extra_bits_stored: number;
+  elems: string;
 }
 export interface CompactBitArrayAminoMsg {
   type: "cosmos-sdk/CompactBitArray";
   value: CompactBitArrayAmino;
-}
-/**
- * CompactBitArray is an implementation of a space efficient bit array.
- * This is used to ensure that the encoded data takes up a minimal amount of
- * space after proto encoding.
- * This is not thread safe, and is not intended for concurrent usage.
- * @name CompactBitArraySDKType
- * @package cosmos.crypto.multisig.v1beta1
- * @see proto type: cosmos.crypto.multisig.v1beta1.CompactBitArray
- */
-export interface CompactBitArraySDKType {
-  extra_bits_stored: number;
-  elems: Uint8Array;
 }
 function createBaseMultiSignature(): MultiSignature {
   return {
@@ -107,9 +83,6 @@ export const MultiSignature = {
   typeUrl: "/cosmos.crypto.multisig.v1beta1.MultiSignature",
   aminoType: "cosmos-sdk/MultiSignature",
   is(o: any): o is MultiSignature {
-    return o && (o.$typeUrl === MultiSignature.typeUrl || Array.isArray(o.signatures) && (!o.signatures.length || o.signatures[0] instanceof Uint8Array || typeof o.signatures[0] === "string"));
-  },
-  isSDK(o: any): o is MultiSignatureSDKType {
     return o && (o.$typeUrl === MultiSignature.typeUrl || Array.isArray(o.signatures) && (!o.signatures.length || o.signatures[0] instanceof Uint8Array || typeof o.signatures[0] === "string"));
   },
   isAmino(o: any): o is MultiSignatureAmino {
@@ -138,7 +111,7 @@ export const MultiSignature = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MultiSignature>, I>>(object: I): MultiSignature {
+  fromPartial(object: DeepPartial<MultiSignature>): MultiSignature {
     const message = createBaseMultiSignature();
     message.signatures = object.signatures?.map(e => e) || [];
     return message;
@@ -201,9 +174,6 @@ export const CompactBitArray = {
   is(o: any): o is CompactBitArray {
     return o && (o.$typeUrl === CompactBitArray.typeUrl || typeof o.extraBitsStored === "number" && (o.elems instanceof Uint8Array || typeof o.elems === "string"));
   },
-  isSDK(o: any): o is CompactBitArraySDKType {
-    return o && (o.$typeUrl === CompactBitArray.typeUrl || typeof o.extra_bits_stored === "number" && (o.elems instanceof Uint8Array || typeof o.elems === "string"));
-  },
   isAmino(o: any): o is CompactBitArrayAmino {
     return o && (o.$typeUrl === CompactBitArray.typeUrl || typeof o.extra_bits_stored === "number" && (o.elems instanceof Uint8Array || typeof o.elems === "string"));
   },
@@ -236,7 +206,7 @@ export const CompactBitArray = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CompactBitArray>, I>>(object: I): CompactBitArray {
+  fromPartial(object: DeepPartial<CompactBitArray>): CompactBitArray {
     const message = createBaseCompactBitArray();
     message.extraBitsStored = object.extraBitsStored ?? 0;
     message.elems = object.elems ?? new Uint8Array();

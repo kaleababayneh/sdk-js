@@ -1,11 +1,11 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Proof, ProofAmino, ProofSDKType } from "../crypto/proof";
-import { Consensus, ConsensusAmino, ConsensusSDKType } from "../version/types";
+import { Proof, ProofAmino } from "../crypto/proof";
+import { Consensus, ConsensusAmino } from "../version/types";
 import { Timestamp } from "../../google/protobuf/timestamp";
-import { BlockIDFlag, ValidatorSet, ValidatorSetAmino, ValidatorSetSDKType } from "./validator";
+import { BlockIDFlag, ValidatorSet, ValidatorSetAmino } from "./validator";
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact, bytesFromBase64, base64FromBytes, toTimestamp, fromTimestamp, isSet } from "../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes, toTimestamp, fromTimestamp, isSet } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /** SignedMsgType is a type of signed message in the consensus. */
 export enum SignedMsgType {
@@ -17,7 +17,6 @@ export enum SignedMsgType {
   SIGNED_MSG_TYPE_PROPOSAL = 32,
   UNRECOGNIZED = -1,
 }
-export const SignedMsgTypeSDKType = SignedMsgType;
 export const SignedMsgTypeAmino = SignedMsgType;
 export function signedMsgTypeFromJSON(object: any): SignedMsgType {
   switch (object) {
@@ -75,22 +74,12 @@ export interface PartSetHeaderProtoMsg {
  * @see proto type: tendermint.types.PartSetHeader
  */
 export interface PartSetHeaderAmino {
-  total?: number;
-  hash?: string;
+  total: number;
+  hash: string;
 }
 export interface PartSetHeaderAminoMsg {
   type: "/tendermint.types.PartSetHeader";
   value: PartSetHeaderAmino;
-}
-/**
- * PartsetHeader
- * @name PartSetHeaderSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.PartSetHeader
- */
-export interface PartSetHeaderSDKType {
-  total: number;
-  hash: Uint8Array;
 }
 /**
  * @name Part
@@ -112,23 +101,13 @@ export interface PartProtoMsg {
  * @see proto type: tendermint.types.Part
  */
 export interface PartAmino {
-  index?: number;
-  bytes?: string;
-  proof?: ProofAmino;
+  index: number;
+  bytes: string;
+  proof: ProofAmino;
 }
 export interface PartAminoMsg {
   type: "/tendermint.types.Part";
   value: PartAmino;
-}
-/**
- * @name PartSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.Part
- */
-export interface PartSDKType {
-  index: number;
-  bytes: Uint8Array;
-  proof: ProofSDKType;
 }
 /**
  * BlockID
@@ -151,22 +130,12 @@ export interface BlockIDProtoMsg {
  * @see proto type: tendermint.types.BlockID
  */
 export interface BlockIDAmino {
-  hash?: string;
-  part_set_header?: PartSetHeaderAmino;
+  hash: string;
+  part_set_header: PartSetHeaderAmino;
 }
 export interface BlockIDAminoMsg {
   type: "/tendermint.types.BlockID";
   value: BlockIDAmino;
-}
-/**
- * BlockID
- * @name BlockIDSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.BlockID
- */
-export interface BlockIDSDKType {
-  hash: Uint8Array;
-  part_set_header: PartSetHeaderSDKType;
 }
 /**
  * Header defines the structure of a block header.
@@ -237,76 +206,54 @@ export interface HeaderAmino {
   /**
    * basic block info
    */
-  version?: ConsensusAmino;
-  chain_id?: string;
-  height?: string;
-  time?: string;
+  version: ConsensusAmino;
+  chain_id: string;
+  height: string;
+  time: string;
   /**
    * prev block info
    */
-  last_block_id?: BlockIDAmino;
+  last_block_id: BlockIDAmino;
   /**
    * hashes of block data
    */
-  last_commit_hash?: string;
+  last_commit_hash: string;
   /**
    * transactions
    */
-  data_hash?: string;
+  data_hash: string;
   /**
    * hashes from the app output from the prev block
    */
-  validators_hash?: string;
+  validators_hash: string;
   /**
    * validators for the next block
    */
-  next_validators_hash?: string;
+  next_validators_hash: string;
   /**
    * consensus params for current block
    */
-  consensus_hash?: string;
+  consensus_hash: string;
   /**
    * state after txs from the previous block
    */
-  app_hash?: string;
+  app_hash: string;
   /**
    * root hash of all results from the txs from the previous block
    */
-  last_results_hash?: string;
+  last_results_hash: string;
   /**
    * consensus info
    */
-  evidence_hash?: string;
+  evidence_hash: string;
   /**
    * original proposer of the block
    */
-  proposer_address?: string;
+  proposer_address: string;
 }
 export interface HeaderAminoMsg {
   type: "/tendermint.types.Header";
   value: HeaderAmino;
-}
-/**
- * Header defines the structure of a block header.
- * @name HeaderSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.Header
- */
-export interface HeaderSDKType {
-  version: ConsensusSDKType;
-  chain_id: string;
-  height: bigint;
-  time: Date;
-  last_block_id: BlockIDSDKType;
-  last_commit_hash: Uint8Array;
-  data_hash: Uint8Array;
-  validators_hash: Uint8Array;
-  next_validators_hash: Uint8Array;
-  consensus_hash: Uint8Array;
-  app_hash: Uint8Array;
-  last_results_hash: Uint8Array;
-  evidence_hash: Uint8Array;
-  proposer_address: Uint8Array;
 }
 /**
  * Data contains the set of transactions included in the block
@@ -338,20 +285,11 @@ export interface DataAmino {
    * NOTE: not all txs here are valid.  We're just agreeing on the order first.
    * This means that block.AppHash does not include these txs.
    */
-  txs?: string[];
+  txs: string[];
 }
 export interface DataAminoMsg {
   type: "/tendermint.types.Data";
   value: DataAmino;
-}
-/**
- * Data contains the set of transactions included in the block
- * @name DataSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.Data
- */
-export interface DataSDKType {
-  txs: Uint8Array[];
 }
 /**
  * Vote represents a prevote or precommit vote from validators for
@@ -400,55 +338,36 @@ export interface VoteProtoMsg {
  * @see proto type: tendermint.types.Vote
  */
 export interface VoteAmino {
-  type?: SignedMsgType;
-  height?: string;
-  round?: number;
+  type: SignedMsgType;
+  height: string;
+  round: number;
   /**
    * zero if vote is nil.
    */
-  block_id?: BlockIDAmino;
-  timestamp?: string;
-  validator_address?: string;
-  validator_index?: number;
+  block_id: BlockIDAmino;
+  timestamp: string;
+  validator_address: string;
+  validator_index: number;
   /**
    * Vote signature by the validator if they participated in consensus for the
    * associated block.
    */
-  signature?: string;
+  signature: string;
   /**
    * Vote extension provided by the application. Only valid for precommit
    * messages.
    */
-  extension?: string;
+  extension: string;
   /**
    * Vote extension signature by the validator if they participated in
    * consensus for the associated block.
    * Only valid for precommit messages.
    */
-  extension_signature?: string;
+  extension_signature: string;
 }
 export interface VoteAminoMsg {
   type: "/tendermint.types.Vote";
   value: VoteAmino;
-}
-/**
- * Vote represents a prevote or precommit vote from validators for
- * consensus.
- * @name VoteSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.Vote
- */
-export interface VoteSDKType {
-  type: SignedMsgType;
-  height: bigint;
-  round: number;
-  block_id: BlockIDSDKType;
-  timestamp: Date;
-  validator_address: Uint8Array;
-  validator_index: number;
-  signature: Uint8Array;
-  extension: Uint8Array;
-  extension_signature: Uint8Array;
 }
 /**
  * Commit contains the evidence that a block was committed by a set of validators.
@@ -473,26 +392,14 @@ export interface CommitProtoMsg {
  * @see proto type: tendermint.types.Commit
  */
 export interface CommitAmino {
-  height?: string;
-  round?: number;
-  block_id?: BlockIDAmino;
-  signatures?: CommitSigAmino[];
+  height: string;
+  round: number;
+  block_id: BlockIDAmino;
+  signatures: CommitSigAmino[];
 }
 export interface CommitAminoMsg {
   type: "/tendermint.types.Commit";
   value: CommitAmino;
-}
-/**
- * Commit contains the evidence that a block was committed by a set of validators.
- * @name CommitSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.Commit
- */
-export interface CommitSDKType {
-  height: bigint;
-  round: number;
-  block_id: BlockIDSDKType;
-  signatures: CommitSigSDKType[];
 }
 /**
  * CommitSig is a part of the Vote included in a Commit.
@@ -517,26 +424,14 @@ export interface CommitSigProtoMsg {
  * @see proto type: tendermint.types.CommitSig
  */
 export interface CommitSigAmino {
-  block_id_flag?: BlockIDFlag;
-  validator_address?: string;
-  timestamp?: string;
-  signature?: string;
+  block_id_flag: BlockIDFlag;
+  validator_address: string;
+  timestamp: string;
+  signature: string;
 }
 export interface CommitSigAminoMsg {
   type: "/tendermint.types.CommitSig";
   value: CommitSigAmino;
-}
-/**
- * CommitSig is a part of the Vote included in a Commit.
- * @name CommitSigSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.CommitSig
- */
-export interface CommitSigSDKType {
-  block_id_flag: BlockIDFlag;
-  validator_address: Uint8Array;
-  timestamp: Date;
-  signature: Uint8Array;
 }
 /**
  * @name ExtendedCommit
@@ -559,25 +454,14 @@ export interface ExtendedCommitProtoMsg {
  * @see proto type: tendermint.types.ExtendedCommit
  */
 export interface ExtendedCommitAmino {
-  height?: string;
-  round?: number;
-  block_id?: BlockIDAmino;
-  extended_signatures?: ExtendedCommitSigAmino[];
+  height: string;
+  round: number;
+  block_id: BlockIDAmino;
+  extended_signatures: ExtendedCommitSigAmino[];
 }
 export interface ExtendedCommitAminoMsg {
   type: "/tendermint.types.ExtendedCommit";
   value: ExtendedCommitAmino;
-}
-/**
- * @name ExtendedCommitSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.ExtendedCommit
- */
-export interface ExtendedCommitSDKType {
-  height: bigint;
-  round: number;
-  block_id: BlockIDSDKType;
-  extended_signatures: ExtendedCommitSigSDKType[];
 }
 /**
  * ExtendedCommitSig retains all the same fields as CommitSig but adds vote
@@ -614,38 +498,22 @@ export interface ExtendedCommitSigProtoMsg {
  * @see proto type: tendermint.types.ExtendedCommitSig
  */
 export interface ExtendedCommitSigAmino {
-  block_id_flag?: BlockIDFlag;
-  validator_address?: string;
-  timestamp?: string;
-  signature?: string;
+  block_id_flag: BlockIDFlag;
+  validator_address: string;
+  timestamp: string;
+  signature: string;
   /**
    * Vote extension data
    */
-  extension?: string;
+  extension: string;
   /**
    * Vote extension signature
    */
-  extension_signature?: string;
+  extension_signature: string;
 }
 export interface ExtendedCommitSigAminoMsg {
   type: "/tendermint.types.ExtendedCommitSig";
   value: ExtendedCommitSigAmino;
-}
-/**
- * ExtendedCommitSig retains all the same fields as CommitSig but adds vote
- * extension-related fields. We use two signatures to ensure backwards compatibility.
- * That is the digest of the original signature is still the same in prior versions
- * @name ExtendedCommitSigSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.ExtendedCommitSig
- */
-export interface ExtendedCommitSigSDKType {
-  block_id_flag: BlockIDFlag;
-  validator_address: Uint8Array;
-  timestamp: Date;
-  signature: Uint8Array;
-  extension: Uint8Array;
-  extension_signature: Uint8Array;
 }
 /**
  * @name Proposal
@@ -671,31 +539,17 @@ export interface ProposalProtoMsg {
  * @see proto type: tendermint.types.Proposal
  */
 export interface ProposalAmino {
-  type?: SignedMsgType;
-  height?: string;
-  round?: number;
-  pol_round?: number;
-  block_id?: BlockIDAmino;
-  timestamp?: string;
-  signature?: string;
+  type: SignedMsgType;
+  height: string;
+  round: number;
+  pol_round: number;
+  block_id: BlockIDAmino;
+  timestamp: string;
+  signature: string;
 }
 export interface ProposalAminoMsg {
   type: "/tendermint.types.Proposal";
   value: ProposalAmino;
-}
-/**
- * @name ProposalSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.Proposal
- */
-export interface ProposalSDKType {
-  type: SignedMsgType;
-  height: bigint;
-  round: number;
-  pol_round: number;
-  block_id: BlockIDSDKType;
-  timestamp: Date;
-  signature: Uint8Array;
 }
 /**
  * @name SignedHeader
@@ -724,15 +578,6 @@ export interface SignedHeaderAminoMsg {
   value: SignedHeaderAmino;
 }
 /**
- * @name SignedHeaderSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.SignedHeader
- */
-export interface SignedHeaderSDKType {
-  header?: HeaderSDKType;
-  commit?: CommitSDKType;
-}
-/**
  * @name LightBlock
  * @package tendermint.types
  * @see proto type: tendermint.types.LightBlock
@@ -759,15 +604,6 @@ export interface LightBlockAminoMsg {
   value: LightBlockAmino;
 }
 /**
- * @name LightBlockSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.LightBlock
- */
-export interface LightBlockSDKType {
-  signed_header?: SignedHeaderSDKType;
-  validator_set?: ValidatorSetSDKType;
-}
-/**
  * @name BlockMeta
  * @package tendermint.types
  * @see proto type: tendermint.types.BlockMeta
@@ -788,25 +624,14 @@ export interface BlockMetaProtoMsg {
  * @see proto type: tendermint.types.BlockMeta
  */
 export interface BlockMetaAmino {
-  block_id?: BlockIDAmino;
-  block_size?: string;
-  header?: HeaderAmino;
-  num_txs?: string;
+  block_id: BlockIDAmino;
+  block_size: string;
+  header: HeaderAmino;
+  num_txs: string;
 }
 export interface BlockMetaAminoMsg {
   type: "/tendermint.types.BlockMeta";
   value: BlockMetaAmino;
-}
-/**
- * @name BlockMetaSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.BlockMeta
- */
-export interface BlockMetaSDKType {
-  block_id: BlockIDSDKType;
-  block_size: bigint;
-  header: HeaderSDKType;
-  num_txs: bigint;
 }
 /**
  * TxProof represents a Merkle proof of the presence of a transaction in the Merkle tree.
@@ -830,24 +655,13 @@ export interface TxProofProtoMsg {
  * @see proto type: tendermint.types.TxProof
  */
 export interface TxProofAmino {
-  root_hash?: string;
-  data?: string;
+  root_hash: string;
+  data: string;
   proof?: ProofAmino;
 }
 export interface TxProofAminoMsg {
   type: "/tendermint.types.TxProof";
   value: TxProofAmino;
-}
-/**
- * TxProof represents a Merkle proof of the presence of a transaction in the Merkle tree.
- * @name TxProofSDKType
- * @package tendermint.types
- * @see proto type: tendermint.types.TxProof
- */
-export interface TxProofSDKType {
-  root_hash: Uint8Array;
-  data: Uint8Array;
-  proof?: ProofSDKType;
 }
 function createBasePartSetHeader(): PartSetHeader {
   return {
@@ -864,9 +678,6 @@ function createBasePartSetHeader(): PartSetHeader {
 export const PartSetHeader = {
   typeUrl: "/tendermint.types.PartSetHeader",
   is(o: any): o is PartSetHeader {
-    return o && (o.$typeUrl === PartSetHeader.typeUrl || typeof o.total === "number" && (o.hash instanceof Uint8Array || typeof o.hash === "string"));
-  },
-  isSDK(o: any): o is PartSetHeaderSDKType {
     return o && (o.$typeUrl === PartSetHeader.typeUrl || typeof o.total === "number" && (o.hash instanceof Uint8Array || typeof o.hash === "string"));
   },
   isAmino(o: any): o is PartSetHeaderAmino {
@@ -901,7 +712,7 @@ export const PartSetHeader = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PartSetHeader>, I>>(object: I): PartSetHeader {
+  fromPartial(object: DeepPartial<PartSetHeader>): PartSetHeader {
     const message = createBasePartSetHeader();
     message.total = object.total ?? 0;
     message.hash = object.hash ?? new Uint8Array();
@@ -957,9 +768,6 @@ export const Part = {
   is(o: any): o is Part {
     return o && (o.$typeUrl === Part.typeUrl || typeof o.index === "number" && (o.bytes instanceof Uint8Array || typeof o.bytes === "string") && Proof.is(o.proof));
   },
-  isSDK(o: any): o is PartSDKType {
-    return o && (o.$typeUrl === Part.typeUrl || typeof o.index === "number" && (o.bytes instanceof Uint8Array || typeof o.bytes === "string") && Proof.isSDK(o.proof));
-  },
   isAmino(o: any): o is PartAmino {
     return o && (o.$typeUrl === Part.typeUrl || typeof o.index === "number" && (o.bytes instanceof Uint8Array || typeof o.bytes === "string") && Proof.isAmino(o.proof));
   },
@@ -998,7 +806,7 @@ export const Part = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Part>, I>>(object: I): Part {
+  fromPartial(object: DeepPartial<Part>): Part {
     const message = createBasePart();
     message.index = object.index ?? 0;
     message.bytes = object.bytes ?? new Uint8Array();
@@ -1064,9 +872,6 @@ export const BlockID = {
   is(o: any): o is BlockID {
     return o && (o.$typeUrl === BlockID.typeUrl || (o.hash instanceof Uint8Array || typeof o.hash === "string") && PartSetHeader.is(o.partSetHeader));
   },
-  isSDK(o: any): o is BlockIDSDKType {
-    return o && (o.$typeUrl === BlockID.typeUrl || (o.hash instanceof Uint8Array || typeof o.hash === "string") && PartSetHeader.isSDK(o.part_set_header));
-  },
   isAmino(o: any): o is BlockIDAmino {
     return o && (o.$typeUrl === BlockID.typeUrl || (o.hash instanceof Uint8Array || typeof o.hash === "string") && PartSetHeader.isAmino(o.part_set_header));
   },
@@ -1099,7 +904,7 @@ export const BlockID = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BlockID>, I>>(object: I): BlockID {
+  fromPartial(object: DeepPartial<BlockID>): BlockID {
     const message = createBaseBlockID();
     message.hash = object.hash ?? new Uint8Array();
     message.partSetHeader = object.partSetHeader !== undefined && object.partSetHeader !== null ? PartSetHeader.fromPartial(object.partSetHeader) : undefined;
@@ -1171,9 +976,6 @@ export const Header = {
   typeUrl: "/tendermint.types.Header",
   is(o: any): o is Header {
     return o && (o.$typeUrl === Header.typeUrl || Consensus.is(o.version) && typeof o.chainId === "string" && typeof o.height === "bigint" && Timestamp.is(o.time) && BlockID.is(o.lastBlockId) && (o.lastCommitHash instanceof Uint8Array || typeof o.lastCommitHash === "string") && (o.dataHash instanceof Uint8Array || typeof o.dataHash === "string") && (o.validatorsHash instanceof Uint8Array || typeof o.validatorsHash === "string") && (o.nextValidatorsHash instanceof Uint8Array || typeof o.nextValidatorsHash === "string") && (o.consensusHash instanceof Uint8Array || typeof o.consensusHash === "string") && (o.appHash instanceof Uint8Array || typeof o.appHash === "string") && (o.lastResultsHash instanceof Uint8Array || typeof o.lastResultsHash === "string") && (o.evidenceHash instanceof Uint8Array || typeof o.evidenceHash === "string") && (o.proposerAddress instanceof Uint8Array || typeof o.proposerAddress === "string"));
-  },
-  isSDK(o: any): o is HeaderSDKType {
-    return o && (o.$typeUrl === Header.typeUrl || Consensus.isSDK(o.version) && typeof o.chain_id === "string" && typeof o.height === "bigint" && Timestamp.isSDK(o.time) && BlockID.isSDK(o.last_block_id) && (o.last_commit_hash instanceof Uint8Array || typeof o.last_commit_hash === "string") && (o.data_hash instanceof Uint8Array || typeof o.data_hash === "string") && (o.validators_hash instanceof Uint8Array || typeof o.validators_hash === "string") && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.consensus_hash instanceof Uint8Array || typeof o.consensus_hash === "string") && (o.app_hash instanceof Uint8Array || typeof o.app_hash === "string") && (o.last_results_hash instanceof Uint8Array || typeof o.last_results_hash === "string") && (o.evidence_hash instanceof Uint8Array || typeof o.evidence_hash === "string") && (o.proposer_address instanceof Uint8Array || typeof o.proposer_address === "string"));
   },
   isAmino(o: any): o is HeaderAmino {
     return o && (o.$typeUrl === Header.typeUrl || Consensus.isAmino(o.version) && typeof o.chain_id === "string" && typeof o.height === "bigint" && Timestamp.isAmino(o.time) && BlockID.isAmino(o.last_block_id) && (o.last_commit_hash instanceof Uint8Array || typeof o.last_commit_hash === "string") && (o.data_hash instanceof Uint8Array || typeof o.data_hash === "string") && (o.validators_hash instanceof Uint8Array || typeof o.validators_hash === "string") && (o.next_validators_hash instanceof Uint8Array || typeof o.next_validators_hash === "string") && (o.consensus_hash instanceof Uint8Array || typeof o.consensus_hash === "string") && (o.app_hash instanceof Uint8Array || typeof o.app_hash === "string") && (o.last_results_hash instanceof Uint8Array || typeof o.last_results_hash === "string") && (o.evidence_hash instanceof Uint8Array || typeof o.evidence_hash === "string") && (o.proposer_address instanceof Uint8Array || typeof o.proposer_address === "string"));
@@ -1279,7 +1081,7 @@ export const Header = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Header>, I>>(object: I): Header {
+  fromPartial(object: DeepPartial<Header>): Header {
     const message = createBaseHeader();
     message.version = object.version !== undefined && object.version !== null ? Consensus.fromPartial(object.version) : undefined;
     message.chainId = object.chainId ?? "";
@@ -1400,9 +1202,6 @@ export const Data = {
   is(o: any): o is Data {
     return o && (o.$typeUrl === Data.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string"));
   },
-  isSDK(o: any): o is DataSDKType {
-    return o && (o.$typeUrl === Data.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string"));
-  },
   isAmino(o: any): o is DataAmino {
     return o && (o.$typeUrl === Data.typeUrl || Array.isArray(o.txs) && (!o.txs.length || o.txs[0] instanceof Uint8Array || typeof o.txs[0] === "string"));
   },
@@ -1429,7 +1228,7 @@ export const Data = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Data>, I>>(object: I): Data {
+  fromPartial(object: DeepPartial<Data>): Data {
     const message = createBaseData();
     message.txs = object.txs?.map(e => e) || [];
     return message;
@@ -1490,9 +1289,6 @@ export const Vote = {
   typeUrl: "/tendermint.types.Vote",
   is(o: any): o is Vote {
     return o && (o.$typeUrl === Vote.typeUrl || isSet(o.type) && typeof o.height === "bigint" && typeof o.round === "number" && BlockID.is(o.blockId) && Timestamp.is(o.timestamp) && (o.validatorAddress instanceof Uint8Array || typeof o.validatorAddress === "string") && typeof o.validatorIndex === "number" && (o.signature instanceof Uint8Array || typeof o.signature === "string") && (o.extension instanceof Uint8Array || typeof o.extension === "string") && (o.extensionSignature instanceof Uint8Array || typeof o.extensionSignature === "string"));
-  },
-  isSDK(o: any): o is VoteSDKType {
-    return o && (o.$typeUrl === Vote.typeUrl || isSet(o.type) && typeof o.height === "bigint" && typeof o.round === "number" && BlockID.isSDK(o.block_id) && Timestamp.isSDK(o.timestamp) && (o.validator_address instanceof Uint8Array || typeof o.validator_address === "string") && typeof o.validator_index === "number" && (o.signature instanceof Uint8Array || typeof o.signature === "string") && (o.extension instanceof Uint8Array || typeof o.extension === "string") && (o.extension_signature instanceof Uint8Array || typeof o.extension_signature === "string"));
   },
   isAmino(o: any): o is VoteAmino {
     return o && (o.$typeUrl === Vote.typeUrl || isSet(o.type) && typeof o.height === "bigint" && typeof o.round === "number" && BlockID.isAmino(o.block_id) && Timestamp.isAmino(o.timestamp) && (o.validator_address instanceof Uint8Array || typeof o.validator_address === "string") && typeof o.validator_index === "number" && (o.signature instanceof Uint8Array || typeof o.signature === "string") && (o.extension instanceof Uint8Array || typeof o.extension === "string") && (o.extension_signature instanceof Uint8Array || typeof o.extension_signature === "string"));
@@ -1574,7 +1370,7 @@ export const Vote = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Vote>, I>>(object: I): Vote {
+  fromPartial(object: DeepPartial<Vote>): Vote {
     const message = createBaseVote();
     message.type = object.type ?? 0;
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
@@ -1677,9 +1473,6 @@ export const Commit = {
   is(o: any): o is Commit {
     return o && (o.$typeUrl === Commit.typeUrl || typeof o.height === "bigint" && typeof o.round === "number" && BlockID.is(o.blockId) && Array.isArray(o.signatures) && (!o.signatures.length || CommitSig.is(o.signatures[0])));
   },
-  isSDK(o: any): o is CommitSDKType {
-    return o && (o.$typeUrl === Commit.typeUrl || typeof o.height === "bigint" && typeof o.round === "number" && BlockID.isSDK(o.block_id) && Array.isArray(o.signatures) && (!o.signatures.length || CommitSig.isSDK(o.signatures[0])));
-  },
   isAmino(o: any): o is CommitAmino {
     return o && (o.$typeUrl === Commit.typeUrl || typeof o.height === "bigint" && typeof o.round === "number" && BlockID.isAmino(o.block_id) && Array.isArray(o.signatures) && (!o.signatures.length || CommitSig.isAmino(o.signatures[0])));
   },
@@ -1724,7 +1517,7 @@ export const Commit = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Commit>, I>>(object: I): Commit {
+  fromPartial(object: DeepPartial<Commit>): Commit {
     const message = createBaseCommit();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     message.round = object.round ?? 0;
@@ -1800,9 +1593,6 @@ export const CommitSig = {
   is(o: any): o is CommitSig {
     return o && (o.$typeUrl === CommitSig.typeUrl || isSet(o.blockIdFlag) && (o.validatorAddress instanceof Uint8Array || typeof o.validatorAddress === "string") && Timestamp.is(o.timestamp) && (o.signature instanceof Uint8Array || typeof o.signature === "string"));
   },
-  isSDK(o: any): o is CommitSigSDKType {
-    return o && (o.$typeUrl === CommitSig.typeUrl || isSet(o.block_id_flag) && (o.validator_address instanceof Uint8Array || typeof o.validator_address === "string") && Timestamp.isSDK(o.timestamp) && (o.signature instanceof Uint8Array || typeof o.signature === "string"));
-  },
   isAmino(o: any): o is CommitSigAmino {
     return o && (o.$typeUrl === CommitSig.typeUrl || isSet(o.block_id_flag) && (o.validator_address instanceof Uint8Array || typeof o.validator_address === "string") && Timestamp.isAmino(o.timestamp) && (o.signature instanceof Uint8Array || typeof o.signature === "string"));
   },
@@ -1847,7 +1637,7 @@ export const CommitSig = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CommitSig>, I>>(object: I): CommitSig {
+  fromPartial(object: DeepPartial<CommitSig>): CommitSig {
     const message = createBaseCommitSig();
     message.blockIdFlag = object.blockIdFlag ?? 0;
     message.validatorAddress = object.validatorAddress ?? new Uint8Array();
@@ -1914,9 +1704,6 @@ export const ExtendedCommit = {
   is(o: any): o is ExtendedCommit {
     return o && (o.$typeUrl === ExtendedCommit.typeUrl || typeof o.height === "bigint" && typeof o.round === "number" && BlockID.is(o.blockId) && Array.isArray(o.extendedSignatures) && (!o.extendedSignatures.length || ExtendedCommitSig.is(o.extendedSignatures[0])));
   },
-  isSDK(o: any): o is ExtendedCommitSDKType {
-    return o && (o.$typeUrl === ExtendedCommit.typeUrl || typeof o.height === "bigint" && typeof o.round === "number" && BlockID.isSDK(o.block_id) && Array.isArray(o.extended_signatures) && (!o.extended_signatures.length || ExtendedCommitSig.isSDK(o.extended_signatures[0])));
-  },
   isAmino(o: any): o is ExtendedCommitAmino {
     return o && (o.$typeUrl === ExtendedCommit.typeUrl || typeof o.height === "bigint" && typeof o.round === "number" && BlockID.isAmino(o.block_id) && Array.isArray(o.extended_signatures) && (!o.extended_signatures.length || ExtendedCommitSig.isAmino(o.extended_signatures[0])));
   },
@@ -1961,7 +1748,7 @@ export const ExtendedCommit = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ExtendedCommit>, I>>(object: I): ExtendedCommit {
+  fromPartial(object: DeepPartial<ExtendedCommit>): ExtendedCommit {
     const message = createBaseExtendedCommit();
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
     message.round = object.round ?? 0;
@@ -2041,9 +1828,6 @@ export const ExtendedCommitSig = {
   is(o: any): o is ExtendedCommitSig {
     return o && (o.$typeUrl === ExtendedCommitSig.typeUrl || isSet(o.blockIdFlag) && (o.validatorAddress instanceof Uint8Array || typeof o.validatorAddress === "string") && Timestamp.is(o.timestamp) && (o.signature instanceof Uint8Array || typeof o.signature === "string") && (o.extension instanceof Uint8Array || typeof o.extension === "string") && (o.extensionSignature instanceof Uint8Array || typeof o.extensionSignature === "string"));
   },
-  isSDK(o: any): o is ExtendedCommitSigSDKType {
-    return o && (o.$typeUrl === ExtendedCommitSig.typeUrl || isSet(o.block_id_flag) && (o.validator_address instanceof Uint8Array || typeof o.validator_address === "string") && Timestamp.isSDK(o.timestamp) && (o.signature instanceof Uint8Array || typeof o.signature === "string") && (o.extension instanceof Uint8Array || typeof o.extension === "string") && (o.extension_signature instanceof Uint8Array || typeof o.extension_signature === "string"));
-  },
   isAmino(o: any): o is ExtendedCommitSigAmino {
     return o && (o.$typeUrl === ExtendedCommitSig.typeUrl || isSet(o.block_id_flag) && (o.validator_address instanceof Uint8Array || typeof o.validator_address === "string") && Timestamp.isAmino(o.timestamp) && (o.signature instanceof Uint8Array || typeof o.signature === "string") && (o.extension instanceof Uint8Array || typeof o.extension === "string") && (o.extension_signature instanceof Uint8Array || typeof o.extension_signature === "string"));
   },
@@ -2100,7 +1884,7 @@ export const ExtendedCommitSig = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ExtendedCommitSig>, I>>(object: I): ExtendedCommitSig {
+  fromPartial(object: DeepPartial<ExtendedCommitSig>): ExtendedCommitSig {
     const message = createBaseExtendedCommitSig();
     message.blockIdFlag = object.blockIdFlag ?? 0;
     message.validatorAddress = object.validatorAddress ?? new Uint8Array();
@@ -2180,9 +1964,6 @@ export const Proposal = {
   is(o: any): o is Proposal {
     return o && (o.$typeUrl === Proposal.typeUrl || isSet(o.type) && typeof o.height === "bigint" && typeof o.round === "number" && typeof o.polRound === "number" && BlockID.is(o.blockId) && Timestamp.is(o.timestamp) && (o.signature instanceof Uint8Array || typeof o.signature === "string"));
   },
-  isSDK(o: any): o is ProposalSDKType {
-    return o && (o.$typeUrl === Proposal.typeUrl || isSet(o.type) && typeof o.height === "bigint" && typeof o.round === "number" && typeof o.pol_round === "number" && BlockID.isSDK(o.block_id) && Timestamp.isSDK(o.timestamp) && (o.signature instanceof Uint8Array || typeof o.signature === "string"));
-  },
   isAmino(o: any): o is ProposalAmino {
     return o && (o.$typeUrl === Proposal.typeUrl || isSet(o.type) && typeof o.height === "bigint" && typeof o.round === "number" && typeof o.pol_round === "number" && BlockID.isAmino(o.block_id) && Timestamp.isAmino(o.timestamp) && (o.signature instanceof Uint8Array || typeof o.signature === "string"));
   },
@@ -2245,7 +2026,7 @@ export const Proposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Proposal>, I>>(object: I): Proposal {
+  fromPartial(object: DeepPartial<Proposal>): Proposal {
     const message = createBaseProposal();
     message.type = object.type ?? 0;
     message.height = object.height !== undefined && object.height !== null ? BigInt(object.height.toString()) : BigInt(0);
@@ -2330,9 +2111,6 @@ export const SignedHeader = {
   is(o: any): o is SignedHeader {
     return o && o.$typeUrl === SignedHeader.typeUrl;
   },
-  isSDK(o: any): o is SignedHeaderSDKType {
-    return o && o.$typeUrl === SignedHeader.typeUrl;
-  },
   isAmino(o: any): o is SignedHeaderAmino {
     return o && o.$typeUrl === SignedHeader.typeUrl;
   },
@@ -2365,7 +2143,7 @@ export const SignedHeader = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SignedHeader>, I>>(object: I): SignedHeader {
+  fromPartial(object: DeepPartial<SignedHeader>): SignedHeader {
     const message = createBaseSignedHeader();
     message.header = object.header !== undefined && object.header !== null ? Header.fromPartial(object.header) : undefined;
     message.commit = object.commit !== undefined && object.commit !== null ? Commit.fromPartial(object.commit) : undefined;
@@ -2426,9 +2204,6 @@ export const LightBlock = {
   is(o: any): o is LightBlock {
     return o && o.$typeUrl === LightBlock.typeUrl;
   },
-  isSDK(o: any): o is LightBlockSDKType {
-    return o && o.$typeUrl === LightBlock.typeUrl;
-  },
   isAmino(o: any): o is LightBlockAmino {
     return o && o.$typeUrl === LightBlock.typeUrl;
   },
@@ -2461,7 +2236,7 @@ export const LightBlock = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<LightBlock>, I>>(object: I): LightBlock {
+  fromPartial(object: DeepPartial<LightBlock>): LightBlock {
     const message = createBaseLightBlock();
     message.signedHeader = object.signedHeader !== undefined && object.signedHeader !== null ? SignedHeader.fromPartial(object.signedHeader) : undefined;
     message.validatorSet = object.validatorSet !== undefined && object.validatorSet !== null ? ValidatorSet.fromPartial(object.validatorSet) : undefined;
@@ -2524,9 +2299,6 @@ export const BlockMeta = {
   is(o: any): o is BlockMeta {
     return o && (o.$typeUrl === BlockMeta.typeUrl || BlockID.is(o.blockId) && typeof o.blockSize === "bigint" && Header.is(o.header) && typeof o.numTxs === "bigint");
   },
-  isSDK(o: any): o is BlockMetaSDKType {
-    return o && (o.$typeUrl === BlockMeta.typeUrl || BlockID.isSDK(o.block_id) && typeof o.block_size === "bigint" && Header.isSDK(o.header) && typeof o.num_txs === "bigint");
-  },
   isAmino(o: any): o is BlockMetaAmino {
     return o && (o.$typeUrl === BlockMeta.typeUrl || BlockID.isAmino(o.block_id) && typeof o.block_size === "bigint" && Header.isAmino(o.header) && typeof o.num_txs === "bigint");
   },
@@ -2571,7 +2343,7 @@ export const BlockMeta = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<BlockMeta>, I>>(object: I): BlockMeta {
+  fromPartial(object: DeepPartial<BlockMeta>): BlockMeta {
     const message = createBaseBlockMeta();
     message.blockId = object.blockId !== undefined && object.blockId !== null ? BlockID.fromPartial(object.blockId) : undefined;
     message.blockSize = object.blockSize !== undefined && object.blockSize !== null ? BigInt(object.blockSize.toString()) : BigInt(0);
@@ -2644,9 +2416,6 @@ export const TxProof = {
   is(o: any): o is TxProof {
     return o && (o.$typeUrl === TxProof.typeUrl || (o.rootHash instanceof Uint8Array || typeof o.rootHash === "string") && (o.data instanceof Uint8Array || typeof o.data === "string"));
   },
-  isSDK(o: any): o is TxProofSDKType {
-    return o && (o.$typeUrl === TxProof.typeUrl || (o.root_hash instanceof Uint8Array || typeof o.root_hash === "string") && (o.data instanceof Uint8Array || typeof o.data === "string"));
-  },
   isAmino(o: any): o is TxProofAmino {
     return o && (o.$typeUrl === TxProof.typeUrl || (o.root_hash instanceof Uint8Array || typeof o.root_hash === "string") && (o.data instanceof Uint8Array || typeof o.data === "string"));
   },
@@ -2685,7 +2454,7 @@ export const TxProof = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TxProof>, I>>(object: I): TxProof {
+  fromPartial(object: DeepPartial<TxProof>): TxProof {
     const message = createBaseTxProof();
     message.rootHash = object.rootHash ?? new Uint8Array();
     message.data = object.data ?? new Uint8Array();

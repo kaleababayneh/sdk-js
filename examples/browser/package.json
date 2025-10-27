@@ -10,14 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@cosmjs/proto-signing": "^0.32.0",
-    "@cosmjs/stargate": "^0.32.0",
+    "@cosmjs/proto-signing": "^0.36.0",
+    "@cosmjs/stargate": "^0.36.0",
     "@lumera/sdk-js": "file:../.."
   },
   "devDependencies": {
-    "@vitejs/plugin-basic-ssl": "^2.1.0",
-    "typescript": "^5.6.3",
-    "vite": "^5.0.0",
-    "vite-plugin-static-copy": "^3.1.4"
+    "@vitejs/plugin-basic-ssl": "^1.1.0",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.0",
+    "vite-plugin-static-copy": "^1.0.5"
   }
 }

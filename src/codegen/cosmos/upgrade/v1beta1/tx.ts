@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Plan, PlanAmino, PlanSDKType } from "./upgrade";
+import { Plan, PlanAmino } from "./upgrade";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * MsgSoftwareUpgrade is the Msg/SoftwareUpgrade request type.
  * 
@@ -38,7 +38,7 @@ export interface MsgSoftwareUpgradeAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * plan is the upgrade plan.
    */
@@ -47,18 +47,6 @@ export interface MsgSoftwareUpgradeAmino {
 export interface MsgSoftwareUpgradeAminoMsg {
   type: "cosmos-sdk/MsgSoftwareUpgrade";
   value: MsgSoftwareUpgradeAmino;
-}
-/**
- * MsgSoftwareUpgrade is the Msg/SoftwareUpgrade request type.
- * 
- * Since: cosmos-sdk 0.46
- * @name MsgSoftwareUpgradeSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.MsgSoftwareUpgrade
- */
-export interface MsgSoftwareUpgradeSDKType {
-  authority: string;
-  plan: PlanSDKType;
 }
 /**
  * MsgSoftwareUpgradeResponse is the Msg/SoftwareUpgrade response type.
@@ -86,15 +74,6 @@ export interface MsgSoftwareUpgradeResponseAminoMsg {
   type: "cosmos-sdk/MsgSoftwareUpgradeResponse";
   value: MsgSoftwareUpgradeResponseAmino;
 }
-/**
- * MsgSoftwareUpgradeResponse is the Msg/SoftwareUpgrade response type.
- * 
- * Since: cosmos-sdk 0.46
- * @name MsgSoftwareUpgradeResponseSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.MsgSoftwareUpgradeResponse
- */
-export interface MsgSoftwareUpgradeResponseSDKType {}
 /**
  * MsgCancelUpgrade is the Msg/CancelUpgrade request type.
  * 
@@ -125,22 +104,11 @@ export interface MsgCancelUpgradeAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
 }
 export interface MsgCancelUpgradeAminoMsg {
   type: "cosmos-sdk/MsgCancelUpgrade";
   value: MsgCancelUpgradeAmino;
-}
-/**
- * MsgCancelUpgrade is the Msg/CancelUpgrade request type.
- * 
- * Since: cosmos-sdk 0.46
- * @name MsgCancelUpgradeSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.MsgCancelUpgrade
- */
-export interface MsgCancelUpgradeSDKType {
-  authority: string;
 }
 /**
  * MsgCancelUpgradeResponse is the Msg/CancelUpgrade response type.
@@ -168,15 +136,6 @@ export interface MsgCancelUpgradeResponseAminoMsg {
   type: "cosmos-sdk/MsgCancelUpgradeResponse";
   value: MsgCancelUpgradeResponseAmino;
 }
-/**
- * MsgCancelUpgradeResponse is the Msg/CancelUpgrade response type.
- * 
- * Since: cosmos-sdk 0.46
- * @name MsgCancelUpgradeResponseSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.MsgCancelUpgradeResponse
- */
-export interface MsgCancelUpgradeResponseSDKType {}
 function createBaseMsgSoftwareUpgrade(): MsgSoftwareUpgrade {
   return {
     authority: "",
@@ -196,9 +155,6 @@ export const MsgSoftwareUpgrade = {
   aminoType: "cosmos-sdk/MsgSoftwareUpgrade",
   is(o: any): o is MsgSoftwareUpgrade {
     return o && (o.$typeUrl === MsgSoftwareUpgrade.typeUrl || typeof o.authority === "string" && Plan.is(o.plan));
-  },
-  isSDK(o: any): o is MsgSoftwareUpgradeSDKType {
-    return o && (o.$typeUrl === MsgSoftwareUpgrade.typeUrl || typeof o.authority === "string" && Plan.isSDK(o.plan));
   },
   isAmino(o: any): o is MsgSoftwareUpgradeAmino {
     return o && (o.$typeUrl === MsgSoftwareUpgrade.typeUrl || typeof o.authority === "string" && Plan.isAmino(o.plan));
@@ -232,7 +188,7 @@ export const MsgSoftwareUpgrade = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSoftwareUpgrade>, I>>(object: I): MsgSoftwareUpgrade {
+  fromPartial(object: DeepPartial<MsgSoftwareUpgrade>): MsgSoftwareUpgrade {
     const message = createBaseMsgSoftwareUpgrade();
     message.authority = object.authority ?? "";
     message.plan = object.plan !== undefined && object.plan !== null ? Plan.fromPartial(object.plan) : undefined;
@@ -299,9 +255,6 @@ export const MsgSoftwareUpgradeResponse = {
   is(o: any): o is MsgSoftwareUpgradeResponse {
     return o && o.$typeUrl === MsgSoftwareUpgradeResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgSoftwareUpgradeResponseSDKType {
-    return o && o.$typeUrl === MsgSoftwareUpgradeResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgSoftwareUpgradeResponseAmino {
     return o && o.$typeUrl === MsgSoftwareUpgradeResponse.typeUrl;
   },
@@ -322,7 +275,7 @@ export const MsgSoftwareUpgradeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSoftwareUpgradeResponse>, I>>(_: I): MsgSoftwareUpgradeResponse {
+  fromPartial(_: DeepPartial<MsgSoftwareUpgradeResponse>): MsgSoftwareUpgradeResponse {
     const message = createBaseMsgSoftwareUpgradeResponse();
     return message;
   },
@@ -376,9 +329,6 @@ export const MsgCancelUpgrade = {
   is(o: any): o is MsgCancelUpgrade {
     return o && (o.$typeUrl === MsgCancelUpgrade.typeUrl || typeof o.authority === "string");
   },
-  isSDK(o: any): o is MsgCancelUpgradeSDKType {
-    return o && (o.$typeUrl === MsgCancelUpgrade.typeUrl || typeof o.authority === "string");
-  },
   isAmino(o: any): o is MsgCancelUpgradeAmino {
     return o && (o.$typeUrl === MsgCancelUpgrade.typeUrl || typeof o.authority === "string");
   },
@@ -405,7 +355,7 @@ export const MsgCancelUpgrade = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCancelUpgrade>, I>>(object: I): MsgCancelUpgrade {
+  fromPartial(object: DeepPartial<MsgCancelUpgrade>): MsgCancelUpgrade {
     const message = createBaseMsgCancelUpgrade();
     message.authority = object.authority ?? "";
     return message;
@@ -462,9 +412,6 @@ export const MsgCancelUpgradeResponse = {
   is(o: any): o is MsgCancelUpgradeResponse {
     return o && o.$typeUrl === MsgCancelUpgradeResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgCancelUpgradeResponseSDKType {
-    return o && o.$typeUrl === MsgCancelUpgradeResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgCancelUpgradeResponseAmino {
     return o && o.$typeUrl === MsgCancelUpgradeResponse.typeUrl;
   },
@@ -485,7 +432,7 @@ export const MsgCancelUpgradeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCancelUpgradeResponse>, I>>(_: I): MsgCancelUpgradeResponse {
+  fromPartial(_: DeepPartial<MsgCancelUpgradeResponse>): MsgCancelUpgradeResponse {
     const message = createBaseMsgCancelUpgradeResponse();
     return message;
   },

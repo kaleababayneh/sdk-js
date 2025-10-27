@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
-import { ContinuousFund, ContinuousFundAmino, ContinuousFundSDKType, Params, ParamsAmino, ParamsSDKType } from "./types";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
+import { ContinuousFund, ContinuousFundAmino, Params, ParamsAmino } from "./types";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * QueryCommunityPoolRequest is the request type for the Query/CommunityPool RPC
@@ -29,14 +29,6 @@ export interface QueryCommunityPoolRequestAminoMsg {
   type: "cosmos-sdk/QueryCommunityPoolRequest";
   value: QueryCommunityPoolRequestAmino;
 }
-/**
- * QueryCommunityPoolRequest is the request type for the Query/CommunityPool RPC
- * method.
- * @name QueryCommunityPoolRequestSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.QueryCommunityPoolRequest
- */
-export interface QueryCommunityPoolRequestSDKType {}
 /**
  * QueryCommunityPoolResponse is the response type for the Query/CommunityPool
  * RPC method.
@@ -65,21 +57,11 @@ export interface QueryCommunityPoolResponseAmino {
   /**
    * pool defines community pool's coins.
    */
-  pool?: CoinAmino[];
+  pool: CoinAmino[];
 }
 export interface QueryCommunityPoolResponseAminoMsg {
   type: "cosmos-sdk/QueryCommunityPoolResponse";
   value: QueryCommunityPoolResponseAmino;
-}
-/**
- * QueryCommunityPoolResponse is the response type for the Query/CommunityPool
- * RPC method.
- * @name QueryCommunityPoolResponseSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.QueryCommunityPoolResponse
- */
-export interface QueryCommunityPoolResponseSDKType {
-  pool: CoinSDKType[];
 }
 /**
  * QueryContinuousFundRequest is the request type for the Query/ContinuousFund
@@ -109,21 +91,11 @@ export interface QueryContinuousFundRequestAmino {
   /**
    * recipient is the recipient address to query unclaimed budget amount for.
    */
-  recipient?: string;
+  recipient: string;
 }
 export interface QueryContinuousFundRequestAminoMsg {
   type: "cosmos-sdk/QueryContinuousFundRequest";
   value: QueryContinuousFundRequestAmino;
-}
-/**
- * QueryContinuousFundRequest is the request type for the Query/ContinuousFund
- * RPC method.
- * @name QueryContinuousFundRequestSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.QueryContinuousFundRequest
- */
-export interface QueryContinuousFundRequestSDKType {
-  recipient: string;
 }
 /**
  * QueryUnclaimedBudgetResponse is the response type for the Query/ContinuousFund
@@ -153,21 +125,11 @@ export interface QueryContinuousFundResponseAmino {
   /**
    * ContinuousFunds is the given continuous fund returned in the query.
    */
-  continuous_fund?: ContinuousFundAmino;
+  continuous_fund: ContinuousFundAmino;
 }
 export interface QueryContinuousFundResponseAminoMsg {
   type: "cosmos-sdk/QueryContinuousFundResponse";
   value: QueryContinuousFundResponseAmino;
-}
-/**
- * QueryUnclaimedBudgetResponse is the response type for the Query/ContinuousFund
- * RPC method.
- * @name QueryContinuousFundResponseSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.QueryContinuousFundResponse
- */
-export interface QueryContinuousFundResponseSDKType {
-  continuous_fund: ContinuousFundSDKType;
 }
 /**
  * QueryContinuousFundRequest is the request type for the Query/ContinuousFunds
@@ -193,14 +155,6 @@ export interface QueryContinuousFundsRequestAminoMsg {
   type: "cosmos-sdk/QueryContinuousFundsRequest";
   value: QueryContinuousFundsRequestAmino;
 }
-/**
- * QueryContinuousFundRequest is the request type for the Query/ContinuousFunds
- * RPC method.
- * @name QueryContinuousFundsRequestSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.QueryContinuousFundsRequest
- */
-export interface QueryContinuousFundsRequestSDKType {}
 /**
  * QueryUnclaimedBudgetResponse is the response type for the Query/ContinuousFunds
  * RPC method.
@@ -229,21 +183,11 @@ export interface QueryContinuousFundsResponseAmino {
   /**
    * ContinuousFunds defines all continuous funds in state.
    */
-  continuous_funds?: ContinuousFundAmino[];
+  continuous_funds: ContinuousFundAmino[];
 }
 export interface QueryContinuousFundsResponseAminoMsg {
   type: "cosmos-sdk/QueryContinuousFundsResponse";
   value: QueryContinuousFundsResponseAmino;
-}
-/**
- * QueryUnclaimedBudgetResponse is the response type for the Query/ContinuousFunds
- * RPC method.
- * @name QueryContinuousFundsResponseSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.QueryContinuousFundsResponse
- */
-export interface QueryContinuousFundsResponseSDKType {
-  continuous_funds: ContinuousFundSDKType[];
 }
 /**
  * QueryParamsRequest is the response type for the Query/Params RPC method.
@@ -268,13 +212,6 @@ export interface QueryParamsRequestAminoMsg {
   value: QueryParamsRequestAmino;
 }
 /**
- * QueryParamsRequest is the response type for the Query/Params RPC method.
- * @name QueryParamsRequestSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {}
-/**
  * QueryParamsResponse is the response type for the Query/Params RPC method.
  * @name QueryParamsResponse
  * @package cosmos.protocolpool.v1
@@ -294,20 +231,11 @@ export interface QueryParamsResponseProtoMsg {
  * @see proto type: cosmos.protocolpool.v1.QueryParamsResponse
  */
 export interface QueryParamsResponseAmino {
-  params?: ParamsAmino;
+  params: ParamsAmino;
 }
 export interface QueryParamsResponseAminoMsg {
   type: "cosmos-sdk/QueryParamsResponse";
   value: QueryParamsResponseAmino;
-}
-/**
- * QueryParamsResponse is the response type for the Query/Params RPC method.
- * @name QueryParamsResponseSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  params: ParamsSDKType;
 }
 function createBaseQueryCommunityPoolRequest(): QueryCommunityPoolRequest {
   return {};
@@ -323,9 +251,6 @@ export const QueryCommunityPoolRequest = {
   typeUrl: "/cosmos.protocolpool.v1.QueryCommunityPoolRequest",
   aminoType: "cosmos-sdk/QueryCommunityPoolRequest",
   is(o: any): o is QueryCommunityPoolRequest {
-    return o && o.$typeUrl === QueryCommunityPoolRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryCommunityPoolRequestSDKType {
     return o && o.$typeUrl === QueryCommunityPoolRequest.typeUrl;
   },
   isAmino(o: any): o is QueryCommunityPoolRequestAmino {
@@ -348,7 +273,7 @@ export const QueryCommunityPoolRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryCommunityPoolRequest>, I>>(_: I): QueryCommunityPoolRequest {
+  fromPartial(_: DeepPartial<QueryCommunityPoolRequest>): QueryCommunityPoolRequest {
     const message = createBaseQueryCommunityPoolRequest();
     return message;
   },
@@ -401,9 +326,6 @@ export const QueryCommunityPoolResponse = {
   is(o: any): o is QueryCommunityPoolResponse {
     return o && (o.$typeUrl === QueryCommunityPoolResponse.typeUrl || Array.isArray(o.pool) && (!o.pool.length || Coin.is(o.pool[0])));
   },
-  isSDK(o: any): o is QueryCommunityPoolResponseSDKType {
-    return o && (o.$typeUrl === QueryCommunityPoolResponse.typeUrl || Array.isArray(o.pool) && (!o.pool.length || Coin.isSDK(o.pool[0])));
-  },
   isAmino(o: any): o is QueryCommunityPoolResponseAmino {
     return o && (o.$typeUrl === QueryCommunityPoolResponse.typeUrl || Array.isArray(o.pool) && (!o.pool.length || Coin.isAmino(o.pool[0])));
   },
@@ -430,7 +352,7 @@ export const QueryCommunityPoolResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryCommunityPoolResponse>, I>>(object: I): QueryCommunityPoolResponse {
+  fromPartial(object: DeepPartial<QueryCommunityPoolResponse>): QueryCommunityPoolResponse {
     const message = createBaseQueryCommunityPoolResponse();
     message.pool = object.pool?.map(e => Coin.fromPartial(e)) || [];
     return message;
@@ -495,9 +417,6 @@ export const QueryContinuousFundRequest = {
   is(o: any): o is QueryContinuousFundRequest {
     return o && (o.$typeUrl === QueryContinuousFundRequest.typeUrl || typeof o.recipient === "string");
   },
-  isSDK(o: any): o is QueryContinuousFundRequestSDKType {
-    return o && (o.$typeUrl === QueryContinuousFundRequest.typeUrl || typeof o.recipient === "string");
-  },
   isAmino(o: any): o is QueryContinuousFundRequestAmino {
     return o && (o.$typeUrl === QueryContinuousFundRequest.typeUrl || typeof o.recipient === "string");
   },
@@ -524,7 +443,7 @@ export const QueryContinuousFundRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryContinuousFundRequest>, I>>(object: I): QueryContinuousFundRequest {
+  fromPartial(object: DeepPartial<QueryContinuousFundRequest>): QueryContinuousFundRequest {
     const message = createBaseQueryContinuousFundRequest();
     message.recipient = object.recipient ?? "";
     return message;
@@ -582,9 +501,6 @@ export const QueryContinuousFundResponse = {
   is(o: any): o is QueryContinuousFundResponse {
     return o && (o.$typeUrl === QueryContinuousFundResponse.typeUrl || ContinuousFund.is(o.continuousFund));
   },
-  isSDK(o: any): o is QueryContinuousFundResponseSDKType {
-    return o && (o.$typeUrl === QueryContinuousFundResponse.typeUrl || ContinuousFund.isSDK(o.continuous_fund));
-  },
   isAmino(o: any): o is QueryContinuousFundResponseAmino {
     return o && (o.$typeUrl === QueryContinuousFundResponse.typeUrl || ContinuousFund.isAmino(o.continuous_fund));
   },
@@ -611,7 +527,7 @@ export const QueryContinuousFundResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryContinuousFundResponse>, I>>(object: I): QueryContinuousFundResponse {
+  fromPartial(object: DeepPartial<QueryContinuousFundResponse>): QueryContinuousFundResponse {
     const message = createBaseQueryContinuousFundResponse();
     message.continuousFund = object.continuousFund !== undefined && object.continuousFund !== null ? ContinuousFund.fromPartial(object.continuousFund) : undefined;
     return message;
@@ -672,9 +588,6 @@ export const QueryContinuousFundsRequest = {
   is(o: any): o is QueryContinuousFundsRequest {
     return o && o.$typeUrl === QueryContinuousFundsRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryContinuousFundsRequestSDKType {
-    return o && o.$typeUrl === QueryContinuousFundsRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryContinuousFundsRequestAmino {
     return o && o.$typeUrl === QueryContinuousFundsRequest.typeUrl;
   },
@@ -695,7 +608,7 @@ export const QueryContinuousFundsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryContinuousFundsRequest>, I>>(_: I): QueryContinuousFundsRequest {
+  fromPartial(_: DeepPartial<QueryContinuousFundsRequest>): QueryContinuousFundsRequest {
     const message = createBaseQueryContinuousFundsRequest();
     return message;
   },
@@ -748,9 +661,6 @@ export const QueryContinuousFundsResponse = {
   is(o: any): o is QueryContinuousFundsResponse {
     return o && (o.$typeUrl === QueryContinuousFundsResponse.typeUrl || Array.isArray(o.continuousFunds) && (!o.continuousFunds.length || ContinuousFund.is(o.continuousFunds[0])));
   },
-  isSDK(o: any): o is QueryContinuousFundsResponseSDKType {
-    return o && (o.$typeUrl === QueryContinuousFundsResponse.typeUrl || Array.isArray(o.continuous_funds) && (!o.continuous_funds.length || ContinuousFund.isSDK(o.continuous_funds[0])));
-  },
   isAmino(o: any): o is QueryContinuousFundsResponseAmino {
     return o && (o.$typeUrl === QueryContinuousFundsResponse.typeUrl || Array.isArray(o.continuous_funds) && (!o.continuous_funds.length || ContinuousFund.isAmino(o.continuous_funds[0])));
   },
@@ -777,7 +687,7 @@ export const QueryContinuousFundsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryContinuousFundsResponse>, I>>(object: I): QueryContinuousFundsResponse {
+  fromPartial(object: DeepPartial<QueryContinuousFundsResponse>): QueryContinuousFundsResponse {
     const message = createBaseQueryContinuousFundsResponse();
     message.continuousFunds = object.continuousFunds?.map(e => ContinuousFund.fromPartial(e)) || [];
     return message;
@@ -839,9 +749,6 @@ export const QueryParamsRequest = {
   is(o: any): o is QueryParamsRequest {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
-    return o && o.$typeUrl === QueryParamsRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryParamsRequestAmino {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
@@ -862,7 +769,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(_: I): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -914,9 +821,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.is(o.params));
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isSDK(o.params));
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isAmino(o.params));
   },
@@ -943,7 +847,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;

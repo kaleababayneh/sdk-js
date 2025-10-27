@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * QueryGetCountRequest defines the request type for querying x/mock count.
  * @name QueryGetCountRequest
@@ -25,13 +25,6 @@ export interface QueryGetCountRequestAminoMsg {
   value: QueryGetCountRequestAmino;
 }
 /**
- * QueryGetCountRequest defines the request type for querying x/mock count.
- * @name QueryGetCountRequestSDKType
- * @package cosmos.counter.v1
- * @see proto type: cosmos.counter.v1.QueryGetCountRequest
- */
-export interface QueryGetCountRequestSDKType {}
-/**
  * QueryGetCountResponse defines the response type for querying x/mock count.
  * @name QueryGetCountResponse
  * @package cosmos.counter.v1
@@ -51,20 +44,11 @@ export interface QueryGetCountResponseProtoMsg {
  * @see proto type: cosmos.counter.v1.QueryGetCountResponse
  */
 export interface QueryGetCountResponseAmino {
-  total_count?: string;
+  total_count: string;
 }
 export interface QueryGetCountResponseAminoMsg {
   type: "cosmos-sdk/QueryGetCountResponse";
   value: QueryGetCountResponseAmino;
-}
-/**
- * QueryGetCountResponse defines the response type for querying x/mock count.
- * @name QueryGetCountResponseSDKType
- * @package cosmos.counter.v1
- * @see proto type: cosmos.counter.v1.QueryGetCountResponse
- */
-export interface QueryGetCountResponseSDKType {
-  total_count: bigint;
 }
 function createBaseQueryGetCountRequest(): QueryGetCountRequest {
   return {};
@@ -79,9 +63,6 @@ export const QueryGetCountRequest = {
   typeUrl: "/cosmos.counter.v1.QueryGetCountRequest",
   aminoType: "cosmos-sdk/QueryGetCountRequest",
   is(o: any): o is QueryGetCountRequest {
-    return o && o.$typeUrl === QueryGetCountRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryGetCountRequestSDKType {
     return o && o.$typeUrl === QueryGetCountRequest.typeUrl;
   },
   isAmino(o: any): o is QueryGetCountRequestAmino {
@@ -104,7 +85,7 @@ export const QueryGetCountRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetCountRequest>, I>>(_: I): QueryGetCountRequest {
+  fromPartial(_: DeepPartial<QueryGetCountRequest>): QueryGetCountRequest {
     const message = createBaseQueryGetCountRequest();
     return message;
   },
@@ -156,9 +137,6 @@ export const QueryGetCountResponse = {
   is(o: any): o is QueryGetCountResponse {
     return o && (o.$typeUrl === QueryGetCountResponse.typeUrl || typeof o.totalCount === "bigint");
   },
-  isSDK(o: any): o is QueryGetCountResponseSDKType {
-    return o && (o.$typeUrl === QueryGetCountResponse.typeUrl || typeof o.total_count === "bigint");
-  },
   isAmino(o: any): o is QueryGetCountResponseAmino {
     return o && (o.$typeUrl === QueryGetCountResponse.typeUrl || typeof o.total_count === "bigint");
   },
@@ -185,7 +163,7 @@ export const QueryGetCountResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetCountResponse>, I>>(object: I): QueryGetCountResponse {
+  fromPartial(object: DeepPartial<QueryGetCountResponse>): QueryGetCountResponse {
     const message = createBaseQueryGetCountResponse();
     message.totalCount = object.totalCount !== undefined && object.totalCount !== null ? BigInt(object.totalCount.toString()) : BigInt(0);
     return message;

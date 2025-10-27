@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType } from "./params";
+import { Params, ParamsAmino } from "./params";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * MsgUpdateParams is the Msg/UpdateParams request type.
@@ -37,27 +37,16 @@ export interface MsgUpdateParamsAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/claim parameters to update.
    * NOTE: All parameters must be supplied.
    */
-  params?: ParamsAmino;
+  params: ParamsAmino;
 }
 export interface MsgUpdateParamsAminoMsg {
   type: "/lumera.claim.MsgUpdateParams";
   value: MsgUpdateParamsAmino;
-}
-/**
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * @name MsgUpdateParamsSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.MsgUpdateParams
- */
-export interface MsgUpdateParamsSDKType {
-  authority: string;
-  params: ParamsSDKType;
 }
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
@@ -84,14 +73,6 @@ export interface MsgUpdateParamsResponseAminoMsg {
   value: MsgUpdateParamsResponseAmino;
 }
 /**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- * @name MsgUpdateParamsResponseSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.MsgUpdateParamsResponse
- */
-export interface MsgUpdateParamsResponseSDKType {}
-/**
  * @name MsgClaim
  * @package lumera.claim
  * @see proto type: lumera.claim.MsgClaim
@@ -113,27 +94,15 @@ export interface MsgClaimProtoMsg {
  * @see proto type: lumera.claim.MsgClaim
  */
 export interface MsgClaimAmino {
-  creator?: string;
-  oldAddress?: string;
-  newAddress?: string;
-  pubKey?: string;
-  signature?: string;
-}
-export interface MsgClaimAminoMsg {
-  type: "/lumera.claim.MsgClaim";
-  value: MsgClaimAmino;
-}
-/**
- * @name MsgClaimSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.MsgClaim
- */
-export interface MsgClaimSDKType {
   creator: string;
   oldAddress: string;
   newAddress: string;
   pubKey: string;
   signature: string;
+}
+export interface MsgClaimAminoMsg {
+  type: "/lumera.claim.MsgClaim";
+  value: MsgClaimAmino;
 }
 /**
  * @name MsgClaimResponse
@@ -155,12 +124,6 @@ export interface MsgClaimResponseAminoMsg {
   type: "/lumera.claim.MsgClaimResponse";
   value: MsgClaimResponseAmino;
 }
-/**
- * @name MsgClaimResponseSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.MsgClaimResponse
- */
-export interface MsgClaimResponseSDKType {}
 /**
  * @name MsgDelayedClaim
  * @package lumera.claim
@@ -184,29 +147,16 @@ export interface MsgDelayedClaimProtoMsg {
  * @see proto type: lumera.claim.MsgDelayedClaim
  */
 export interface MsgDelayedClaimAmino {
-  creator?: string;
-  oldAddress?: string;
-  newAddress?: string;
-  pubKey?: string;
-  signature?: string;
-  tier?: number;
-}
-export interface MsgDelayedClaimAminoMsg {
-  type: "/lumera.claim.MsgDelayedClaim";
-  value: MsgDelayedClaimAmino;
-}
-/**
- * @name MsgDelayedClaimSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.MsgDelayedClaim
- */
-export interface MsgDelayedClaimSDKType {
   creator: string;
   oldAddress: string;
   newAddress: string;
   pubKey: string;
   signature: string;
   tier: number;
+}
+export interface MsgDelayedClaimAminoMsg {
+  type: "/lumera.claim.MsgDelayedClaim";
+  value: MsgDelayedClaimAmino;
 }
 /**
  * @name MsgDelayedClaimResponse
@@ -228,12 +178,6 @@ export interface MsgDelayedClaimResponseAminoMsg {
   type: "/lumera.claim.MsgDelayedClaimResponse";
   value: MsgDelayedClaimResponseAmino;
 }
-/**
- * @name MsgDelayedClaimResponseSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.MsgDelayedClaimResponse
- */
-export interface MsgDelayedClaimResponseSDKType {}
 function createBaseMsgUpdateParams(): MsgUpdateParams {
   return {
     authority: "",
@@ -251,9 +195,6 @@ export const MsgUpdateParams = {
   typeUrl: "/lumera.claim.MsgUpdateParams",
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.is(o.params));
-  },
-  isSDK(o: any): o is MsgUpdateParamsSDKType {
-    return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isSDK(o.params));
   },
   isAmino(o: any): o is MsgUpdateParamsAmino {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isAmino(o.params));
@@ -287,7 +228,7 @@ export const MsgUpdateParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParams>, I>>(object: I): MsgUpdateParams {
+  fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
@@ -346,9 +287,6 @@ export const MsgUpdateParamsResponse = {
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateParamsResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateParamsResponseAmino {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -369,7 +307,7 @@ export const MsgUpdateParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParamsResponse>, I>>(_: I): MsgUpdateParamsResponse {
+  fromPartial(_: DeepPartial<MsgUpdateParamsResponse>): MsgUpdateParamsResponse {
     const message = createBaseMsgUpdateParamsResponse();
     return message;
   },
@@ -415,9 +353,6 @@ function createBaseMsgClaim(): MsgClaim {
 export const MsgClaim = {
   typeUrl: "/lumera.claim.MsgClaim",
   is(o: any): o is MsgClaim {
-    return o && (o.$typeUrl === MsgClaim.typeUrl || typeof o.creator === "string" && typeof o.oldAddress === "string" && typeof o.newAddress === "string" && typeof o.pubKey === "string" && typeof o.signature === "string");
-  },
-  isSDK(o: any): o is MsgClaimSDKType {
     return o && (o.$typeUrl === MsgClaim.typeUrl || typeof o.creator === "string" && typeof o.oldAddress === "string" && typeof o.newAddress === "string" && typeof o.pubKey === "string" && typeof o.signature === "string");
   },
   isAmino(o: any): o is MsgClaimAmino {
@@ -470,7 +405,7 @@ export const MsgClaim = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgClaim>, I>>(object: I): MsgClaim {
+  fromPartial(object: DeepPartial<MsgClaim>): MsgClaim {
     const message = createBaseMsgClaim();
     message.creator = object.creator ?? "";
     message.oldAddress = object.oldAddress ?? "";
@@ -537,9 +472,6 @@ export const MsgClaimResponse = {
   is(o: any): o is MsgClaimResponse {
     return o && o.$typeUrl === MsgClaimResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgClaimResponseSDKType {
-    return o && o.$typeUrl === MsgClaimResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgClaimResponseAmino {
     return o && o.$typeUrl === MsgClaimResponse.typeUrl;
   },
@@ -560,7 +492,7 @@ export const MsgClaimResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgClaimResponse>, I>>(_: I): MsgClaimResponse {
+  fromPartial(_: DeepPartial<MsgClaimResponse>): MsgClaimResponse {
     const message = createBaseMsgClaimResponse();
     return message;
   },
@@ -607,9 +539,6 @@ function createBaseMsgDelayedClaim(): MsgDelayedClaim {
 export const MsgDelayedClaim = {
   typeUrl: "/lumera.claim.MsgDelayedClaim",
   is(o: any): o is MsgDelayedClaim {
-    return o && (o.$typeUrl === MsgDelayedClaim.typeUrl || typeof o.creator === "string" && typeof o.oldAddress === "string" && typeof o.newAddress === "string" && typeof o.pubKey === "string" && typeof o.signature === "string" && typeof o.tier === "number");
-  },
-  isSDK(o: any): o is MsgDelayedClaimSDKType {
     return o && (o.$typeUrl === MsgDelayedClaim.typeUrl || typeof o.creator === "string" && typeof o.oldAddress === "string" && typeof o.newAddress === "string" && typeof o.pubKey === "string" && typeof o.signature === "string" && typeof o.tier === "number");
   },
   isAmino(o: any): o is MsgDelayedClaimAmino {
@@ -668,7 +597,7 @@ export const MsgDelayedClaim = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgDelayedClaim>, I>>(object: I): MsgDelayedClaim {
+  fromPartial(object: DeepPartial<MsgDelayedClaim>): MsgDelayedClaim {
     const message = createBaseMsgDelayedClaim();
     message.creator = object.creator ?? "";
     message.oldAddress = object.oldAddress ?? "";
@@ -740,9 +669,6 @@ export const MsgDelayedClaimResponse = {
   is(o: any): o is MsgDelayedClaimResponse {
     return o && o.$typeUrl === MsgDelayedClaimResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgDelayedClaimResponseSDKType {
-    return o && o.$typeUrl === MsgDelayedClaimResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgDelayedClaimResponseAmino {
     return o && o.$typeUrl === MsgDelayedClaimResponse.typeUrl;
   },
@@ -763,7 +689,7 @@ export const MsgDelayedClaimResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgDelayedClaimResponse>, I>>(_: I): MsgDelayedClaimResponse {
+  fromPartial(_: DeepPartial<MsgDelayedClaimResponse>): MsgDelayedClaimResponse {
     const message = createBaseMsgDelayedClaimResponse();
     return message;
   },

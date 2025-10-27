@@ -1,15 +1,15 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
-import { VoteOption, WeightedVoteOption, WeightedVoteOptionAmino, WeightedVoteOptionSDKType, Params, ParamsAmino, ParamsSDKType } from "./gov";
+import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
+import { VoteOption, WeightedVoteOption, WeightedVoteOptionAmino, Params, ParamsAmino } from "./gov";
 import { Timestamp } from "../../../google/protobuf/timestamp";
-import { CommunityPoolSpendProposal, CommunityPoolSpendProposalProtoMsg, CommunityPoolSpendProposalSDKType, CommunityPoolSpendProposalWithDeposit, CommunityPoolSpendProposalWithDepositProtoMsg, CommunityPoolSpendProposalWithDepositSDKType } from "../../distribution/v1beta1/distribution";
-import { TextProposal, TextProposalProtoMsg, TextProposalSDKType } from "../v1beta1/gov";
-import { ParameterChangeProposal, ParameterChangeProposalProtoMsg, ParameterChangeProposalSDKType } from "../../params/v1beta1/params";
-import { SoftwareUpgradeProposal, SoftwareUpgradeProposalProtoMsg, SoftwareUpgradeProposalSDKType, CancelSoftwareUpgradeProposal, CancelSoftwareUpgradeProposalProtoMsg, CancelSoftwareUpgradeProposalSDKType } from "../../upgrade/v1beta1/upgrade";
+import { SoftwareUpgradeProposal, SoftwareUpgradeProposalProtoMsg, CancelSoftwareUpgradeProposal, CancelSoftwareUpgradeProposalProtoMsg } from "../../upgrade/v1beta1/upgrade";
+import { ParameterChangeProposal, ParameterChangeProposalProtoMsg } from "../../params/v1beta1/params";
+import { TextProposal, TextProposalProtoMsg } from "../v1beta1/gov";
+import { CommunityPoolSpendProposal, CommunityPoolSpendProposalProtoMsg, CommunityPoolSpendProposalWithDeposit, CommunityPoolSpendProposalWithDepositProtoMsg } from "../../distribution/v1beta1/distribution";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact, isSet, toTimestamp, fromTimestamp } from "../../../helpers";
+import { DeepPartial, isSet, toTimestamp, fromTimestamp } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * MsgSubmitProposal defines an sdk.Msg type that supports submitting arbitrary
@@ -69,7 +69,7 @@ export interface MsgSubmitProposalAmino {
   /**
    * messages are the arbitrary messages to be executed if proposal passes.
    */
-  messages?: AnyAmino[];
+  messages: AnyAmino[];
   /**
    * initial_deposit is the deposit value that must be paid at proposal submission.
    */
@@ -77,49 +77,33 @@ export interface MsgSubmitProposalAmino {
   /**
    * proposer is the account address of the proposer.
    */
-  proposer?: string;
+  proposer: string;
   /**
    * metadata is any arbitrary metadata attached to the proposal.
    */
-  metadata?: string;
+  metadata: string;
   /**
    * title is the title of the proposal.
    * 
    * Since: cosmos-sdk 0.47
    */
-  title?: string;
+  title: string;
   /**
    * summary is the summary of the proposal
    * 
    * Since: cosmos-sdk 0.47
    */
-  summary?: string;
+  summary: string;
   /**
    * expedited defines if the proposal is expedited or not
    * 
    * Since: cosmos-sdk 0.50
    */
-  expedited?: boolean;
+  expedited: boolean;
 }
 export interface MsgSubmitProposalAminoMsg {
   type: "cosmos-sdk/v1/MsgSubmitProposal";
   value: MsgSubmitProposalAmino;
-}
-/**
- * MsgSubmitProposal defines an sdk.Msg type that supports submitting arbitrary
- * proposal Content.
- * @name MsgSubmitProposalSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgSubmitProposal
- */
-export interface MsgSubmitProposalSDKType {
-  messages: AnySDKType[];
-  initial_deposit: CoinSDKType[];
-  proposer: string;
-  metadata: string;
-  title: string;
-  summary: string;
-  expedited: boolean;
 }
 /**
  * MsgSubmitProposalResponse defines the Msg/SubmitProposal response type.
@@ -147,20 +131,11 @@ export interface MsgSubmitProposalResponseAmino {
   /**
    * proposal_id defines the unique id of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
 }
 export interface MsgSubmitProposalResponseAminoMsg {
   type: "cosmos-sdk/v1/MsgSubmitProposalResponse";
   value: MsgSubmitProposalResponseAmino;
-}
-/**
- * MsgSubmitProposalResponse defines the Msg/SubmitProposal response type.
- * @name MsgSubmitProposalResponseSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgSubmitProposalResponse
- */
-export interface MsgSubmitProposalResponseSDKType {
-  proposal_id: bigint;
 }
 /**
  * MsgExecLegacyContent is used to wrap the legacy content field into a message.
@@ -173,7 +148,7 @@ export interface MsgExecLegacyContent {
   /**
    * content is the proposal's content.
    */
-  content?: CommunityPoolSpendProposal | CommunityPoolSpendProposalWithDeposit | TextProposal | ParameterChangeProposal | SoftwareUpgradeProposal | CancelSoftwareUpgradeProposal | Any | undefined;
+  content?: SoftwareUpgradeProposal | CancelSoftwareUpgradeProposal | ParameterChangeProposal | TextProposal | CommunityPoolSpendProposal | CommunityPoolSpendProposalWithDeposit | Any | undefined;
   /**
    * authority must be the gov module address.
    */
@@ -187,7 +162,7 @@ export type MsgExecLegacyContentEncoded = Omit<MsgExecLegacyContent, "content"> 
   /**
    * content is the proposal's content.
    */
-  content?: CommunityPoolSpendProposalProtoMsg | CommunityPoolSpendProposalWithDepositProtoMsg | TextProposalProtoMsg | ParameterChangeProposalProtoMsg | SoftwareUpgradeProposalProtoMsg | CancelSoftwareUpgradeProposalProtoMsg | AnyProtoMsg | undefined;
+  content?: SoftwareUpgradeProposalProtoMsg | CancelSoftwareUpgradeProposalProtoMsg | ParameterChangeProposalProtoMsg | TextProposalProtoMsg | CommunityPoolSpendProposalProtoMsg | CommunityPoolSpendProposalWithDepositProtoMsg | AnyProtoMsg | undefined;
 };
 /**
  * MsgExecLegacyContent is used to wrap the legacy content field into a message.
@@ -204,22 +179,11 @@ export interface MsgExecLegacyContentAmino {
   /**
    * authority must be the gov module address.
    */
-  authority?: string;
+  authority: string;
 }
 export interface MsgExecLegacyContentAminoMsg {
   type: "cosmos-sdk/v1/MsgExecLegacyContent";
   value: MsgExecLegacyContentAmino;
-}
-/**
- * MsgExecLegacyContent is used to wrap the legacy content field into a message.
- * This ensures backwards compatibility with v1beta1.MsgSubmitProposal.
- * @name MsgExecLegacyContentSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgExecLegacyContent
- */
-export interface MsgExecLegacyContentSDKType {
-  content?: CommunityPoolSpendProposalSDKType | CommunityPoolSpendProposalWithDepositSDKType | TextProposalSDKType | ParameterChangeProposalSDKType | SoftwareUpgradeProposalSDKType | CancelSoftwareUpgradeProposalSDKType | AnySDKType | undefined;
-  authority: string;
 }
 /**
  * MsgExecLegacyContentResponse defines the Msg/ExecLegacyContent response type.
@@ -243,13 +207,6 @@ export interface MsgExecLegacyContentResponseAminoMsg {
   type: "cosmos-sdk/v1/MsgExecLegacyContentResponse";
   value: MsgExecLegacyContentResponseAmino;
 }
-/**
- * MsgExecLegacyContentResponse defines the Msg/ExecLegacyContent response type.
- * @name MsgExecLegacyContentResponseSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgExecLegacyContentResponse
- */
-export interface MsgExecLegacyContentResponseSDKType {}
 /**
  * MsgVote defines a message to cast a vote.
  * @name MsgVote
@@ -292,31 +249,19 @@ export interface MsgVoteAmino {
   /**
    * voter is the voter address for the proposal.
    */
-  voter?: string;
+  voter: string;
   /**
    * option defines the vote option.
    */
-  option?: VoteOption;
+  option: VoteOption;
   /**
    * metadata is any arbitrary metadata attached to the Vote.
    */
-  metadata?: string;
+  metadata: string;
 }
 export interface MsgVoteAminoMsg {
   type: "cosmos-sdk/v1/MsgVote";
   value: MsgVoteAmino;
-}
-/**
- * MsgVote defines a message to cast a vote.
- * @name MsgVoteSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgVote
- */
-export interface MsgVoteSDKType {
-  proposal_id: bigint;
-  voter: string;
-  option: VoteOption;
-  metadata: string;
 }
 /**
  * MsgVoteResponse defines the Msg/Vote response type.
@@ -340,13 +285,6 @@ export interface MsgVoteResponseAminoMsg {
   type: "cosmos-sdk/v1/MsgVoteResponse";
   value: MsgVoteResponseAmino;
 }
-/**
- * MsgVoteResponse defines the Msg/Vote response type.
- * @name MsgVoteResponseSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgVoteResponse
- */
-export interface MsgVoteResponseSDKType {}
 /**
  * MsgVoteWeighted defines a message to cast a vote.
  * @name MsgVoteWeighted
@@ -389,31 +327,19 @@ export interface MsgVoteWeightedAmino {
   /**
    * voter is the voter address for the proposal.
    */
-  voter?: string;
+  voter: string;
   /**
    * options defines the weighted vote options.
    */
-  options?: WeightedVoteOptionAmino[];
+  options: WeightedVoteOptionAmino[];
   /**
    * metadata is any arbitrary metadata attached to the VoteWeighted.
    */
-  metadata?: string;
+  metadata: string;
 }
 export interface MsgVoteWeightedAminoMsg {
   type: "cosmos-sdk/v1/MsgVoteWeighted";
   value: MsgVoteWeightedAmino;
-}
-/**
- * MsgVoteWeighted defines a message to cast a vote.
- * @name MsgVoteWeightedSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgVoteWeighted
- */
-export interface MsgVoteWeightedSDKType {
-  proposal_id: bigint;
-  voter: string;
-  options: WeightedVoteOptionSDKType[];
-  metadata: string;
 }
 /**
  * MsgVoteWeightedResponse defines the Msg/VoteWeighted response type.
@@ -437,13 +363,6 @@ export interface MsgVoteWeightedResponseAminoMsg {
   type: "cosmos-sdk/v1/MsgVoteWeightedResponse";
   value: MsgVoteWeightedResponseAmino;
 }
-/**
- * MsgVoteWeightedResponse defines the Msg/VoteWeighted response type.
- * @name MsgVoteWeightedResponseSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgVoteWeightedResponse
- */
-export interface MsgVoteWeightedResponseSDKType {}
 /**
  * MsgDeposit defines a message to submit a deposit to an existing proposal.
  * @name MsgDeposit
@@ -482,7 +401,7 @@ export interface MsgDepositAmino {
   /**
    * depositor defines the deposit addresses from the proposals.
    */
-  depositor?: string;
+  depositor: string;
   /**
    * amount to be deposited by depositor.
    */
@@ -491,17 +410,6 @@ export interface MsgDepositAmino {
 export interface MsgDepositAminoMsg {
   type: "cosmos-sdk/v1/MsgDeposit";
   value: MsgDepositAmino;
-}
-/**
- * MsgDeposit defines a message to submit a deposit to an existing proposal.
- * @name MsgDepositSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgDeposit
- */
-export interface MsgDepositSDKType {
-  proposal_id: bigint;
-  depositor: string;
-  amount: CoinSDKType[];
 }
 /**
  * MsgDepositResponse defines the Msg/Deposit response type.
@@ -525,13 +433,6 @@ export interface MsgDepositResponseAminoMsg {
   type: "cosmos-sdk/v1/MsgDepositResponse";
   value: MsgDepositResponseAmino;
 }
-/**
- * MsgDepositResponse defines the Msg/Deposit response type.
- * @name MsgDepositResponseSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgDepositResponse
- */
-export interface MsgDepositResponseSDKType {}
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * 
@@ -568,7 +469,7 @@ export interface MsgUpdateParamsAmino {
   /**
    * authority is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  authority?: string;
+  authority: string;
   /**
    * params defines the x/gov parameters to update.
    * 
@@ -579,18 +480,6 @@ export interface MsgUpdateParamsAmino {
 export interface MsgUpdateParamsAminoMsg {
   type: "cosmos-sdk/x/gov/v1/MsgUpdateParams";
   value: MsgUpdateParamsAmino;
-}
-/**
- * MsgUpdateParams is the Msg/UpdateParams request type.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgUpdateParams
- */
-export interface MsgUpdateParamsSDKType {
-  authority: string;
-  params: ParamsSDKType;
 }
 /**
  * MsgUpdateParamsResponse defines the response structure for executing a
@@ -620,16 +509,6 @@ export interface MsgUpdateParamsResponseAminoMsg {
   type: "cosmos-sdk/v1/MsgUpdateParamsResponse";
   value: MsgUpdateParamsResponseAmino;
 }
-/**
- * MsgUpdateParamsResponse defines the response structure for executing a
- * MsgUpdateParams message.
- * 
- * Since: cosmos-sdk 0.47
- * @name MsgUpdateParamsResponseSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgUpdateParamsResponse
- */
-export interface MsgUpdateParamsResponseSDKType {}
 /**
  * MsgCancelProposal is the Msg/CancelProposal request type.
  * 
@@ -668,23 +547,11 @@ export interface MsgCancelProposalAmino {
   /**
    * proposer is the account address of the proposer.
    */
-  proposer?: string;
+  proposer: string;
 }
 export interface MsgCancelProposalAminoMsg {
   type: "cosmos-sdk/v1/MsgCancelProposal";
   value: MsgCancelProposalAmino;
-}
-/**
- * MsgCancelProposal is the Msg/CancelProposal request type.
- * 
- * Since: cosmos-sdk 0.50
- * @name MsgCancelProposalSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgCancelProposal
- */
-export interface MsgCancelProposalSDKType {
-  proposal_id: bigint;
-  proposer: string;
 }
 /**
  * MsgCancelProposalResponse defines the response structure for executing a
@@ -730,29 +597,15 @@ export interface MsgCancelProposalResponseAmino {
   /**
    * canceled_time is the time when proposal is canceled.
    */
-  canceled_time?: string;
+  canceled_time: string;
   /**
    * canceled_height defines the block height at which the proposal is canceled.
    */
-  canceled_height?: string;
+  canceled_height: string;
 }
 export interface MsgCancelProposalResponseAminoMsg {
   type: "cosmos-sdk/v1/MsgCancelProposalResponse";
   value: MsgCancelProposalResponseAmino;
-}
-/**
- * MsgCancelProposalResponse defines the response structure for executing a
- * MsgCancelProposal message.
- * 
- * Since: cosmos-sdk 0.50
- * @name MsgCancelProposalResponseSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.MsgCancelProposalResponse
- */
-export interface MsgCancelProposalResponseSDKType {
-  proposal_id: bigint;
-  canceled_time: Date;
-  canceled_height: bigint;
 }
 function createBaseMsgSubmitProposal(): MsgSubmitProposal {
   return {
@@ -777,9 +630,6 @@ export const MsgSubmitProposal = {
   aminoType: "cosmos-sdk/v1/MsgSubmitProposal",
   is(o: any): o is MsgSubmitProposal {
     return o && (o.$typeUrl === MsgSubmitProposal.typeUrl || Array.isArray(o.messages) && (!o.messages.length || Any.is(o.messages[0])) && Array.isArray(o.initialDeposit) && (!o.initialDeposit.length || Coin.is(o.initialDeposit[0])) && typeof o.proposer === "string" && typeof o.metadata === "string" && typeof o.title === "string" && typeof o.summary === "string" && typeof o.expedited === "boolean");
-  },
-  isSDK(o: any): o is MsgSubmitProposalSDKType {
-    return o && (o.$typeUrl === MsgSubmitProposal.typeUrl || Array.isArray(o.messages) && (!o.messages.length || Any.isSDK(o.messages[0])) && Array.isArray(o.initial_deposit) && (!o.initial_deposit.length || Coin.isSDK(o.initial_deposit[0])) && typeof o.proposer === "string" && typeof o.metadata === "string" && typeof o.title === "string" && typeof o.summary === "string" && typeof o.expedited === "boolean");
   },
   isAmino(o: any): o is MsgSubmitProposalAmino {
     return o && (o.$typeUrl === MsgSubmitProposal.typeUrl || Array.isArray(o.messages) && (!o.messages.length || Any.isAmino(o.messages[0])) && Array.isArray(o.initial_deposit) && (!o.initial_deposit.length || Coin.isAmino(o.initial_deposit[0])) && typeof o.proposer === "string" && typeof o.metadata === "string" && typeof o.title === "string" && typeof o.summary === "string" && typeof o.expedited === "boolean");
@@ -843,7 +693,7 @@ export const MsgSubmitProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSubmitProposal>, I>>(object: I): MsgSubmitProposal {
+  fromPartial(object: DeepPartial<MsgSubmitProposal>): MsgSubmitProposal {
     const message = createBaseMsgSubmitProposal();
     message.messages = object.messages?.map(e => Any.fromPartial(e)) || [];
     message.initialDeposit = object.initialDeposit?.map(e => Coin.fromPartial(e)) || [];
@@ -939,9 +789,6 @@ export const MsgSubmitProposalResponse = {
   is(o: any): o is MsgSubmitProposalResponse {
     return o && (o.$typeUrl === MsgSubmitProposalResponse.typeUrl || typeof o.proposalId === "bigint");
   },
-  isSDK(o: any): o is MsgSubmitProposalResponseSDKType {
-    return o && (o.$typeUrl === MsgSubmitProposalResponse.typeUrl || typeof o.proposal_id === "bigint");
-  },
   isAmino(o: any): o is MsgSubmitProposalResponseAmino {
     return o && (o.$typeUrl === MsgSubmitProposalResponse.typeUrl || typeof o.proposal_id === "bigint");
   },
@@ -968,7 +815,7 @@ export const MsgSubmitProposalResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgSubmitProposalResponse>, I>>(object: I): MsgSubmitProposalResponse {
+  fromPartial(object: DeepPartial<MsgSubmitProposalResponse>): MsgSubmitProposalResponse {
     const message = createBaseMsgSubmitProposalResponse();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     return message;
@@ -1027,9 +874,6 @@ export const MsgExecLegacyContent = {
   is(o: any): o is MsgExecLegacyContent {
     return o && (o.$typeUrl === MsgExecLegacyContent.typeUrl || typeof o.authority === "string");
   },
-  isSDK(o: any): o is MsgExecLegacyContentSDKType {
-    return o && (o.$typeUrl === MsgExecLegacyContent.typeUrl || typeof o.authority === "string");
-  },
   isAmino(o: any): o is MsgExecLegacyContentAmino {
     return o && (o.$typeUrl === MsgExecLegacyContent.typeUrl || typeof o.authority === "string");
   },
@@ -1062,7 +906,7 @@ export const MsgExecLegacyContent = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgExecLegacyContent>, I>>(object: I): MsgExecLegacyContent {
+  fromPartial(object: DeepPartial<MsgExecLegacyContent>): MsgExecLegacyContent {
     const message = createBaseMsgExecLegacyContent();
     message.content = object.content !== undefined && object.content !== null ? GlobalDecoderRegistry.fromPartial(object.content) : undefined;
     message.authority = object.authority ?? "";
@@ -1109,12 +953,12 @@ export const MsgExecLegacyContent = {
     if (!GlobalDecoderRegistry.registerExistingTypeUrl(MsgExecLegacyContent.typeUrl)) {
       return;
     }
-    CommunityPoolSpendProposal.registerTypeUrl();
-    CommunityPoolSpendProposalWithDeposit.registerTypeUrl();
-    TextProposal.registerTypeUrl();
-    ParameterChangeProposal.registerTypeUrl();
     SoftwareUpgradeProposal.registerTypeUrl();
     CancelSoftwareUpgradeProposal.registerTypeUrl();
+    ParameterChangeProposal.registerTypeUrl();
+    TextProposal.registerTypeUrl();
+    CommunityPoolSpendProposal.registerTypeUrl();
+    CommunityPoolSpendProposalWithDeposit.registerTypeUrl();
   }
 };
 function createBaseMsgExecLegacyContentResponse(): MsgExecLegacyContentResponse {
@@ -1130,9 +974,6 @@ export const MsgExecLegacyContentResponse = {
   typeUrl: "/cosmos.gov.v1.MsgExecLegacyContentResponse",
   aminoType: "cosmos-sdk/v1/MsgExecLegacyContentResponse",
   is(o: any): o is MsgExecLegacyContentResponse {
-    return o && o.$typeUrl === MsgExecLegacyContentResponse.typeUrl;
-  },
-  isSDK(o: any): o is MsgExecLegacyContentResponseSDKType {
     return o && o.$typeUrl === MsgExecLegacyContentResponse.typeUrl;
   },
   isAmino(o: any): o is MsgExecLegacyContentResponseAmino {
@@ -1155,7 +996,7 @@ export const MsgExecLegacyContentResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgExecLegacyContentResponse>, I>>(_: I): MsgExecLegacyContentResponse {
+  fromPartial(_: DeepPartial<MsgExecLegacyContentResponse>): MsgExecLegacyContentResponse {
     const message = createBaseMsgExecLegacyContentResponse();
     return message;
   },
@@ -1210,9 +1051,6 @@ export const MsgVote = {
   is(o: any): o is MsgVote {
     return o && (o.$typeUrl === MsgVote.typeUrl || typeof o.proposalId === "bigint" && typeof o.voter === "string" && isSet(o.option) && typeof o.metadata === "string");
   },
-  isSDK(o: any): o is MsgVoteSDKType {
-    return o && (o.$typeUrl === MsgVote.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string" && isSet(o.option) && typeof o.metadata === "string");
-  },
   isAmino(o: any): o is MsgVoteAmino {
     return o && (o.$typeUrl === MsgVote.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string" && isSet(o.option) && typeof o.metadata === "string");
   },
@@ -1257,7 +1095,7 @@ export const MsgVote = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgVote>, I>>(object: I): MsgVote {
+  fromPartial(object: DeepPartial<MsgVote>): MsgVote {
     const message = createBaseMsgVote();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.voter = object.voter ?? "";
@@ -1327,9 +1165,6 @@ export const MsgVoteResponse = {
   is(o: any): o is MsgVoteResponse {
     return o && o.$typeUrl === MsgVoteResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgVoteResponseSDKType {
-    return o && o.$typeUrl === MsgVoteResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgVoteResponseAmino {
     return o && o.$typeUrl === MsgVoteResponse.typeUrl;
   },
@@ -1350,7 +1185,7 @@ export const MsgVoteResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgVoteResponse>, I>>(_: I): MsgVoteResponse {
+  fromPartial(_: DeepPartial<MsgVoteResponse>): MsgVoteResponse {
     const message = createBaseMsgVoteResponse();
     return message;
   },
@@ -1405,9 +1240,6 @@ export const MsgVoteWeighted = {
   is(o: any): o is MsgVoteWeighted {
     return o && (o.$typeUrl === MsgVoteWeighted.typeUrl || typeof o.proposalId === "bigint" && typeof o.voter === "string" && Array.isArray(o.options) && (!o.options.length || WeightedVoteOption.is(o.options[0])) && typeof o.metadata === "string");
   },
-  isSDK(o: any): o is MsgVoteWeightedSDKType {
-    return o && (o.$typeUrl === MsgVoteWeighted.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string" && Array.isArray(o.options) && (!o.options.length || WeightedVoteOption.isSDK(o.options[0])) && typeof o.metadata === "string");
-  },
   isAmino(o: any): o is MsgVoteWeightedAmino {
     return o && (o.$typeUrl === MsgVoteWeighted.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string" && Array.isArray(o.options) && (!o.options.length || WeightedVoteOption.isAmino(o.options[0])) && typeof o.metadata === "string");
   },
@@ -1452,7 +1284,7 @@ export const MsgVoteWeighted = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgVoteWeighted>, I>>(object: I): MsgVoteWeighted {
+  fromPartial(object: DeepPartial<MsgVoteWeighted>): MsgVoteWeighted {
     const message = createBaseMsgVoteWeighted();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.voter = object.voter ?? "";
@@ -1529,9 +1361,6 @@ export const MsgVoteWeightedResponse = {
   is(o: any): o is MsgVoteWeightedResponse {
     return o && o.$typeUrl === MsgVoteWeightedResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgVoteWeightedResponseSDKType {
-    return o && o.$typeUrl === MsgVoteWeightedResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgVoteWeightedResponseAmino {
     return o && o.$typeUrl === MsgVoteWeightedResponse.typeUrl;
   },
@@ -1552,7 +1381,7 @@ export const MsgVoteWeightedResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgVoteWeightedResponse>, I>>(_: I): MsgVoteWeightedResponse {
+  fromPartial(_: DeepPartial<MsgVoteWeightedResponse>): MsgVoteWeightedResponse {
     const message = createBaseMsgVoteWeightedResponse();
     return message;
   },
@@ -1606,9 +1435,6 @@ export const MsgDeposit = {
   is(o: any): o is MsgDeposit {
     return o && (o.$typeUrl === MsgDeposit.typeUrl || typeof o.proposalId === "bigint" && typeof o.depositor === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])));
   },
-  isSDK(o: any): o is MsgDepositSDKType {
-    return o && (o.$typeUrl === MsgDeposit.typeUrl || typeof o.proposal_id === "bigint" && typeof o.depositor === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])));
-  },
   isAmino(o: any): o is MsgDepositAmino {
     return o && (o.$typeUrl === MsgDeposit.typeUrl || typeof o.proposal_id === "bigint" && typeof o.depositor === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])));
   },
@@ -1647,7 +1473,7 @@ export const MsgDeposit = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgDeposit>, I>>(object: I): MsgDeposit {
+  fromPartial(object: DeepPartial<MsgDeposit>): MsgDeposit {
     const message = createBaseMsgDeposit();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.depositor = object.depositor ?? "";
@@ -1719,9 +1545,6 @@ export const MsgDepositResponse = {
   is(o: any): o is MsgDepositResponse {
     return o && o.$typeUrl === MsgDepositResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgDepositResponseSDKType {
-    return o && o.$typeUrl === MsgDepositResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgDepositResponseAmino {
     return o && o.$typeUrl === MsgDepositResponse.typeUrl;
   },
@@ -1742,7 +1565,7 @@ export const MsgDepositResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgDepositResponse>, I>>(_: I): MsgDepositResponse {
+  fromPartial(_: DeepPartial<MsgDepositResponse>): MsgDepositResponse {
     const message = createBaseMsgDepositResponse();
     return message;
   },
@@ -1797,9 +1620,6 @@ export const MsgUpdateParams = {
   is(o: any): o is MsgUpdateParams {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.is(o.params));
   },
-  isSDK(o: any): o is MsgUpdateParamsSDKType {
-    return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isSDK(o.params));
-  },
   isAmino(o: any): o is MsgUpdateParamsAmino {
     return o && (o.$typeUrl === MsgUpdateParams.typeUrl || typeof o.authority === "string" && Params.isAmino(o.params));
   },
@@ -1832,7 +1652,7 @@ export const MsgUpdateParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParams>, I>>(object: I): MsgUpdateParams {
+  fromPartial(object: DeepPartial<MsgUpdateParams>): MsgUpdateParams {
     const message = createBaseMsgUpdateParams();
     message.authority = object.authority ?? "";
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
@@ -1900,9 +1720,6 @@ export const MsgUpdateParamsResponse = {
   is(o: any): o is MsgUpdateParamsResponse {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgUpdateParamsResponseSDKType {
-    return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgUpdateParamsResponseAmino {
     return o && o.$typeUrl === MsgUpdateParamsResponse.typeUrl;
   },
@@ -1923,7 +1740,7 @@ export const MsgUpdateParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgUpdateParamsResponse>, I>>(_: I): MsgUpdateParamsResponse {
+  fromPartial(_: DeepPartial<MsgUpdateParamsResponse>): MsgUpdateParamsResponse {
     const message = createBaseMsgUpdateParamsResponse();
     return message;
   },
@@ -1978,9 +1795,6 @@ export const MsgCancelProposal = {
   is(o: any): o is MsgCancelProposal {
     return o && (o.$typeUrl === MsgCancelProposal.typeUrl || typeof o.proposalId === "bigint" && typeof o.proposer === "string");
   },
-  isSDK(o: any): o is MsgCancelProposalSDKType {
-    return o && (o.$typeUrl === MsgCancelProposal.typeUrl || typeof o.proposal_id === "bigint" && typeof o.proposer === "string");
-  },
   isAmino(o: any): o is MsgCancelProposalAmino {
     return o && (o.$typeUrl === MsgCancelProposal.typeUrl || typeof o.proposal_id === "bigint" && typeof o.proposer === "string");
   },
@@ -2013,7 +1827,7 @@ export const MsgCancelProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCancelProposal>, I>>(object: I): MsgCancelProposal {
+  fromPartial(object: DeepPartial<MsgCancelProposal>): MsgCancelProposal {
     const message = createBaseMsgCancelProposal();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.proposer = object.proposer ?? "";
@@ -2080,9 +1894,6 @@ export const MsgCancelProposalResponse = {
   is(o: any): o is MsgCancelProposalResponse {
     return o && (o.$typeUrl === MsgCancelProposalResponse.typeUrl || typeof o.proposalId === "bigint" && Timestamp.is(o.canceledTime) && typeof o.canceledHeight === "bigint");
   },
-  isSDK(o: any): o is MsgCancelProposalResponseSDKType {
-    return o && (o.$typeUrl === MsgCancelProposalResponse.typeUrl || typeof o.proposal_id === "bigint" && Timestamp.isSDK(o.canceled_time) && typeof o.canceled_height === "bigint");
-  },
   isAmino(o: any): o is MsgCancelProposalResponseAmino {
     return o && (o.$typeUrl === MsgCancelProposalResponse.typeUrl || typeof o.proposal_id === "bigint" && Timestamp.isAmino(o.canceled_time) && typeof o.canceled_height === "bigint");
   },
@@ -2121,7 +1932,7 @@ export const MsgCancelProposalResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgCancelProposalResponse>, I>>(object: I): MsgCancelProposalResponse {
+  fromPartial(object: DeepPartial<MsgCancelProposalResponse>): MsgCancelProposalResponse {
     const message = createBaseMsgCancelProposalResponse();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.canceledTime = object.canceledTime ?? undefined;

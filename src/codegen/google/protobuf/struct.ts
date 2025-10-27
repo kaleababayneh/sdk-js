@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact, isSet } from "../../helpers";
+import { DeepPartial, isSet } from "../../helpers";
 /**
  * `NullValue` is a singleton enumeration to represent the null value for the
  * `Value` type union.
@@ -14,7 +14,6 @@ export enum NullValue {
   NULL_VALUE = 0,
   UNRECOGNIZED = -1,
 }
-export const NullValueSDKType = NullValue;
 export const NullValueAmino = NullValue;
 export function nullValueFromJSON(object: any): NullValue {
   switch (object) {
@@ -55,21 +54,12 @@ export interface Struct_FieldsEntryProtoMsg {
  * @see proto type: google.protobuf.Struct_FieldsEntry
  */
 export interface Struct_FieldsEntryAmino {
-  key?: string;
+  key: string;
   value?: ValueAmino;
 }
 export interface Struct_FieldsEntryAminoMsg {
   type: string;
   value: Struct_FieldsEntryAmino;
-}
-/**
- * @name Struct_FieldsEntrySDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.undefined
- */
-export interface Struct_FieldsEntrySDKType {
-  key: string;
-  value?: ValueSDKType;
 }
 /**
  * `Struct` represents a structured data value, consisting of fields
@@ -113,31 +103,13 @@ export interface StructAmino {
   /**
    * Unordered map of dynamically typed values.
    */
-  fields?: {
+  fields: {
     [key: string]: ValueAmino;
   };
 }
 export interface StructAminoMsg {
   type: "/google.protobuf.Struct";
   value: StructAmino;
-}
-/**
- * `Struct` represents a structured data value, consisting of fields
- * which map to dynamically typed values. In some languages, `Struct`
- * might be supported by a native representation. For example, in
- * scripting languages like JS a struct is represented as an
- * object. The details of that representation are described together
- * with the proto support for the language.
- * 
- * The JSON representation for `Struct` is JSON object.
- * @name StructSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.Struct
- */
-export interface StructSDKType {
-  fields: {
-    [key: string]: ValueSDKType;
-  };
 }
 /**
  * `Value` represents a dynamically typed value which can be either
@@ -222,25 +194,6 @@ export interface ValueAminoMsg {
   value: ValueAmino;
 }
 /**
- * `Value` represents a dynamically typed value which can be either
- * null, a number, a string, a boolean, a recursive struct value, or a
- * list of values. A producer of value is expected to set one of that
- * variants, absence of any variant indicates an error.
- * 
- * The JSON representation for `Value` is JSON value.
- * @name ValueSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.Value
- */
-export interface ValueSDKType {
-  null_value?: NullValue;
-  number_value?: number;
-  string_value?: string;
-  bool_value?: boolean;
-  struct_value?: StructSDKType;
-  list_value?: ListValueSDKType;
-}
-/**
  * `ListValue` is a wrapper around a repeated field of values.
  * 
  * The JSON representation for `ListValue` is JSON array.
@@ -270,22 +223,11 @@ export interface ListValueAmino {
   /**
    * Repeated field of dynamically typed values.
    */
-  values?: ValueAmino[];
+  values: ValueAmino[];
 }
 export interface ListValueAminoMsg {
   type: "/google.protobuf.ListValue";
   value: ListValueAmino;
-}
-/**
- * `ListValue` is a wrapper around a repeated field of values.
- * 
- * The JSON representation for `ListValue` is JSON array.
- * @name ListValueSDKType
- * @package google.protobuf
- * @see proto type: google.protobuf.ListValue
- */
-export interface ListValueSDKType {
-  values: ValueSDKType[];
 }
 function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
   return {
@@ -328,7 +270,7 @@ export const Struct_FieldsEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Struct_FieldsEntry>, I>>(object: I): Struct_FieldsEntry {
+  fromPartial(object: DeepPartial<Struct_FieldsEntry>): Struct_FieldsEntry {
     const message = createBaseStruct_FieldsEntry();
     message.key = object.key ?? "";
     message.value = object.value !== undefined && object.value !== null ? Value.fromPartial(object.value) : undefined;
@@ -386,9 +328,6 @@ export const Struct = {
   is(o: any): o is Struct {
     return o && (o.$typeUrl === Struct.typeUrl || isSet(o.fields));
   },
-  isSDK(o: any): o is StructSDKType {
-    return o && (o.$typeUrl === Struct.typeUrl || isSet(o.fields));
-  },
   isAmino(o: any): o is StructAmino {
     return o && (o.$typeUrl === Struct.typeUrl || isSet(o.fields));
   },
@@ -421,7 +360,7 @@ export const Struct = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Struct>, I>>(object: I): Struct {
+  fromPartial(object: DeepPartial<Struct>): Struct {
     const message = createBaseStruct();
     message.fields = Object.entries(object.fields ?? {}).reduce<{
       [key: string]: Value;
@@ -503,9 +442,6 @@ export const Value = {
   is(o: any): o is Value {
     return o && o.$typeUrl === Value.typeUrl;
   },
-  isSDK(o: any): o is ValueSDKType {
-    return o && o.$typeUrl === Value.typeUrl;
-  },
   isAmino(o: any): o is ValueAmino {
     return o && o.$typeUrl === Value.typeUrl;
   },
@@ -562,7 +498,7 @@ export const Value = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Value>, I>>(object: I): Value {
+  fromPartial(object: DeepPartial<Value>): Value {
     const message = createBaseValue();
     message.nullValue = object.nullValue ?? undefined;
     message.numberValue = object.numberValue ?? undefined;
@@ -645,9 +581,6 @@ export const ListValue = {
   is(o: any): o is ListValue {
     return o && (o.$typeUrl === ListValue.typeUrl || Array.isArray(o.values) && (!o.values.length || Value.is(o.values[0])));
   },
-  isSDK(o: any): o is ListValueSDKType {
-    return o && (o.$typeUrl === ListValue.typeUrl || Array.isArray(o.values) && (!o.values.length || Value.isSDK(o.values[0])));
-  },
   isAmino(o: any): o is ListValueAmino {
     return o && (o.$typeUrl === ListValue.typeUrl || Array.isArray(o.values) && (!o.values.length || Value.isAmino(o.values[0])));
   },
@@ -674,7 +607,7 @@ export const ListValue = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ListValue>, I>>(object: I): ListValue {
+  fromPartial(object: DeepPartial<ListValue>): ListValue {
     const message = createBaseListValue();
     message.values = object.values?.map(e => Value.fromPartial(e)) || [];
     return message;

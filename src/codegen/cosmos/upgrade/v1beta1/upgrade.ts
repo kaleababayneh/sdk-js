@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
 import { Timestamp } from "../../../google/protobuf/timestamp";
-import { Any, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Any, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { toTimestamp, fromTimestamp, Exact } from "../../../helpers";
+import { toTimestamp, fromTimestamp, DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * Plan specifies information about a planned upgrade and when it should occur.
@@ -66,7 +66,7 @@ export interface PlanAmino {
    * assumed that the software is out-of-date when the upgrade Time or Height is
    * reached and the software will exit.
    */
-  name?: string;
+  name: string;
   /**
    * Deprecated: Time based upgrades have been deprecated. Time based upgrade logic
    * has been removed from the SDK.
@@ -77,12 +77,12 @@ export interface PlanAmino {
   /**
    * The height at which the upgrade must be performed.
    */
-  height?: string;
+  height: string;
   /**
    * Any application specific upgrade info to be included on-chain
    * such as a git commit that validators could automatically upgrade to
    */
-  info?: string;
+  info: string;
   /**
    * Deprecated: UpgradedClientState field has been deprecated. IBC upgrade logic has been
    * moved to the IBC module in the sub module 02-client.
@@ -96,25 +96,6 @@ export interface PlanAminoMsg {
   value: PlanAmino;
 }
 /**
- * Plan specifies information about a planned upgrade and when it should occur.
- * @name PlanSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.Plan
- */
-export interface PlanSDKType {
-  name: string;
-  /**
-   * @deprecated
-   */
-  time: Date;
-  height: bigint;
-  info: string;
-  /**
-   * @deprecated
-   */
-  upgraded_client_state?: AnySDKType;
-}
-/**
  * SoftwareUpgradeProposal is a gov Content type for initiating a software
  * upgrade.
  * Deprecated: This legacy proposal is deprecated in favor of Msg-based gov
@@ -125,7 +106,6 @@ export interface PlanSDKType {
  * @deprecated
  */
 export interface SoftwareUpgradeProposal {
-  $typeUrl?: "/cosmos.upgrade.v1beta1.SoftwareUpgradeProposal";
   /**
    * title of the proposal
    */
@@ -157,11 +137,11 @@ export interface SoftwareUpgradeProposalAmino {
   /**
    * title of the proposal
    */
-  title?: string;
+  title: string;
   /**
    * description of the proposal
    */
-  description?: string;
+  description: string;
   /**
    * plan of the proposal
    */
@@ -170,22 +150,6 @@ export interface SoftwareUpgradeProposalAmino {
 export interface SoftwareUpgradeProposalAminoMsg {
   type: "cosmos-sdk/SoftwareUpgradeProposal";
   value: SoftwareUpgradeProposalAmino;
-}
-/**
- * SoftwareUpgradeProposal is a gov Content type for initiating a software
- * upgrade.
- * Deprecated: This legacy proposal is deprecated in favor of Msg-based gov
- * proposals, see MsgSoftwareUpgrade.
- * @name SoftwareUpgradeProposalSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.SoftwareUpgradeProposal
- * @deprecated
- */
-export interface SoftwareUpgradeProposalSDKType {
-  $typeUrl?: "/cosmos.upgrade.v1beta1.SoftwareUpgradeProposal";
-  title: string;
-  description: string;
-  plan: PlanSDKType;
 }
 /**
  * CancelSoftwareUpgradeProposal is a gov Content type for cancelling a software
@@ -198,7 +162,6 @@ export interface SoftwareUpgradeProposalSDKType {
  * @deprecated
  */
 export interface CancelSoftwareUpgradeProposal {
-  $typeUrl?: "/cosmos.upgrade.v1beta1.CancelSoftwareUpgradeProposal";
   /**
    * title of the proposal
    */
@@ -226,30 +189,15 @@ export interface CancelSoftwareUpgradeProposalAmino {
   /**
    * title of the proposal
    */
-  title?: string;
+  title: string;
   /**
    * description of the proposal
    */
-  description?: string;
+  description: string;
 }
 export interface CancelSoftwareUpgradeProposalAminoMsg {
   type: "cosmos-sdk/CancelSoftwareUpgradeProposal";
   value: CancelSoftwareUpgradeProposalAmino;
-}
-/**
- * CancelSoftwareUpgradeProposal is a gov Content type for cancelling a software
- * upgrade.
- * Deprecated: This legacy proposal is deprecated in favor of Msg-based gov
- * proposals, see MsgCancelUpgrade.
- * @name CancelSoftwareUpgradeProposalSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.CancelSoftwareUpgradeProposal
- * @deprecated
- */
-export interface CancelSoftwareUpgradeProposalSDKType {
-  $typeUrl?: "/cosmos.upgrade.v1beta1.CancelSoftwareUpgradeProposal";
-  title: string;
-  description: string;
 }
 /**
  * ModuleVersion specifies a module and its consensus version.
@@ -285,27 +233,15 @@ export interface ModuleVersionAmino {
   /**
    * name of the app module
    */
-  name?: string;
+  name: string;
   /**
    * consensus version of the app module
    */
-  version?: string;
+  version: string;
 }
 export interface ModuleVersionAminoMsg {
   type: "cosmos-sdk/ModuleVersion";
   value: ModuleVersionAmino;
-}
-/**
- * ModuleVersion specifies a module and its consensus version.
- * 
- * Since: cosmos-sdk 0.43
- * @name ModuleVersionSDKType
- * @package cosmos.upgrade.v1beta1
- * @see proto type: cosmos.upgrade.v1beta1.ModuleVersion
- */
-export interface ModuleVersionSDKType {
-  name: string;
-  version: bigint;
 }
 function createBasePlan(): Plan {
   return {
@@ -327,9 +263,6 @@ export const Plan = {
   aminoType: "cosmos-sdk/Plan",
   is(o: any): o is Plan {
     return o && (o.$typeUrl === Plan.typeUrl || typeof o.name === "string" && Timestamp.is(o.time) && typeof o.height === "bigint" && typeof o.info === "string");
-  },
-  isSDK(o: any): o is PlanSDKType {
-    return o && (o.$typeUrl === Plan.typeUrl || typeof o.name === "string" && Timestamp.isSDK(o.time) && typeof o.height === "bigint" && typeof o.info === "string");
   },
   isAmino(o: any): o is PlanAmino {
     return o && (o.$typeUrl === Plan.typeUrl || typeof o.name === "string" && Timestamp.isAmino(o.time) && typeof o.height === "bigint" && typeof o.info === "string");
@@ -381,7 +314,7 @@ export const Plan = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Plan>, I>>(object: I): Plan {
+  fromPartial(object: DeepPartial<Plan>): Plan {
     const message = createBasePlan();
     message.name = object.name ?? "";
     message.time = object.time ?? undefined;
@@ -443,7 +376,6 @@ export const Plan = {
 };
 function createBaseSoftwareUpgradeProposal(): SoftwareUpgradeProposal {
   return {
-    $typeUrl: "/cosmos.upgrade.v1beta1.SoftwareUpgradeProposal",
     title: "",
     description: "",
     plan: Plan.fromPartial({})
@@ -464,9 +396,6 @@ export const SoftwareUpgradeProposal = {
   aminoType: "cosmos-sdk/SoftwareUpgradeProposal",
   is(o: any): o is SoftwareUpgradeProposal {
     return o && (o.$typeUrl === SoftwareUpgradeProposal.typeUrl || typeof o.title === "string" && typeof o.description === "string" && Plan.is(o.plan));
-  },
-  isSDK(o: any): o is SoftwareUpgradeProposalSDKType {
-    return o && (o.$typeUrl === SoftwareUpgradeProposal.typeUrl || typeof o.title === "string" && typeof o.description === "string" && Plan.isSDK(o.plan));
   },
   isAmino(o: any): o is SoftwareUpgradeProposalAmino {
     return o && (o.$typeUrl === SoftwareUpgradeProposal.typeUrl || typeof o.title === "string" && typeof o.description === "string" && Plan.isAmino(o.plan));
@@ -506,7 +435,7 @@ export const SoftwareUpgradeProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SoftwareUpgradeProposal>, I>>(object: I): SoftwareUpgradeProposal {
+  fromPartial(object: DeepPartial<SoftwareUpgradeProposal>): SoftwareUpgradeProposal {
     const message = createBaseSoftwareUpgradeProposal();
     message.title = object.title ?? "";
     message.description = object.description ?? "";
@@ -565,7 +494,6 @@ export const SoftwareUpgradeProposal = {
 };
 function createBaseCancelSoftwareUpgradeProposal(): CancelSoftwareUpgradeProposal {
   return {
-    $typeUrl: "/cosmos.upgrade.v1beta1.CancelSoftwareUpgradeProposal",
     title: "",
     description: ""
   };
@@ -584,9 +512,6 @@ export const CancelSoftwareUpgradeProposal = {
   typeUrl: "/cosmos.upgrade.v1beta1.CancelSoftwareUpgradeProposal",
   aminoType: "cosmos-sdk/CancelSoftwareUpgradeProposal",
   is(o: any): o is CancelSoftwareUpgradeProposal {
-    return o && (o.$typeUrl === CancelSoftwareUpgradeProposal.typeUrl || typeof o.title === "string" && typeof o.description === "string");
-  },
-  isSDK(o: any): o is CancelSoftwareUpgradeProposalSDKType {
     return o && (o.$typeUrl === CancelSoftwareUpgradeProposal.typeUrl || typeof o.title === "string" && typeof o.description === "string");
   },
   isAmino(o: any): o is CancelSoftwareUpgradeProposalAmino {
@@ -621,7 +546,7 @@ export const CancelSoftwareUpgradeProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CancelSoftwareUpgradeProposal>, I>>(object: I): CancelSoftwareUpgradeProposal {
+  fromPartial(object: DeepPartial<CancelSoftwareUpgradeProposal>): CancelSoftwareUpgradeProposal {
     const message = createBaseCancelSoftwareUpgradeProposal();
     message.title = object.title ?? "";
     message.description = object.description ?? "";
@@ -692,9 +617,6 @@ export const ModuleVersion = {
   is(o: any): o is ModuleVersion {
     return o && (o.$typeUrl === ModuleVersion.typeUrl || typeof o.name === "string" && typeof o.version === "bigint");
   },
-  isSDK(o: any): o is ModuleVersionSDKType {
-    return o && (o.$typeUrl === ModuleVersion.typeUrl || typeof o.name === "string" && typeof o.version === "bigint");
-  },
   isAmino(o: any): o is ModuleVersionAmino {
     return o && (o.$typeUrl === ModuleVersion.typeUrl || typeof o.name === "string" && typeof o.version === "bigint");
   },
@@ -727,7 +649,7 @@ export const ModuleVersion = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ModuleVersion>, I>>(object: I): ModuleVersion {
+  fromPartial(object: DeepPartial<ModuleVersion>): ModuleVersion {
     const message = createBaseModuleVersion();
     message.name = object.name ?? "";
     message.version = object.version !== undefined && object.version !== null ? BigInt(object.version.toString()) : BigInt(0);

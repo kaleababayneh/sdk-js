@@ -1,8 +1,8 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../cosmos/base/v1beta1/coin";
+import { Coin, CoinAmino } from "../../cosmos/base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
  * @name ClaimRecord
@@ -27,29 +27,16 @@ export interface ClaimRecordProtoMsg {
  * @see proto type: lumera.claim.ClaimRecord
  */
 export interface ClaimRecordAmino {
-  oldAddress?: string;
+  oldAddress: string;
   balance: CoinAmino[];
   claimed: boolean;
-  claimTime?: string;
-  destAddress?: string;
+  claimTime: string;
+  destAddress: string;
   vestedTier: number;
 }
 export interface ClaimRecordAminoMsg {
   type: "/lumera.claim.ClaimRecord";
   value: ClaimRecordAmino;
-}
-/**
- * @name ClaimRecordSDKType
- * @package lumera.claim
- * @see proto type: lumera.claim.ClaimRecord
- */
-export interface ClaimRecordSDKType {
-  oldAddress: string;
-  balance: CoinSDKType[];
-  claimed: boolean;
-  claimTime: bigint;
-  destAddress: string;
-  vestedTier: number;
 }
 function createBaseClaimRecord(): ClaimRecord {
   return {
@@ -70,9 +57,6 @@ export const ClaimRecord = {
   typeUrl: "/lumera.claim.ClaimRecord",
   is(o: any): o is ClaimRecord {
     return o && (o.$typeUrl === ClaimRecord.typeUrl || typeof o.oldAddress === "string" && Array.isArray(o.balance) && (!o.balance.length || Coin.is(o.balance[0])) && typeof o.claimed === "boolean" && typeof o.claimTime === "bigint" && typeof o.destAddress === "string" && typeof o.vestedTier === "number");
-  },
-  isSDK(o: any): o is ClaimRecordSDKType {
-    return o && (o.$typeUrl === ClaimRecord.typeUrl || typeof o.oldAddress === "string" && Array.isArray(o.balance) && (!o.balance.length || Coin.isSDK(o.balance[0])) && typeof o.claimed === "boolean" && typeof o.claimTime === "bigint" && typeof o.destAddress === "string" && typeof o.vestedTier === "number");
   },
   isAmino(o: any): o is ClaimRecordAmino {
     return o && (o.$typeUrl === ClaimRecord.typeUrl || typeof o.oldAddress === "string" && Array.isArray(o.balance) && (!o.balance.length || Coin.isAmino(o.balance[0])) && typeof o.claimed === "boolean" && typeof o.claimTime === "bigint" && typeof o.destAddress === "string" && typeof o.vestedTier === "number");
@@ -130,7 +114,7 @@ export const ClaimRecord = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ClaimRecord>, I>>(object: I): ClaimRecord {
+  fromPartial(object: DeepPartial<ClaimRecord>): ClaimRecord {
     const message = createBaseClaimRecord();
     message.oldAddress = object.oldAddress ?? "";
     message.balance = object.balance?.map(e => Coin.fromPartial(e)) || [];

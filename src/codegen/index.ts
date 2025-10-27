@@ -6,15 +6,15 @@
     * and run the transpile command or npm scripts command that is used to regenerate this bundle.
   */
  
-export * from "./amino/bundle";
+export * from "./tendermint/bundle";
+export * from "./lumera/bundle";
+export * from "./lumera/client";
+export * from "./google/bundle";
+export * from "./gogoproto/bundle";
 export * from "./cosmos_proto/bundle";
 export * from "./cosmos/bundle";
 export * from "./cosmos/client";
-export * from "./gogoproto/bundle";
-export * from "./google/bundle";
-export * from "./lumera/bundle";
-export * from "./lumera/client";
-export * from "./tendermint/bundle";
+export * from "./amino/bundle";
 export * from "./extern";
 export * from "./helper-func-types";
 export * from "./varint";

@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Grant, GrantAmino, GrantSDKType } from "./authz";
-import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Grant, GrantAmino } from "./authz";
+import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 /**
  * MsgGrant is a request type for Grant method. It declares authorization to the grantee
  * on behalf of the granter with the provided expiration time.
@@ -29,25 +29,13 @@ export interface MsgGrantProtoMsg {
  * @see proto type: cosmos.authz.v1beta1.MsgGrant
  */
 export interface MsgGrantAmino {
-  granter?: string;
-  grantee?: string;
+  granter: string;
+  grantee: string;
   grant: GrantAmino;
 }
 export interface MsgGrantAminoMsg {
   type: "cosmos-sdk/MsgGrant";
   value: MsgGrantAmino;
-}
-/**
- * MsgGrant is a request type for Grant method. It declares authorization to the grantee
- * on behalf of the granter with the provided expiration time.
- * @name MsgGrantSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.MsgGrant
- */
-export interface MsgGrantSDKType {
-  granter: string;
-  grantee: string;
-  grant: GrantSDKType;
 }
 /**
  * MsgGrantResponse defines the Msg/MsgGrant response type.
@@ -71,13 +59,6 @@ export interface MsgGrantResponseAminoMsg {
   type: "cosmos-sdk/MsgGrantResponse";
   value: MsgGrantResponseAmino;
 }
-/**
- * MsgGrantResponse defines the Msg/MsgGrant response type.
- * @name MsgGrantResponseSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.MsgGrantResponse
- */
-export interface MsgGrantResponseSDKType {}
 /**
  * MsgExec attempts to execute the provided messages using
  * authorizations granted to the grantee. Each message should have only
@@ -116,29 +97,17 @@ export type MsgExecEncoded = Omit<MsgExec, "msgs"> & {
  * @see proto type: cosmos.authz.v1beta1.MsgExec
  */
 export interface MsgExecAmino {
-  grantee?: string;
+  grantee: string;
   /**
    * Execute Msg.
    * The x/authz will try to find a grant matching (msg.signers[0], grantee, MsgTypeURL(msg))
    * triple and validate it.
    */
-  msgs?: AnyAmino[];
+  msgs: AnyAmino[];
 }
 export interface MsgExecAminoMsg {
   type: "cosmos-sdk/MsgExec";
   value: MsgExecAmino;
-}
-/**
- * MsgExec attempts to execute the provided messages using
- * authorizations granted to the grantee. Each message should have only
- * one signer corresponding to the granter of the authorization.
- * @name MsgExecSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.MsgExec
- */
-export interface MsgExecSDKType {
-  grantee: string;
-  msgs: (AnySDKType)[];
 }
 /**
  * MsgExecResponse defines the Msg/MsgExecResponse response type.
@@ -160,20 +129,11 @@ export interface MsgExecResponseProtoMsg {
  * @see proto type: cosmos.authz.v1beta1.MsgExecResponse
  */
 export interface MsgExecResponseAmino {
-  results?: string[];
+  results: string[];
 }
 export interface MsgExecResponseAminoMsg {
   type: "cosmos-sdk/MsgExecResponse";
   value: MsgExecResponseAmino;
-}
-/**
- * MsgExecResponse defines the Msg/MsgExecResponse response type.
- * @name MsgExecResponseSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.MsgExecResponse
- */
-export interface MsgExecResponseSDKType {
-  results: Uint8Array[];
 }
 /**
  * MsgRevoke revokes any authorization with the provided sdk.Msg type on the
@@ -199,25 +159,13 @@ export interface MsgRevokeProtoMsg {
  * @see proto type: cosmos.authz.v1beta1.MsgRevoke
  */
 export interface MsgRevokeAmino {
-  granter?: string;
-  grantee?: string;
-  msg_type_url?: string;
+  granter: string;
+  grantee: string;
+  msg_type_url: string;
 }
 export interface MsgRevokeAminoMsg {
   type: "cosmos-sdk/MsgRevoke";
   value: MsgRevokeAmino;
-}
-/**
- * MsgRevoke revokes any authorization with the provided sdk.Msg type on the
- * granter's account with that has been granted to the grantee.
- * @name MsgRevokeSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.MsgRevoke
- */
-export interface MsgRevokeSDKType {
-  granter: string;
-  grantee: string;
-  msg_type_url: string;
 }
 /**
  * MsgRevokeResponse defines the Msg/MsgRevokeResponse response type.
@@ -241,13 +189,6 @@ export interface MsgRevokeResponseAminoMsg {
   type: "cosmos-sdk/MsgRevokeResponse";
   value: MsgRevokeResponseAmino;
 }
-/**
- * MsgRevokeResponse defines the Msg/MsgRevokeResponse response type.
- * @name MsgRevokeResponseSDKType
- * @package cosmos.authz.v1beta1
- * @see proto type: cosmos.authz.v1beta1.MsgRevokeResponse
- */
-export interface MsgRevokeResponseSDKType {}
 function createBaseMsgGrant(): MsgGrant {
   return {
     granter: "",
@@ -267,9 +208,6 @@ export const MsgGrant = {
   aminoType: "cosmos-sdk/MsgGrant",
   is(o: any): o is MsgGrant {
     return o && (o.$typeUrl === MsgGrant.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string" && Grant.is(o.grant));
-  },
-  isSDK(o: any): o is MsgGrantSDKType {
-    return o && (o.$typeUrl === MsgGrant.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string" && Grant.isSDK(o.grant));
   },
   isAmino(o: any): o is MsgGrantAmino {
     return o && (o.$typeUrl === MsgGrant.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string" && Grant.isAmino(o.grant));
@@ -309,7 +247,7 @@ export const MsgGrant = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgGrant>, I>>(object: I): MsgGrant {
+  fromPartial(object: DeepPartial<MsgGrant>): MsgGrant {
     const message = createBaseMsgGrant();
     message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
@@ -379,9 +317,6 @@ export const MsgGrantResponse = {
   is(o: any): o is MsgGrantResponse {
     return o && o.$typeUrl === MsgGrantResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgGrantResponseSDKType {
-    return o && o.$typeUrl === MsgGrantResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgGrantResponseAmino {
     return o && o.$typeUrl === MsgGrantResponse.typeUrl;
   },
@@ -402,7 +337,7 @@ export const MsgGrantResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgGrantResponse>, I>>(_: I): MsgGrantResponse {
+  fromPartial(_: DeepPartial<MsgGrantResponse>): MsgGrantResponse {
     const message = createBaseMsgGrantResponse();
     return message;
   },
@@ -457,9 +392,6 @@ export const MsgExec = {
   is(o: any): o is MsgExec {
     return o && (o.$typeUrl === MsgExec.typeUrl || typeof o.grantee === "string" && Array.isArray(o.msgs) && (!o.msgs.length || Any.is(o.msgs[0])));
   },
-  isSDK(o: any): o is MsgExecSDKType {
-    return o && (o.$typeUrl === MsgExec.typeUrl || typeof o.grantee === "string" && Array.isArray(o.msgs) && (!o.msgs.length || Any.isSDK(o.msgs[0])));
-  },
   isAmino(o: any): o is MsgExecAmino {
     return o && (o.$typeUrl === MsgExec.typeUrl || typeof o.grantee === "string" && Array.isArray(o.msgs) && (!o.msgs.length || Any.isAmino(o.msgs[0])));
   },
@@ -492,7 +424,7 @@ export const MsgExec = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgExec>, I>>(object: I): MsgExec {
+  fromPartial(object: DeepPartial<MsgExec>): MsgExec {
     const message = createBaseMsgExec();
     message.grantee = object.grantee ?? "";
     message.msgs = object.msgs?.map(e => GlobalDecoderRegistry.fromPartial(e) as any) || [];
@@ -556,9 +488,6 @@ export const MsgExecResponse = {
   is(o: any): o is MsgExecResponse {
     return o && (o.$typeUrl === MsgExecResponse.typeUrl || Array.isArray(o.results) && (!o.results.length || o.results[0] instanceof Uint8Array || typeof o.results[0] === "string"));
   },
-  isSDK(o: any): o is MsgExecResponseSDKType {
-    return o && (o.$typeUrl === MsgExecResponse.typeUrl || Array.isArray(o.results) && (!o.results.length || o.results[0] instanceof Uint8Array || typeof o.results[0] === "string"));
-  },
   isAmino(o: any): o is MsgExecResponseAmino {
     return o && (o.$typeUrl === MsgExecResponse.typeUrl || Array.isArray(o.results) && (!o.results.length || o.results[0] instanceof Uint8Array || typeof o.results[0] === "string"));
   },
@@ -585,7 +514,7 @@ export const MsgExecResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgExecResponse>, I>>(object: I): MsgExecResponse {
+  fromPartial(object: DeepPartial<MsgExecResponse>): MsgExecResponse {
     const message = createBaseMsgExecResponse();
     message.results = object.results?.map(e => e) || [];
     return message;
@@ -647,9 +576,6 @@ export const MsgRevoke = {
   is(o: any): o is MsgRevoke {
     return o && (o.$typeUrl === MsgRevoke.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string" && typeof o.msgTypeUrl === "string");
   },
-  isSDK(o: any): o is MsgRevokeSDKType {
-    return o && (o.$typeUrl === MsgRevoke.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string" && typeof o.msg_type_url === "string");
-  },
   isAmino(o: any): o is MsgRevokeAmino {
     return o && (o.$typeUrl === MsgRevoke.typeUrl || typeof o.granter === "string" && typeof o.grantee === "string" && typeof o.msg_type_url === "string");
   },
@@ -688,7 +614,7 @@ export const MsgRevoke = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgRevoke>, I>>(object: I): MsgRevoke {
+  fromPartial(object: DeepPartial<MsgRevoke>): MsgRevoke {
     const message = createBaseMsgRevoke();
     message.granter = object.granter ?? "";
     message.grantee = object.grantee ?? "";
@@ -753,9 +679,6 @@ export const MsgRevokeResponse = {
   is(o: any): o is MsgRevokeResponse {
     return o && o.$typeUrl === MsgRevokeResponse.typeUrl;
   },
-  isSDK(o: any): o is MsgRevokeResponseSDKType {
-    return o && o.$typeUrl === MsgRevokeResponse.typeUrl;
-  },
   isAmino(o: any): o is MsgRevokeResponseAmino {
     return o && o.$typeUrl === MsgRevokeResponse.typeUrl;
   },
@@ -776,7 +699,7 @@ export const MsgRevokeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgRevokeResponse>, I>>(_: I): MsgRevokeResponse {
+  fromPartial(_: DeepPartial<MsgRevokeResponse>): MsgRevokeResponse {
     const message = createBaseMsgRevokeResponse();
     return message;
   },

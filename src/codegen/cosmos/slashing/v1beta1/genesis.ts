@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType, ValidatorSigningInfo, ValidatorSigningInfoAmino, ValidatorSigningInfoSDKType } from "./slashing";
+import { Params, ParamsAmino, ValidatorSigningInfo, ValidatorSigningInfoAmino } from "./slashing";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * GenesisState defines the slashing module's genesis state.
  * @name GenesisState
@@ -57,17 +57,6 @@ export interface GenesisStateAminoMsg {
   value: GenesisStateAmino;
 }
 /**
- * GenesisState defines the slashing module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  params: ParamsSDKType;
-  signing_infos: SigningInfoSDKType[];
-  missed_blocks: ValidatorMissedBlocksSDKType[];
-}
-/**
  * SigningInfo stores validator signing info of corresponding address.
  * @name SigningInfo
  * @package cosmos.slashing.v1beta1
@@ -97,7 +86,7 @@ export interface SigningInfoAmino {
   /**
    * address is the validator address.
    */
-  address?: string;
+  address: string;
   /**
    * validator_signing_info represents the signing info of this validator.
    */
@@ -106,16 +95,6 @@ export interface SigningInfoAmino {
 export interface SigningInfoAminoMsg {
   type: "cosmos-sdk/SigningInfo";
   value: SigningInfoAmino;
-}
-/**
- * SigningInfo stores validator signing info of corresponding address.
- * @name SigningInfoSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.SigningInfo
- */
-export interface SigningInfoSDKType {
-  address: string;
-  validator_signing_info: ValidatorSigningInfoSDKType;
 }
 /**
  * ValidatorMissedBlocks contains array of missed blocks of corresponding
@@ -149,7 +128,7 @@ export interface ValidatorMissedBlocksAmino {
   /**
    * address is the validator address.
    */
-  address?: string;
+  address: string;
   /**
    * missed_blocks is an array of missed blocks by the validator.
    */
@@ -158,17 +137,6 @@ export interface ValidatorMissedBlocksAmino {
 export interface ValidatorMissedBlocksAminoMsg {
   type: "cosmos-sdk/ValidatorMissedBlocks";
   value: ValidatorMissedBlocksAmino;
-}
-/**
- * ValidatorMissedBlocks contains array of missed blocks of corresponding
- * address.
- * @name ValidatorMissedBlocksSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.ValidatorMissedBlocks
- */
-export interface ValidatorMissedBlocksSDKType {
-  address: string;
-  missed_blocks: MissedBlockSDKType[];
 }
 /**
  * MissedBlock contains height and missed status as boolean.
@@ -200,25 +168,15 @@ export interface MissedBlockAmino {
   /**
    * index is the height at which the block was missed.
    */
-  index?: string;
+  index: string;
   /**
    * missed is the missed status.
    */
-  missed?: boolean;
+  missed: boolean;
 }
 export interface MissedBlockAminoMsg {
   type: "cosmos-sdk/MissedBlock";
   value: MissedBlockAmino;
-}
-/**
- * MissedBlock contains height and missed status as boolean.
- * @name MissedBlockSDKType
- * @package cosmos.slashing.v1beta1
- * @see proto type: cosmos.slashing.v1beta1.MissedBlock
- */
-export interface MissedBlockSDKType {
-  index: bigint;
-  missed: boolean;
 }
 function createBaseGenesisState(): GenesisState {
   return {
@@ -238,9 +196,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.is(o.params) && Array.isArray(o.signingInfos) && (!o.signingInfos.length || SigningInfo.is(o.signingInfos[0])) && Array.isArray(o.missedBlocks) && (!o.missedBlocks.length || ValidatorMissedBlocks.is(o.missedBlocks[0])));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Params.isSDK(o.params) && Array.isArray(o.signing_infos) && (!o.signing_infos.length || SigningInfo.isSDK(o.signing_infos[0])) && Array.isArray(o.missed_blocks) && (!o.missed_blocks.length || ValidatorMissedBlocks.isSDK(o.missed_blocks[0])));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.isAmino(o.params) && Array.isArray(o.signing_infos) && (!o.signing_infos.length || SigningInfo.isAmino(o.signing_infos[0])) && Array.isArray(o.missed_blocks) && (!o.missed_blocks.length || ValidatorMissedBlocks.isAmino(o.missed_blocks[0])));
@@ -280,7 +235,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     message.signingInfos = object.signingInfos?.map(e => SigningInfo.fromPartial(e)) || [];
@@ -359,9 +314,6 @@ export const SigningInfo = {
   is(o: any): o is SigningInfo {
     return o && (o.$typeUrl === SigningInfo.typeUrl || typeof o.address === "string" && ValidatorSigningInfo.is(o.validatorSigningInfo));
   },
-  isSDK(o: any): o is SigningInfoSDKType {
-    return o && (o.$typeUrl === SigningInfo.typeUrl || typeof o.address === "string" && ValidatorSigningInfo.isSDK(o.validator_signing_info));
-  },
   isAmino(o: any): o is SigningInfoAmino {
     return o && (o.$typeUrl === SigningInfo.typeUrl || typeof o.address === "string" && ValidatorSigningInfo.isAmino(o.validator_signing_info));
   },
@@ -394,7 +346,7 @@ export const SigningInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SigningInfo>, I>>(object: I): SigningInfo {
+  fromPartial(object: DeepPartial<SigningInfo>): SigningInfo {
     const message = createBaseSigningInfo();
     message.address = object.address ?? "";
     message.validatorSigningInfo = object.validatorSigningInfo !== undefined && object.validatorSigningInfo !== null ? ValidatorSigningInfo.fromPartial(object.validatorSigningInfo) : undefined;
@@ -463,9 +415,6 @@ export const ValidatorMissedBlocks = {
   is(o: any): o is ValidatorMissedBlocks {
     return o && (o.$typeUrl === ValidatorMissedBlocks.typeUrl || typeof o.address === "string" && Array.isArray(o.missedBlocks) && (!o.missedBlocks.length || MissedBlock.is(o.missedBlocks[0])));
   },
-  isSDK(o: any): o is ValidatorMissedBlocksSDKType {
-    return o && (o.$typeUrl === ValidatorMissedBlocks.typeUrl || typeof o.address === "string" && Array.isArray(o.missed_blocks) && (!o.missed_blocks.length || MissedBlock.isSDK(o.missed_blocks[0])));
-  },
   isAmino(o: any): o is ValidatorMissedBlocksAmino {
     return o && (o.$typeUrl === ValidatorMissedBlocks.typeUrl || typeof o.address === "string" && Array.isArray(o.missed_blocks) && (!o.missed_blocks.length || MissedBlock.isAmino(o.missed_blocks[0])));
   },
@@ -498,7 +447,7 @@ export const ValidatorMissedBlocks = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorMissedBlocks>, I>>(object: I): ValidatorMissedBlocks {
+  fromPartial(object: DeepPartial<ValidatorMissedBlocks>): ValidatorMissedBlocks {
     const message = createBaseValidatorMissedBlocks();
     message.address = object.address ?? "";
     message.missedBlocks = object.missedBlocks?.map(e => MissedBlock.fromPartial(e)) || [];
@@ -568,9 +517,6 @@ export const MissedBlock = {
   is(o: any): o is MissedBlock {
     return o && (o.$typeUrl === MissedBlock.typeUrl || typeof o.index === "bigint" && typeof o.missed === "boolean");
   },
-  isSDK(o: any): o is MissedBlockSDKType {
-    return o && (o.$typeUrl === MissedBlock.typeUrl || typeof o.index === "bigint" && typeof o.missed === "boolean");
-  },
   isAmino(o: any): o is MissedBlockAmino {
     return o && (o.$typeUrl === MissedBlock.typeUrl || typeof o.index === "bigint" && typeof o.missed === "boolean");
   },
@@ -603,7 +549,7 @@ export const MissedBlock = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MissedBlock>, I>>(object: I): MissedBlock {
+  fromPartial(object: DeepPartial<MissedBlock>): MissedBlock {
     const message = createBaseMissedBlock();
     message.index = object.index !== undefined && object.index !== null ? BigInt(object.index.toString()) : BigInt(0);
     message.missed = object.missed ?? false;

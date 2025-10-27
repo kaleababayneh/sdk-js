@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType, Validator, ValidatorAmino, ValidatorSDKType, Delegation, DelegationAmino, DelegationSDKType, UnbondingDelegation, UnbondingDelegationAmino, UnbondingDelegationSDKType, Redelegation, RedelegationAmino, RedelegationSDKType } from "./staking";
+import { Params, ParamsAmino, Validator, ValidatorAmino, Delegation, DelegationAmino, UnbondingDelegation, UnbondingDelegationAmino, Redelegation, RedelegationAmino } from "./staking";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 /**
  * GenesisState defines the staking module's genesis state.
  * @name GenesisState
@@ -90,27 +90,11 @@ export interface GenesisStateAmino {
   /**
    * exported defines a bool to identify whether the chain dealing with exported or initialized genesis.
    */
-  exported?: boolean;
+  exported: boolean;
 }
 export interface GenesisStateAminoMsg {
   type: "cosmos-sdk/GenesisState";
   value: GenesisStateAmino;
-}
-/**
- * GenesisState defines the staking module's genesis state.
- * @name GenesisStateSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.GenesisState
- */
-export interface GenesisStateSDKType {
-  params: ParamsSDKType;
-  last_total_power: Uint8Array;
-  last_validator_powers: LastValidatorPowerSDKType[];
-  validators: ValidatorSDKType[];
-  delegations: DelegationSDKType[];
-  unbonding_delegations: UnbondingDelegationSDKType[];
-  redelegations: RedelegationSDKType[];
-  exported: boolean;
 }
 /**
  * LastValidatorPower required for validator set update logic.
@@ -142,25 +126,15 @@ export interface LastValidatorPowerAmino {
   /**
    * address is the address of the validator.
    */
-  address?: string;
+  address: string;
   /**
    * power defines the power of the validator.
    */
-  power?: string;
+  power: string;
 }
 export interface LastValidatorPowerAminoMsg {
   type: "cosmos-sdk/LastValidatorPower";
   value: LastValidatorPowerAmino;
-}
-/**
- * LastValidatorPower required for validator set update logic.
- * @name LastValidatorPowerSDKType
- * @package cosmos.staking.v1beta1
- * @see proto type: cosmos.staking.v1beta1.LastValidatorPower
- */
-export interface LastValidatorPowerSDKType {
-  address: string;
-  power: bigint;
 }
 function createBaseGenesisState(): GenesisState {
   return {
@@ -185,9 +159,6 @@ export const GenesisState = {
   aminoType: "cosmos-sdk/GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.is(o.params) && (o.lastTotalPower instanceof Uint8Array || typeof o.lastTotalPower === "string") && Array.isArray(o.lastValidatorPowers) && (!o.lastValidatorPowers.length || LastValidatorPower.is(o.lastValidatorPowers[0])) && Array.isArray(o.validators) && (!o.validators.length || Validator.is(o.validators[0])) && Array.isArray(o.delegations) && (!o.delegations.length || Delegation.is(o.delegations[0])) && Array.isArray(o.unbondingDelegations) && (!o.unbondingDelegations.length || UnbondingDelegation.is(o.unbondingDelegations[0])) && Array.isArray(o.redelegations) && (!o.redelegations.length || Redelegation.is(o.redelegations[0])) && typeof o.exported === "boolean");
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Params.isSDK(o.params) && (o.last_total_power instanceof Uint8Array || typeof o.last_total_power === "string") && Array.isArray(o.last_validator_powers) && (!o.last_validator_powers.length || LastValidatorPower.isSDK(o.last_validator_powers[0])) && Array.isArray(o.validators) && (!o.validators.length || Validator.isSDK(o.validators[0])) && Array.isArray(o.delegations) && (!o.delegations.length || Delegation.isSDK(o.delegations[0])) && Array.isArray(o.unbonding_delegations) && (!o.unbonding_delegations.length || UnbondingDelegation.isSDK(o.unbonding_delegations[0])) && Array.isArray(o.redelegations) && (!o.redelegations.length || Redelegation.isSDK(o.redelegations[0])) && typeof o.exported === "boolean");
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.isAmino(o.params) && (o.last_total_power instanceof Uint8Array || typeof o.last_total_power === "string") && Array.isArray(o.last_validator_powers) && (!o.last_validator_powers.length || LastValidatorPower.isAmino(o.last_validator_powers[0])) && Array.isArray(o.validators) && (!o.validators.length || Validator.isAmino(o.validators[0])) && Array.isArray(o.delegations) && (!o.delegations.length || Delegation.isAmino(o.delegations[0])) && Array.isArray(o.unbonding_delegations) && (!o.unbonding_delegations.length || UnbondingDelegation.isAmino(o.unbonding_delegations[0])) && Array.isArray(o.redelegations) && (!o.redelegations.length || Redelegation.isAmino(o.redelegations[0])) && typeof o.exported === "boolean");
@@ -257,7 +228,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     message.lastTotalPower = object.lastTotalPower ?? new Uint8Array();
@@ -370,9 +341,6 @@ export const LastValidatorPower = {
   is(o: any): o is LastValidatorPower {
     return o && (o.$typeUrl === LastValidatorPower.typeUrl || typeof o.address === "string" && typeof o.power === "bigint");
   },
-  isSDK(o: any): o is LastValidatorPowerSDKType {
-    return o && (o.$typeUrl === LastValidatorPower.typeUrl || typeof o.address === "string" && typeof o.power === "bigint");
-  },
   isAmino(o: any): o is LastValidatorPowerAmino {
     return o && (o.$typeUrl === LastValidatorPower.typeUrl || typeof o.address === "string" && typeof o.power === "bigint");
   },
@@ -405,7 +373,7 @@ export const LastValidatorPower = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<LastValidatorPower>, I>>(object: I): LastValidatorPower {
+  fromPartial(object: DeepPartial<LastValidatorPower>): LastValidatorPower {
     const message = createBaseLastValidatorPower();
     message.address = object.address ?? "";
     message.power = object.power !== undefined && object.power !== null ? BigInt(object.power.toString()) : BigInt(0);

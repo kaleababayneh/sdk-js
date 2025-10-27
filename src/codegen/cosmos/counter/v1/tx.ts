@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 /**
  * MsgIncreaseCounter defines a count Msg service counter.
  * @name MsgIncreaseCounter
@@ -32,25 +32,15 @@ export interface MsgIncreaseCounterAmino {
   /**
    * signer is the address that controls the module (defaults to x/gov unless overwritten).
    */
-  signer?: string;
+  signer: string;
   /**
    * count is the number of times to increment the counter.
    */
-  count?: string;
+  count: string;
 }
 export interface MsgIncreaseCounterAminoMsg {
   type: "cosmos-sdk/increase_counter";
   value: MsgIncreaseCounterAmino;
-}
-/**
- * MsgIncreaseCounter defines a count Msg service counter.
- * @name MsgIncreaseCounterSDKType
- * @package cosmos.counter.v1
- * @see proto type: cosmos.counter.v1.MsgIncreaseCounter
- */
-export interface MsgIncreaseCounterSDKType {
-  signer: string;
-  count: bigint;
 }
 /**
  * MsgIncreaseCountResponse is the Msg/Counter response type.
@@ -78,20 +68,11 @@ export interface MsgIncreaseCountResponseAmino {
   /**
    * new_count is the number of times the counter was incremented.
    */
-  new_count?: string;
+  new_count: string;
 }
 export interface MsgIncreaseCountResponseAminoMsg {
   type: "cosmos-sdk/MsgIncreaseCountResponse";
   value: MsgIncreaseCountResponseAmino;
-}
-/**
- * MsgIncreaseCountResponse is the Msg/Counter response type.
- * @name MsgIncreaseCountResponseSDKType
- * @package cosmos.counter.v1
- * @see proto type: cosmos.counter.v1.MsgIncreaseCountResponse
- */
-export interface MsgIncreaseCountResponseSDKType {
-  new_count: bigint;
 }
 function createBaseMsgIncreaseCounter(): MsgIncreaseCounter {
   return {
@@ -109,9 +90,6 @@ export const MsgIncreaseCounter = {
   typeUrl: "/cosmos.counter.v1.MsgIncreaseCounter",
   aminoType: "cosmos-sdk/increase_counter",
   is(o: any): o is MsgIncreaseCounter {
-    return o && (o.$typeUrl === MsgIncreaseCounter.typeUrl || typeof o.signer === "string" && typeof o.count === "bigint");
-  },
-  isSDK(o: any): o is MsgIncreaseCounterSDKType {
     return o && (o.$typeUrl === MsgIncreaseCounter.typeUrl || typeof o.signer === "string" && typeof o.count === "bigint");
   },
   isAmino(o: any): o is MsgIncreaseCounterAmino {
@@ -146,7 +124,7 @@ export const MsgIncreaseCounter = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgIncreaseCounter>, I>>(object: I): MsgIncreaseCounter {
+  fromPartial(object: DeepPartial<MsgIncreaseCounter>): MsgIncreaseCounter {
     const message = createBaseMsgIncreaseCounter();
     message.signer = object.signer ?? "";
     message.count = object.count !== undefined && object.count !== null ? BigInt(object.count.toString()) : BigInt(0);
@@ -208,9 +186,6 @@ export const MsgIncreaseCountResponse = {
   is(o: any): o is MsgIncreaseCountResponse {
     return o && (o.$typeUrl === MsgIncreaseCountResponse.typeUrl || typeof o.newCount === "bigint");
   },
-  isSDK(o: any): o is MsgIncreaseCountResponseSDKType {
-    return o && (o.$typeUrl === MsgIncreaseCountResponse.typeUrl || typeof o.new_count === "bigint");
-  },
   isAmino(o: any): o is MsgIncreaseCountResponseAmino {
     return o && (o.$typeUrl === MsgIncreaseCountResponse.typeUrl || typeof o.new_count === "bigint");
   },
@@ -237,7 +212,7 @@ export const MsgIncreaseCountResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<MsgIncreaseCountResponse>, I>>(object: I): MsgIncreaseCountResponse {
+  fromPartial(object: DeepPartial<MsgIncreaseCountResponse>): MsgIncreaseCountResponse {
     const message = createBaseMsgIncreaseCountResponse();
     message.newCount = object.newCount !== undefined && object.newCount !== null ? BigInt(object.newCount.toString()) : BigInt(0);
     return message;

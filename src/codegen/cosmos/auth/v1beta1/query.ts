@@ -1,11 +1,11 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../base/query/v1beta1/pagination";
-import { Any, AnyProtoMsg, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
-import { Params, ParamsAmino, ParamsSDKType, BaseAccount, BaseAccountProtoMsg, BaseAccountAmino, BaseAccountSDKType, ModuleAccount, ModuleAccountProtoMsg, ModuleAccountSDKType } from "./auth";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../base/query/v1beta1/pagination";
+import { Any, AnyProtoMsg, AnyAmino } from "../../../google/protobuf/any";
+import { Params, ParamsAmino, BaseAccount, BaseAccountProtoMsg, BaseAccountAmino, ModuleAccount, ModuleAccountProtoMsg } from "./auth";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 /**
  * QueryAccountsRequest is the request type for the Query/Accounts RPC method.
  * 
@@ -41,17 +41,6 @@ export interface QueryAccountsRequestAmino {
 export interface QueryAccountsRequestAminoMsg {
   type: "cosmos-sdk/QueryAccountsRequest";
   value: QueryAccountsRequestAmino;
-}
-/**
- * QueryAccountsRequest is the request type for the Query/Accounts RPC method.
- * 
- * Since: cosmos-sdk 0.43
- * @name QueryAccountsRequestSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryAccountsRequest
- */
-export interface QueryAccountsRequestSDKType {
-  pagination?: PageRequestSDKType;
 }
 /**
  * QueryAccountsResponse is the response type for the Query/Accounts RPC method.
@@ -93,7 +82,7 @@ export interface QueryAccountsResponseAmino {
   /**
    * accounts are the existing accounts
    */
-  accounts?: AnyAmino[];
+  accounts: AnyAmino[];
   /**
    * pagination defines the pagination in the response.
    */
@@ -102,18 +91,6 @@ export interface QueryAccountsResponseAmino {
 export interface QueryAccountsResponseAminoMsg {
   type: "cosmos-sdk/QueryAccountsResponse";
   value: QueryAccountsResponseAmino;
-}
-/**
- * QueryAccountsResponse is the response type for the Query/Accounts RPC method.
- * 
- * Since: cosmos-sdk 0.43
- * @name QueryAccountsResponseSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryAccountsResponse
- */
-export interface QueryAccountsResponseSDKType {
-  accounts: (BaseAccountSDKType | AnySDKType)[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * QueryAccountRequest is the request type for the Query/Account RPC method.
@@ -141,20 +118,11 @@ export interface QueryAccountRequestAmino {
   /**
    * address defines the address to query for.
    */
-  address?: string;
+  address: string;
 }
 export interface QueryAccountRequestAminoMsg {
   type: "cosmos-sdk/QueryAccountRequest";
   value: QueryAccountRequestAmino;
-}
-/**
- * QueryAccountRequest is the request type for the Query/Account RPC method.
- * @name QueryAccountRequestSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryAccountRequest
- */
-export interface QueryAccountRequestSDKType {
-  address: string;
 }
 /**
  * QueryAccountResponse is the response type for the Query/Account RPC method.
@@ -195,15 +163,6 @@ export interface QueryAccountResponseAminoMsg {
   value: QueryAccountResponseAmino;
 }
 /**
- * QueryAccountResponse is the response type for the Query/Account RPC method.
- * @name QueryAccountResponseSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryAccountResponse
- */
-export interface QueryAccountResponseSDKType {
-  account?: BaseAccountSDKType | AnySDKType | undefined;
-}
-/**
  * QueryParamsRequest is the request type for the Query/Params RPC method.
  * @name QueryParamsRequest
  * @package cosmos.auth.v1beta1
@@ -225,13 +184,6 @@ export interface QueryParamsRequestAminoMsg {
   type: "cosmos-sdk/QueryParamsRequest";
   value: QueryParamsRequestAmino;
 }
-/**
- * QueryParamsRequest is the request type for the Query/Params RPC method.
- * @name QueryParamsRequestSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {}
 /**
  * QueryParamsResponse is the response type for the Query/Params RPC method.
  * @name QueryParamsResponse
@@ -258,20 +210,11 @@ export interface QueryParamsResponseAmino {
   /**
    * params defines the parameters of the module.
    */
-  params?: ParamsAmino;
+  params: ParamsAmino;
 }
 export interface QueryParamsResponseAminoMsg {
   type: "cosmos-sdk/QueryParamsResponse";
   value: QueryParamsResponseAmino;
-}
-/**
- * QueryParamsResponse is the response type for the Query/Params RPC method.
- * @name QueryParamsResponseSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  params: ParamsSDKType;
 }
 /**
  * QueryModuleAccountsRequest is the request type for the Query/ModuleAccounts RPC method.
@@ -300,15 +243,6 @@ export interface QueryModuleAccountsRequestAminoMsg {
   value: QueryModuleAccountsRequestAmino;
 }
 /**
- * QueryModuleAccountsRequest is the request type for the Query/ModuleAccounts RPC method.
- * 
- * Since: cosmos-sdk 0.46
- * @name QueryModuleAccountsRequestSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryModuleAccountsRequest
- */
-export interface QueryModuleAccountsRequestSDKType {}
-/**
  * QueryModuleAccountsResponse is the response type for the Query/ModuleAccounts RPC method.
  * 
  * Since: cosmos-sdk 0.46
@@ -335,22 +269,11 @@ export type QueryModuleAccountsResponseEncoded = Omit<QueryModuleAccountsRespons
  * @see proto type: cosmos.auth.v1beta1.QueryModuleAccountsResponse
  */
 export interface QueryModuleAccountsResponseAmino {
-  accounts?: AnyAmino[];
+  accounts: AnyAmino[];
 }
 export interface QueryModuleAccountsResponseAminoMsg {
   type: "cosmos-sdk/QueryModuleAccountsResponse";
   value: QueryModuleAccountsResponseAmino;
-}
-/**
- * QueryModuleAccountsResponse is the response type for the Query/ModuleAccounts RPC method.
- * 
- * Since: cosmos-sdk 0.46
- * @name QueryModuleAccountsResponseSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryModuleAccountsResponse
- */
-export interface QueryModuleAccountsResponseSDKType {
-  accounts: (ModuleAccountSDKType | AnySDKType)[];
 }
 /**
  * QueryModuleAccountByNameRequest is the request type for the Query/ModuleAccountByName RPC method.
@@ -372,20 +295,11 @@ export interface QueryModuleAccountByNameRequestProtoMsg {
  * @see proto type: cosmos.auth.v1beta1.QueryModuleAccountByNameRequest
  */
 export interface QueryModuleAccountByNameRequestAmino {
-  name?: string;
+  name: string;
 }
 export interface QueryModuleAccountByNameRequestAminoMsg {
   type: "cosmos-sdk/QueryModuleAccountByNameRequest";
   value: QueryModuleAccountByNameRequestAmino;
-}
-/**
- * QueryModuleAccountByNameRequest is the request type for the Query/ModuleAccountByName RPC method.
- * @name QueryModuleAccountByNameRequestSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryModuleAccountByNameRequest
- */
-export interface QueryModuleAccountByNameRequestSDKType {
-  name: string;
 }
 /**
  * QueryModuleAccountByNameResponse is the response type for the Query/ModuleAccountByName RPC method.
@@ -417,15 +331,6 @@ export interface QueryModuleAccountByNameResponseAminoMsg {
   value: QueryModuleAccountByNameResponseAmino;
 }
 /**
- * QueryModuleAccountByNameResponse is the response type for the Query/ModuleAccountByName RPC method.
- * @name QueryModuleAccountByNameResponseSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryModuleAccountByNameResponse
- */
-export interface QueryModuleAccountByNameResponseSDKType {
-  account?: ModuleAccountSDKType | AnySDKType | undefined;
-}
-/**
  * Bech32PrefixRequest is the request type for Bech32Prefix rpc method.
  * 
  * Since: cosmos-sdk 0.46
@@ -452,15 +357,6 @@ export interface Bech32PrefixRequestAminoMsg {
   value: Bech32PrefixRequestAmino;
 }
 /**
- * Bech32PrefixRequest is the request type for Bech32Prefix rpc method.
- * 
- * Since: cosmos-sdk 0.46
- * @name Bech32PrefixRequestSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.Bech32PrefixRequest
- */
-export interface Bech32PrefixRequestSDKType {}
-/**
  * Bech32PrefixResponse is the response type for Bech32Prefix rpc method.
  * 
  * Since: cosmos-sdk 0.46
@@ -484,22 +380,11 @@ export interface Bech32PrefixResponseProtoMsg {
  * @see proto type: cosmos.auth.v1beta1.Bech32PrefixResponse
  */
 export interface Bech32PrefixResponseAmino {
-  bech32_prefix?: string;
+  bech32_prefix: string;
 }
 export interface Bech32PrefixResponseAminoMsg {
   type: "cosmos-sdk/Bech32PrefixResponse";
   value: Bech32PrefixResponseAmino;
-}
-/**
- * Bech32PrefixResponse is the response type for Bech32Prefix rpc method.
- * 
- * Since: cosmos-sdk 0.46
- * @name Bech32PrefixResponseSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.Bech32PrefixResponse
- */
-export interface Bech32PrefixResponseSDKType {
-  bech32_prefix: string;
 }
 /**
  * AddressBytesToStringRequest is the request type for AddressString rpc method.
@@ -525,22 +410,11 @@ export interface AddressBytesToStringRequestProtoMsg {
  * @see proto type: cosmos.auth.v1beta1.AddressBytesToStringRequest
  */
 export interface AddressBytesToStringRequestAmino {
-  address_bytes?: string;
+  address_bytes: string;
 }
 export interface AddressBytesToStringRequestAminoMsg {
   type: "cosmos-sdk/AddressBytesToStringRequest";
   value: AddressBytesToStringRequestAmino;
-}
-/**
- * AddressBytesToStringRequest is the request type for AddressString rpc method.
- * 
- * Since: cosmos-sdk 0.46
- * @name AddressBytesToStringRequestSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.AddressBytesToStringRequest
- */
-export interface AddressBytesToStringRequestSDKType {
-  address_bytes: Uint8Array;
 }
 /**
  * AddressBytesToStringResponse is the response type for AddressString rpc method.
@@ -566,22 +440,11 @@ export interface AddressBytesToStringResponseProtoMsg {
  * @see proto type: cosmos.auth.v1beta1.AddressBytesToStringResponse
  */
 export interface AddressBytesToStringResponseAmino {
-  address_string?: string;
+  address_string: string;
 }
 export interface AddressBytesToStringResponseAminoMsg {
   type: "cosmos-sdk/AddressBytesToStringResponse";
   value: AddressBytesToStringResponseAmino;
-}
-/**
- * AddressBytesToStringResponse is the response type for AddressString rpc method.
- * 
- * Since: cosmos-sdk 0.46
- * @name AddressBytesToStringResponseSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.AddressBytesToStringResponse
- */
-export interface AddressBytesToStringResponseSDKType {
-  address_string: string;
 }
 /**
  * AddressStringToBytesRequest is the request type for AccountBytes rpc method.
@@ -607,22 +470,11 @@ export interface AddressStringToBytesRequestProtoMsg {
  * @see proto type: cosmos.auth.v1beta1.AddressStringToBytesRequest
  */
 export interface AddressStringToBytesRequestAmino {
-  address_string?: string;
+  address_string: string;
 }
 export interface AddressStringToBytesRequestAminoMsg {
   type: "cosmos-sdk/AddressStringToBytesRequest";
   value: AddressStringToBytesRequestAmino;
-}
-/**
- * AddressStringToBytesRequest is the request type for AccountBytes rpc method.
- * 
- * Since: cosmos-sdk 0.46
- * @name AddressStringToBytesRequestSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.AddressStringToBytesRequest
- */
-export interface AddressStringToBytesRequestSDKType {
-  address_string: string;
 }
 /**
  * AddressStringToBytesResponse is the response type for AddressBytes rpc method.
@@ -648,22 +500,11 @@ export interface AddressStringToBytesResponseProtoMsg {
  * @see proto type: cosmos.auth.v1beta1.AddressStringToBytesResponse
  */
 export interface AddressStringToBytesResponseAmino {
-  address_bytes?: string;
+  address_bytes: string;
 }
 export interface AddressStringToBytesResponseAminoMsg {
   type: "cosmos-sdk/AddressStringToBytesResponse";
   value: AddressStringToBytesResponseAmino;
-}
-/**
- * AddressStringToBytesResponse is the response type for AddressBytes rpc method.
- * 
- * Since: cosmos-sdk 0.46
- * @name AddressStringToBytesResponseSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.AddressStringToBytesResponse
- */
-export interface AddressStringToBytesResponseSDKType {
-  address_bytes: Uint8Array;
 }
 /**
  * QueryAccountAddressByIDRequest is the request type for AccountAddressByID rpc method
@@ -711,32 +552,17 @@ export interface QueryAccountAddressByIDRequestAmino {
    * updated to uint64 in a future version of the auth query.
    * @deprecated
    */
-  id?: string;
+  id: string;
   /**
    * account_id is the account number of the address to be queried.
    * 
    * Since: cosmos-sdk 0.47
    */
-  account_id?: string;
+  account_id: string;
 }
 export interface QueryAccountAddressByIDRequestAminoMsg {
   type: "cosmos-sdk/QueryAccountAddressByIDRequest";
   value: QueryAccountAddressByIDRequestAmino;
-}
-/**
- * QueryAccountAddressByIDRequest is the request type for AccountAddressByID rpc method
- * 
- * Since: cosmos-sdk 0.46.2
- * @name QueryAccountAddressByIDRequestSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryAccountAddressByIDRequest
- */
-export interface QueryAccountAddressByIDRequestSDKType {
-  /**
-   * @deprecated
-   */
-  id: bigint;
-  account_id: bigint;
 }
 /**
  * QueryAccountAddressByIDResponse is the response type for AccountAddressByID rpc method
@@ -762,22 +588,11 @@ export interface QueryAccountAddressByIDResponseProtoMsg {
  * @see proto type: cosmos.auth.v1beta1.QueryAccountAddressByIDResponse
  */
 export interface QueryAccountAddressByIDResponseAmino {
-  account_address?: string;
+  account_address: string;
 }
 export interface QueryAccountAddressByIDResponseAminoMsg {
   type: "cosmos-sdk/QueryAccountAddressByIDResponse";
   value: QueryAccountAddressByIDResponseAmino;
-}
-/**
- * QueryAccountAddressByIDResponse is the response type for AccountAddressByID rpc method
- * 
- * Since: cosmos-sdk 0.46.2
- * @name QueryAccountAddressByIDResponseSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryAccountAddressByIDResponse
- */
-export interface QueryAccountAddressByIDResponseSDKType {
-  account_address: string;
 }
 /**
  * QueryAccountInfoRequest is the Query/AccountInfo request type.
@@ -809,22 +624,11 @@ export interface QueryAccountInfoRequestAmino {
   /**
    * address is the account address string.
    */
-  address?: string;
+  address: string;
 }
 export interface QueryAccountInfoRequestAminoMsg {
   type: "cosmos-sdk/QueryAccountInfoRequest";
   value: QueryAccountInfoRequestAmino;
-}
-/**
- * QueryAccountInfoRequest is the Query/AccountInfo request type.
- * 
- * Since: cosmos-sdk 0.47
- * @name QueryAccountInfoRequestSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryAccountInfoRequest
- */
-export interface QueryAccountInfoRequestSDKType {
-  address: string;
 }
 /**
  * QueryAccountInfoResponse is the Query/AccountInfo response type.
@@ -862,17 +666,6 @@ export interface QueryAccountInfoResponseAminoMsg {
   type: "cosmos-sdk/QueryAccountInfoResponse";
   value: QueryAccountInfoResponseAmino;
 }
-/**
- * QueryAccountInfoResponse is the Query/AccountInfo response type.
- * 
- * Since: cosmos-sdk 0.47
- * @name QueryAccountInfoResponseSDKType
- * @package cosmos.auth.v1beta1
- * @see proto type: cosmos.auth.v1beta1.QueryAccountInfoResponse
- */
-export interface QueryAccountInfoResponseSDKType {
-  info?: BaseAccountSDKType;
-}
 function createBaseQueryAccountsRequest(): QueryAccountsRequest {
   return {
     pagination: undefined
@@ -890,9 +683,6 @@ export const QueryAccountsRequest = {
   typeUrl: "/cosmos.auth.v1beta1.QueryAccountsRequest",
   aminoType: "cosmos-sdk/QueryAccountsRequest",
   is(o: any): o is QueryAccountsRequest {
-    return o && o.$typeUrl === QueryAccountsRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryAccountsRequestSDKType {
     return o && o.$typeUrl === QueryAccountsRequest.typeUrl;
   },
   isAmino(o: any): o is QueryAccountsRequestAmino {
@@ -921,7 +711,7 @@ export const QueryAccountsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAccountsRequest>, I>>(object: I): QueryAccountsRequest {
+  fromPartial(object: DeepPartial<QueryAccountsRequest>): QueryAccountsRequest {
     const message = createBaseQueryAccountsRequest();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -986,9 +776,6 @@ export const QueryAccountsResponse = {
   is(o: any): o is QueryAccountsResponse {
     return o && (o.$typeUrl === QueryAccountsResponse.typeUrl || Array.isArray(o.accounts) && (!o.accounts.length || BaseAccount.is(o.accounts[0]) || Any.is(o.accounts[0])));
   },
-  isSDK(o: any): o is QueryAccountsResponseSDKType {
-    return o && (o.$typeUrl === QueryAccountsResponse.typeUrl || Array.isArray(o.accounts) && (!o.accounts.length || BaseAccount.isSDK(o.accounts[0]) || Any.isSDK(o.accounts[0])));
-  },
   isAmino(o: any): o is QueryAccountsResponseAmino {
     return o && (o.$typeUrl === QueryAccountsResponse.typeUrl || Array.isArray(o.accounts) && (!o.accounts.length || BaseAccount.isAmino(o.accounts[0]) || Any.isAmino(o.accounts[0])));
   },
@@ -1021,7 +808,7 @@ export const QueryAccountsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAccountsResponse>, I>>(object: I): QueryAccountsResponse {
+  fromPartial(object: DeepPartial<QueryAccountsResponse>): QueryAccountsResponse {
     const message = createBaseQueryAccountsResponse();
     message.accounts = object.accounts?.map(e => GlobalDecoderRegistry.fromPartial(e) as any) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -1091,9 +878,6 @@ export const QueryAccountRequest = {
   is(o: any): o is QueryAccountRequest {
     return o && (o.$typeUrl === QueryAccountRequest.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is QueryAccountRequestSDKType {
-    return o && (o.$typeUrl === QueryAccountRequest.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is QueryAccountRequestAmino {
     return o && (o.$typeUrl === QueryAccountRequest.typeUrl || typeof o.address === "string");
   },
@@ -1120,7 +904,7 @@ export const QueryAccountRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAccountRequest>, I>>(object: I): QueryAccountRequest {
+  fromPartial(object: DeepPartial<QueryAccountRequest>): QueryAccountRequest {
     const message = createBaseQueryAccountRequest();
     message.address = object.address ?? "";
     return message;
@@ -1177,9 +961,6 @@ export const QueryAccountResponse = {
   is(o: any): o is QueryAccountResponse {
     return o && o.$typeUrl === QueryAccountResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryAccountResponseSDKType {
-    return o && o.$typeUrl === QueryAccountResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryAccountResponseAmino {
     return o && o.$typeUrl === QueryAccountResponse.typeUrl;
   },
@@ -1206,7 +987,7 @@ export const QueryAccountResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAccountResponse>, I>>(object: I): QueryAccountResponse {
+  fromPartial(object: DeepPartial<QueryAccountResponse>): QueryAccountResponse {
     const message = createBaseQueryAccountResponse();
     message.account = object.account !== undefined && object.account !== null ? GlobalDecoderRegistry.fromPartial(object.account) : undefined;
     return message;
@@ -1266,9 +1047,6 @@ export const QueryParamsRequest = {
   is(o: any): o is QueryParamsRequest {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
-    return o && o.$typeUrl === QueryParamsRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryParamsRequestAmino {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
@@ -1289,7 +1067,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(_: I): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -1341,9 +1119,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.is(o.params));
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isSDK(o.params));
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isAmino(o.params));
   },
@@ -1370,7 +1145,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;
@@ -1432,9 +1207,6 @@ export const QueryModuleAccountsRequest = {
   is(o: any): o is QueryModuleAccountsRequest {
     return o && o.$typeUrl === QueryModuleAccountsRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryModuleAccountsRequestSDKType {
-    return o && o.$typeUrl === QueryModuleAccountsRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryModuleAccountsRequestAmino {
     return o && o.$typeUrl === QueryModuleAccountsRequest.typeUrl;
   },
@@ -1455,7 +1227,7 @@ export const QueryModuleAccountsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryModuleAccountsRequest>, I>>(_: I): QueryModuleAccountsRequest {
+  fromPartial(_: DeepPartial<QueryModuleAccountsRequest>): QueryModuleAccountsRequest {
     const message = createBaseQueryModuleAccountsRequest();
     return message;
   },
@@ -1509,9 +1281,6 @@ export const QueryModuleAccountsResponse = {
   is(o: any): o is QueryModuleAccountsResponse {
     return o && (o.$typeUrl === QueryModuleAccountsResponse.typeUrl || Array.isArray(o.accounts) && (!o.accounts.length || ModuleAccount.is(o.accounts[0]) || Any.is(o.accounts[0])));
   },
-  isSDK(o: any): o is QueryModuleAccountsResponseSDKType {
-    return o && (o.$typeUrl === QueryModuleAccountsResponse.typeUrl || Array.isArray(o.accounts) && (!o.accounts.length || ModuleAccount.isSDK(o.accounts[0]) || Any.isSDK(o.accounts[0])));
-  },
   isAmino(o: any): o is QueryModuleAccountsResponseAmino {
     return o && (o.$typeUrl === QueryModuleAccountsResponse.typeUrl || Array.isArray(o.accounts) && (!o.accounts.length || ModuleAccount.isAmino(o.accounts[0]) || Any.isAmino(o.accounts[0])));
   },
@@ -1538,7 +1307,7 @@ export const QueryModuleAccountsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryModuleAccountsResponse>, I>>(object: I): QueryModuleAccountsResponse {
+  fromPartial(object: DeepPartial<QueryModuleAccountsResponse>): QueryModuleAccountsResponse {
     const message = createBaseQueryModuleAccountsResponse();
     message.accounts = object.accounts?.map(e => GlobalDecoderRegistry.fromPartial(e) as any) || [];
     return message;
@@ -1602,9 +1371,6 @@ export const QueryModuleAccountByNameRequest = {
   is(o: any): o is QueryModuleAccountByNameRequest {
     return o && (o.$typeUrl === QueryModuleAccountByNameRequest.typeUrl || typeof o.name === "string");
   },
-  isSDK(o: any): o is QueryModuleAccountByNameRequestSDKType {
-    return o && (o.$typeUrl === QueryModuleAccountByNameRequest.typeUrl || typeof o.name === "string");
-  },
   isAmino(o: any): o is QueryModuleAccountByNameRequestAmino {
     return o && (o.$typeUrl === QueryModuleAccountByNameRequest.typeUrl || typeof o.name === "string");
   },
@@ -1631,7 +1397,7 @@ export const QueryModuleAccountByNameRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryModuleAccountByNameRequest>, I>>(object: I): QueryModuleAccountByNameRequest {
+  fromPartial(object: DeepPartial<QueryModuleAccountByNameRequest>): QueryModuleAccountByNameRequest {
     const message = createBaseQueryModuleAccountByNameRequest();
     message.name = object.name ?? "";
     return message;
@@ -1688,9 +1454,6 @@ export const QueryModuleAccountByNameResponse = {
   is(o: any): o is QueryModuleAccountByNameResponse {
     return o && o.$typeUrl === QueryModuleAccountByNameResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryModuleAccountByNameResponseSDKType {
-    return o && o.$typeUrl === QueryModuleAccountByNameResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryModuleAccountByNameResponseAmino {
     return o && o.$typeUrl === QueryModuleAccountByNameResponse.typeUrl;
   },
@@ -1717,7 +1480,7 @@ export const QueryModuleAccountByNameResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryModuleAccountByNameResponse>, I>>(object: I): QueryModuleAccountByNameResponse {
+  fromPartial(object: DeepPartial<QueryModuleAccountByNameResponse>): QueryModuleAccountByNameResponse {
     const message = createBaseQueryModuleAccountByNameResponse();
     message.account = object.account !== undefined && object.account !== null ? GlobalDecoderRegistry.fromPartial(object.account) : undefined;
     return message;
@@ -1779,9 +1542,6 @@ export const Bech32PrefixRequest = {
   is(o: any): o is Bech32PrefixRequest {
     return o && o.$typeUrl === Bech32PrefixRequest.typeUrl;
   },
-  isSDK(o: any): o is Bech32PrefixRequestSDKType {
-    return o && o.$typeUrl === Bech32PrefixRequest.typeUrl;
-  },
   isAmino(o: any): o is Bech32PrefixRequestAmino {
     return o && o.$typeUrl === Bech32PrefixRequest.typeUrl;
   },
@@ -1802,7 +1562,7 @@ export const Bech32PrefixRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Bech32PrefixRequest>, I>>(_: I): Bech32PrefixRequest {
+  fromPartial(_: DeepPartial<Bech32PrefixRequest>): Bech32PrefixRequest {
     const message = createBaseBech32PrefixRequest();
     return message;
   },
@@ -1856,9 +1616,6 @@ export const Bech32PrefixResponse = {
   is(o: any): o is Bech32PrefixResponse {
     return o && (o.$typeUrl === Bech32PrefixResponse.typeUrl || typeof o.bech32Prefix === "string");
   },
-  isSDK(o: any): o is Bech32PrefixResponseSDKType {
-    return o && (o.$typeUrl === Bech32PrefixResponse.typeUrl || typeof o.bech32_prefix === "string");
-  },
   isAmino(o: any): o is Bech32PrefixResponseAmino {
     return o && (o.$typeUrl === Bech32PrefixResponse.typeUrl || typeof o.bech32_prefix === "string");
   },
@@ -1885,7 +1642,7 @@ export const Bech32PrefixResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Bech32PrefixResponse>, I>>(object: I): Bech32PrefixResponse {
+  fromPartial(object: DeepPartial<Bech32PrefixResponse>): Bech32PrefixResponse {
     const message = createBaseBech32PrefixResponse();
     message.bech32Prefix = object.bech32Prefix ?? "";
     return message;
@@ -1944,9 +1701,6 @@ export const AddressBytesToStringRequest = {
   is(o: any): o is AddressBytesToStringRequest {
     return o && (o.$typeUrl === AddressBytesToStringRequest.typeUrl || o.addressBytes instanceof Uint8Array || typeof o.addressBytes === "string");
   },
-  isSDK(o: any): o is AddressBytesToStringRequestSDKType {
-    return o && (o.$typeUrl === AddressBytesToStringRequest.typeUrl || o.address_bytes instanceof Uint8Array || typeof o.address_bytes === "string");
-  },
   isAmino(o: any): o is AddressBytesToStringRequestAmino {
     return o && (o.$typeUrl === AddressBytesToStringRequest.typeUrl || o.address_bytes instanceof Uint8Array || typeof o.address_bytes === "string");
   },
@@ -1973,7 +1727,7 @@ export const AddressBytesToStringRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AddressBytesToStringRequest>, I>>(object: I): AddressBytesToStringRequest {
+  fromPartial(object: DeepPartial<AddressBytesToStringRequest>): AddressBytesToStringRequest {
     const message = createBaseAddressBytesToStringRequest();
     message.addressBytes = object.addressBytes ?? new Uint8Array();
     return message;
@@ -2032,9 +1786,6 @@ export const AddressBytesToStringResponse = {
   is(o: any): o is AddressBytesToStringResponse {
     return o && (o.$typeUrl === AddressBytesToStringResponse.typeUrl || typeof o.addressString === "string");
   },
-  isSDK(o: any): o is AddressBytesToStringResponseSDKType {
-    return o && (o.$typeUrl === AddressBytesToStringResponse.typeUrl || typeof o.address_string === "string");
-  },
   isAmino(o: any): o is AddressBytesToStringResponseAmino {
     return o && (o.$typeUrl === AddressBytesToStringResponse.typeUrl || typeof o.address_string === "string");
   },
@@ -2061,7 +1812,7 @@ export const AddressBytesToStringResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AddressBytesToStringResponse>, I>>(object: I): AddressBytesToStringResponse {
+  fromPartial(object: DeepPartial<AddressBytesToStringResponse>): AddressBytesToStringResponse {
     const message = createBaseAddressBytesToStringResponse();
     message.addressString = object.addressString ?? "";
     return message;
@@ -2120,9 +1871,6 @@ export const AddressStringToBytesRequest = {
   is(o: any): o is AddressStringToBytesRequest {
     return o && (o.$typeUrl === AddressStringToBytesRequest.typeUrl || typeof o.addressString === "string");
   },
-  isSDK(o: any): o is AddressStringToBytesRequestSDKType {
-    return o && (o.$typeUrl === AddressStringToBytesRequest.typeUrl || typeof o.address_string === "string");
-  },
   isAmino(o: any): o is AddressStringToBytesRequestAmino {
     return o && (o.$typeUrl === AddressStringToBytesRequest.typeUrl || typeof o.address_string === "string");
   },
@@ -2149,7 +1897,7 @@ export const AddressStringToBytesRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AddressStringToBytesRequest>, I>>(object: I): AddressStringToBytesRequest {
+  fromPartial(object: DeepPartial<AddressStringToBytesRequest>): AddressStringToBytesRequest {
     const message = createBaseAddressStringToBytesRequest();
     message.addressString = object.addressString ?? "";
     return message;
@@ -2208,9 +1956,6 @@ export const AddressStringToBytesResponse = {
   is(o: any): o is AddressStringToBytesResponse {
     return o && (o.$typeUrl === AddressStringToBytesResponse.typeUrl || o.addressBytes instanceof Uint8Array || typeof o.addressBytes === "string");
   },
-  isSDK(o: any): o is AddressStringToBytesResponseSDKType {
-    return o && (o.$typeUrl === AddressStringToBytesResponse.typeUrl || o.address_bytes instanceof Uint8Array || typeof o.address_bytes === "string");
-  },
   isAmino(o: any): o is AddressStringToBytesResponseAmino {
     return o && (o.$typeUrl === AddressStringToBytesResponse.typeUrl || o.address_bytes instanceof Uint8Array || typeof o.address_bytes === "string");
   },
@@ -2237,7 +1982,7 @@ export const AddressStringToBytesResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<AddressStringToBytesResponse>, I>>(object: I): AddressStringToBytesResponse {
+  fromPartial(object: DeepPartial<AddressStringToBytesResponse>): AddressStringToBytesResponse {
     const message = createBaseAddressStringToBytesResponse();
     message.addressBytes = object.addressBytes ?? new Uint8Array();
     return message;
@@ -2297,9 +2042,6 @@ export const QueryAccountAddressByIDRequest = {
   is(o: any): o is QueryAccountAddressByIDRequest {
     return o && (o.$typeUrl === QueryAccountAddressByIDRequest.typeUrl || typeof o.id === "bigint" && typeof o.accountId === "bigint");
   },
-  isSDK(o: any): o is QueryAccountAddressByIDRequestSDKType {
-    return o && (o.$typeUrl === QueryAccountAddressByIDRequest.typeUrl || typeof o.id === "bigint" && typeof o.account_id === "bigint");
-  },
   isAmino(o: any): o is QueryAccountAddressByIDRequestAmino {
     return o && (o.$typeUrl === QueryAccountAddressByIDRequest.typeUrl || typeof o.id === "bigint" && typeof o.account_id === "bigint");
   },
@@ -2332,7 +2074,7 @@ export const QueryAccountAddressByIDRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAccountAddressByIDRequest>, I>>(object: I): QueryAccountAddressByIDRequest {
+  fromPartial(object: DeepPartial<QueryAccountAddressByIDRequest>): QueryAccountAddressByIDRequest {
     const message = createBaseQueryAccountAddressByIDRequest();
     message.id = object.id !== undefined && object.id !== null ? BigInt(object.id.toString()) : BigInt(0);
     message.accountId = object.accountId !== undefined && object.accountId !== null ? BigInt(object.accountId.toString()) : BigInt(0);
@@ -2396,9 +2138,6 @@ export const QueryAccountAddressByIDResponse = {
   is(o: any): o is QueryAccountAddressByIDResponse {
     return o && (o.$typeUrl === QueryAccountAddressByIDResponse.typeUrl || typeof o.accountAddress === "string");
   },
-  isSDK(o: any): o is QueryAccountAddressByIDResponseSDKType {
-    return o && (o.$typeUrl === QueryAccountAddressByIDResponse.typeUrl || typeof o.account_address === "string");
-  },
   isAmino(o: any): o is QueryAccountAddressByIDResponseAmino {
     return o && (o.$typeUrl === QueryAccountAddressByIDResponse.typeUrl || typeof o.account_address === "string");
   },
@@ -2425,7 +2164,7 @@ export const QueryAccountAddressByIDResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAccountAddressByIDResponse>, I>>(object: I): QueryAccountAddressByIDResponse {
+  fromPartial(object: DeepPartial<QueryAccountAddressByIDResponse>): QueryAccountAddressByIDResponse {
     const message = createBaseQueryAccountAddressByIDResponse();
     message.accountAddress = object.accountAddress ?? "";
     return message;
@@ -2484,9 +2223,6 @@ export const QueryAccountInfoRequest = {
   is(o: any): o is QueryAccountInfoRequest {
     return o && (o.$typeUrl === QueryAccountInfoRequest.typeUrl || typeof o.address === "string");
   },
-  isSDK(o: any): o is QueryAccountInfoRequestSDKType {
-    return o && (o.$typeUrl === QueryAccountInfoRequest.typeUrl || typeof o.address === "string");
-  },
   isAmino(o: any): o is QueryAccountInfoRequestAmino {
     return o && (o.$typeUrl === QueryAccountInfoRequest.typeUrl || typeof o.address === "string");
   },
@@ -2513,7 +2249,7 @@ export const QueryAccountInfoRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAccountInfoRequest>, I>>(object: I): QueryAccountInfoRequest {
+  fromPartial(object: DeepPartial<QueryAccountInfoRequest>): QueryAccountInfoRequest {
     const message = createBaseQueryAccountInfoRequest();
     message.address = object.address ?? "";
     return message;
@@ -2572,9 +2308,6 @@ export const QueryAccountInfoResponse = {
   is(o: any): o is QueryAccountInfoResponse {
     return o && o.$typeUrl === QueryAccountInfoResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryAccountInfoResponseSDKType {
-    return o && o.$typeUrl === QueryAccountInfoResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryAccountInfoResponseAmino {
     return o && o.$typeUrl === QueryAccountInfoResponse.typeUrl;
   },
@@ -2601,7 +2334,7 @@ export const QueryAccountInfoResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryAccountInfoResponse>, I>>(object: I): QueryAccountInfoResponse {
+  fromPartial(object: DeepPartial<QueryAccountInfoResponse>): QueryAccountInfoResponse {
     const message = createBaseQueryAccountInfoResponse();
     message.info = object.info !== undefined && object.info !== null ? BaseAccount.fromPartial(object.info) : undefined;
     return message;

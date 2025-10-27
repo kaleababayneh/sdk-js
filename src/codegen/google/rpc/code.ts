@@ -183,7 +183,6 @@ export enum Code {
   DATA_LOSS = 15,
   UNRECOGNIZED = -1,
 }
-export const CodeSDKType = Code;
 export const CodeAmino = Code;
 export function codeFromJSON(object: any): Code {
   switch (object) {

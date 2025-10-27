@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
-import { Any, AnyAmino, AnySDKType } from "../../../google/protobuf/any";
+import { Coin, CoinAmino } from "../../base/v1beta1/coin";
+import { Any, AnyAmino } from "../../../google/protobuf/any";
 import { Timestamp } from "../../../google/protobuf/timestamp";
-import { Duration, DurationAmino, DurationSDKType } from "../../../google/protobuf/duration";
-import { isSet, Exact, toTimestamp, fromTimestamp } from "../../../helpers";
+import { Duration, DurationAmino } from "../../../google/protobuf/duration";
+import { isSet, DeepPartial, toTimestamp, fromTimestamp } from "../../../helpers";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
 /** VoteOption enumerates the valid vote options for a given governance proposal. */
@@ -21,7 +21,6 @@ export enum VoteOption {
   VOTE_OPTION_NO_WITH_VETO = 4,
   UNRECOGNIZED = -1,
 }
-export const VoteOptionSDKType = VoteOption;
 export const VoteOptionAmino = VoteOption;
 export function voteOptionFromJSON(object: any): VoteOption {
   switch (object) {
@@ -94,7 +93,6 @@ export enum ProposalStatus {
   PROPOSAL_STATUS_FAILED = 5,
   UNRECOGNIZED = -1,
 }
-export const ProposalStatusSDKType = ProposalStatus;
 export const ProposalStatusAmino = ProposalStatus;
 export function proposalStatusFromJSON(object: any): ProposalStatus {
   switch (object) {
@@ -171,25 +169,15 @@ export interface WeightedVoteOptionAmino {
   /**
    * option defines the valid vote options, it must not contain duplicate vote options.
    */
-  option?: VoteOption;
+  option: VoteOption;
   /**
    * weight is the vote weight associated with the vote option.
    */
-  weight?: string;
+  weight: string;
 }
 export interface WeightedVoteOptionAminoMsg {
   type: "cosmos-sdk/v1/WeightedVoteOption";
   value: WeightedVoteOptionAmino;
-}
-/**
- * WeightedVoteOption defines a unit of vote for vote split.
- * @name WeightedVoteOptionSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.WeightedVoteOption
- */
-export interface WeightedVoteOptionSDKType {
-  option: VoteOption;
-  weight: string;
 }
 /**
  * Deposit defines an amount deposited by an account address to an active
@@ -227,11 +215,11 @@ export interface DepositAmino {
   /**
    * proposal_id defines the unique id of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
   /**
    * depositor defines the deposit addresses from the proposals.
    */
-  depositor?: string;
+  depositor: string;
   /**
    * amount to be deposited by depositor.
    */
@@ -240,18 +228,6 @@ export interface DepositAmino {
 export interface DepositAminoMsg {
   type: "cosmos-sdk/v1/Deposit";
   value: DepositAmino;
-}
-/**
- * Deposit defines an amount deposited by an account address to an active
- * proposal.
- * @name DepositSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.Deposit
- */
-export interface DepositSDKType {
-  proposal_id: bigint;
-  depositor: string;
-  amount: CoinSDKType[];
 }
 /**
  * Proposal defines the core field members of a governance proposal.
@@ -349,15 +325,15 @@ export interface ProposalAmino {
   /**
    * id defines the unique id of the proposal.
    */
-  id?: string;
+  id: string;
   /**
    * messages are the arbitrary messages to be executed if the proposal passes.
    */
-  messages?: AnyAmino[];
+  messages: AnyAmino[];
   /**
    * status defines the proposal status.
    */
-  status?: ProposalStatus;
+  status: ProposalStatus;
   /**
    * final_tally_result is the final tally result of the proposal. When
    * querying a proposal via gRPC, this field is not populated until the
@@ -389,64 +365,41 @@ export interface ProposalAmino {
    * the recommended format of the metadata is to be found here:
    * https://docs.cosmos.network/v0.47/modules/gov#proposal-3
    */
-  metadata?: string;
+  metadata: string;
   /**
    * title is the title of the proposal
    * 
    * Since: cosmos-sdk 0.47
    */
-  title?: string;
+  title: string;
   /**
    * summary is a short summary of the proposal
    * 
    * Since: cosmos-sdk 0.47
    */
-  summary?: string;
+  summary: string;
   /**
    * proposer is the address of the proposal sumbitter
    * 
    * Since: cosmos-sdk 0.47
    */
-  proposer?: string;
+  proposer: string;
   /**
    * expedited defines if the proposal is expedited
    * 
    * Since: cosmos-sdk 0.50
    */
-  expedited?: boolean;
+  expedited: boolean;
   /**
    * failed_reason defines the reason why the proposal failed
    * 
    * Since: cosmos-sdk 0.50
    */
-  failed_reason?: string;
+  failed_reason: string;
 }
 export interface ProposalAminoMsg {
   type: "cosmos-sdk/v1/Proposal";
   value: ProposalAmino;
-}
-/**
- * Proposal defines the core field members of a governance proposal.
- * @name ProposalSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.Proposal
- */
-export interface ProposalSDKType {
-  id: bigint;
-  messages: AnySDKType[];
-  status: ProposalStatus;
-  final_tally_result?: TallyResultSDKType;
-  submit_time?: Date;
-  deposit_end_time?: Date;
-  total_deposit: CoinSDKType[];
-  voting_start_time?: Date;
-  voting_end_time?: Date;
-  metadata: string;
-  title: string;
-  summary: string;
-  proposer: string;
-  expedited: boolean;
-  failed_reason: string;
 }
 /**
  * TallyResult defines a standard tally for a governance proposal.
@@ -486,35 +439,23 @@ export interface TallyResultAmino {
   /**
    * yes_count is the number of yes votes on a proposal.
    */
-  yes_count?: string;
+  yes_count: string;
   /**
    * abstain_count is the number of abstain votes on a proposal.
    */
-  abstain_count?: string;
+  abstain_count: string;
   /**
    * no_count is the number of no votes on a proposal.
    */
-  no_count?: string;
+  no_count: string;
   /**
    * no_with_veto_count is the number of no with veto votes on a proposal.
    */
-  no_with_veto_count?: string;
+  no_with_veto_count: string;
 }
 export interface TallyResultAminoMsg {
   type: "cosmos-sdk/v1/TallyResult";
   value: TallyResultAmino;
-}
-/**
- * TallyResult defines a standard tally for a governance proposal.
- * @name TallyResultSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.TallyResult
- */
-export interface TallyResultSDKType {
-  yes_count: string;
-  abstain_count: string;
-  no_count: string;
-  no_with_veto_count: string;
 }
 /**
  * Vote defines a vote on a governance proposal.
@@ -557,37 +498,24 @@ export interface VoteAmino {
   /**
    * proposal_id defines the unique id of the proposal.
    */
-  proposal_id?: string;
+  proposal_id: string;
   /**
    * voter is the voter address of the proposal.
    */
-  voter?: string;
+  voter: string;
   /**
    * options is the weighted vote options.
    */
-  options?: WeightedVoteOptionAmino[];
+  options: WeightedVoteOptionAmino[];
   /**
    * metadata is any arbitrary metadata attached to the vote.
    * the recommended format of the metadata is to be found here: https://docs.cosmos.network/v0.47/modules/gov#vote-5
    */
-  metadata?: string;
+  metadata: string;
 }
 export interface VoteAminoMsg {
   type: "cosmos-sdk/v1/Vote";
   value: VoteAmino;
-}
-/**
- * Vote defines a vote on a governance proposal.
- * A Vote consists of a proposal ID, the voter, and the vote option.
- * @name VoteSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.Vote
- */
-export interface VoteSDKType {
-  proposal_id: bigint;
-  voter: string;
-  options: WeightedVoteOptionSDKType[];
-  metadata: string;
 }
 /**
  * DepositParams defines the params for deposits on governance proposals.
@@ -622,7 +550,7 @@ export interface DepositParamsAmino {
   /**
    * Minimum deposit for a proposal to enter voting period.
    */
-  min_deposit?: CoinAmino[];
+  min_deposit: CoinAmino[];
   /**
    * Maximum period for Atom holders to deposit on a proposal. Initial value: 2
    * months.
@@ -632,17 +560,6 @@ export interface DepositParamsAmino {
 export interface DepositParamsAminoMsg {
   type: "cosmos-sdk/v1/DepositParams";
   value: DepositParamsAmino;
-}
-/**
- * DepositParams defines the params for deposits on governance proposals.
- * @name DepositParamsSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.DepositParams
- * @deprecated
- */
-export interface DepositParamsSDKType {
-  min_deposit: CoinSDKType[];
-  max_deposit_period?: DurationSDKType;
 }
 /**
  * VotingParams defines the params for voting on governance proposals.
@@ -677,16 +594,6 @@ export interface VotingParamsAmino {
 export interface VotingParamsAminoMsg {
   type: "cosmos-sdk/v1/VotingParams";
   value: VotingParamsAmino;
-}
-/**
- * VotingParams defines the params for voting on governance proposals.
- * @name VotingParamsSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.VotingParams
- * @deprecated
- */
-export interface VotingParamsSDKType {
-  voting_period?: DurationSDKType;
 }
 /**
  * TallyParams defines the params for tallying votes on governance proposals.
@@ -727,32 +634,20 @@ export interface TallyParamsAmino {
    * Minimum percentage of total stake needed to vote for a result to be
    * considered valid.
    */
-  quorum?: string;
+  quorum: string;
   /**
    * Minimum proportion of Yes votes for proposal to pass. Default value: 0.5.
    */
-  threshold?: string;
+  threshold: string;
   /**
    * Minimum value of Veto votes to Total votes ratio for proposal to be
    * vetoed. Default value: 1/3.
    */
-  veto_threshold?: string;
+  veto_threshold: string;
 }
 export interface TallyParamsAminoMsg {
   type: "cosmos-sdk/v1/TallyParams";
   value: TallyParamsAmino;
-}
-/**
- * TallyParams defines the params for tallying votes on governance proposals.
- * @name TallyParamsSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.TallyParams
- * @deprecated
- */
-export interface TallyParamsSDKType {
-  quorum: string;
-  threshold: string;
-  veto_threshold: string;
 }
 /**
  * Params defines the parameters for the x/gov module.
@@ -874,33 +769,33 @@ export interface ParamsAmino {
    * Minimum percentage of total stake needed to vote for a result to be
    *  considered valid.
    */
-  quorum?: string;
+  quorum: string;
   /**
    * Minimum proportion of Yes votes for proposal to pass. Default value: 0.5.
    */
-  threshold?: string;
+  threshold: string;
   /**
    * Minimum value of Veto votes to Total votes ratio for proposal to be
    *  vetoed. Default value: 1/3.
    */
-  veto_threshold?: string;
+  veto_threshold: string;
   /**
    * The ratio representing the proportion of the deposit value that must be paid at proposal submission.
    */
-  min_initial_deposit_ratio?: string;
+  min_initial_deposit_ratio: string;
   /**
    * The cancel ratio which will not be returned back to the depositors when a proposal is cancelled.
    * 
    * Since: cosmos-sdk 0.50
    */
-  proposal_cancel_ratio?: string;
+  proposal_cancel_ratio: string;
   /**
    * The address which will receive (proposal_cancel_ratio * deposit) proposal deposits.
    * If empty, the (proposal_cancel_ratio * deposit) proposal deposits will be burned.
    * 
    * Since: cosmos-sdk 0.50
    */
-  proposal_cancel_dest?: string;
+  proposal_cancel_dest: string;
   /**
    * Duration of the voting period of an expedited proposal.
    * 
@@ -912,7 +807,7 @@ export interface ParamsAmino {
    * 
    * Since: cosmos-sdk 0.50
    */
-  expedited_threshold?: string;
+  expedited_threshold: string;
   /**
    * Minimum expedited deposit for a proposal to enter voting period.
    */
@@ -920,15 +815,15 @@ export interface ParamsAmino {
   /**
    * burn deposits if a proposal does not meet quorum
    */
-  burn_vote_quorum?: boolean;
+  burn_vote_quorum: boolean;
   /**
    * burn deposits if the proposal does not enter voting period
    */
-  burn_proposal_deposit_prevote?: boolean;
+  burn_proposal_deposit_prevote: boolean;
   /**
    * burn deposits if quorum with vote type no_veto is met
    */
-  burn_vote_veto?: boolean;
+  burn_vote_veto: boolean;
   /**
    * The ratio representing the proportion of the deposit value minimum that must be met when making a deposit.
    * Default value: 0.01. Meaning that for a chain with a min_deposit of 100stake, a deposit of 1stake would be
@@ -936,37 +831,11 @@ export interface ParamsAmino {
    * 
    * Since: cosmos-sdk 0.50
    */
-  min_deposit_ratio?: string;
+  min_deposit_ratio: string;
 }
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/v1/Params";
   value: ParamsAmino;
-}
-/**
- * Params defines the parameters for the x/gov module.
- * 
- * Since: cosmos-sdk 0.47
- * @name ParamsSDKType
- * @package cosmos.gov.v1
- * @see proto type: cosmos.gov.v1.Params
- */
-export interface ParamsSDKType {
-  min_deposit: CoinSDKType[];
-  max_deposit_period?: DurationSDKType;
-  voting_period?: DurationSDKType;
-  quorum: string;
-  threshold: string;
-  veto_threshold: string;
-  min_initial_deposit_ratio: string;
-  proposal_cancel_ratio: string;
-  proposal_cancel_dest: string;
-  expedited_voting_period?: DurationSDKType;
-  expedited_threshold: string;
-  expedited_min_deposit: CoinSDKType[];
-  burn_vote_quorum: boolean;
-  burn_proposal_deposit_prevote: boolean;
-  burn_vote_veto: boolean;
-  min_deposit_ratio: string;
 }
 function createBaseWeightedVoteOption(): WeightedVoteOption {
   return {
@@ -984,9 +853,6 @@ export const WeightedVoteOption = {
   typeUrl: "/cosmos.gov.v1.WeightedVoteOption",
   aminoType: "cosmos-sdk/v1/WeightedVoteOption",
   is(o: any): o is WeightedVoteOption {
-    return o && (o.$typeUrl === WeightedVoteOption.typeUrl || isSet(o.option) && typeof o.weight === "string");
-  },
-  isSDK(o: any): o is WeightedVoteOptionSDKType {
     return o && (o.$typeUrl === WeightedVoteOption.typeUrl || isSet(o.option) && typeof o.weight === "string");
   },
   isAmino(o: any): o is WeightedVoteOptionAmino {
@@ -1021,7 +887,7 @@ export const WeightedVoteOption = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<WeightedVoteOption>, I>>(object: I): WeightedVoteOption {
+  fromPartial(object: DeepPartial<WeightedVoteOption>): WeightedVoteOption {
     const message = createBaseWeightedVoteOption();
     message.option = object.option ?? 0;
     message.weight = object.weight ?? "";
@@ -1086,9 +952,6 @@ export const Deposit = {
   is(o: any): o is Deposit {
     return o && (o.$typeUrl === Deposit.typeUrl || typeof o.proposalId === "bigint" && typeof o.depositor === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])));
   },
-  isSDK(o: any): o is DepositSDKType {
-    return o && (o.$typeUrl === Deposit.typeUrl || typeof o.proposal_id === "bigint" && typeof o.depositor === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])));
-  },
   isAmino(o: any): o is DepositAmino {
     return o && (o.$typeUrl === Deposit.typeUrl || typeof o.proposal_id === "bigint" && typeof o.depositor === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])));
   },
@@ -1127,7 +990,7 @@ export const Deposit = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Deposit>, I>>(object: I): Deposit {
+  fromPartial(object: DeepPartial<Deposit>): Deposit {
     const message = createBaseDeposit();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.depositor = object.depositor ?? "";
@@ -1214,9 +1077,6 @@ export const Proposal = {
   aminoType: "cosmos-sdk/v1/Proposal",
   is(o: any): o is Proposal {
     return o && (o.$typeUrl === Proposal.typeUrl || typeof o.id === "bigint" && Array.isArray(o.messages) && (!o.messages.length || Any.is(o.messages[0])) && isSet(o.status) && Array.isArray(o.totalDeposit) && (!o.totalDeposit.length || Coin.is(o.totalDeposit[0])) && typeof o.metadata === "string" && typeof o.title === "string" && typeof o.summary === "string" && typeof o.proposer === "string" && typeof o.expedited === "boolean" && typeof o.failedReason === "string");
-  },
-  isSDK(o: any): o is ProposalSDKType {
-    return o && (o.$typeUrl === Proposal.typeUrl || typeof o.id === "bigint" && Array.isArray(o.messages) && (!o.messages.length || Any.isSDK(o.messages[0])) && isSet(o.status) && Array.isArray(o.total_deposit) && (!o.total_deposit.length || Coin.isSDK(o.total_deposit[0])) && typeof o.metadata === "string" && typeof o.title === "string" && typeof o.summary === "string" && typeof o.proposer === "string" && typeof o.expedited === "boolean" && typeof o.failed_reason === "string");
   },
   isAmino(o: any): o is ProposalAmino {
     return o && (o.$typeUrl === Proposal.typeUrl || typeof o.id === "bigint" && Array.isArray(o.messages) && (!o.messages.length || Any.isAmino(o.messages[0])) && isSet(o.status) && Array.isArray(o.total_deposit) && (!o.total_deposit.length || Coin.isAmino(o.total_deposit[0])) && typeof o.metadata === "string" && typeof o.title === "string" && typeof o.summary === "string" && typeof o.proposer === "string" && typeof o.expedited === "boolean" && typeof o.failed_reason === "string");
@@ -1328,7 +1188,7 @@ export const Proposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Proposal>, I>>(object: I): Proposal {
+  fromPartial(object: DeepPartial<Proposal>): Proposal {
     const message = createBaseProposal();
     message.id = object.id !== undefined && object.id !== null ? BigInt(object.id.toString()) : BigInt(0);
     message.messages = object.messages?.map(e => Any.fromPartial(e)) || [];
@@ -1468,9 +1328,6 @@ export const TallyResult = {
   is(o: any): o is TallyResult {
     return o && (o.$typeUrl === TallyResult.typeUrl || typeof o.yesCount === "string" && typeof o.abstainCount === "string" && typeof o.noCount === "string" && typeof o.noWithVetoCount === "string");
   },
-  isSDK(o: any): o is TallyResultSDKType {
-    return o && (o.$typeUrl === TallyResult.typeUrl || typeof o.yes_count === "string" && typeof o.abstain_count === "string" && typeof o.no_count === "string" && typeof o.no_with_veto_count === "string");
-  },
   isAmino(o: any): o is TallyResultAmino {
     return o && (o.$typeUrl === TallyResult.typeUrl || typeof o.yes_count === "string" && typeof o.abstain_count === "string" && typeof o.no_count === "string" && typeof o.no_with_veto_count === "string");
   },
@@ -1515,7 +1372,7 @@ export const TallyResult = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TallyResult>, I>>(object: I): TallyResult {
+  fromPartial(object: DeepPartial<TallyResult>): TallyResult {
     const message = createBaseTallyResult();
     message.yesCount = object.yesCount ?? "";
     message.abstainCount = object.abstainCount ?? "";
@@ -1591,9 +1448,6 @@ export const Vote = {
   is(o: any): o is Vote {
     return o && (o.$typeUrl === Vote.typeUrl || typeof o.proposalId === "bigint" && typeof o.voter === "string" && Array.isArray(o.options) && (!o.options.length || WeightedVoteOption.is(o.options[0])) && typeof o.metadata === "string");
   },
-  isSDK(o: any): o is VoteSDKType {
-    return o && (o.$typeUrl === Vote.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string" && Array.isArray(o.options) && (!o.options.length || WeightedVoteOption.isSDK(o.options[0])) && typeof o.metadata === "string");
-  },
   isAmino(o: any): o is VoteAmino {
     return o && (o.$typeUrl === Vote.typeUrl || typeof o.proposal_id === "bigint" && typeof o.voter === "string" && Array.isArray(o.options) && (!o.options.length || WeightedVoteOption.isAmino(o.options[0])) && typeof o.metadata === "string");
   },
@@ -1638,7 +1492,7 @@ export const Vote = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Vote>, I>>(object: I): Vote {
+  fromPartial(object: DeepPartial<Vote>): Vote {
     const message = createBaseVote();
     message.proposalId = object.proposalId !== undefined && object.proposalId !== null ? BigInt(object.proposalId.toString()) : BigInt(0);
     message.voter = object.voter ?? "";
@@ -1719,9 +1573,6 @@ export const DepositParams = {
   is(o: any): o is DepositParams {
     return o && (o.$typeUrl === DepositParams.typeUrl || Array.isArray(o.minDeposit) && (!o.minDeposit.length || Coin.is(o.minDeposit[0])));
   },
-  isSDK(o: any): o is DepositParamsSDKType {
-    return o && (o.$typeUrl === DepositParams.typeUrl || Array.isArray(o.min_deposit) && (!o.min_deposit.length || Coin.isSDK(o.min_deposit[0])));
-  },
   isAmino(o: any): o is DepositParamsAmino {
     return o && (o.$typeUrl === DepositParams.typeUrl || Array.isArray(o.min_deposit) && (!o.min_deposit.length || Coin.isAmino(o.min_deposit[0])));
   },
@@ -1754,7 +1605,7 @@ export const DepositParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DepositParams>, I>>(object: I): DepositParams {
+  fromPartial(object: DeepPartial<DepositParams>): DepositParams {
     const message = createBaseDepositParams();
     message.minDeposit = object.minDeposit?.map(e => Coin.fromPartial(e)) || [];
     message.maxDepositPeriod = object.maxDepositPeriod !== undefined && object.maxDepositPeriod !== null ? Duration.fromPartial(object.maxDepositPeriod) : undefined;
@@ -1824,9 +1675,6 @@ export const VotingParams = {
   is(o: any): o is VotingParams {
     return o && o.$typeUrl === VotingParams.typeUrl;
   },
-  isSDK(o: any): o is VotingParamsSDKType {
-    return o && o.$typeUrl === VotingParams.typeUrl;
-  },
   isAmino(o: any): o is VotingParamsAmino {
     return o && o.$typeUrl === VotingParams.typeUrl;
   },
@@ -1853,7 +1701,7 @@ export const VotingParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<VotingParams>, I>>(object: I): VotingParams {
+  fromPartial(object: DeepPartial<VotingParams>): VotingParams {
     const message = createBaseVotingParams();
     message.votingPeriod = object.votingPeriod !== undefined && object.votingPeriod !== null ? Duration.fromPartial(object.votingPeriod) : undefined;
     return message;
@@ -1913,9 +1761,6 @@ export const TallyParams = {
   is(o: any): o is TallyParams {
     return o && (o.$typeUrl === TallyParams.typeUrl || typeof o.quorum === "string" && typeof o.threshold === "string" && typeof o.vetoThreshold === "string");
   },
-  isSDK(o: any): o is TallyParamsSDKType {
-    return o && (o.$typeUrl === TallyParams.typeUrl || typeof o.quorum === "string" && typeof o.threshold === "string" && typeof o.veto_threshold === "string");
-  },
   isAmino(o: any): o is TallyParamsAmino {
     return o && (o.$typeUrl === TallyParams.typeUrl || typeof o.quorum === "string" && typeof o.threshold === "string" && typeof o.veto_threshold === "string");
   },
@@ -1954,7 +1799,7 @@ export const TallyParams = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<TallyParams>, I>>(object: I): TallyParams {
+  fromPartial(object: DeepPartial<TallyParams>): TallyParams {
     const message = createBaseTallyParams();
     message.quorum = object.quorum ?? "";
     message.threshold = object.threshold ?? "";
@@ -2037,9 +1882,6 @@ export const Params = {
   aminoType: "cosmos-sdk/v1/Params",
   is(o: any): o is Params {
     return o && (o.$typeUrl === Params.typeUrl || Array.isArray(o.minDeposit) && (!o.minDeposit.length || Coin.is(o.minDeposit[0])) && typeof o.quorum === "string" && typeof o.threshold === "string" && typeof o.vetoThreshold === "string" && typeof o.minInitialDepositRatio === "string" && typeof o.proposalCancelRatio === "string" && typeof o.proposalCancelDest === "string" && typeof o.expeditedThreshold === "string" && Array.isArray(o.expeditedMinDeposit) && (!o.expeditedMinDeposit.length || Coin.is(o.expeditedMinDeposit[0])) && typeof o.burnVoteQuorum === "boolean" && typeof o.burnProposalDepositPrevote === "boolean" && typeof o.burnVoteVeto === "boolean" && typeof o.minDepositRatio === "string");
-  },
-  isSDK(o: any): o is ParamsSDKType {
-    return o && (o.$typeUrl === Params.typeUrl || Array.isArray(o.min_deposit) && (!o.min_deposit.length || Coin.isSDK(o.min_deposit[0])) && typeof o.quorum === "string" && typeof o.threshold === "string" && typeof o.veto_threshold === "string" && typeof o.min_initial_deposit_ratio === "string" && typeof o.proposal_cancel_ratio === "string" && typeof o.proposal_cancel_dest === "string" && typeof o.expedited_threshold === "string" && Array.isArray(o.expedited_min_deposit) && (!o.expedited_min_deposit.length || Coin.isSDK(o.expedited_min_deposit[0])) && typeof o.burn_vote_quorum === "boolean" && typeof o.burn_proposal_deposit_prevote === "boolean" && typeof o.burn_vote_veto === "boolean" && typeof o.min_deposit_ratio === "string");
   },
   isAmino(o: any): o is ParamsAmino {
     return o && (o.$typeUrl === Params.typeUrl || Array.isArray(o.min_deposit) && (!o.min_deposit.length || Coin.isAmino(o.min_deposit[0])) && typeof o.quorum === "string" && typeof o.threshold === "string" && typeof o.veto_threshold === "string" && typeof o.min_initial_deposit_ratio === "string" && typeof o.proposal_cancel_ratio === "string" && typeof o.proposal_cancel_dest === "string" && typeof o.expedited_threshold === "string" && Array.isArray(o.expedited_min_deposit) && (!o.expedited_min_deposit.length || Coin.isAmino(o.expedited_min_deposit[0])) && typeof o.burn_vote_quorum === "boolean" && typeof o.burn_proposal_deposit_prevote === "boolean" && typeof o.burn_vote_veto === "boolean" && typeof o.min_deposit_ratio === "string");
@@ -2157,7 +1999,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(object: I): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.minDeposit = object.minDeposit?.map(e => Coin.fromPartial(e)) || [];
     message.maxDepositPeriod = object.maxDepositPeriod !== undefined && object.maxDepositPeriod !== null ? Duration.fromPartial(object.maxDepositPeriod) : undefined;

@@ -3,7 +3,7 @@
 import { Timestamp } from "../../../google/protobuf/timestamp";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { Decimal } from "@interchainjs/math";
-import { toTimestamp, fromTimestamp, Exact } from "../../../helpers";
+import { toTimestamp, fromTimestamp, DeepPartial } from "../../../helpers";
 /**
  * ContinuousFund defines the fields of continuous fund proposal.
  * @name ContinuousFund
@@ -38,11 +38,11 @@ export interface ContinuousFundAmino {
   /**
    * Recipient is the address string of the account receiving funds.
    */
-  recipient?: string;
+  recipient: string;
   /**
    * Percentage is the percentage of funds to be allocated from Community pool.
    */
-  percentage?: string;
+  percentage: string;
   /**
    * Optional, if expiry is set, removes the state object when expired.
    */
@@ -51,17 +51,6 @@ export interface ContinuousFundAmino {
 export interface ContinuousFundAminoMsg {
   type: "cosmos-sdk/ContinuousFund";
   value: ContinuousFundAmino;
-}
-/**
- * ContinuousFund defines the fields of continuous fund proposal.
- * @name ContinuousFundSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.ContinuousFund
- */
-export interface ContinuousFundSDKType {
-  recipient: string;
-  percentage: string;
-  expiry?: Date;
 }
 /**
  * Params defines the parameters for the protocolpool module.
@@ -96,26 +85,16 @@ export interface ParamsAmino {
    * EnabledDistributionDenoms lists the denoms that are allowed to be distributed.
    * This is to avoid spending time distributing undesired tokens to continuous funds and budgets.
    */
-  enabled_distribution_denoms?: string[];
+  enabled_distribution_denoms: string[];
   /**
    * DistributionFrequency is the frequency (in terms of blocks) that funds are distributed out from the
    * x/protocolpool module.
    */
-  distribution_frequency?: string;
+  distribution_frequency: string;
 }
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/Params";
   value: ParamsAmino;
-}
-/**
- * Params defines the parameters for the protocolpool module.
- * @name ParamsSDKType
- * @package cosmos.protocolpool.v1
- * @see proto type: cosmos.protocolpool.v1.Params
- */
-export interface ParamsSDKType {
-  enabled_distribution_denoms: string[];
-  distribution_frequency: bigint;
 }
 function createBaseContinuousFund(): ContinuousFund {
   return {
@@ -134,9 +113,6 @@ export const ContinuousFund = {
   typeUrl: "/cosmos.protocolpool.v1.ContinuousFund",
   aminoType: "cosmos-sdk/ContinuousFund",
   is(o: any): o is ContinuousFund {
-    return o && (o.$typeUrl === ContinuousFund.typeUrl || typeof o.recipient === "string" && typeof o.percentage === "string");
-  },
-  isSDK(o: any): o is ContinuousFundSDKType {
     return o && (o.$typeUrl === ContinuousFund.typeUrl || typeof o.recipient === "string" && typeof o.percentage === "string");
   },
   isAmino(o: any): o is ContinuousFundAmino {
@@ -177,7 +153,7 @@ export const ContinuousFund = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ContinuousFund>, I>>(object: I): ContinuousFund {
+  fromPartial(object: DeepPartial<ContinuousFund>): ContinuousFund {
     const message = createBaseContinuousFund();
     message.recipient = object.recipient ?? "";
     message.percentage = object.percentage ?? "";
@@ -245,9 +221,6 @@ export const Params = {
   is(o: any): o is Params {
     return o && (o.$typeUrl === Params.typeUrl || Array.isArray(o.enabledDistributionDenoms) && (!o.enabledDistributionDenoms.length || typeof o.enabledDistributionDenoms[0] === "string") && typeof o.distributionFrequency === "bigint");
   },
-  isSDK(o: any): o is ParamsSDKType {
-    return o && (o.$typeUrl === Params.typeUrl || Array.isArray(o.enabled_distribution_denoms) && (!o.enabled_distribution_denoms.length || typeof o.enabled_distribution_denoms[0] === "string") && typeof o.distribution_frequency === "bigint");
-  },
   isAmino(o: any): o is ParamsAmino {
     return o && (o.$typeUrl === Params.typeUrl || Array.isArray(o.enabled_distribution_denoms) && (!o.enabled_distribution_denoms.length || typeof o.enabled_distribution_denoms[0] === "string") && typeof o.distribution_frequency === "bigint");
   },
@@ -280,7 +253,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(object: I): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.enabledDistributionDenoms = object.enabledDistributionDenoms?.map(e => e) || [];
     message.distributionFrequency = object.distributionFrequency !== undefined && object.distributionFrequency !== null ? BigInt(object.distributionFrequency.toString()) : BigInt(0);

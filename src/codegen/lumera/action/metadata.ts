@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * SenseMetadata contains information for Sense actions.
  * This metadata is directly embedded in the Action.metadata field.
@@ -59,49 +59,26 @@ export interface SenseMetadataAmino {
   /**
    * RequestAction required fields
    */
-  data_hash?: string;
-  dd_and_fingerprints_ic?: string;
+  data_hash: string;
+  dd_and_fingerprints_ic: string;
   /**
    * RequestAction optional fields
    */
-  collection_id?: string;
-  group_id?: string;
+  collection_id: string;
+  group_id: string;
   /**
    * Added by Keeper
    */
-  dd_and_fingerprints_max?: string;
+  dd_and_fingerprints_max: string;
   /**
    * FinalizeAction fields
    */
-  dd_and_fingerprints_ids?: string[];
-  signatures?: string;
+  dd_and_fingerprints_ids: string[];
+  signatures: string;
 }
 export interface SenseMetadataAminoMsg {
   type: "/lumera.action.SenseMetadata";
   value: SenseMetadataAmino;
-}
-/**
- * SenseMetadata contains information for Sense actions.
- * This metadata is directly embedded in the Action.metadata field.
- * For RequestAction:
- *   - Required: data_hash, dd_and_fingerprints_ic
- *   - Optional: collection_id, group_id
- * Keeper will add:
- *   - dd_and_fingerprints_max (from module params)
- * For FinalizeAction:
- *   - Required: dd_and_fingerprints_ids, signatures
- * @name SenseMetadataSDKType
- * @package lumera.action
- * @see proto type: lumera.action.SenseMetadata
- */
-export interface SenseMetadataSDKType {
-  data_hash: string;
-  dd_and_fingerprints_ic: bigint;
-  collection_id: string;
-  group_id: string;
-  dd_and_fingerprints_max: bigint;
-  dd_and_fingerprints_ids: string[];
-  signatures: string;
 }
 /**
  * CascadeMetadata contains information for Cascade actions.
@@ -163,13 +140,13 @@ export interface CascadeMetadataAmino {
   /**
    * RequestAction required fields
    */
-  data_hash?: string;
-  file_name?: string;
-  rq_ids_ic?: string;
+  data_hash: string;
+  file_name: string;
+  rq_ids_ic: string;
   /**
    * Added by Keeper
    */
-  rq_ids_max?: string;
+  rq_ids_max: string;
   /**
    * FinalizeAction fields
    */
@@ -177,39 +154,17 @@ export interface CascadeMetadataAmino {
   /**
    * RequestAction required field
    */
-  signatures?: string;
+  signatures: string;
   /**
    * Indicates whether the action is publicly visible. Set to true to
    * mark the action as visible to all users; set to false for private
    * or restricted actions.
    */
-  public?: boolean;
+  public: boolean;
 }
 export interface CascadeMetadataAminoMsg {
   type: "/lumera.action.CascadeMetadata";
   value: CascadeMetadataAmino;
-}
-/**
- * CascadeMetadata contains information for Cascade actions.
- * This metadata is directly embedded in the Action.metadata field.
- * For RequestAction:
- *   - Required: data_hash, file_name, rq_ids_ic, signatures
- * Keeper will add:
- *   - rq_ids_max (from module params)
- * For FinalizeAction:
- *   - Required: rq_ids_ids
- * @name CascadeMetadataSDKType
- * @package lumera.action
- * @see proto type: lumera.action.CascadeMetadata
- */
-export interface CascadeMetadataSDKType {
-  data_hash: string;
-  file_name: string;
-  rq_ids_ic: bigint;
-  rq_ids_max: bigint;
-  rq_ids_ids?: string[];
-  signatures: string;
-  public: boolean;
 }
 function createBaseSenseMetadata(): SenseMetadata {
   return {
@@ -240,9 +195,6 @@ export const SenseMetadata = {
   typeUrl: "/lumera.action.SenseMetadata",
   is(o: any): o is SenseMetadata {
     return o && (o.$typeUrl === SenseMetadata.typeUrl || typeof o.dataHash === "string" && typeof o.ddAndFingerprintsIc === "bigint" && typeof o.collectionId === "string" && typeof o.groupId === "string" && typeof o.ddAndFingerprintsMax === "bigint" && Array.isArray(o.ddAndFingerprintsIds) && (!o.ddAndFingerprintsIds.length || typeof o.ddAndFingerprintsIds[0] === "string") && typeof o.signatures === "string");
-  },
-  isSDK(o: any): o is SenseMetadataSDKType {
-    return o && (o.$typeUrl === SenseMetadata.typeUrl || typeof o.data_hash === "string" && typeof o.dd_and_fingerprints_ic === "bigint" && typeof o.collection_id === "string" && typeof o.group_id === "string" && typeof o.dd_and_fingerprints_max === "bigint" && Array.isArray(o.dd_and_fingerprints_ids) && (!o.dd_and_fingerprints_ids.length || typeof o.dd_and_fingerprints_ids[0] === "string") && typeof o.signatures === "string");
   },
   isAmino(o: any): o is SenseMetadataAmino {
     return o && (o.$typeUrl === SenseMetadata.typeUrl || typeof o.data_hash === "string" && typeof o.dd_and_fingerprints_ic === "bigint" && typeof o.collection_id === "string" && typeof o.group_id === "string" && typeof o.dd_and_fingerprints_max === "bigint" && Array.isArray(o.dd_and_fingerprints_ids) && (!o.dd_and_fingerprints_ids.length || typeof o.dd_and_fingerprints_ids[0] === "string") && typeof o.signatures === "string");
@@ -306,7 +258,7 @@ export const SenseMetadata = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<SenseMetadata>, I>>(object: I): SenseMetadata {
+  fromPartial(object: DeepPartial<SenseMetadata>): SenseMetadata {
     const message = createBaseSenseMetadata();
     message.dataHash = object.dataHash ?? "";
     message.ddAndFingerprintsIc = object.ddAndFingerprintsIc !== undefined && object.ddAndFingerprintsIc !== null ? BigInt(object.ddAndFingerprintsIc.toString()) : BigInt(0);
@@ -401,9 +353,6 @@ export const CascadeMetadata = {
   is(o: any): o is CascadeMetadata {
     return o && (o.$typeUrl === CascadeMetadata.typeUrl || typeof o.dataHash === "string" && typeof o.fileName === "string" && typeof o.rqIdsIc === "bigint" && typeof o.rqIdsMax === "bigint" && typeof o.signatures === "string" && typeof o.public === "boolean");
   },
-  isSDK(o: any): o is CascadeMetadataSDKType {
-    return o && (o.$typeUrl === CascadeMetadata.typeUrl || typeof o.data_hash === "string" && typeof o.file_name === "string" && typeof o.rq_ids_ic === "bigint" && typeof o.rq_ids_max === "bigint" && typeof o.signatures === "string" && typeof o.public === "boolean");
-  },
   isAmino(o: any): o is CascadeMetadataAmino {
     return o && (o.$typeUrl === CascadeMetadata.typeUrl || typeof o.data_hash === "string" && typeof o.file_name === "string" && typeof o.rq_ids_ic === "bigint" && typeof o.rq_ids_max === "bigint" && typeof o.signatures === "string" && typeof o.public === "boolean");
   },
@@ -466,7 +415,7 @@ export const CascadeMetadata = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CascadeMetadata>, I>>(object: I): CascadeMetadata {
+  fromPartial(object: DeepPartial<CascadeMetadata>): CascadeMetadata {
     const message = createBaseCascadeMetadata();
     message.dataHash = object.dataHash ?? "";
     message.fileName = object.fileName ?? "";

@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { Exact, isSet } from "../../../helpers";
+import { DeepPartial, isSet } from "../../../helpers";
 /**
  * ModuleOptions describes the CLI options for a Cosmos SDK module.
  * @name ModuleOptions
@@ -44,16 +44,6 @@ export interface ModuleOptionsAminoMsg {
   value: ModuleOptionsAmino;
 }
 /**
- * ModuleOptions describes the CLI options for a Cosmos SDK module.
- * @name ModuleOptionsSDKType
- * @package cosmos.autocli.v1
- * @see proto type: cosmos.autocli.v1.ModuleOptions
- */
-export interface ModuleOptionsSDKType {
-  tx?: ServiceCommandDescriptorSDKType;
-  query?: ServiceCommandDescriptorSDKType;
-}
-/**
  * @name ServiceCommandDescriptor_SubCommandsEntry
  * @package cosmos.autocli.v1
  * @see proto type: cosmos.autocli.v1.undefined
@@ -72,21 +62,12 @@ export interface ServiceCommandDescriptor_SubCommandsEntryProtoMsg {
  * @see proto type: cosmos.autocli.v1.ServiceCommandDescriptor_SubCommandsEntry
  */
 export interface ServiceCommandDescriptor_SubCommandsEntryAmino {
-  key?: string;
+  key: string;
   value?: ServiceCommandDescriptorAmino;
 }
 export interface ServiceCommandDescriptor_SubCommandsEntryAminoMsg {
   type: string;
   value: ServiceCommandDescriptor_SubCommandsEntryAmino;
-}
-/**
- * @name ServiceCommandDescriptor_SubCommandsEntrySDKType
- * @package cosmos.autocli.v1
- * @see proto type: cosmos.autocli.v1.undefined
- */
-export interface ServiceCommandDescriptor_SubCommandsEntrySDKType {
-  key: string;
-  value?: ServiceCommandDescriptorSDKType;
 }
 /**
  * ServiceCommandDescriptor describes a CLI command based on a protobuf service.
@@ -132,38 +113,25 @@ export interface ServiceCommandDescriptorAmino {
    * the command from. It can be left empty if sub_commands are used instead
    * which may be the case if a module provides multiple tx and/or query services.
    */
-  service?: string;
+  service: string;
   /**
    * rpc_command_options are options for commands generated from rpc methods.
    * If no options are specified for a given rpc method on the service, a
    * command will be generated for that method with the default options.
    */
-  rpc_command_options?: RpcCommandOptionsAmino[];
+  rpc_command_options: RpcCommandOptionsAmino[];
   /**
    * sub_commands is a map of optional sub-commands for this command based on
    * different protobuf services. The map key is used as the name of the
    * sub-command.
    */
-  sub_commands?: {
+  sub_commands: {
     [key: string]: ServiceCommandDescriptorAmino;
   };
 }
 export interface ServiceCommandDescriptorAminoMsg {
   type: "cosmos-sdk/ServiceCommandDescriptor";
   value: ServiceCommandDescriptorAmino;
-}
-/**
- * ServiceCommandDescriptor describes a CLI command based on a protobuf service.
- * @name ServiceCommandDescriptorSDKType
- * @package cosmos.autocli.v1
- * @see proto type: cosmos.autocli.v1.ServiceCommandDescriptor
- */
-export interface ServiceCommandDescriptorSDKType {
-  service: string;
-  rpc_command_options: RpcCommandOptionsSDKType[];
-  sub_commands: {
-    [key: string]: ServiceCommandDescriptorSDKType;
-  };
 }
 /**
  * @name RpcCommandOptions_FlagOptionsEntry
@@ -184,21 +152,12 @@ export interface RpcCommandOptions_FlagOptionsEntryProtoMsg {
  * @see proto type: cosmos.autocli.v1.RpcCommandOptions_FlagOptionsEntry
  */
 export interface RpcCommandOptions_FlagOptionsEntryAmino {
-  key?: string;
+  key: string;
   value?: FlagOptionsAmino;
 }
 export interface RpcCommandOptions_FlagOptionsEntryAminoMsg {
   type: string;
   value: RpcCommandOptions_FlagOptionsEntryAmino;
-}
-/**
- * @name RpcCommandOptions_FlagOptionsEntrySDKType
- * @package cosmos.autocli.v1
- * @see proto type: cosmos.autocli.v1.undefined
- */
-export interface RpcCommandOptions_FlagOptionsEntrySDKType {
-  key: string;
-  value?: FlagOptionsSDKType;
 }
 /**
  * RpcCommandOptions specifies options for commands generated from protobuf
@@ -286,7 +245,7 @@ export interface RpcCommandOptionsAmino {
    * rpc_method is short name of the protobuf rpc method that this command is
    * generated from.
    */
-  rpc_method?: string;
+  rpc_method: string;
   /**
    * use is the one-line usage method. It also allows specifying an alternate
    * name for the command as the first word of the usage text.
@@ -294,82 +253,59 @@ export interface RpcCommandOptionsAmino {
    * By default the name of an rpc command is the kebab-case short name of the
    * rpc method.
    */
-  use?: string;
+  use: string;
   /**
    * long is the long message shown in the 'help <this-command>' output.
    */
-  long?: string;
+  long: string;
   /**
    * short is the short description shown in the 'help' output.
    */
-  short?: string;
+  short: string;
   /**
    * example is examples of how to use the command.
    */
-  example?: string;
+  example: string;
   /**
    * alias is an array of aliases that can be used instead of the first word in Use.
    */
-  alias?: string[];
+  alias: string[];
   /**
    * suggest_for is an array of command names for which this command will be suggested -
    * similar to aliases but only suggests.
    */
-  suggest_for?: string[];
+  suggest_for: string[];
   /**
    * deprecated defines, if this command is deprecated and should print this string when used.
    */
-  deprecated?: string;
+  deprecated: string;
   /**
    * version defines the version for this command. If this value is non-empty and the command does not
    * define a "version" flag, a "version" boolean flag will be added to the command and, if specified,
    * will print content of the "Version" variable. A shorthand "v" flag will also be added if the
    * command does not define one.
    */
-  version?: string;
+  version: string;
   /**
    * flag_options are options for flags generated from rpc request fields.
    * By default all request fields are configured as flags. They can
    * also be configured as positional args instead using positional_args.
    */
-  flag_options?: {
+  flag_options: {
     [key: string]: FlagOptionsAmino;
   };
   /**
    * positional_args specifies positional arguments for the command.
    */
-  positional_args?: PositionalArgDescriptorAmino[];
+  positional_args: PositionalArgDescriptorAmino[];
   /**
    * skip specifies whether to skip this rpc method when generating commands.
    */
-  skip?: boolean;
+  skip: boolean;
 }
 export interface RpcCommandOptionsAminoMsg {
   type: "cosmos-sdk/RpcCommandOptions";
   value: RpcCommandOptionsAmino;
-}
-/**
- * RpcCommandOptions specifies options for commands generated from protobuf
- * rpc methods.
- * @name RpcCommandOptionsSDKType
- * @package cosmos.autocli.v1
- * @see proto type: cosmos.autocli.v1.RpcCommandOptions
- */
-export interface RpcCommandOptionsSDKType {
-  rpc_method: string;
-  use: string;
-  long: string;
-  short: string;
-  example: string;
-  alias: string[];
-  suggest_for: string[];
-  deprecated: string;
-  version: string;
-  flag_options: {
-    [key: string]: FlagOptionsSDKType;
-  };
-  positional_args: PositionalArgDescriptorSDKType[];
-  skip: boolean;
 }
 /**
  * FlagOptions are options for flags generated from rpc request fields.
@@ -427,53 +363,35 @@ export interface FlagOptionsAmino {
   /**
    * name is an alternate name to use for the field flag.
    */
-  name?: string;
+  name: string;
   /**
    * shorthand is a one-letter abbreviated flag.
    */
-  shorthand?: string;
+  shorthand: string;
   /**
    * usage is the help message.
    */
-  usage?: string;
+  usage: string;
   /**
    * default_value is the default value as text.
    */
-  default_value?: string;
+  default_value: string;
   /**
    * deprecated is the usage text to show if this flag is deprecated.
    */
-  deprecated?: string;
+  deprecated: string;
   /**
    * shorthand_deprecated is the usage text to show if the shorthand of this flag is deprecated.
    */
-  shorthand_deprecated?: string;
+  shorthand_deprecated: string;
   /**
    * hidden hides the flag from help/usage text
    */
-  hidden?: boolean;
+  hidden: boolean;
 }
 export interface FlagOptionsAminoMsg {
   type: "cosmos-sdk/FlagOptions";
   value: FlagOptionsAmino;
-}
-/**
- * FlagOptions are options for flags generated from rpc request fields.
- * By default, all request fields are configured as flags based on the
- * kebab-case name of the field. Fields can be turned into positional arguments
- * instead by using RpcCommandOptions.positional_args.
- * @name FlagOptionsSDKType
- * @package cosmos.autocli.v1
- * @see proto type: cosmos.autocli.v1.FlagOptions
- */
-export interface FlagOptionsSDKType {
-  name: string;
-  shorthand: string;
-  usage: string;
-  default_value: string;
-  deprecated: string;
-  shorthand_deprecated: string;
-  hidden: boolean;
 }
 /**
  * PositionalArgDescriptor describes a positional argument.
@@ -509,27 +427,17 @@ export interface PositionalArgDescriptorAmino {
    * proto_field specifies the proto field to use as the positional arg. Any
    * fields used as positional args will not have a flag generated.
    */
-  proto_field?: string;
+  proto_field: string;
   /**
    * varargs makes a positional parameter a varargs parameter. This can only be
    * applied to last positional parameter and the proto_field must a repeated
    * field.
    */
-  varargs?: boolean;
+  varargs: boolean;
 }
 export interface PositionalArgDescriptorAminoMsg {
   type: "cosmos-sdk/PositionalArgDescriptor";
   value: PositionalArgDescriptorAmino;
-}
-/**
- * PositionalArgDescriptor describes a positional argument.
- * @name PositionalArgDescriptorSDKType
- * @package cosmos.autocli.v1
- * @see proto type: cosmos.autocli.v1.PositionalArgDescriptor
- */
-export interface PositionalArgDescriptorSDKType {
-  proto_field: string;
-  varargs: boolean;
 }
 function createBaseModuleOptions(): ModuleOptions {
   return {
@@ -547,9 +455,6 @@ export const ModuleOptions = {
   typeUrl: "/cosmos.autocli.v1.ModuleOptions",
   aminoType: "cosmos-sdk/ModuleOptions",
   is(o: any): o is ModuleOptions {
-    return o && o.$typeUrl === ModuleOptions.typeUrl;
-  },
-  isSDK(o: any): o is ModuleOptionsSDKType {
     return o && o.$typeUrl === ModuleOptions.typeUrl;
   },
   isAmino(o: any): o is ModuleOptionsAmino {
@@ -584,7 +489,7 @@ export const ModuleOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ModuleOptions>, I>>(object: I): ModuleOptions {
+  fromPartial(object: DeepPartial<ModuleOptions>): ModuleOptions {
     const message = createBaseModuleOptions();
     message.tx = object.tx !== undefined && object.tx !== null ? ServiceCommandDescriptor.fromPartial(object.tx) : undefined;
     message.query = object.query !== undefined && object.query !== null ? ServiceCommandDescriptor.fromPartial(object.query) : undefined;
@@ -675,7 +580,7 @@ export const ServiceCommandDescriptor_SubCommandsEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ServiceCommandDescriptor_SubCommandsEntry>, I>>(object: I): ServiceCommandDescriptor_SubCommandsEntry {
+  fromPartial(object: DeepPartial<ServiceCommandDescriptor_SubCommandsEntry>): ServiceCommandDescriptor_SubCommandsEntry {
     const message = createBaseServiceCommandDescriptor_SubCommandsEntry();
     message.key = object.key ?? "";
     message.value = object.value !== undefined && object.value !== null ? ServiceCommandDescriptor.fromPartial(object.value) : undefined;
@@ -729,9 +634,6 @@ export const ServiceCommandDescriptor = {
   is(o: any): o is ServiceCommandDescriptor {
     return o && (o.$typeUrl === ServiceCommandDescriptor.typeUrl || typeof o.service === "string" && Array.isArray(o.rpcCommandOptions) && (!o.rpcCommandOptions.length || RpcCommandOptions.is(o.rpcCommandOptions[0])) && isSet(o.subCommands));
   },
-  isSDK(o: any): o is ServiceCommandDescriptorSDKType {
-    return o && (o.$typeUrl === ServiceCommandDescriptor.typeUrl || typeof o.service === "string" && Array.isArray(o.rpc_command_options) && (!o.rpc_command_options.length || RpcCommandOptions.isSDK(o.rpc_command_options[0])) && isSet(o.sub_commands));
-  },
   isAmino(o: any): o is ServiceCommandDescriptorAmino {
     return o && (o.$typeUrl === ServiceCommandDescriptor.typeUrl || typeof o.service === "string" && Array.isArray(o.rpc_command_options) && (!o.rpc_command_options.length || RpcCommandOptions.isAmino(o.rpc_command_options[0])) && isSet(o.sub_commands));
   },
@@ -776,7 +678,7 @@ export const ServiceCommandDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ServiceCommandDescriptor>, I>>(object: I): ServiceCommandDescriptor {
+  fromPartial(object: DeepPartial<ServiceCommandDescriptor>): ServiceCommandDescriptor {
     const message = createBaseServiceCommandDescriptor();
     message.service = object.service ?? "";
     message.rpcCommandOptions = object.rpcCommandOptions?.map(e => RpcCommandOptions.fromPartial(e)) || [];
@@ -892,7 +794,7 @@ export const RpcCommandOptions_FlagOptionsEntry = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RpcCommandOptions_FlagOptionsEntry>, I>>(object: I): RpcCommandOptions_FlagOptionsEntry {
+  fromPartial(object: DeepPartial<RpcCommandOptions_FlagOptionsEntry>): RpcCommandOptions_FlagOptionsEntry {
     const message = createBaseRpcCommandOptions_FlagOptionsEntry();
     message.key = object.key ?? "";
     message.value = object.value !== undefined && object.value !== null ? FlagOptions.fromPartial(object.value) : undefined;
@@ -955,9 +857,6 @@ export const RpcCommandOptions = {
   aminoType: "cosmos-sdk/RpcCommandOptions",
   is(o: any): o is RpcCommandOptions {
     return o && (o.$typeUrl === RpcCommandOptions.typeUrl || typeof o.rpcMethod === "string" && typeof o.use === "string" && typeof o.long === "string" && typeof o.short === "string" && typeof o.example === "string" && Array.isArray(o.alias) && (!o.alias.length || typeof o.alias[0] === "string") && Array.isArray(o.suggestFor) && (!o.suggestFor.length || typeof o.suggestFor[0] === "string") && typeof o.deprecated === "string" && typeof o.version === "string" && isSet(o.flagOptions) && Array.isArray(o.positionalArgs) && (!o.positionalArgs.length || PositionalArgDescriptor.is(o.positionalArgs[0])) && typeof o.skip === "boolean");
-  },
-  isSDK(o: any): o is RpcCommandOptionsSDKType {
-    return o && (o.$typeUrl === RpcCommandOptions.typeUrl || typeof o.rpc_method === "string" && typeof o.use === "string" && typeof o.long === "string" && typeof o.short === "string" && typeof o.example === "string" && Array.isArray(o.alias) && (!o.alias.length || typeof o.alias[0] === "string") && Array.isArray(o.suggest_for) && (!o.suggest_for.length || typeof o.suggest_for[0] === "string") && typeof o.deprecated === "string" && typeof o.version === "string" && isSet(o.flag_options) && Array.isArray(o.positional_args) && (!o.positional_args.length || PositionalArgDescriptor.isSDK(o.positional_args[0])) && typeof o.skip === "boolean");
   },
   isAmino(o: any): o is RpcCommandOptionsAmino {
     return o && (o.$typeUrl === RpcCommandOptions.typeUrl || typeof o.rpc_method === "string" && typeof o.use === "string" && typeof o.long === "string" && typeof o.short === "string" && typeof o.example === "string" && Array.isArray(o.alias) && (!o.alias.length || typeof o.alias[0] === "string") && Array.isArray(o.suggest_for) && (!o.suggest_for.length || typeof o.suggest_for[0] === "string") && typeof o.deprecated === "string" && typeof o.version === "string" && isSet(o.flag_options) && Array.isArray(o.positional_args) && (!o.positional_args.length || PositionalArgDescriptor.isAmino(o.positional_args[0])) && typeof o.skip === "boolean");
@@ -1057,7 +956,7 @@ export const RpcCommandOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<RpcCommandOptions>, I>>(object: I): RpcCommandOptions {
+  fromPartial(object: DeepPartial<RpcCommandOptions>): RpcCommandOptions {
     const message = createBaseRpcCommandOptions();
     message.rpcMethod = object.rpcMethod ?? "";
     message.use = object.use ?? "";
@@ -1207,9 +1106,6 @@ export const FlagOptions = {
   is(o: any): o is FlagOptions {
     return o && (o.$typeUrl === FlagOptions.typeUrl || typeof o.name === "string" && typeof o.shorthand === "string" && typeof o.usage === "string" && typeof o.defaultValue === "string" && typeof o.deprecated === "string" && typeof o.shorthandDeprecated === "string" && typeof o.hidden === "boolean");
   },
-  isSDK(o: any): o is FlagOptionsSDKType {
-    return o && (o.$typeUrl === FlagOptions.typeUrl || typeof o.name === "string" && typeof o.shorthand === "string" && typeof o.usage === "string" && typeof o.default_value === "string" && typeof o.deprecated === "string" && typeof o.shorthand_deprecated === "string" && typeof o.hidden === "boolean");
-  },
   isAmino(o: any): o is FlagOptionsAmino {
     return o && (o.$typeUrl === FlagOptions.typeUrl || typeof o.name === "string" && typeof o.shorthand === "string" && typeof o.usage === "string" && typeof o.default_value === "string" && typeof o.deprecated === "string" && typeof o.shorthand_deprecated === "string" && typeof o.hidden === "boolean");
   },
@@ -1272,7 +1168,7 @@ export const FlagOptions = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FlagOptions>, I>>(object: I): FlagOptions {
+  fromPartial(object: DeepPartial<FlagOptions>): FlagOptions {
     const message = createBaseFlagOptions();
     message.name = object.name ?? "";
     message.shorthand = object.shorthand ?? "";
@@ -1360,9 +1256,6 @@ export const PositionalArgDescriptor = {
   is(o: any): o is PositionalArgDescriptor {
     return o && (o.$typeUrl === PositionalArgDescriptor.typeUrl || typeof o.protoField === "string" && typeof o.varargs === "boolean");
   },
-  isSDK(o: any): o is PositionalArgDescriptorSDKType {
-    return o && (o.$typeUrl === PositionalArgDescriptor.typeUrl || typeof o.proto_field === "string" && typeof o.varargs === "boolean");
-  },
   isAmino(o: any): o is PositionalArgDescriptorAmino {
     return o && (o.$typeUrl === PositionalArgDescriptor.typeUrl || typeof o.proto_field === "string" && typeof o.varargs === "boolean");
   },
@@ -1395,7 +1288,7 @@ export const PositionalArgDescriptor = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<PositionalArgDescriptor>, I>>(object: I): PositionalArgDescriptor {
+  fromPartial(object: DeepPartial<PositionalArgDescriptor>): PositionalArgDescriptor {
     const message = createBasePositionalArgDescriptor();
     message.protoField = object.protoField ?? "";
     message.varargs = object.varargs ?? false;

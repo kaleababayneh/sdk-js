@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "../../../../../binary";
-import { Exact, bytesFromBase64, base64FromBytes } from "../../../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../../../helpers";
 import { GlobalDecoderRegistry } from "../../../../../registry";
 /**
  * Pairs defines a repeated slice of Pair objects.
@@ -23,20 +23,11 @@ export interface PairsProtoMsg {
  * @see proto type: cosmos.store.internal.kv.v1beta1.Pairs
  */
 export interface PairsAmino {
-  pairs?: PairAmino[];
+  pairs: PairAmino[];
 }
 export interface PairsAminoMsg {
   type: "cosmos-sdk/Pairs";
   value: PairsAmino;
-}
-/**
- * Pairs defines a repeated slice of Pair objects.
- * @name PairsSDKType
- * @package cosmos.store.internal.kv.v1beta1
- * @see proto type: cosmos.store.internal.kv.v1beta1.Pairs
- */
-export interface PairsSDKType {
-  pairs: PairSDKType[];
 }
 /**
  * Pair defines a key/value bytes tuple.
@@ -59,22 +50,12 @@ export interface PairProtoMsg {
  * @see proto type: cosmos.store.internal.kv.v1beta1.Pair
  */
 export interface PairAmino {
-  key?: string;
-  value?: string;
+  key: string;
+  value: string;
 }
 export interface PairAminoMsg {
   type: "cosmos-sdk/Pair";
   value: PairAmino;
-}
-/**
- * Pair defines a key/value bytes tuple.
- * @name PairSDKType
- * @package cosmos.store.internal.kv.v1beta1
- * @see proto type: cosmos.store.internal.kv.v1beta1.Pair
- */
-export interface PairSDKType {
-  key: Uint8Array;
-  value: Uint8Array;
 }
 function createBasePairs(): Pairs {
   return {
@@ -92,9 +73,6 @@ export const Pairs = {
   aminoType: "cosmos-sdk/Pairs",
   is(o: any): o is Pairs {
     return o && (o.$typeUrl === Pairs.typeUrl || Array.isArray(o.pairs) && (!o.pairs.length || Pair.is(o.pairs[0])));
-  },
-  isSDK(o: any): o is PairsSDKType {
-    return o && (o.$typeUrl === Pairs.typeUrl || Array.isArray(o.pairs) && (!o.pairs.length || Pair.isSDK(o.pairs[0])));
   },
   isAmino(o: any): o is PairsAmino {
     return o && (o.$typeUrl === Pairs.typeUrl || Array.isArray(o.pairs) && (!o.pairs.length || Pair.isAmino(o.pairs[0])));
@@ -122,7 +100,7 @@ export const Pairs = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Pairs>, I>>(object: I): Pairs {
+  fromPartial(object: DeepPartial<Pairs>): Pairs {
     const message = createBasePairs();
     message.pairs = object.pairs?.map(e => Pair.fromPartial(e)) || [];
     return message;
@@ -187,9 +165,6 @@ export const Pair = {
   is(o: any): o is Pair {
     return o && (o.$typeUrl === Pair.typeUrl || (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string"));
   },
-  isSDK(o: any): o is PairSDKType {
-    return o && (o.$typeUrl === Pair.typeUrl || (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string"));
-  },
   isAmino(o: any): o is PairAmino {
     return o && (o.$typeUrl === Pair.typeUrl || (o.key instanceof Uint8Array || typeof o.key === "string") && (o.value instanceof Uint8Array || typeof o.value === "string"));
   },
@@ -222,7 +197,7 @@ export const Pair = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Pair>, I>>(object: I): Pair {
+  fromPartial(object: DeepPartial<Pair>): Pair {
     const message = createBasePair();
     message.key = object.key ?? new Uint8Array();
     message.value = object.value ?? new Uint8Array();

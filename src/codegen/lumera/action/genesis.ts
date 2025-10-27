@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { Params, ParamsAmino, ParamsSDKType } from "./params";
+import { Params, ParamsAmino } from "./params";
 import { BinaryReader, BinaryWriter } from "../../binary";
 import { GlobalDecoderRegistry } from "../../registry";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 /**
  * GenesisState defines the action module's genesis state.
  * @name GenesisState
@@ -36,15 +36,6 @@ export interface GenesisStateAminoMsg {
   type: "/lumera.action.GenesisState";
   value: GenesisStateAmino;
 }
-/**
- * GenesisState defines the action module's genesis state.
- * @name GenesisStateSDKType
- * @package lumera.action
- * @see proto type: lumera.action.GenesisState
- */
-export interface GenesisStateSDKType {
-  params: ParamsSDKType;
-}
 function createBaseGenesisState(): GenesisState {
   return {
     params: Params.fromPartial({})
@@ -60,9 +51,6 @@ export const GenesisState = {
   typeUrl: "/lumera.action.GenesisState",
   is(o: any): o is GenesisState {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.is(o.params));
-  },
-  isSDK(o: any): o is GenesisStateSDKType {
-    return o && (o.$typeUrl === GenesisState.typeUrl || Params.isSDK(o.params));
   },
   isAmino(o: any): o is GenesisStateAmino {
     return o && (o.$typeUrl === GenesisState.typeUrl || Params.isAmino(o.params));
@@ -90,7 +78,7 @@ export const GenesisState = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<GenesisState>, I>>(object: I): GenesisState {
+  fromPartial(object: DeepPartial<GenesisState>): GenesisState {
     const message = createBaseGenesisState();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;

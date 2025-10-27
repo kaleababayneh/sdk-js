@@ -1,9 +1,9 @@
 // @ts-nocheck
 /* eslint-disable */
-import { DecCoin, DecCoinAmino, DecCoinSDKType, Coin, CoinAmino, CoinSDKType } from "../../base/v1beta1/coin";
+import { DecCoin, DecCoinAmino, Coin, CoinAmino } from "../../base/v1beta1/coin";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { Decimal } from "@interchainjs/math";
-import { Exact } from "../../../helpers";
+import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
 /**
  * Params defines the set of params for the distribution module.
@@ -51,29 +51,11 @@ export interface ParamsAmino {
    * @deprecated
    */
   bonus_proposer_reward: string;
-  withdraw_addr_enabled?: boolean;
+  withdraw_addr_enabled: boolean;
 }
 export interface ParamsAminoMsg {
   type: "cosmos-sdk/x/distribution/Params";
   value: ParamsAmino;
-}
-/**
- * Params defines the set of params for the distribution module.
- * @name ParamsSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.Params
- */
-export interface ParamsSDKType {
-  community_tax: string;
-  /**
-   * @deprecated
-   */
-  base_proposer_reward: string;
-  /**
-   * @deprecated
-   */
-  bonus_proposer_reward: string;
-  withdraw_addr_enabled: boolean;
 }
 /**
  * ValidatorHistoricalRewards represents historical rewards for a validator.
@@ -119,32 +101,11 @@ export interface ValidatorHistoricalRewardsProtoMsg {
  */
 export interface ValidatorHistoricalRewardsAmino {
   cumulative_reward_ratio: DecCoinAmino[];
-  reference_count?: number;
+  reference_count: number;
 }
 export interface ValidatorHistoricalRewardsAminoMsg {
   type: "cosmos-sdk/ValidatorHistoricalRewards";
   value: ValidatorHistoricalRewardsAmino;
-}
-/**
- * ValidatorHistoricalRewards represents historical rewards for a validator.
- * Height is implicit within the store key.
- * Cumulative reward ratio is the sum from the zeroeth period
- * until this period of rewards / tokens, per the spec.
- * The reference count indicates the number of objects
- * which might need to reference this historical entry at any point.
- * ReferenceCount =
- *    number of outstanding delegations which ended the associated period (and
- *    might need to read that record)
- *  + number of slashes which ended the associated period (and might need to
- *  read that record)
- *  + one per validator for the zeroeth period, set on initialization
- * @name ValidatorHistoricalRewardsSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.ValidatorHistoricalRewards
- */
-export interface ValidatorHistoricalRewardsSDKType {
-  cumulative_reward_ratio: DecCoinSDKType[];
-  reference_count: number;
 }
 /**
  * ValidatorCurrentRewards represents current rewards and current
@@ -172,23 +133,11 @@ export interface ValidatorCurrentRewardsProtoMsg {
  */
 export interface ValidatorCurrentRewardsAmino {
   rewards: DecCoinAmino[];
-  period?: string;
+  period: string;
 }
 export interface ValidatorCurrentRewardsAminoMsg {
   type: "cosmos-sdk/ValidatorCurrentRewards";
   value: ValidatorCurrentRewardsAmino;
-}
-/**
- * ValidatorCurrentRewards represents current rewards and current
- * period for a validator kept as a running counter and incremented
- * each block as long as the validator's tokens remain constant.
- * @name ValidatorCurrentRewardsSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.ValidatorCurrentRewards
- */
-export interface ValidatorCurrentRewardsSDKType {
-  rewards: DecCoinSDKType[];
-  period: bigint;
 }
 /**
  * ValidatorAccumulatedCommission represents accumulated commission
@@ -219,16 +168,6 @@ export interface ValidatorAccumulatedCommissionAminoMsg {
   value: ValidatorAccumulatedCommissionAmino;
 }
 /**
- * ValidatorAccumulatedCommission represents accumulated commission
- * for a validator kept as a running counter, can be withdrawn at any time.
- * @name ValidatorAccumulatedCommissionSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.ValidatorAccumulatedCommission
- */
-export interface ValidatorAccumulatedCommissionSDKType {
-  commission: DecCoinSDKType[];
-}
-/**
  * ValidatorOutstandingRewards represents outstanding (un-withdrawn) rewards
  * for a validator inexpensive to track, allows simple sanity checks.
  * @name ValidatorOutstandingRewards
@@ -257,16 +196,6 @@ export interface ValidatorOutstandingRewardsAminoMsg {
   value: ValidatorOutstandingRewardsAmino;
 }
 /**
- * ValidatorOutstandingRewards represents outstanding (un-withdrawn) rewards
- * for a validator inexpensive to track, allows simple sanity checks.
- * @name ValidatorOutstandingRewardsSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.ValidatorOutstandingRewards
- */
-export interface ValidatorOutstandingRewardsSDKType {
-  rewards: DecCoinSDKType[];
-}
-/**
  * ValidatorSlashEvent represents a validator slash event.
  * Height is implicit within the store key.
  * This is needed to calculate appropriate amount of staking tokens
@@ -293,25 +222,12 @@ export interface ValidatorSlashEventProtoMsg {
  * @see proto type: cosmos.distribution.v1beta1.ValidatorSlashEvent
  */
 export interface ValidatorSlashEventAmino {
-  validator_period?: string;
-  fraction?: string;
+  validator_period: string;
+  fraction: string;
 }
 export interface ValidatorSlashEventAminoMsg {
   type: "cosmos-sdk/ValidatorSlashEvent";
   value: ValidatorSlashEventAmino;
-}
-/**
- * ValidatorSlashEvent represents a validator slash event.
- * Height is implicit within the store key.
- * This is needed to calculate appropriate amount of staking tokens
- * for delegations which are withdrawn after a slash has occurred.
- * @name ValidatorSlashEventSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.ValidatorSlashEvent
- */
-export interface ValidatorSlashEventSDKType {
-  validator_period: bigint;
-  fraction: string;
 }
 /**
  * ValidatorSlashEvents is a collection of ValidatorSlashEvent messages.
@@ -340,15 +256,6 @@ export interface ValidatorSlashEventsAminoMsg {
   value: ValidatorSlashEventsAmino;
 }
 /**
- * ValidatorSlashEvents is a collection of ValidatorSlashEvent messages.
- * @name ValidatorSlashEventsSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.ValidatorSlashEvents
- */
-export interface ValidatorSlashEventsSDKType {
-  validator_slash_events: ValidatorSlashEventSDKType[];
-}
-/**
  * FeePool is the global fee pool for distribution.
  * @name FeePool
  * @package cosmos.distribution.v1beta1
@@ -375,15 +282,6 @@ export interface FeePoolAminoMsg {
   value: FeePoolAmino;
 }
 /**
- * FeePool is the global fee pool for distribution.
- * @name FeePoolSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.FeePool
- */
-export interface FeePoolSDKType {
-  community_pool: DecCoinSDKType[];
-}
-/**
  * CommunityPoolSpendProposal details a proposal for use of community funds,
  * together with how many coins are proposed to be spent, and to which
  * recipient account.
@@ -398,7 +296,6 @@ export interface FeePoolSDKType {
  * @deprecated
  */
 export interface CommunityPoolSpendProposal {
-  $typeUrl?: "/cosmos.distribution.v1beta1.CommunityPoolSpendProposal";
   title: string;
   description: string;
   recipient: string;
@@ -423,35 +320,14 @@ export interface CommunityPoolSpendProposalProtoMsg {
  * @deprecated
  */
 export interface CommunityPoolSpendProposalAmino {
-  title?: string;
-  description?: string;
-  recipient?: string;
+  title: string;
+  description: string;
+  recipient: string;
   amount: CoinAmino[];
 }
 export interface CommunityPoolSpendProposalAminoMsg {
   type: "cosmos-sdk/CommunityPoolSpendProposal";
   value: CommunityPoolSpendProposalAmino;
-}
-/**
- * CommunityPoolSpendProposal details a proposal for use of community funds,
- * together with how many coins are proposed to be spent, and to which
- * recipient account.
- * 
- * Deprecated: Do not use. As of the Cosmos SDK release v0.47.x, there is no
- * longer a need for an explicit CommunityPoolSpendProposal. To spend community
- * pool funds, a simple MsgCommunityPoolSpend can be invoked from the x/gov
- * module via a v1 governance proposal.
- * @name CommunityPoolSpendProposalSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.CommunityPoolSpendProposal
- * @deprecated
- */
-export interface CommunityPoolSpendProposalSDKType {
-  $typeUrl?: "/cosmos.distribution.v1beta1.CommunityPoolSpendProposal";
-  title: string;
-  description: string;
-  recipient: string;
-  amount: CoinSDKType[];
 }
 /**
  * DelegatorStartingInfo represents the starting info for a delegator reward
@@ -485,29 +361,13 @@ export interface DelegatorStartingInfoProtoMsg {
  * @see proto type: cosmos.distribution.v1beta1.DelegatorStartingInfo
  */
 export interface DelegatorStartingInfoAmino {
-  previous_period?: string;
+  previous_period: string;
   stake: string;
   height: string;
 }
 export interface DelegatorStartingInfoAminoMsg {
   type: "cosmos-sdk/DelegatorStartingInfo";
   value: DelegatorStartingInfoAmino;
-}
-/**
- * DelegatorStartingInfo represents the starting info for a delegator reward
- * period. It tracks the previous validator period, the delegation's amount of
- * staking token, and the creation height (to check later on if any slashes have
- * occurred). NOTE: Even though validators are slashed to whole staking tokens,
- * the delegators within the validator may be left with less than a full token,
- * thus sdk.Dec is used.
- * @name DelegatorStartingInfoSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.DelegatorStartingInfo
- */
-export interface DelegatorStartingInfoSDKType {
-  previous_period: bigint;
-  stake: string;
-  height: bigint;
 }
 /**
  * DelegationDelegatorReward represents the properties
@@ -532,23 +392,12 @@ export interface DelegationDelegatorRewardProtoMsg {
  * @see proto type: cosmos.distribution.v1beta1.DelegationDelegatorReward
  */
 export interface DelegationDelegatorRewardAmino {
-  validator_address?: string;
+  validator_address: string;
   reward: DecCoinAmino[];
 }
 export interface DelegationDelegatorRewardAminoMsg {
   type: "cosmos-sdk/DelegationDelegatorReward";
   value: DelegationDelegatorRewardAmino;
-}
-/**
- * DelegationDelegatorReward represents the properties
- * of a delegator's delegation reward.
- * @name DelegationDelegatorRewardSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.DelegationDelegatorReward
- */
-export interface DelegationDelegatorRewardSDKType {
-  validator_address: string;
-  reward: DecCoinSDKType[];
 }
 /**
  * CommunityPoolSpendProposalWithDeposit defines a CommunityPoolSpendProposal
@@ -558,7 +407,6 @@ export interface DelegationDelegatorRewardSDKType {
  * @see proto type: cosmos.distribution.v1beta1.CommunityPoolSpendProposalWithDeposit
  */
 export interface CommunityPoolSpendProposalWithDeposit {
-  $typeUrl?: "/cosmos.distribution.v1beta1.CommunityPoolSpendProposalWithDeposit";
   title: string;
   description: string;
   recipient: string;
@@ -577,30 +425,15 @@ export interface CommunityPoolSpendProposalWithDepositProtoMsg {
  * @see proto type: cosmos.distribution.v1beta1.CommunityPoolSpendProposalWithDeposit
  */
 export interface CommunityPoolSpendProposalWithDepositAmino {
-  title?: string;
-  description?: string;
-  recipient?: string;
-  amount?: string;
-  deposit?: string;
-}
-export interface CommunityPoolSpendProposalWithDepositAminoMsg {
-  type: "cosmos-sdk/CommunityPoolSpendProposalWithDeposit";
-  value: CommunityPoolSpendProposalWithDepositAmino;
-}
-/**
- * CommunityPoolSpendProposalWithDeposit defines a CommunityPoolSpendProposal
- * with a deposit
- * @name CommunityPoolSpendProposalWithDepositSDKType
- * @package cosmos.distribution.v1beta1
- * @see proto type: cosmos.distribution.v1beta1.CommunityPoolSpendProposalWithDeposit
- */
-export interface CommunityPoolSpendProposalWithDepositSDKType {
-  $typeUrl?: "/cosmos.distribution.v1beta1.CommunityPoolSpendProposalWithDeposit";
   title: string;
   description: string;
   recipient: string;
   amount: string;
   deposit: string;
+}
+export interface CommunityPoolSpendProposalWithDepositAminoMsg {
+  type: "cosmos-sdk/CommunityPoolSpendProposalWithDeposit";
+  value: CommunityPoolSpendProposalWithDepositAmino;
 }
 function createBaseParams(): Params {
   return {
@@ -621,9 +454,6 @@ export const Params = {
   aminoType: "cosmos-sdk/x/distribution/Params",
   is(o: any): o is Params {
     return o && (o.$typeUrl === Params.typeUrl || typeof o.communityTax === "string" && typeof o.baseProposerReward === "string" && typeof o.bonusProposerReward === "string" && typeof o.withdrawAddrEnabled === "boolean");
-  },
-  isSDK(o: any): o is ParamsSDKType {
-    return o && (o.$typeUrl === Params.typeUrl || typeof o.community_tax === "string" && typeof o.base_proposer_reward === "string" && typeof o.bonus_proposer_reward === "string" && typeof o.withdraw_addr_enabled === "boolean");
   },
   isAmino(o: any): o is ParamsAmino {
     return o && (o.$typeUrl === Params.typeUrl || typeof o.community_tax === "string" && typeof o.base_proposer_reward === "string" && typeof o.bonus_proposer_reward === "string" && typeof o.withdraw_addr_enabled === "boolean");
@@ -669,7 +499,7 @@ export const Params = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<Params>, I>>(object: I): Params {
+  fromPartial(object: DeepPartial<Params>): Params {
     const message = createBaseParams();
     message.communityTax = object.communityTax ?? "";
     message.baseProposerReward = object.baseProposerReward ?? "";
@@ -753,9 +583,6 @@ export const ValidatorHistoricalRewards = {
   is(o: any): o is ValidatorHistoricalRewards {
     return o && (o.$typeUrl === ValidatorHistoricalRewards.typeUrl || Array.isArray(o.cumulativeRewardRatio) && (!o.cumulativeRewardRatio.length || DecCoin.is(o.cumulativeRewardRatio[0])) && typeof o.referenceCount === "number");
   },
-  isSDK(o: any): o is ValidatorHistoricalRewardsSDKType {
-    return o && (o.$typeUrl === ValidatorHistoricalRewards.typeUrl || Array.isArray(o.cumulative_reward_ratio) && (!o.cumulative_reward_ratio.length || DecCoin.isSDK(o.cumulative_reward_ratio[0])) && typeof o.reference_count === "number");
-  },
   isAmino(o: any): o is ValidatorHistoricalRewardsAmino {
     return o && (o.$typeUrl === ValidatorHistoricalRewards.typeUrl || Array.isArray(o.cumulative_reward_ratio) && (!o.cumulative_reward_ratio.length || DecCoin.isAmino(o.cumulative_reward_ratio[0])) && typeof o.reference_count === "number");
   },
@@ -788,7 +615,7 @@ export const ValidatorHistoricalRewards = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorHistoricalRewards>, I>>(object: I): ValidatorHistoricalRewards {
+  fromPartial(object: DeepPartial<ValidatorHistoricalRewards>): ValidatorHistoricalRewards {
     const message = createBaseValidatorHistoricalRewards();
     message.cumulativeRewardRatio = object.cumulativeRewardRatio?.map(e => DecCoin.fromPartial(e)) || [];
     message.referenceCount = object.referenceCount ?? 0;
@@ -860,9 +687,6 @@ export const ValidatorCurrentRewards = {
   is(o: any): o is ValidatorCurrentRewards {
     return o && (o.$typeUrl === ValidatorCurrentRewards.typeUrl || Array.isArray(o.rewards) && (!o.rewards.length || DecCoin.is(o.rewards[0])) && typeof o.period === "bigint");
   },
-  isSDK(o: any): o is ValidatorCurrentRewardsSDKType {
-    return o && (o.$typeUrl === ValidatorCurrentRewards.typeUrl || Array.isArray(o.rewards) && (!o.rewards.length || DecCoin.isSDK(o.rewards[0])) && typeof o.period === "bigint");
-  },
   isAmino(o: any): o is ValidatorCurrentRewardsAmino {
     return o && (o.$typeUrl === ValidatorCurrentRewards.typeUrl || Array.isArray(o.rewards) && (!o.rewards.length || DecCoin.isAmino(o.rewards[0])) && typeof o.period === "bigint");
   },
@@ -895,7 +719,7 @@ export const ValidatorCurrentRewards = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorCurrentRewards>, I>>(object: I): ValidatorCurrentRewards {
+  fromPartial(object: DeepPartial<ValidatorCurrentRewards>): ValidatorCurrentRewards {
     const message = createBaseValidatorCurrentRewards();
     message.rewards = object.rewards?.map(e => DecCoin.fromPartial(e)) || [];
     message.period = object.period !== undefined && object.period !== null ? BigInt(object.period.toString()) : BigInt(0);
@@ -965,9 +789,6 @@ export const ValidatorAccumulatedCommission = {
   is(o: any): o is ValidatorAccumulatedCommission {
     return o && (o.$typeUrl === ValidatorAccumulatedCommission.typeUrl || Array.isArray(o.commission) && (!o.commission.length || DecCoin.is(o.commission[0])));
   },
-  isSDK(o: any): o is ValidatorAccumulatedCommissionSDKType {
-    return o && (o.$typeUrl === ValidatorAccumulatedCommission.typeUrl || Array.isArray(o.commission) && (!o.commission.length || DecCoin.isSDK(o.commission[0])));
-  },
   isAmino(o: any): o is ValidatorAccumulatedCommissionAmino {
     return o && (o.$typeUrl === ValidatorAccumulatedCommission.typeUrl || Array.isArray(o.commission) && (!o.commission.length || DecCoin.isAmino(o.commission[0])));
   },
@@ -994,7 +815,7 @@ export const ValidatorAccumulatedCommission = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorAccumulatedCommission>, I>>(object: I): ValidatorAccumulatedCommission {
+  fromPartial(object: DeepPartial<ValidatorAccumulatedCommission>): ValidatorAccumulatedCommission {
     const message = createBaseValidatorAccumulatedCommission();
     message.commission = object.commission?.map(e => DecCoin.fromPartial(e)) || [];
     return message;
@@ -1059,9 +880,6 @@ export const ValidatorOutstandingRewards = {
   is(o: any): o is ValidatorOutstandingRewards {
     return o && (o.$typeUrl === ValidatorOutstandingRewards.typeUrl || Array.isArray(o.rewards) && (!o.rewards.length || DecCoin.is(o.rewards[0])));
   },
-  isSDK(o: any): o is ValidatorOutstandingRewardsSDKType {
-    return o && (o.$typeUrl === ValidatorOutstandingRewards.typeUrl || Array.isArray(o.rewards) && (!o.rewards.length || DecCoin.isSDK(o.rewards[0])));
-  },
   isAmino(o: any): o is ValidatorOutstandingRewardsAmino {
     return o && (o.$typeUrl === ValidatorOutstandingRewards.typeUrl || Array.isArray(o.rewards) && (!o.rewards.length || DecCoin.isAmino(o.rewards[0])));
   },
@@ -1088,7 +906,7 @@ export const ValidatorOutstandingRewards = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorOutstandingRewards>, I>>(object: I): ValidatorOutstandingRewards {
+  fromPartial(object: DeepPartial<ValidatorOutstandingRewards>): ValidatorOutstandingRewards {
     const message = createBaseValidatorOutstandingRewards();
     message.rewards = object.rewards?.map(e => DecCoin.fromPartial(e)) || [];
     return message;
@@ -1156,9 +974,6 @@ export const ValidatorSlashEvent = {
   is(o: any): o is ValidatorSlashEvent {
     return o && (o.$typeUrl === ValidatorSlashEvent.typeUrl || typeof o.validatorPeriod === "bigint" && typeof o.fraction === "string");
   },
-  isSDK(o: any): o is ValidatorSlashEventSDKType {
-    return o && (o.$typeUrl === ValidatorSlashEvent.typeUrl || typeof o.validator_period === "bigint" && typeof o.fraction === "string");
-  },
   isAmino(o: any): o is ValidatorSlashEventAmino {
     return o && (o.$typeUrl === ValidatorSlashEvent.typeUrl || typeof o.validator_period === "bigint" && typeof o.fraction === "string");
   },
@@ -1191,7 +1006,7 @@ export const ValidatorSlashEvent = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorSlashEvent>, I>>(object: I): ValidatorSlashEvent {
+  fromPartial(object: DeepPartial<ValidatorSlashEvent>): ValidatorSlashEvent {
     const message = createBaseValidatorSlashEvent();
     message.validatorPeriod = object.validatorPeriod !== undefined && object.validatorPeriod !== null ? BigInt(object.validatorPeriod.toString()) : BigInt(0);
     message.fraction = object.fraction ?? "";
@@ -1253,9 +1068,6 @@ export const ValidatorSlashEvents = {
   is(o: any): o is ValidatorSlashEvents {
     return o && (o.$typeUrl === ValidatorSlashEvents.typeUrl || Array.isArray(o.validatorSlashEvents) && (!o.validatorSlashEvents.length || ValidatorSlashEvent.is(o.validatorSlashEvents[0])));
   },
-  isSDK(o: any): o is ValidatorSlashEventsSDKType {
-    return o && (o.$typeUrl === ValidatorSlashEvents.typeUrl || Array.isArray(o.validator_slash_events) && (!o.validator_slash_events.length || ValidatorSlashEvent.isSDK(o.validator_slash_events[0])));
-  },
   isAmino(o: any): o is ValidatorSlashEventsAmino {
     return o && (o.$typeUrl === ValidatorSlashEvents.typeUrl || Array.isArray(o.validator_slash_events) && (!o.validator_slash_events.length || ValidatorSlashEvent.isAmino(o.validator_slash_events[0])));
   },
@@ -1282,7 +1094,7 @@ export const ValidatorSlashEvents = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<ValidatorSlashEvents>, I>>(object: I): ValidatorSlashEvents {
+  fromPartial(object: DeepPartial<ValidatorSlashEvents>): ValidatorSlashEvents {
     const message = createBaseValidatorSlashEvents();
     message.validatorSlashEvents = object.validatorSlashEvents?.map(e => ValidatorSlashEvent.fromPartial(e)) || [];
     return message;
@@ -1346,9 +1158,6 @@ export const FeePool = {
   is(o: any): o is FeePool {
     return o && (o.$typeUrl === FeePool.typeUrl || Array.isArray(o.communityPool) && (!o.communityPool.length || DecCoin.is(o.communityPool[0])));
   },
-  isSDK(o: any): o is FeePoolSDKType {
-    return o && (o.$typeUrl === FeePool.typeUrl || Array.isArray(o.community_pool) && (!o.community_pool.length || DecCoin.isSDK(o.community_pool[0])));
-  },
   isAmino(o: any): o is FeePoolAmino {
     return o && (o.$typeUrl === FeePool.typeUrl || Array.isArray(o.community_pool) && (!o.community_pool.length || DecCoin.isAmino(o.community_pool[0])));
   },
@@ -1375,7 +1184,7 @@ export const FeePool = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<FeePool>, I>>(object: I): FeePool {
+  fromPartial(object: DeepPartial<FeePool>): FeePool {
     const message = createBaseFeePool();
     message.communityPool = object.communityPool?.map(e => DecCoin.fromPartial(e)) || [];
     return message;
@@ -1424,7 +1233,6 @@ export const FeePool = {
 };
 function createBaseCommunityPoolSpendProposal(): CommunityPoolSpendProposal {
   return {
-    $typeUrl: "/cosmos.distribution.v1beta1.CommunityPoolSpendProposal",
     title: "",
     description: "",
     recipient: "",
@@ -1450,9 +1258,6 @@ export const CommunityPoolSpendProposal = {
   aminoType: "cosmos-sdk/CommunityPoolSpendProposal",
   is(o: any): o is CommunityPoolSpendProposal {
     return o && (o.$typeUrl === CommunityPoolSpendProposal.typeUrl || typeof o.title === "string" && typeof o.description === "string" && typeof o.recipient === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.is(o.amount[0])));
-  },
-  isSDK(o: any): o is CommunityPoolSpendProposalSDKType {
-    return o && (o.$typeUrl === CommunityPoolSpendProposal.typeUrl || typeof o.title === "string" && typeof o.description === "string" && typeof o.recipient === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isSDK(o.amount[0])));
   },
   isAmino(o: any): o is CommunityPoolSpendProposalAmino {
     return o && (o.$typeUrl === CommunityPoolSpendProposal.typeUrl || typeof o.title === "string" && typeof o.description === "string" && typeof o.recipient === "string" && Array.isArray(o.amount) && (!o.amount.length || Coin.isAmino(o.amount[0])));
@@ -1498,7 +1303,7 @@ export const CommunityPoolSpendProposal = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CommunityPoolSpendProposal>, I>>(object: I): CommunityPoolSpendProposal {
+  fromPartial(object: DeepPartial<CommunityPoolSpendProposal>): CommunityPoolSpendProposal {
     const message = createBaseCommunityPoolSpendProposal();
     message.title = object.title ?? "";
     message.description = object.description ?? "";
@@ -1586,9 +1391,6 @@ export const DelegatorStartingInfo = {
   is(o: any): o is DelegatorStartingInfo {
     return o && (o.$typeUrl === DelegatorStartingInfo.typeUrl || typeof o.previousPeriod === "bigint" && typeof o.stake === "string" && typeof o.height === "bigint");
   },
-  isSDK(o: any): o is DelegatorStartingInfoSDKType {
-    return o && (o.$typeUrl === DelegatorStartingInfo.typeUrl || typeof o.previous_period === "bigint" && typeof o.stake === "string" && typeof o.height === "bigint");
-  },
   isAmino(o: any): o is DelegatorStartingInfoAmino {
     return o && (o.$typeUrl === DelegatorStartingInfo.typeUrl || typeof o.previous_period === "bigint" && typeof o.stake === "string" && typeof o.height === "bigint");
   },
@@ -1627,7 +1429,7 @@ export const DelegatorStartingInfo = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DelegatorStartingInfo>, I>>(object: I): DelegatorStartingInfo {
+  fromPartial(object: DeepPartial<DelegatorStartingInfo>): DelegatorStartingInfo {
     const message = createBaseDelegatorStartingInfo();
     message.previousPeriod = object.previousPeriod !== undefined && object.previousPeriod !== null ? BigInt(object.previousPeriod.toString()) : BigInt(0);
     message.stake = object.stake ?? "";
@@ -1696,9 +1498,6 @@ export const DelegationDelegatorReward = {
   is(o: any): o is DelegationDelegatorReward {
     return o && (o.$typeUrl === DelegationDelegatorReward.typeUrl || typeof o.validatorAddress === "string" && Array.isArray(o.reward) && (!o.reward.length || DecCoin.is(o.reward[0])));
   },
-  isSDK(o: any): o is DelegationDelegatorRewardSDKType {
-    return o && (o.$typeUrl === DelegationDelegatorReward.typeUrl || typeof o.validator_address === "string" && Array.isArray(o.reward) && (!o.reward.length || DecCoin.isSDK(o.reward[0])));
-  },
   isAmino(o: any): o is DelegationDelegatorRewardAmino {
     return o && (o.$typeUrl === DelegationDelegatorReward.typeUrl || typeof o.validator_address === "string" && Array.isArray(o.reward) && (!o.reward.length || DecCoin.isAmino(o.reward[0])));
   },
@@ -1731,7 +1530,7 @@ export const DelegationDelegatorReward = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<DelegationDelegatorReward>, I>>(object: I): DelegationDelegatorReward {
+  fromPartial(object: DeepPartial<DelegationDelegatorReward>): DelegationDelegatorReward {
     const message = createBaseDelegationDelegatorReward();
     message.validatorAddress = object.validatorAddress ?? "";
     message.reward = object.reward?.map(e => DecCoin.fromPartial(e)) || [];
@@ -1785,7 +1584,6 @@ export const DelegationDelegatorReward = {
 };
 function createBaseCommunityPoolSpendProposalWithDeposit(): CommunityPoolSpendProposalWithDeposit {
   return {
-    $typeUrl: "/cosmos.distribution.v1beta1.CommunityPoolSpendProposalWithDeposit",
     title: "",
     description: "",
     recipient: "",
@@ -1804,9 +1602,6 @@ export const CommunityPoolSpendProposalWithDeposit = {
   typeUrl: "/cosmos.distribution.v1beta1.CommunityPoolSpendProposalWithDeposit",
   aminoType: "cosmos-sdk/CommunityPoolSpendProposalWithDeposit",
   is(o: any): o is CommunityPoolSpendProposalWithDeposit {
-    return o && (o.$typeUrl === CommunityPoolSpendProposalWithDeposit.typeUrl || typeof o.title === "string" && typeof o.description === "string" && typeof o.recipient === "string" && typeof o.amount === "string" && typeof o.deposit === "string");
-  },
-  isSDK(o: any): o is CommunityPoolSpendProposalWithDepositSDKType {
     return o && (o.$typeUrl === CommunityPoolSpendProposalWithDeposit.typeUrl || typeof o.title === "string" && typeof o.description === "string" && typeof o.recipient === "string" && typeof o.amount === "string" && typeof o.deposit === "string");
   },
   isAmino(o: any): o is CommunityPoolSpendProposalWithDepositAmino {
@@ -1859,7 +1654,7 @@ export const CommunityPoolSpendProposalWithDeposit = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<CommunityPoolSpendProposalWithDeposit>, I>>(object: I): CommunityPoolSpendProposalWithDeposit {
+  fromPartial(object: DeepPartial<CommunityPoolSpendProposalWithDeposit>): CommunityPoolSpendProposalWithDeposit {
     const message = createBaseCommunityPoolSpendProposalWithDeposit();
     message.title = object.title ?? "";
     message.description = object.description ?? "";

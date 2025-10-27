@@ -1,10 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-import { PageRequest, PageRequestAmino, PageRequestSDKType, PageResponse, PageResponseAmino, PageResponseSDKType } from "../../cosmos/base/query/v1beta1/pagination";
-import { Params, ParamsAmino, ParamsSDKType } from "./params";
-import { SuperNode, SuperNodeAmino, SuperNodeSDKType } from "./super_node";
+import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../cosmos/base/query/v1beta1/pagination";
+import { Params, ParamsAmino } from "./params";
+import { SuperNode, SuperNodeAmino } from "./super_node";
 import { BinaryReader, BinaryWriter } from "../../binary";
-import { Exact } from "../../helpers";
+import { DeepPartial } from "../../helpers";
 import { GlobalDecoderRegistry } from "../../registry";
 /**
  * QueryParamsRequest is request type for the Query/Params RPC method.
@@ -28,13 +28,6 @@ export interface QueryParamsRequestAminoMsg {
   type: "/lumera.supernode.QueryParamsRequest";
   value: QueryParamsRequestAmino;
 }
-/**
- * QueryParamsRequest is request type for the Query/Params RPC method.
- * @name QueryParamsRequestSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.QueryParamsRequest
- */
-export interface QueryParamsRequestSDKType {}
 /**
  * QueryParamsResponse is response type for the Query/Params RPC method.
  * @name QueryParamsResponse
@@ -68,15 +61,6 @@ export interface QueryParamsResponseAminoMsg {
   value: QueryParamsResponseAmino;
 }
 /**
- * QueryParamsResponse is response type for the Query/Params RPC method.
- * @name QueryParamsResponseSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.QueryParamsResponse
- */
-export interface QueryParamsResponseSDKType {
-  params: ParamsSDKType;
-}
-/**
  * @name QueryGetSuperNodeRequest
  * @package lumera.supernode
  * @see proto type: lumera.supernode.QueryGetSuperNodeRequest
@@ -94,19 +78,11 @@ export interface QueryGetSuperNodeRequestProtoMsg {
  * @see proto type: lumera.supernode.QueryGetSuperNodeRequest
  */
 export interface QueryGetSuperNodeRequestAmino {
-  validatorAddress?: string;
+  validatorAddress: string;
 }
 export interface QueryGetSuperNodeRequestAminoMsg {
   type: "/lumera.supernode.QueryGetSuperNodeRequest";
   value: QueryGetSuperNodeRequestAmino;
-}
-/**
- * @name QueryGetSuperNodeRequestSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.QueryGetSuperNodeRequest
- */
-export interface QueryGetSuperNodeRequestSDKType {
-  validatorAddress: string;
 }
 /**
  * @name QueryGetSuperNodeResponse
@@ -133,14 +109,6 @@ export interface QueryGetSuperNodeResponseAminoMsg {
   value: QueryGetSuperNodeResponseAmino;
 }
 /**
- * @name QueryGetSuperNodeResponseSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.QueryGetSuperNodeResponse
- */
-export interface QueryGetSuperNodeResponseSDKType {
-  supernode?: SuperNodeSDKType;
-}
-/**
  * @name QueryGetSuperNodeBySuperNodeAddressRequest
  * @package lumera.supernode
  * @see proto type: lumera.supernode.QueryGetSuperNodeBySuperNodeAddressRequest
@@ -158,19 +126,11 @@ export interface QueryGetSuperNodeBySuperNodeAddressRequestProtoMsg {
  * @see proto type: lumera.supernode.QueryGetSuperNodeBySuperNodeAddressRequest
  */
 export interface QueryGetSuperNodeBySuperNodeAddressRequestAmino {
-  supernodeAddress?: string;
+  supernodeAddress: string;
 }
 export interface QueryGetSuperNodeBySuperNodeAddressRequestAminoMsg {
   type: "/lumera.supernode.QueryGetSuperNodeBySuperNodeAddressRequest";
   value: QueryGetSuperNodeBySuperNodeAddressRequestAmino;
-}
-/**
- * @name QueryGetSuperNodeBySuperNodeAddressRequestSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.QueryGetSuperNodeBySuperNodeAddressRequest
- */
-export interface QueryGetSuperNodeBySuperNodeAddressRequestSDKType {
-  supernodeAddress: string;
 }
 /**
  * @name QueryGetSuperNodeBySuperNodeAddressResponse
@@ -197,14 +157,6 @@ export interface QueryGetSuperNodeBySuperNodeAddressResponseAminoMsg {
   value: QueryGetSuperNodeBySuperNodeAddressResponseAmino;
 }
 /**
- * @name QueryGetSuperNodeBySuperNodeAddressResponseSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.QueryGetSuperNodeBySuperNodeAddressResponse
- */
-export interface QueryGetSuperNodeBySuperNodeAddressResponseSDKType {
-  supernode?: SuperNodeSDKType;
-}
-/**
  * @name QueryListSuperNodesRequest
  * @package lumera.supernode
  * @see proto type: lumera.supernode.QueryListSuperNodesRequest
@@ -229,14 +181,6 @@ export interface QueryListSuperNodesRequestAminoMsg {
   value: QueryListSuperNodesRequestAmino;
 }
 /**
- * @name QueryListSuperNodesRequestSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.QueryListSuperNodesRequest
- */
-export interface QueryListSuperNodesRequestSDKType {
-  pagination?: PageRequestSDKType;
-}
-/**
  * @name QueryListSuperNodesResponse
  * @package lumera.supernode
  * @see proto type: lumera.supernode.QueryListSuperNodesResponse
@@ -255,21 +199,12 @@ export interface QueryListSuperNodesResponseProtoMsg {
  * @see proto type: lumera.supernode.QueryListSuperNodesResponse
  */
 export interface QueryListSuperNodesResponseAmino {
-  supernodes?: SuperNodeAmino[];
+  supernodes: SuperNodeAmino[];
   pagination?: PageResponseAmino;
 }
 export interface QueryListSuperNodesResponseAminoMsg {
   type: "/lumera.supernode.QueryListSuperNodesResponse";
   value: QueryListSuperNodesResponseAmino;
-}
-/**
- * @name QueryListSuperNodesResponseSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.QueryListSuperNodesResponse
- */
-export interface QueryListSuperNodesResponseSDKType {
-  supernodes: SuperNodeSDKType[];
-  pagination?: PageResponseSDKType;
 }
 /**
  * @name QueryGetTopSuperNodesForBlockRequest
@@ -291,23 +226,13 @@ export interface QueryGetTopSuperNodesForBlockRequestProtoMsg {
  * @see proto type: lumera.supernode.QueryGetTopSuperNodesForBlockRequest
  */
 export interface QueryGetTopSuperNodesForBlockRequestAmino {
-  blockHeight?: number;
-  limit?: number;
-  state?: string;
+  blockHeight: number;
+  limit: number;
+  state: string;
 }
 export interface QueryGetTopSuperNodesForBlockRequestAminoMsg {
   type: "/lumera.supernode.QueryGetTopSuperNodesForBlockRequest";
   value: QueryGetTopSuperNodesForBlockRequestAmino;
-}
-/**
- * @name QueryGetTopSuperNodesForBlockRequestSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.QueryGetTopSuperNodesForBlockRequest
- */
-export interface QueryGetTopSuperNodesForBlockRequestSDKType {
-  blockHeight: number;
-  limit: number;
-  state: string;
 }
 /**
  * @name QueryGetTopSuperNodesForBlockResponse
@@ -327,19 +252,11 @@ export interface QueryGetTopSuperNodesForBlockResponseProtoMsg {
  * @see proto type: lumera.supernode.QueryGetTopSuperNodesForBlockResponse
  */
 export interface QueryGetTopSuperNodesForBlockResponseAmino {
-  supernodes?: SuperNodeAmino[];
+  supernodes: SuperNodeAmino[];
 }
 export interface QueryGetTopSuperNodesForBlockResponseAminoMsg {
   type: "/lumera.supernode.QueryGetTopSuperNodesForBlockResponse";
   value: QueryGetTopSuperNodesForBlockResponseAmino;
-}
-/**
- * @name QueryGetTopSuperNodesForBlockResponseSDKType
- * @package lumera.supernode
- * @see proto type: lumera.supernode.QueryGetTopSuperNodesForBlockResponse
- */
-export interface QueryGetTopSuperNodesForBlockResponseSDKType {
-  supernodes: SuperNodeSDKType[];
 }
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
@@ -353,9 +270,6 @@ function createBaseQueryParamsRequest(): QueryParamsRequest {
 export const QueryParamsRequest = {
   typeUrl: "/lumera.supernode.QueryParamsRequest",
   is(o: any): o is QueryParamsRequest {
-    return o && o.$typeUrl === QueryParamsRequest.typeUrl;
-  },
-  isSDK(o: any): o is QueryParamsRequestSDKType {
     return o && o.$typeUrl === QueryParamsRequest.typeUrl;
   },
   isAmino(o: any): o is QueryParamsRequestAmino {
@@ -378,7 +292,7 @@ export const QueryParamsRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsRequest>, I>>(_: I): QueryParamsRequest {
+  fromPartial(_: DeepPartial<QueryParamsRequest>): QueryParamsRequest {
     const message = createBaseQueryParamsRequest();
     return message;
   },
@@ -423,9 +337,6 @@ export const QueryParamsResponse = {
   is(o: any): o is QueryParamsResponse {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.is(o.params));
   },
-  isSDK(o: any): o is QueryParamsResponseSDKType {
-    return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isSDK(o.params));
-  },
   isAmino(o: any): o is QueryParamsResponseAmino {
     return o && (o.$typeUrl === QueryParamsResponse.typeUrl || Params.isAmino(o.params));
   },
@@ -452,7 +363,7 @@ export const QueryParamsResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryParamsResponse>, I>>(object: I): QueryParamsResponse {
+  fromPartial(object: DeepPartial<QueryParamsResponse>): QueryParamsResponse {
     const message = createBaseQueryParamsResponse();
     message.params = object.params !== undefined && object.params !== null ? Params.fromPartial(object.params) : undefined;
     return message;
@@ -506,9 +417,6 @@ export const QueryGetSuperNodeRequest = {
   is(o: any): o is QueryGetSuperNodeRequest {
     return o && (o.$typeUrl === QueryGetSuperNodeRequest.typeUrl || typeof o.validatorAddress === "string");
   },
-  isSDK(o: any): o is QueryGetSuperNodeRequestSDKType {
-    return o && (o.$typeUrl === QueryGetSuperNodeRequest.typeUrl || typeof o.validatorAddress === "string");
-  },
   isAmino(o: any): o is QueryGetSuperNodeRequestAmino {
     return o && (o.$typeUrl === QueryGetSuperNodeRequest.typeUrl || typeof o.validatorAddress === "string");
   },
@@ -535,7 +443,7 @@ export const QueryGetSuperNodeRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetSuperNodeRequest>, I>>(object: I): QueryGetSuperNodeRequest {
+  fromPartial(object: DeepPartial<QueryGetSuperNodeRequest>): QueryGetSuperNodeRequest {
     const message = createBaseQueryGetSuperNodeRequest();
     message.validatorAddress = object.validatorAddress ?? "";
     return message;
@@ -584,9 +492,6 @@ export const QueryGetSuperNodeResponse = {
   is(o: any): o is QueryGetSuperNodeResponse {
     return o && o.$typeUrl === QueryGetSuperNodeResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryGetSuperNodeResponseSDKType {
-    return o && o.$typeUrl === QueryGetSuperNodeResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryGetSuperNodeResponseAmino {
     return o && o.$typeUrl === QueryGetSuperNodeResponse.typeUrl;
   },
@@ -613,7 +518,7 @@ export const QueryGetSuperNodeResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetSuperNodeResponse>, I>>(object: I): QueryGetSuperNodeResponse {
+  fromPartial(object: DeepPartial<QueryGetSuperNodeResponse>): QueryGetSuperNodeResponse {
     const message = createBaseQueryGetSuperNodeResponse();
     message.supernode = object.supernode !== undefined && object.supernode !== null ? SuperNode.fromPartial(object.supernode) : undefined;
     return message;
@@ -667,9 +572,6 @@ export const QueryGetSuperNodeBySuperNodeAddressRequest = {
   is(o: any): o is QueryGetSuperNodeBySuperNodeAddressRequest {
     return o && (o.$typeUrl === QueryGetSuperNodeBySuperNodeAddressRequest.typeUrl || typeof o.supernodeAddress === "string");
   },
-  isSDK(o: any): o is QueryGetSuperNodeBySuperNodeAddressRequestSDKType {
-    return o && (o.$typeUrl === QueryGetSuperNodeBySuperNodeAddressRequest.typeUrl || typeof o.supernodeAddress === "string");
-  },
   isAmino(o: any): o is QueryGetSuperNodeBySuperNodeAddressRequestAmino {
     return o && (o.$typeUrl === QueryGetSuperNodeBySuperNodeAddressRequest.typeUrl || typeof o.supernodeAddress === "string");
   },
@@ -696,7 +598,7 @@ export const QueryGetSuperNodeBySuperNodeAddressRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetSuperNodeBySuperNodeAddressRequest>, I>>(object: I): QueryGetSuperNodeBySuperNodeAddressRequest {
+  fromPartial(object: DeepPartial<QueryGetSuperNodeBySuperNodeAddressRequest>): QueryGetSuperNodeBySuperNodeAddressRequest {
     const message = createBaseQueryGetSuperNodeBySuperNodeAddressRequest();
     message.supernodeAddress = object.supernodeAddress ?? "";
     return message;
@@ -745,9 +647,6 @@ export const QueryGetSuperNodeBySuperNodeAddressResponse = {
   is(o: any): o is QueryGetSuperNodeBySuperNodeAddressResponse {
     return o && o.$typeUrl === QueryGetSuperNodeBySuperNodeAddressResponse.typeUrl;
   },
-  isSDK(o: any): o is QueryGetSuperNodeBySuperNodeAddressResponseSDKType {
-    return o && o.$typeUrl === QueryGetSuperNodeBySuperNodeAddressResponse.typeUrl;
-  },
   isAmino(o: any): o is QueryGetSuperNodeBySuperNodeAddressResponseAmino {
     return o && o.$typeUrl === QueryGetSuperNodeBySuperNodeAddressResponse.typeUrl;
   },
@@ -774,7 +673,7 @@ export const QueryGetSuperNodeBySuperNodeAddressResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetSuperNodeBySuperNodeAddressResponse>, I>>(object: I): QueryGetSuperNodeBySuperNodeAddressResponse {
+  fromPartial(object: DeepPartial<QueryGetSuperNodeBySuperNodeAddressResponse>): QueryGetSuperNodeBySuperNodeAddressResponse {
     const message = createBaseQueryGetSuperNodeBySuperNodeAddressResponse();
     message.supernode = object.supernode !== undefined && object.supernode !== null ? SuperNode.fromPartial(object.supernode) : undefined;
     return message;
@@ -828,9 +727,6 @@ export const QueryListSuperNodesRequest = {
   is(o: any): o is QueryListSuperNodesRequest {
     return o && o.$typeUrl === QueryListSuperNodesRequest.typeUrl;
   },
-  isSDK(o: any): o is QueryListSuperNodesRequestSDKType {
-    return o && o.$typeUrl === QueryListSuperNodesRequest.typeUrl;
-  },
   isAmino(o: any): o is QueryListSuperNodesRequestAmino {
     return o && o.$typeUrl === QueryListSuperNodesRequest.typeUrl;
   },
@@ -857,7 +753,7 @@ export const QueryListSuperNodesRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryListSuperNodesRequest>, I>>(object: I): QueryListSuperNodesRequest {
+  fromPartial(object: DeepPartial<QueryListSuperNodesRequest>): QueryListSuperNodesRequest {
     const message = createBaseQueryListSuperNodesRequest();
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
     return message;
@@ -912,9 +808,6 @@ export const QueryListSuperNodesResponse = {
   is(o: any): o is QueryListSuperNodesResponse {
     return o && (o.$typeUrl === QueryListSuperNodesResponse.typeUrl || Array.isArray(o.supernodes) && (!o.supernodes.length || SuperNode.is(o.supernodes[0])));
   },
-  isSDK(o: any): o is QueryListSuperNodesResponseSDKType {
-    return o && (o.$typeUrl === QueryListSuperNodesResponse.typeUrl || Array.isArray(o.supernodes) && (!o.supernodes.length || SuperNode.isSDK(o.supernodes[0])));
-  },
   isAmino(o: any): o is QueryListSuperNodesResponseAmino {
     return o && (o.$typeUrl === QueryListSuperNodesResponse.typeUrl || Array.isArray(o.supernodes) && (!o.supernodes.length || SuperNode.isAmino(o.supernodes[0])));
   },
@@ -947,7 +840,7 @@ export const QueryListSuperNodesResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryListSuperNodesResponse>, I>>(object: I): QueryListSuperNodesResponse {
+  fromPartial(object: DeepPartial<QueryListSuperNodesResponse>): QueryListSuperNodesResponse {
     const message = createBaseQueryListSuperNodesResponse();
     message.supernodes = object.supernodes?.map(e => SuperNode.fromPartial(e)) || [];
     message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
@@ -1011,9 +904,6 @@ export const QueryGetTopSuperNodesForBlockRequest = {
   is(o: any): o is QueryGetTopSuperNodesForBlockRequest {
     return o && (o.$typeUrl === QueryGetTopSuperNodesForBlockRequest.typeUrl || typeof o.blockHeight === "number" && typeof o.limit === "number" && typeof o.state === "string");
   },
-  isSDK(o: any): o is QueryGetTopSuperNodesForBlockRequestSDKType {
-    return o && (o.$typeUrl === QueryGetTopSuperNodesForBlockRequest.typeUrl || typeof o.blockHeight === "number" && typeof o.limit === "number" && typeof o.state === "string");
-  },
   isAmino(o: any): o is QueryGetTopSuperNodesForBlockRequestAmino {
     return o && (o.$typeUrl === QueryGetTopSuperNodesForBlockRequest.typeUrl || typeof o.blockHeight === "number" && typeof o.limit === "number" && typeof o.state === "string");
   },
@@ -1052,7 +942,7 @@ export const QueryGetTopSuperNodesForBlockRequest = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetTopSuperNodesForBlockRequest>, I>>(object: I): QueryGetTopSuperNodesForBlockRequest {
+  fromPartial(object: DeepPartial<QueryGetTopSuperNodesForBlockRequest>): QueryGetTopSuperNodesForBlockRequest {
     const message = createBaseQueryGetTopSuperNodesForBlockRequest();
     message.blockHeight = object.blockHeight ?? 0;
     message.limit = object.limit ?? 0;
@@ -1111,9 +1001,6 @@ export const QueryGetTopSuperNodesForBlockResponse = {
   is(o: any): o is QueryGetTopSuperNodesForBlockResponse {
     return o && (o.$typeUrl === QueryGetTopSuperNodesForBlockResponse.typeUrl || Array.isArray(o.supernodes) && (!o.supernodes.length || SuperNode.is(o.supernodes[0])));
   },
-  isSDK(o: any): o is QueryGetTopSuperNodesForBlockResponseSDKType {
-    return o && (o.$typeUrl === QueryGetTopSuperNodesForBlockResponse.typeUrl || Array.isArray(o.supernodes) && (!o.supernodes.length || SuperNode.isSDK(o.supernodes[0])));
-  },
   isAmino(o: any): o is QueryGetTopSuperNodesForBlockResponseAmino {
     return o && (o.$typeUrl === QueryGetTopSuperNodesForBlockResponse.typeUrl || Array.isArray(o.supernodes) && (!o.supernodes.length || SuperNode.isAmino(o.supernodes[0])));
   },
@@ -1140,7 +1027,7 @@ export const QueryGetTopSuperNodesForBlockResponse = {
     }
     return message;
   },
-  fromPartial<I extends Exact<Partial<QueryGetTopSuperNodesForBlockResponse>, I>>(object: I): QueryGetTopSuperNodesForBlockResponse {
+  fromPartial(object: DeepPartial<QueryGetTopSuperNodesForBlockResponse>): QueryGetTopSuperNodesForBlockResponse {
     const message = createBaseQueryGetTopSuperNodesForBlockResponse();
     message.supernodes = object.supernodes?.map(e => SuperNode.fromPartial(e)) || [];
     return message;
