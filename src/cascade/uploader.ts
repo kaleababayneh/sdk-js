@@ -29,7 +29,7 @@ import type { SNApiClient, Task } from './client';
 import type { CascadeChainPort } from './ports';
 import { TaskManager, TaskManagerOptions } from './task';
 import { blake3Hash } from '../internal/hash';
-import { toBase64, fromBase64, asUint8, toCanonicalJsonBytes } from '../internal/encoding';
+import { toBase64, fromBase64, toCanonicalJsonBytes } from '../internal/encoding';
 import { createSingleBlockLayout, generateIds, buildIndexFile } from '../wasm/lep1';
 import type { UniversalSigner, ArbitrarySignResponse } from '../wallets/signer';
 import { createDefaultSignaturePrompter } from '../wallets/prompter';
@@ -178,8 +178,7 @@ export class CascadeUploader {
     console.debug('CascadeUploader.uploadFile actionParams', { actionParams });
     
     // Step 2: Generate random initial counter for layout ID derivation
-    // const rq_ids_ic = Math.floor(Math.random() * rq_ids_max);
-    const rq_ids_ic = 43;
+    const rq_ids_ic = Math.floor(Math.random() * rq_ids_max);
     
     console.debug('CascadeUploader.uploadFile generated rq_ids_ic', { rq_ids_ic });
 
@@ -197,13 +196,12 @@ export class CascadeUploader {
     // Step 5: Generate LEP-1 layout using rq-wasm
     // Returns raw layout file bytes (JSON format)
     const layoutBytes = await createSingleBlockLayout(fileBytes);
-    // const layoutBytesB64 = toBase64(layoutBytes);
-    const layoutBytesB64 = "eyJibG9ja3MiOlt7ImJsb2NrX2lkIjowLCJlbmNvZGVyX3BhcmFtZXRlcnMiOiJBQUFBR2UwQS8vZ0JBQUVJIiwib3JpZ2luYWxfb2Zmc2V0IjowLCJzaXplIjo2NjM3LCJzeW1ib2xzIjpbIjJ6ZW91RFB2ZjVnSDEzQ2JXZ0RtY1F5N0MxUnlYQ0tDeXBXcVZjZE1hOFhnIiwiQjhjYmtZdVJYREJFTFo4Snd6V2t1dWRtZnRaUTc4R05yWWRORmtzZXU0cEsiLCI2amV0aGtiZEZKejM0WXZKR0ZnRVJXTkJYZVpCV0wyVVVQc1ZGYWlGUlhmIiwiQTJCNnBZTU5DOXp5S0pmS1piQ0RmejY3eXAyeTFBdHhtTjNlakZRem42M3EiLCJDN3RZSjFKa3MxNVlGaFhRdjJyUHdubnhqc0o4SG5WRGFjQ3oxUldQUXVGbiIsIkRwMTJOdzVKS3FmWTJTSkJ3Q0NOeUdUbUNZaW10SEJOUDlrVk1ZRXlYb2FFIiwiOVozbUJ3dFNMeG9Gdmp3WlN5ZTN5QW1RaDR1REdQUzRraThuQ2hTaXhMbVAiXSwiaGFzaCI6IkNEdWpwbXk1c0hqVnVQeGJRaEV3VkF1QUxpaENuZHBzS3BlUHRuU2V5aDhLIn1dfQ=="
+    const layoutBytesB64 = toBase64(layoutBytes);
 
     console.debug('CascadeUploader.uploadFile layoutBytes', { layoutBytes });
     console.debug('CascadeUploader.uploadFile layoutBytesB64', { layoutBytesB64 });
     
-    // Sign the layout using wallet (raw UTF-8 bytes)
+    // Sign the layout using wallet (ADR-036 signArbitrary)
     const layoutSignatureResponse = await this.requestSignature(
       "layout",
       layoutBytesB64,
@@ -349,10 +347,10 @@ export class CascadeUploader {
     let invoked = false;
     const sign = async (): Promise<ArbitrarySignResponse> => {
       if (invoked) {
-        throw new Error("signRaw has already been invoked for this request");
+        throw new Error("signArbitrary has already been invoked for this request");
       }
       invoked = true;
-      return this.signer.signRaw(this.chainId, this.signerAddress, data);
+      return this.signer.signArbitrary(this.chainId, this.signerAddress, data);
     };
 
     const response = prompter ? await prompter(context, sign) : await sign();
