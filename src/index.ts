@@ -85,11 +85,11 @@ export {
 // Internal layer - HTTP client
 export { HttpClient, type HttpClientConfig, type RequestOptions, HttpError } from "./internal/http";
 
-// WASM layer - RaptorQ bridge and LEP-1 helpers
-export { WasmBridge } from "./wasm/bridge";
+// WASM layer - RaptorQ proxy and LEP-1 helpers
+export { RaptorQProxy } from "./wasm/raptorq-proxy";
 export type {
   RaptorQSession,
-} from "./wasm/bridge";
+} from "./wasm/raptorq-proxy";
 
 export {
   createSingleBlockLayout,

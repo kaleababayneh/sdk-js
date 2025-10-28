@@ -280,10 +280,10 @@ export async function createLumeraClient(
   console.debug(`Creating LumeraClient for chainId=${chainId}, rpcUrl=${rpcUrl}, lcdUrl=${lcdUrl}, snapiUrl=${snapiUrl}`);
   
   // Initialize WASM bridge
-  console.debug(`Initializing WASM bridge`);
-  const { WasmBridge } = await import('./wasm/bridge.js');
-  const bridge = WasmBridge.getInstance();
-  await bridge.initialize();
+  console.debug(`Initializing WASM proxy`);
+  const { RaptorQProxy } = await import('./wasm/raptorq-proxy.js');
+  const proxy = RaptorQProxy.getInstance();
+  await proxy.initialize();
   console.debug("WASM bridge initialized");
   
   // Initialize blockchain client

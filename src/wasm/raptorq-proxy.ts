@@ -1,35 +1,45 @@
 /**
- * WASM Bridge for RaptorQ WASM Integration
+ * RaptorQ WASM Proxy
  *
- * This module provides a simplified bridge to the RaptorQ WASM library.
- * It handles initialization and provides a clean interface for RaptorQ operations.
+ * This module provides a proxy layer to the RaptorQ WASM library (rq-library-wasm).
+ * It handles initialization, in-memory filesystem operations, and provides a clean
+ * interface for RaptorQ operations.
  */
 
-import init, { RaptorQSession } from "rq-library-wasm";
+import init, {
+  RaptorQSession,
+  writeFileChunk,
+  readFileChunk,
+  getFileSize,
+  createDirAll,
+  dirExists,
+  syncDirExists,
+  flushFile
+} from "rq-library-wasm";
 import wasmUrl from 'rq-library-wasm/rq_library_bg.wasm?url';
 import type { Layout } from "./types.js";
 
 /**
- * Bridge to the rq-library-wasm package for RaptorQ operations.
+ * Proxy to the rq-library-wasm package for RaptorQ operations.
  * 
  * This class handles initialization of the WASM module and provides a clean API 
- * for creating RaptorQ layouts. It works in both Node.js and browser environments.
+ * for creating RaptorQ layouts using in-memory filesystem operations.
  * 
  * @remarks
- * The bridge implements the singleton pattern to ensure only one WASM instance
- * is created. The rq-library-wasm package handles all platform-specific details.
+ * The proxy implements the singleton pattern to ensure only one WASM instance
+ * is created. Files are stored in browser's in-memory filesystem before processing.
  * 
  * @example
  * ```typescript
- * const bridge = WasmBridge.getInstance();
- * await bridge.initialize();
+ * const proxy = RaptorQProxy.getInstance();
+ * await proxy.initialize();
  * 
  * // Create a layout from file data
- * const layout = await bridge.createSingleBlockLayout(fileBytes);
+ * const layoutBytes = await proxy.createSingleBlockLayout(fileBytes);
  * ```
  */
-export class WasmBridge {
-  private static instance: WasmBridge | null = null;
+export class RaptorQProxy {
+  private static instance: RaptorQProxy | null = null;
   private initPromise: Promise<void> | null = null;
   private initialized: boolean = false;
 
@@ -37,9 +47,10 @@ export class WasmBridge {
    * Default RaptorQ session parameters
    */
   private static readonly DEFAULT_SYMBOL_SIZE = 65535; // 64KB - 1
-  private static readonly DEFAULT_REDUNDANCY_FACTOR = 10;
-  private static readonly DEFAULT_MAX_MEMORY_MB = 1024n; // 1GB
-  private static readonly DEFAULT_CONCURRENCY_LIMIT = 4n;
+  private static readonly DEFAULT_REDUNDANCY_FACTOR = 6;
+  private static readonly DEFAULT_MAX_MEMORY_MB = 4096n; // 4GB
+  private static readonly DEFAULT_CONCURRENCY_LIMIT = 1n;
+  private static readonly DEFAULT_BLOCK_SIZE = 1280 * 1024 * 1024; // 1,280 MiB
 
   /**
    * Private constructor to enforce singleton pattern.
@@ -47,15 +58,15 @@ export class WasmBridge {
   private constructor() {}
 
   /**
-   * Gets the singleton instance of the WasmBridge.
+   * Gets the singleton instance of the RaptorQProxy.
    * 
-   * @returns The WasmBridge singleton instance
+   * @returns The RaptorQProxy singleton instance
    */
-  public static getInstance(): WasmBridge {
-    if (!WasmBridge.instance) {
-      WasmBridge.instance = new WasmBridge();
+  public static getInstance(): RaptorQProxy {
+    if (!RaptorQProxy.instance) {
+      RaptorQProxy.instance = new RaptorQProxy();
     }
-    return WasmBridge.instance;
+    return RaptorQProxy.instance;
   }
 
   /**
@@ -67,7 +78,7 @@ export class WasmBridge {
    * @internal
    */
   public static resetInstance(): void {
-    WasmBridge.instance = null;
+    RaptorQProxy.instance = null;
   }
 
   /**
@@ -130,10 +141,10 @@ export class WasmBridge {
    * @throws {Error} If WASM module is not initialized
    */
   public async createSession(
-    symbolSize: number = WasmBridge.DEFAULT_SYMBOL_SIZE,
-    redundancyFactor: number = WasmBridge.DEFAULT_REDUNDANCY_FACTOR,
-    maxMemoryMb: bigint = WasmBridge.DEFAULT_MAX_MEMORY_MB,
-    concurrencyLimit: bigint = WasmBridge.DEFAULT_CONCURRENCY_LIMIT
+    symbolSize: number = RaptorQProxy.DEFAULT_SYMBOL_SIZE,
+    redundancyFactor: number = RaptorQProxy.DEFAULT_REDUNDANCY_FACTOR,
+    maxMemoryMb: bigint = RaptorQProxy.DEFAULT_MAX_MEMORY_MB,
+    concurrencyLimit: bigint = RaptorQProxy.DEFAULT_CONCURRENCY_LIMIT
   ): Promise<RaptorQSession> {
     await this.ensureInitialized();
     
@@ -148,8 +159,12 @@ export class WasmBridge {
   /**
    * Creates a single-block RaptorQ layout from file bytes.
    *
-   * This generates metadata for a file, which includes the RaptorQ layout
-   * configuration needed for encoding and decoding.
+   * This generates metadata for a file by:
+   * 1. Writing the file bytes to the in-memory filesystem
+   * 2. Creating a RaptorQ session
+   * 3. Calling create_metadata to generate the layout
+   * 4. Reading the layout file from in-memory filesystem
+   * 5. Cleaning up temporary files
    *
    * @param fileBytes - The file content as a Uint8Array
    * @returns A promise that resolves to the raw layout file bytes (JSON format)
@@ -157,40 +172,42 @@ export class WasmBridge {
    * @throws {Error} If layout creation fails
    *
    * @remarks
-   * This method uses the RaptorQ session to create metadata and returns the layout.
-   * The rq-library-wasm package handles the layout generation internally.
+   * **IMPORTANT**: The file MUST be loaded into in-memory FS before creating RaptorQSession.
+   * This method follows the correct workflow:
+   * - Save file to in-memory FS
+   * - Create session
+   * - Call create_metadata
+   * - Read and return the layout file
    */
   public async createSingleBlockLayout(fileBytes: Uint8Array): Promise<Uint8Array> {
     await this.ensureInitialized();
     
+    // Generate unique temporary paths to avoid conflicts
+    const timestamp = Date.now();
+    const inputPath = `/temp_input_${timestamp}.bin`;
+    const layoutPath = `/temp_layout_${timestamp}.json`;
+    
     try {
-      // Create a session for metadata generation
+      // Step 1: Write file bytes to in-memory FS
+      // IMPORTANT: File must be in FS before creating session!
+      await writeFileChunk(inputPath, 0, fileBytes);
+      
+      // Step 2: Create a session for metadata generation
       const session = await this.createSession();
       
-      // The rq-library-wasm package should provide a method to generate layout from bytes
-      // Since we don't have filesystem access in the browser, we work with the data directly
-      // The session should have a method that accepts the file bytes and returns layout
+      // Step 3: Call create_metadata to generate the layout
+      // block_size = 0 means auto-calculate
+      const metadata = await session.create_metadata(inputPath, layoutPath, 0);
       
-      // Generate layout metadata with block_size = 0 (auto)
-      // The exact API depends on rq-library-wasm implementation
-      // Assuming it provides a method to generate layout from file size
-      const fileSize = fileBytes.length;
-      const blockSize = session.get_recommended_block_size(fileSize);
+      // Step 4: Read the layout file from in-memory FS
+      const layoutSize = getFileSize(layoutPath);
+      const layoutBytes = await readFileChunk(layoutPath, 0, layoutSize);
       
-      // Create a layout object based on the file parameters
-      const layout = {
-        transfer_length: fileSize,
-        symbol_size: WasmBridge.DEFAULT_SYMBOL_SIZE,
-        num_source_blocks: Math.ceil(fileSize / blockSize),
-        source_blocks: []
-      };
-      
-      // Convert layout to JSON bytes
-      const layoutJson = JSON.stringify(layout);
-      const layoutBytes = new TextEncoder().encode(layoutJson);
-      
-      // Clean up session
+      // Step 5: Clean up
       session.free();
+      
+      // Note: We could delete the temp files here, but the in-memory FS
+      // will be cleared on page reload anyway
       
       return layoutBytes;
     } catch (error) {
@@ -255,3 +272,14 @@ export function parseLayoutFile(layoutBytes: Uint8Array): Layout {
 
 // Re-export types and classes for convenience
 export type { RaptorQSession };
+
+// Re-export filesystem utilities for advanced use cases
+export {
+  writeFileChunk,
+  readFileChunk,
+  getFileSize,
+  createDirAll,
+  dirExists,
+  syncDirExists,
+  flushFile
+};

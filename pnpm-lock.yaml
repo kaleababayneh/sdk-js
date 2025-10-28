@@ -66,8 +66,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       rq-library-wasm:
-        specifier: ^1.0.1
-        version: 1.0.1
+        specifier: ^1.0.2
+        version: 1.0.2
       undici:
         specifier: ^6.19.8
         version: 6.22.0
@@ -1945,8 +1945,8 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  rq-library-wasm@1.0.1:
-    resolution: {integrity: sha512-wOTADRkdmICgwJs8J2BkgzsDAPX0SnlwsxG2jQas4X+QRASAAfUaS8MdJ46ys/NWqxrutmL2HP7DR8vItTeupQ==}
+  rq-library-wasm@1.0.2:
+    resolution: {integrity: sha512-Gj7YqnWM0JzuBLsXYWHPfqyD0dIGzWeOoHl7k9U1wGDT21E1sSblcnCRFCilRYCJjuml3M+RRtxxp6LkCEyNow==}
 
   run-async@2.4.1:
     resolution: {integrity: sha512-tvVnVv01b8c1RrA6Ep7JkStj85Guv/YrMcwqYQnwjsAS2cTmmPGBBjAjpCW7RrSodNSoE2/qg9O4bceNvUuDgQ==}
@@ -4333,7 +4333,7 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.52.5
       fsevents: 2.3.3
 
-  rq-library-wasm@1.0.1: {}
+  rq-library-wasm@1.0.2: {}
 
   run-async@2.4.1: {}
 

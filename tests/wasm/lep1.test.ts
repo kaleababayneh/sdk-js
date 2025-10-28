@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { WasmBridge } from "src/wasm/bridge";
+import { RaptorQProxy } from "src/wasm/raptorq-proxy";
 import {
   buildIndexFile,
   createSingleBlockLayout,
@@ -7,9 +7,9 @@ import {
 } from "src/wasm/lep1";
 import type { Layout } from "src/wasm/types";
 
-vi.mock("src/wasm/bridge", () => {
+vi.mock("src/wasm/raptorq-proxy", () => {
   return {
-    WasmBridge: {
+    RaptorQProxy: {
       getInstance: vi.fn(),
     },
   };
@@ -35,37 +35,43 @@ describe("LEP-1 helpers", () => {
     vi.resetAllMocks();
   });
 
-  it("delegates createSingleBlockLayout to WasmBridge singleton", async () => {
+  it("delegates createSingleBlockLayout to RaptorQProxy singleton", async () => {
     const createLayoutMock = vi.fn().mockResolvedValue(fakeLayout);
-    (WasmBridge.getInstance as unknown as vi.Mock).mockReturnValue({
+    (RaptorQProxy.getInstance as unknown as vi.Mock).mockReturnValue({
       createSingleBlockLayout: createLayoutMock,
     });
 
     const input = new Uint8Array([1, 2, 3]);
     const layout = await createSingleBlockLayout(input);
 
-    expect(WasmBridge.getInstance).toHaveBeenCalledTimes(1);
+    expect(RaptorQProxy.getInstance).toHaveBeenCalledTimes(1);
     expect(createLayoutMock).toHaveBeenCalledWith(input);
     expect(layout).toBe(fakeLayout);
   });
 
-  it("derives sequential layout IDs with wrap-around", () => {
-    const ids = generateIds(8, 10);
-    expect(ids).toEqual([8, 9, 0, 1, 2]);
+  it("derives sequential layout IDs", async () => {
+    const layoutFileB64 = "bGF5b3V0"; // "layout" in base64
+    const layoutSignatureB64 = "c2lnbmF0dXJl"; // "signature" in base64
+    const ids = await generateIds(layoutFileB64, layoutSignatureB64, 0, 5);
+    expect(ids).toHaveLength(5);
+    expect(ids.every((id: string) => typeof id === 'string')).toBe(true);
   });
 
-  it("throws when generateIds receives invalid inputs", () => {
-    expect(() => generateIds(0, 0)).toThrow(
-      /rq_ids_max must be positive/
+  it("throws when generateIds receives invalid inputs", async () => {
+    await expect(generateIds("", "sig", 0, 5)).rejects.toThrow(
+      /layoutFile must not be empty/
     );
-    expect(() => generateIds(0, -1)).toThrow(
-      /count must be non-negative/
+    await expect(generateIds("layout", "", 0, 5)).rejects.toThrow(
+      /layoutSignature must not be empty/
+    );
+    await expect(generateIds("layout", "sig", 0, 0)).rejects.toThrow(
+      /rq_ids_max must be positive/
     );
   });
 
   it("builds index file with version and validates inputs", () => {
-    const signature = new Uint8Array([1, 2, 3]);
-    const layoutIds = [1, 2, 3];
+    const signature = "c2lnbmF0dXJl"; // base64 encoded
+    const layoutIds = ["id1", "id2", "id3"];
 
     const indexFile = buildIndexFile(layoutIds, signature);
     expect(indexFile).toEqual({
@@ -77,7 +83,7 @@ describe("LEP-1 helpers", () => {
     expect(() => buildIndexFile([], signature)).toThrow(
       /layout_ids must not be empty/
     );
-    expect(() => buildIndexFile(layoutIds, new Uint8Array())).toThrow(
+    expect(() => buildIndexFile(layoutIds, "")).toThrow(
       /layout_signature must not be empty/
     );
   });

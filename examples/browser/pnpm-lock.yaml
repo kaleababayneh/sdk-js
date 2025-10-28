@@ -712,8 +712,8 @@ packages:
     engines: {node: '>=18.0.0', npm: '>=8.0.0'}
     hasBin: true
 
-  rq-library-wasm@1.0.1:
-    resolution: {integrity: sha512-wOTADRkdmICgwJs8J2BkgzsDAPX0SnlwsxG2jQas4X+QRASAAfUaS8MdJ46ys/NWqxrutmL2HP7DR8vItTeupQ==}
+  rq-library-wasm@1.0.2:
+    resolution: {integrity: sha512-Gj7YqnWM0JzuBLsXYWHPfqyD0dIGzWeOoHl7k9U1wGDT21E1sSblcnCRFCilRYCJjuml3M+RRtxxp6LkCEyNow==}
 
   run-parallel@1.2.0:
     resolution: {integrity: sha512-5l4VyZR86LZ/lDxZTR6jqL8AFE2S0IFLMP26AbjsLVADxHdhB/c0GUsH+y39UfCi3dzz8OlQuPmnaJOMoDHQBA==}
@@ -1138,7 +1138,7 @@ snapshots:
       bs58: 6.0.0
       cosmjs-types: 0.9.0
       formdata-node: 6.0.3
-      rq-library-wasm: 1.0.1
+      rq-library-wasm: 1.0.2
       undici: 6.22.0
       zod: 3.25.76
     transitivePeerDependencies:
@@ -1604,7 +1604,7 @@ snapshots:
       '@rollup/rollup-win32-x64-msvc': 4.52.5
       fsevents: 2.3.3
 
-  rq-library-wasm@1.0.1: {}
+  rq-library-wasm@1.0.2: {}
 
   run-parallel@1.2.0:
     dependencies:

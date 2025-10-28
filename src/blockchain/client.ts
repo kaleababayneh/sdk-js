@@ -33,6 +33,7 @@ import type { SuperNodeStateRecord } from "../codegen/lumera/supernode/v1/supern
 import type { Evidence } from "../codegen/lumera/supernode/v1/evidence";
 import type { IPAddressHistory } from "../codegen/lumera/supernode/v1/ip_address_history";
 import type { SupernodeAccountHistory } from "../codegen/lumera/supernode/v1/supernode_account_history";
+import { c } from "node_modules/formdata-node/lib/File-cfd9c54a";
 
 /**
  * RPC-based Action query client adapter.
@@ -332,6 +333,9 @@ export async function makeBlockchainClient(
   const registry = createRegistry();
   const aminoTypes = createAminoTypes();
   
+  console.debug("Created registry and amino types");
+  console.debug("Connecting to RPC endpoint:", opts.rpcUrl);
+
   // Connect to Tendermint RPC via CosmJS SigningStargateClient
   const signingClient = await SigningStargateClient.connectWithSigner(
     opts.rpcUrl,
@@ -343,18 +347,30 @@ export async function makeBlockchainClient(
     }
   );
 
+  console.debug("Connected to RPC and created SigningStargateClient");
+  console.debug("Created transaction client");
+
   // Create transaction client with REST fallback support
   const txClient = new CosmjsTxClient(signingClient, {
     lcdBaseUrl: opts.lcdUrl,
     gasMultiplier: 1.5,
   });
 
+  console.debug("Created transaction client with LCD fallback");
+  console.debug("Creating RPC query clients");
+
   // Create RPC query clients using a direct CometClient connection
   const rpcClients = await createQueryClients(opts.rpcUrl);
   
+  console.debug("Created RPC query clients");
+  console.debug("Wrapping query clients with adapters");
+
   // Wrap generated clients with adapter classes for backward compatibility
   const actionQuery = new RpcActionQuery(rpcClients.action);
   const supernodeQuery = new RpcSupernodeQuery(rpcClients.supernode);
+
+  console.debug("Wrapped query clients with adapters");
+  console.debug("Blockchain client creation complete");
 
   // Compose into the unified blockchain client facade
   return new CosmjsRestBlockchainClient(

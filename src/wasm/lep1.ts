@@ -8,7 +8,7 @@
  * @see https://github.com/LumeraProtocol/LEPs/blob/main/LEP-1.md
  */
 
-import { WasmBridge } from './bridge.js';
+import { RaptorQProxy } from './raptorq-proxy.js';
 import type { Layout, IndexFile } from './types.js';
 import { toBase64 } from '../internal/encoding.js';
 import { blake3HashBytes } from '../internal/hash.js';
@@ -45,8 +45,8 @@ import bs58 from 'bs58';
  * ```
  */
 export async function createSingleBlockLayout(fileBytes: Uint8Array): Promise<Uint8Array> {
-  const bridge = WasmBridge.getInstance();
-  return bridge.createSingleBlockLayout(fileBytes);
+  const proxy = RaptorQProxy.getInstance();
+  return proxy.createSingleBlockLayout(fileBytes);
 }
 
 /**
