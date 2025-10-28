@@ -161,7 +161,12 @@ async function connectWallet() {
     // Create LumeraClient with Keplr signer
     log("Initializing Lumera client...", "info");
     state.client = await createLumeraClient({
-      preset: "testnet",
+      chainId: "lumera-testnet-2",
+      rpcUrl: "http://localhost:27657",
+      lcdUrl: "http://localhost:1417",
+      snapiUrl: "https://sn-api.testnet.lumera.io",
+
+      // preset: "testnet",
       signer,
       address: state.address,
       gasPrice: "0.025ulume",
