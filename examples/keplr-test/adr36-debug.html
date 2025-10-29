@@ -1,0 +1,200 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Keplr ADR-36 Debugger (Keplr-accurate serialization)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; margin:24px; background:#0b0b0b; color:#eee; }
+    textarea, input { width:100%; box-sizing:border-box; background:#111; color:#eee; border:1px solid #333; padding:8px; border-radius:6px; }
+    .row { margin:12px 0; }
+    pre { background:#111; color:#eee; padding:12px; overflow:auto; border-radius:8px; border:1px solid #333; }
+    button { padding:10px 14px; border-radius:8px; border:1px solid #444; background:#222; color:#eee; cursor:pointer; }
+    button:hover { background:#2b2b2b; }
+    .ok { color:#12d66b; font-weight:600; }
+    .bad { color:#ff5d5f; font-weight:600; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    small { color:#aaa; }
+  </style>
+</head>
+<body>
+  <h1>Keplr ADR-36 Debugger</h1>
+
+  <div class="row">
+    <label>Chain ID</label>
+    <input id="chainId" class="mono" value="lumera-testnet-2" />
+    <small>Change to your chain (e.g., <span class="mono">lumera-mainnet-1</span>) already added in Keplr.</small>
+  </div>
+
+  <div class="row">
+    <label>Payload (this text is UTF-8 encoded then base64’d and placed into ADR-36 value.data)</label>
+    <textarea id="payload" rows="4" class="mono">Hello, Lumera / ADR-36!</textarea>
+  </div>
+
+  <div class="row">
+    <button id="btn">Connect & Sign</button>
+  </div>
+
+  <div id="out"></div>
+
+<script type="module">
+  import * as secp from "https://esm.sh/@noble/secp256k1@2.1.0";
+
+  const out = document.getElementById('out');
+  const te = new TextEncoder();
+
+  const toBase64 = (u8) => btoa(String.fromCharCode(...u8));
+  const fromText = (s) => te.encode(s);
+  const toHex = (u8) => [...u8].map(b=>b.toString(16).padStart(2,'0')).join('');
+  const fromB64 = (s) => Uint8Array.from(atob(s), c=>c.charCodeAt(0));
+
+  async function sha256(u8) {
+    const h = await crypto.subtle.digest('SHA-256', u8);
+    return new Uint8Array(h);
+  }
+
+  // ----- Keplr-compatible ADR-36 builders -----
+
+  // 1) Exact ADR-36 StdSignDoc object (strings for numbers, no timeout_height)
+  function makeADR36StdSignDoc(signerBech32, dataB64) {
+    return {
+      chain_id: "",
+      account_number: "0",
+      sequence: "0",
+      fee: { gas: "0", amount: [] },
+      msgs: [{
+        type: "sign/MsgSignData",
+        value: { signer: signerBech32, data: dataB64 },
+      }],
+      memo: "",
+    };
+  }
+
+  // 2) sortObjectByKey: recursively sort object keys lexicographically
+  function sortObjectByKey(obj) {
+    if (typeof obj !== "object" || obj === null) return obj;
+    if (Array.isArray(obj)) return obj.map(sortObjectByKey);
+    const sortedKeys = Object.keys(obj).sort();
+    const out = {};
+    for (const k of sortedKeys) out[k] = sortObjectByKey(obj[k]);
+    return out;
+  }
+
+  // 3) escapeHTML: mirror Keplr (escape &, <, > to \u0026 \u003c \u003e)
+  function escapeHTML(str) {
+    return str
+      .replace(/&/g, "\\u0026")
+      .replace(/</g, "\\u003c")
+      .replace(/>/g, "\\u003e");
+  }
+
+  // 4) serializeSignDoc(signDoc): Buffer.from(escapeHTML(sortedJsonByKeyStringify(signDoc)))
+  function serializeSignDoc(signDoc) {
+    const sorted = sortObjectByKey(signDoc);
+    const json = JSON.stringify(sorted);     // canonical JSON (no spaces)
+    const escaped = escapeHTML(json);
+    // Buffer.from(...): in browser, just UTF-8 bytes of the escaped string
+    return fromText(escaped);
+  }
+
+  function logSection(title, bodyHtml) {
+    const wrap = document.createElement('div');
+    wrap.className = 'row';
+    wrap.innerHTML = `<h3>${title}</h3>${bodyHtml}`;
+    out.appendChild(wrap);
+  }
+
+  function coerceDerToRS64(sigBytes) {
+    if (sigBytes.length === 64) return sigBytes;
+    // Minimal DER parser: SEQUENCE(len) INTEGER(r) INTEGER(s)
+    const der = sigBytes;
+    let off = 0;
+    if (der[off++] !== 0x30) throw new Error("DER parse: no SEQUENCE");
+    let len = der[off++]; if (len & 0x80) { const n = len & 0x7f; len = 0; for (let i=0;i<n;i++) len = (len<<8) | der[off++]; }
+    if (der[off++] !== 0x02) throw new Error("DER parse: no INTEGER r");
+    let rlen = der[off++]; const r = der.slice(off, off+rlen); off += rlen;
+    if (der[off++] !== 0x02) throw new Error("DER parse: no INTEGER s");
+    let slen = der[off++]; const s = der.slice(off, off+slen); off += slen;
+    const leftPad32 = (u) => {
+      if (u.length > 32) u = u.slice(u.length - 32);
+      const out = new Uint8Array(32);
+      out.set(u, 32 - u.length);
+      return out;
+    };
+    const rr = leftPad32(r), ss = leftPad32(s);
+    const out64 = new Uint8Array(64);
+    out64.set(rr, 0); out64.set(ss, 32);
+    return out64;
+  }
+
+  document.getElementById('btn').onclick = async () => {
+    out.innerHTML = '';
+    try {
+      if (!window.keplr) throw new Error("Keplr not found. Install Keplr and refresh.");
+      const chainId = document.getElementById('chainId').value.trim();
+      const payloadText = document.getElementById('payload').value;
+
+      // 1) Enable Keplr + get key
+      await window.keplr.enable(chainId);
+      const key = await window.keplr.getKey(chainId);
+      const bech32 = key.bech32Address;
+
+      logSection("Wallet", `<pre><code>bech32: ${bech32}
+pubkey (base64): ${key.pubKey ? toBase64(key.pubKey) : "(will use from stdSig)"}
+</code></pre>`);
+
+      // 2) Prepare payload: bytes -> base64 string
+      const payloadBytes = fromText(payloadText);
+      const payloadB64   = toBase64(payloadBytes);
+      logSection("Payload", `<pre><code>bytes (hex): ${toHex(payloadBytes)}
+base64: ${payloadB64}
+</code></pre>`);
+
+      // 3) Ask Keplr to sign ADR-36
+      const stdSig = await window.keplr.signArbitrary(chainId, bech32, payloadText);
+      const sigB64   = stdSig.signature;
+      const sigBytes = fromB64(sigB64);
+      const pubB64   = stdSig.pub_key?.value || (key.pubKey ? toBase64(key.pubKey) : "");
+      const pubBytes = pubB64 ? fromB64(pubB64) : new Uint8Array();
+
+      logSection("Keplr Signature (StdSignature)", `<pre><code>signature (base64): ${sigB64}
+signature length: ${sigBytes.length} bytes
+pubkey (base64): ${pubB64}
+</code></pre>`);
+
+      // 4) Build Keplr-accurate sign-bytes (sorted + escaped)
+      const doc = makeADR36StdSignDoc(bech32, payloadB64);
+      const signBytes = serializeSignDoc(doc);
+      const docHash = await sha256(signBytes);
+
+      logSection("ADR-36 Sign-Doc (sorted + escaped JSON)", `<pre class="mono"><code>${new TextDecoder().decode(signBytes)}</code></pre>`);
+      logSection("Sign-Doc Bytes / Hash", `<pre><code>bytes length: ${signBytes.length}
+sha256(sign-bytes) hex: ${toHex(docHash)}
+</code></pre>`);
+
+      // 5) Local verification (secp256k1 over sha256(sign-bytes))
+      let verifyMsg;
+      try {
+        const sigRS = coerceDerToRS64(sigBytes);
+        if (pubBytes.length !== 33 && pubBytes.length !== 65) {
+          verifyMsg = "FAIL ❌ (unexpected pubkey length; expected 33 or 65 bytes)";
+        } else {
+          const ok = await secp.verify(sigRS, docHash, pubBytes); // v2 API
+          verifyMsg = ok ? "OK ✅" : "FAIL ❌";
+        }
+      } catch (e) {
+        verifyMsg = "error: " + e.message;
+      }
+      logSection("Verify (local over sha256(sorted+escaped JSON))",
+        `<p class="${verifyMsg.includes('OK')?'ok':'bad'}">${verifyMsg}</p>`);
+
+      // 6) The exact string your node expects: "<base64>.<signatureB64>"
+      logSection("Wire payload for Lumera", `<pre><code>${payloadB64}.${sigB64}</code></pre>`);
+
+    } catch (e) {
+      logSection("Error", `<pre><code>${e?.stack || e}</code></pre>`);
+    }
+  };
+</script>
+</body>
+</html>

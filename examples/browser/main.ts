@@ -226,7 +226,7 @@ async function uploadFile() {
     
     // Calculate expiration time (default to 24 hours from now)
     // Date.now() returns milliseconds, convert to seconds
-    const expirationTime = Math.floor(Date.now() / 1000 + 86400).toString();  
+    const expirationTime = Math.floor(Date.now() / 1000 + 86400 * 1.5).toString();  
   
     // Upload to Cascade
     log("Uploading to Cascade storage...", "info");

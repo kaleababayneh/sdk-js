@@ -229,12 +229,14 @@ export class CascadeUploader {
 
     const indexFileBytes = toCanonicalJsonBytes(indexFile);
     const indexFileB64 = toBase64(indexFileBytes);
+    // indexFile to string
+    const indexFileString = new TextDecoder().decode(indexFileBytes);
 
     console.debug('CascadeUploader.uploadFile indexFile', { indexFileB64 });
     
     const indexSignatureResponse = await this.requestSignature(
       "index",
-      indexFileB64,
+      indexFileString,
       signaturePrompter,
       uploadStartMs
     );
