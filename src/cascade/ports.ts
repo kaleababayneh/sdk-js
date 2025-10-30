@@ -1,15 +1,33 @@
 /**
  * Port interface and DTOs for Cascade layer to access blockchain capabilities.
- * 
+ *
  * This interface defines the minimal surface that Cascade components need from the blockchain,
  * allowing the blockchain layer to evolve independently while keeping Cascade decoupled.
- * 
+ *
  * @module cascade/ports
  */
 
+import type { EncodeObject } from '@cosmjs/proto-signing';
+
+/**
+ * Context for transaction prompt
+ */
+export interface TxPromptContext {
+  messages: readonly EncodeObject[];
+  memo?: string;
+}
+
+/**
+ * Transaction prompter type - wraps transaction submission in a user gesture
+ */
+export type TxPrompter = (
+  context: TxPromptContext,
+  submit: () => Promise<TxOutcome>
+) => Promise<TxOutcome>;
+
 /**
  * Action module parameters needed for Cascade operations.
- * 
+ *
  * These parameters are fetched from the on-chain action module and cached
  * to avoid repeated LCD queries.
  */
@@ -45,6 +63,12 @@ export interface RequestActionTxInput {
    * Optional memo to include in the transaction
    */
   memo?: string;
+
+  /**
+   * Optional transaction prompter for user gesture requirement.
+   * If provided, wraps the signAndBroadcast call in a user gesture.
+   */
+  txPrompter?: TxPrompter;
 }
 
 /**

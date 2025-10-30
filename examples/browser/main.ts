@@ -11,7 +11,7 @@
 
 import { createLumeraClient, type LumeraClient } from "../../src/client";
 import { getKeplrSigner, isKeplrAvailable } from "../../src/wallets/keplr";
-import { createDefaultSignaturePrompter } from "../../src/wallets/prompter";
+import { createBatchedSignaturePrompter, createDefaultTxPrompter } from "../../src/wallets/prompter";
 
 // ============================================================================
 // State Management
@@ -73,9 +73,12 @@ function clearLogs() {
   elements.logContainer.innerHTML = "";
 }
 
-// Create a signature prompter using the SDK's default prompter
-// with the existing UI container in the example
-const keplrSignaturePrompter = createDefaultSignaturePrompter("#signing-prompts");
+// Create a batched signature prompter to improve UX by requiring
+// only a single user gesture for all three signatures (layout, index, auth)
+const keplrSignaturePrompter = createBatchedSignaturePrompter();
+
+// Create a transaction prompter to ensure transaction submission has its own user gesture
+const keplrTxPrompter = createDefaultTxPrompter();
 
 // ============================================================================
 // Progress Bar Utilities
@@ -239,6 +242,7 @@ async function uploadFile() {
         timeout: 300000,
       },
       signaturePrompter: keplrSignaturePrompter,
+      txPrompter: keplrTxPrompter,
     });
     
     showProgress("upload", 100);

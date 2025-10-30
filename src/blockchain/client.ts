@@ -348,6 +348,12 @@ export async function makeBlockchainClient(
   );
 
   console.debug("Connected to RPC and created SigningStargateClient");
+
+  // Verify chain ID matches configuration
+  const actualChainId = await signingClient.getChainId();
+  if (actualChainId !== opts.chainId) {
+    throw new Error(`Chain ID mismatch: configured ${opts.chainId}, but RPC reports ${actualChainId}`);
+  }
   console.debug("Created transaction client");
 
   // Create transaction client with REST fallback support

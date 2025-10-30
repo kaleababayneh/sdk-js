@@ -7,6 +7,8 @@
  */
 
 import type { SignaturePrompter, SignaturePromptContext } from '../cascade/uploader';
+import type { TxOutcome } from '../cascade/ports';
+import type { EncodeObject } from '@cosmjs/proto-signing';
 
 /**
  * CSS styles for the signature prompt modal UI
@@ -151,6 +153,22 @@ const PROMPT_STYLES = `
   }
 }
 `;
+
+/**
+ * Context for transaction prompt
+ */
+export interface TxPromptContext {
+  messages: readonly EncodeObject[];
+  memo?: string;
+}
+
+/**
+ * Transaction prompter type - wraps transaction submission in a user gesture
+ */
+export type TxPrompter = (
+  context: TxPromptContext,
+  submit: () => Promise<TxOutcome>
+) => Promise<TxOutcome>;
 
 /**
  * Describes the signature kind in human-readable format
@@ -341,3 +359,325 @@ export function createDefaultSignaturePrompter(
  * Alias for createDefaultSignaturePrompter for backwards compatibility
  */
 export const defaultSignaturePrompter = createDefaultSignaturePrompter();
+
+/**
+ * Batched signature prompter that captures user gesture once for multiple signatures
+ *
+ * This function creates a signature prompter that shows a modal only on the first
+ * signature request, informing the user that multiple signatures are required.
+ * After the user clicks "Continue" on the initial modal, subsequent signature
+ * requests bypass the modal and proceed directly to the wallet.
+ *
+ * This solves the poor UX of requiring three separate user gestures for file upload,
+ * which involves three signatures: layout, index, and auth.
+ *
+ * The prompter:
+ * 1. On first signature request (layout): Shows a modal explaining three signatures are needed
+ * 2. Waits for user to click "Continue" (this grants the user gesture)
+ * 3. Sets an internal flag to bypass the modal for subsequent signatures
+ * 4. Subsequent signatures (index, auth) proceed directly without showing the modal
+ *
+ * @returns A SignaturePrompter function with batched gesture handling
+ *
+ * @example
+ * ```typescript
+ * const uploader = new CascadeUploader(...);
+ *
+ * await uploader.uploadFile(fileBytes, {
+ *   fileName: 'example.txt',
+ *   expirationTime: '...',
+ *   signaturePrompter: createBatchedSignaturePrompter()
+ * });
+ * ```
+ */
+export function createBatchedSignaturePrompter(): SignaturePrompter {
+  let hasUserGesture = false;
+
+  return async (context, signAction) => {
+    // If we already have user gesture, bypass the modal and sign directly
+    if (hasUserGesture) {
+      return signAction();
+    }
+
+    // Only show modal on the first signature request (layout)
+    if (context.kind === "layout") {
+      // Inject styles on first use
+      injectStyles();
+
+      return new Promise((resolve, reject) => {
+        // Create modal overlay
+        const overlay = document.createElement("div");
+        overlay.className = "lumera-modal-overlay";
+
+        // Create modal dialog
+        const dialog = document.createElement("div");
+        dialog.className = "lumera-modal-dialog";
+
+        // Create modal header
+        const header = document.createElement("div");
+        header.className = "lumera-modal-header";
+
+        const title = document.createElement("h2");
+        title.className = "lumera-modal-title";
+        title.textContent = "Multiple Signatures Required";
+        header.appendChild(title);
+
+        // Create modal body
+        const body = document.createElement("div");
+        body.className = "lumera-modal-body";
+
+        const message = document.createElement("p");
+        message.className = "lumera-modal-message";
+        message.textContent = "This file upload requires three signatures from your wallet. Click Continue to proceed with all three signatures.";
+        body.appendChild(message);
+
+        // Create modal footer
+        const footer = document.createElement("div");
+        footer.className = "lumera-modal-footer";
+
+        const cancelButton = document.createElement("button");
+        cancelButton.type = "button";
+        cancelButton.className = "lumera-modal-button lumera-modal-button-secondary";
+        cancelButton.textContent = "Cancel";
+
+        const continueButton = document.createElement("button");
+        continueButton.type = "button";
+        continueButton.className = "lumera-modal-button lumera-modal-button-primary";
+        continueButton.textContent = "Continue";
+
+        footer.appendChild(cancelButton);
+        footer.appendChild(continueButton);
+
+        // Assemble modal
+        dialog.appendChild(header);
+        dialog.appendChild(body);
+        dialog.appendChild(footer);
+        overlay.appendChild(dialog);
+
+        const cleanup = () => {
+          if (overlay.parentElement) {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+              if (overlay.parentElement) {
+                overlay.parentElement.removeChild(overlay);
+              }
+            }, 200);
+          }
+        };
+
+        const handleCancel = () => {
+          cancelButton.disabled = true;
+          continueButton.disabled = true;
+          cleanup();
+          reject(new Error("User cancelled signature prompt"));
+        };
+
+        // Handle continue button click
+        continueButton.addEventListener("click", () => {
+          if (continueButton.disabled) {
+            return;
+          }
+
+          continueButton.disabled = true;
+          cancelButton.disabled = true;
+          continueButton.textContent = "Processing...";
+
+          // Set flag to bypass modal for subsequent signatures
+          hasUserGesture = true;
+
+          (async () => {
+            try {
+              const result = await signAction();
+              cleanup();
+              resolve(result);
+            } catch (error) {
+              // Reset flag on error so user can try again
+              hasUserGesture = false;
+              cleanup();
+              reject(error);
+            }
+          })();
+        });
+
+        // Handle cancel button click
+        cancelButton.addEventListener("click", handleCancel);
+
+        // Handle overlay click (clicking outside the dialog)
+        overlay.addEventListener("click", (e) => {
+          if (e.target === overlay) {
+            handleCancel();
+          }
+        });
+
+        // Handle Escape key
+        const handleKeyDown = (e: KeyboardEvent) => {
+          if (e.key === "Escape") {
+            handleCancel();
+            document.removeEventListener("keydown", handleKeyDown);
+          }
+        };
+        document.addEventListener("keydown", handleKeyDown);
+
+        // Append to body and focus continue button
+        document.body.appendChild(overlay);
+        continueButton.focus();
+      });
+    } else {
+      // For non-layout signatures, if we somehow get here without user gesture,
+      // just execute directly (shouldn't happen in normal flow)
+      return signAction();
+    }
+  };
+}
+
+/**
+ * Default transaction prompter that creates a modal dialog for transaction confirmation
+ *
+ * This function creates a modal prompt that requests user confirmation before
+ * triggering the wallet transaction (signAndBroadcast). This is necessary for wallets
+ * like Keplr that require transaction requests to originate from explicit user gestures.
+ *
+ * The prompter:
+ * 1. Injects necessary CSS styles (reuses signature prompt styles)
+ * 2. Creates a modal overlay with a centered dialog containing Confirm and Cancel buttons
+ * 3. Waits for user interaction (button click or overlay click)
+ * 4. Triggers the transaction submission on confirmation
+ * 5. Cleans up the modal from the DOM after completion or cancellation
+ *
+ * The modal is centered on the screen with a semi-transparent overlay. Clicking
+ * the overlay or Cancel button will reject the transaction request. The modal is
+ * responsive and works well on different screen sizes.
+ *
+ * @returns A TxPrompter function
+ *
+ * @example
+ * ```typescript
+ * const uploader = new CascadeUploader(...);
+ *
+ * await uploader.uploadFile(fileBytes, {
+ *   fileName: 'example.txt',
+ *   expirationTime: '...',
+ *   txPrompter: createDefaultTxPrompter()
+ * });
+ * ```
+ */
+export function createDefaultTxPrompter(): TxPrompter {
+  return async (context, submit) => {
+    // Inject styles on first use
+    injectStyles();
+
+    return new Promise((resolve, reject) => {
+      // Create modal overlay
+      const overlay = document.createElement("div");
+      overlay.className = "lumera-modal-overlay";
+
+      // Create modal dialog
+      const dialog = document.createElement("div");
+      dialog.className = "lumera-modal-dialog";
+
+      // Create modal header
+      const header = document.createElement("div");
+      header.className = "lumera-modal-header";
+
+      const title = document.createElement("h2");
+      title.className = "lumera-modal-title";
+      title.textContent = "Transaction Confirmation";
+      header.appendChild(title);
+
+      // Create modal body
+      const body = document.createElement("div");
+      body.className = "lumera-modal-body";
+
+      const message = document.createElement("p");
+      message.className = "lumera-modal-message";
+      message.textContent = "Please confirm the transaction in your wallet to proceed with the file upload.";
+      body.appendChild(message);
+
+      // Create modal footer
+      const footer = document.createElement("div");
+      footer.className = "lumera-modal-footer";
+
+      const cancelButton = document.createElement("button");
+      cancelButton.type = "button";
+      cancelButton.className = "lumera-modal-button lumera-modal-button-secondary";
+      cancelButton.textContent = "Cancel";
+
+      const confirmButton = document.createElement("button");
+      confirmButton.type = "button";
+      confirmButton.className = "lumera-modal-button lumera-modal-button-primary";
+      confirmButton.textContent = "Confirm Transaction";
+
+      footer.appendChild(cancelButton);
+      footer.appendChild(confirmButton);
+
+      // Assemble modal
+      dialog.appendChild(header);
+      dialog.appendChild(body);
+      dialog.appendChild(footer);
+      overlay.appendChild(dialog);
+
+      const cleanup = () => {
+        if (overlay.parentElement) {
+          overlay.style.opacity = '0';
+          setTimeout(() => {
+            if (overlay.parentElement) {
+              overlay.parentElement.removeChild(overlay);
+            }
+          }, 200);
+        }
+      };
+
+      const handleCancel = () => {
+        cancelButton.disabled = true;
+        confirmButton.disabled = true;
+        cleanup();
+        reject(new Error("User cancelled transaction prompt"));
+      };
+
+      // Handle confirm button click
+      confirmButton.addEventListener("click", () => {
+        if (confirmButton.disabled) {
+          return;
+        }
+
+        confirmButton.disabled = true;
+        cancelButton.disabled = true;
+        confirmButton.textContent = "Submitting...";
+
+        (async () => {
+          try {
+            const result = await submit();
+            cleanup();
+            resolve(result);
+          } catch (error) {
+            cleanup();
+            reject(error);
+          }
+        })();
+      });
+
+      // Handle cancel button click
+      cancelButton.addEventListener("click", handleCancel);
+
+      // Handle overlay click (clicking outside the dialog)
+      overlay.addEventListener("click", (e) => {
+        if (e.target === overlay) {
+          handleCancel();
+        }
+      });
+
+      // Handle Escape key
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          handleCancel();
+          document.removeEventListener("keydown", handleKeyDown);
+        }
+      };
+      document.addEventListener("keydown", handleKeyDown);
+
+      // Append to body and focus confirm button
+      document.body.appendChild(overlay);
+      confirmButton.focus();
+    });
+  };
+}

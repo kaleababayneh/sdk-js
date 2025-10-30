@@ -103,5 +103,6 @@ export {
 // Wallet utilities - Signature prompter
 export {
   createDefaultSignaturePrompter,
+  createBatchedSignaturePrompter,
   defaultSignaturePrompter,
 } from "./wallets/prompter";

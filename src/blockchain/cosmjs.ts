@@ -282,6 +282,12 @@ export class CosmjsTxClient implements TxClient {
     }
 
     // Standard path: simulation succeeded, use CosmJS signAndBroadcast
+    // Explicitly fetch and validate the signer's account
+    const account = await this.sg.getAccount(signerAddress);
+    if (!account) {
+      throw new Error(`Account '${signerAddress}' not found on chain. Ensure the account is initialized with funds.`);
+    }
+
     const response = await this.sg.signAndBroadcast(
       signerAddress,
       messages,

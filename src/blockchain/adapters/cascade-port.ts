@@ -226,37 +226,56 @@ export class BlockchainActionAdapter implements CascadeChainPort {
 
     // Apply safety multiplier
     const gasWithBuffer = BigInt(Math.ceil(Number(gasEstimate) * this.gasMultiplier));
+    console.log(`Simulated gas: ${gasEstimate}, with buffer: ${gasWithBuffer}`);
 
     // Step 5: Calculate transaction fee from gas
     const gasPrice = input.gasPrice ?? this.defaultGasPrice;
     const gasPriceNum = parseFloat(gasPrice.replace(/[^0-9.]/g, ''));
     const denom = gasPrice.replace(/[0-9.]/g, '');
     const txFeeAmount = Math.ceil(Number(gasWithBuffer) * gasPriceNum).toString();
+    console.log(`Calculated tx fee: ${txFeeAmount} ${denom} (gas price: ${gasPrice})`);
 
-    // Step 6: Sign and broadcast
+    // Step 6: Sign and broadcast (with optional user gesture via txPrompter)
     if (!this.blockchainClient.Tx.signAndBroadcast) {
       throw new Error("Transaction client does not support signAndBroadcast");
     }
     
-    const result = await this.blockchainClient.Tx.signAndBroadcast(
-      this.signerAddress,
-      [msg],
-      {
-        amount: [{ denom, amount: txFeeAmount }],
-        gas: gasWithBuffer.toString(),
-      },
-      input.memo ?? ""
-    );
+    // Define the submission function that returns TxOutcome
+    const submit = async (): Promise<TxOutcome> => {
+      const broadcastResult = await this.blockchainClient.Tx.signAndBroadcast!(
+        this.signerAddress,
+        [msg],
+        {
+          amount: [{ denom, amount: txFeeAmount }],
+          gas: gasWithBuffer.toString(),
+        },
+        input.memo ?? ""
+      );
 
-    // Step 7: Map to TxOutcome DTO
-    return {
-      txHash: result.txHash,
-      height: result.height.toString(),
-      code: result.response.code,
-      gasUsed: result.response.gasUsed.toString(),
-      feePaid: txFeeAmount,
-      rawLog: result.response.rawLog,
+      // Map to TxOutcome DTO
+      return {
+        txHash: broadcastResult.txHash,
+        height: broadcastResult.height.toString(),
+        code: broadcastResult.response.code,
+        gasUsed: broadcastResult.response.gasUsed.toString(),
+        feePaid: txFeeAmount,
+        rawLog: broadcastResult.response.rawLog,
+      };
     };
+
+    // Use txPrompter if provided, otherwise submit directly
+    const outcome = input.txPrompter
+      ? await input.txPrompter(
+          {
+            messages: [msg],
+            memo: input.memo,
+          },
+          submit
+        )
+      : await submit();
+
+    // Step 7: Return the outcome
+    return outcome;
   }
 
   /**
