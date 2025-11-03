@@ -73,7 +73,7 @@ export interface RequestActionTxInput {
 
 /**
  * Result of a successfully broadcast transaction.
- * 
+ *
  * This DTO is intentionally plain (no CosmJS types) to keep the Cascade layer
  * decoupled from blockchain implementation details.
  */
@@ -107,6 +107,12 @@ export interface TxOutcome {
    * Raw log output from the transaction (optional)
    */
   rawLog?: string;
+
+  /**
+   * Action ID extracted from transaction events (optional)
+   * Present when transaction registers an action (e.g., MsgRequestAction)
+   */
+  actionId?: string;
 }
 
 /**

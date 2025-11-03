@@ -58,10 +58,10 @@ export interface TxClient {
 
   /**
    * Sign and broadcast a transaction in one step.
-   * 
+   *
    * This is the recommended method for sending transactions. Handles the entire
    * transaction lifecycle: signing with the wallet and broadcasting to the chain.
-   * 
+   *
    * @param signerAddress - Address of the transaction signer
    * @param messages - Array of Cosmos messages to include in the transaction
    * @param fee - Transaction fee (gas amount and denomination)
@@ -81,6 +81,18 @@ export interface TxClient {
     height: bigint;
     response: DeliverTxResponse;
   }>;
+
+  /**
+   * Query a transaction by hash.
+   *
+   * Retrieves the full transaction details including events from the blockchain.
+   * This is useful for extracting information from transaction events after broadcasting.
+   *
+   * @param txHash - Transaction hash (hex string)
+   * @returns Transaction response with full details including events
+   * @throws {Error} If the query fails or transaction is not found
+   */
+  getTx?(txHash: string): Promise<DeliverTxResponse>;
 }
 
 /**

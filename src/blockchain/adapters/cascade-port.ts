@@ -10,6 +10,7 @@
 import type { CascadeChainPort, CascadeActionParams, RequestActionTxInput, TxOutcome } from "../../cascade/ports";
 import type { BlockchainClient } from "../interfaces";
 import { lumera } from "../../codegen";
+import type { DeliverTxResponse } from "@cosmjs/stargate";
 
 /**
  * Cache entry for action parameters with TTL.
@@ -78,7 +79,7 @@ export class BlockchainActionAdapter implements CascadeChainPort {
 
   /**
    * Create a new blockchain action adapter.
-   * 
+   *
    * @param blockchainClient - The blockchain client to use for queries and transactions
    * @param signerAddress - Address of the account that will sign transactions
    * @param options - Configuration options
@@ -252,6 +253,20 @@ export class BlockchainActionAdapter implements CascadeChainPort {
         input.memo ?? ""
       );
 
+      console.log(`Transaction broadcast successful: ${broadcastResult.txHash}`);
+
+      // Query the transaction to get the full response with events
+      console.log(`Querying transaction to extract action_id...`);
+      if (!this.blockchainClient.Tx.getTx) {
+        throw new Error("Transaction client does not support getTx");
+      }
+      
+      const txResponse = await this.blockchainClient.Tx.getTx(broadcastResult.txHash);
+      
+      // Extract action_id from the transaction events
+      const actionId = this.extractActionIdFromTx(txResponse);
+      console.log(`Extracted action_id: ${actionId}`);
+
       // Map to TxOutcome DTO
       return {
         txHash: broadcastResult.txHash,
@@ -260,6 +275,7 @@ export class BlockchainActionAdapter implements CascadeChainPort {
         gasUsed: broadcastResult.response.gasUsed.toString(),
         feePaid: txFeeAmount,
         rawLog: broadcastResult.response.rawLog,
+        actionId,
       };
     };
 
@@ -290,10 +306,52 @@ export class BlockchainActionAdapter implements CascadeChainPort {
 
   /**
    * Check if the cache is currently valid.
-   * 
+   *
    * @returns true if cached params exist and haven't expired, false otherwise
    */
   isCacheValid(): boolean {
     return this.paramsCache !== null && this.paramsCache.expiresAt > Date.now();
+  }
+
+  /**
+   * Extract action_id from transaction response.
+   *
+   * Searches for the `action_registered` event in the transaction events
+   * and extracts the `action_id` attribute value.
+   *
+   * @param txResponse - Transaction response from getTx query
+   * @returns The action_id value
+   * @throws {Error} If action_registered event or action_id attribute is not found
+   */
+  private extractActionIdFromTx(txResponse: DeliverTxResponse): string {
+    if (!txResponse.events || txResponse.events.length === 0) {
+      throw new Error("No events found in transaction response");
+    }
+
+    // Find the action_registered event
+    const actionRegisteredEvent = txResponse.events.find(
+      (event) => event.type === "action_registered"
+    );
+
+    if (!actionRegisteredEvent) {
+      throw new Error(
+        "action_registered event not found in transaction. " +
+        `Available events: ${txResponse.events.map(e => e.type).join(", ")}`
+      );
+    }
+
+    // Find the action_id attribute
+    const actionIdAttr = actionRegisteredEvent.attributes.find(
+      (attr) => attr.key === "action_id"
+    );
+
+    if (!actionIdAttr) {
+      throw new Error(
+        "action_id attribute not found in action_registered event. " +
+        `Available attributes: ${actionRegisteredEvent.attributes.map(a => a.key).join(", ")}`
+      );
+    }
+
+    return actionIdAttr.value;
   }
 }

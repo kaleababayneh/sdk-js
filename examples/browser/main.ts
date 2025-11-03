@@ -20,7 +20,6 @@ import { createBatchedSignaturePrompter, createDefaultTxPrompter } from "../../s
 interface AppState {
   client: LumeraClient | null;
   address: string | null;
-  chainId: string;
   lastActionId: string | null;
   selectedFile: File | null;
 }
@@ -28,7 +27,6 @@ interface AppState {
 const state: AppState = {
   client: null,
   address: null,
-  chainId: "lumera-testnet-2",
   lastActionId: null,
   selectedFile: null,
 };
@@ -151,7 +149,7 @@ async function connectWallet() {
     elements.connectBtn.disabled = true;
     
     // Get Keplr signer (this will prompt the user to connect)
-    const signer = await getKeplrSigner(state.chainId);
+    const signer = await getKeplrSigner("lumera-devnet-1");
     const accounts = await signer.getAccounts();
     
     if (accounts.length === 0) {
@@ -164,9 +162,12 @@ async function connectWallet() {
     // Create LumeraClient with Keplr signer
     log("Initializing Lumera client...", "info");
     state.client = await createLumeraClient({
-      chainId: "lumera-testnet-2",
-      rpcUrl: "http://localhost:27657",
-      lcdUrl: "http://localhost:1417",
+      // chainId: "lumera-testnet-2",
+      // rpcUrl: "http://localhost:27657",
+      // lcdUrl: "http://localhost:1417",
+      chainId: "lumera-devnet-1",
+      rpcUrl: "https://rpc.pastel.network",
+      lcdUrl: "https://lcd.pastel.network",
       snapiUrl: "https://sn-api.testnet.lumera.io",
 
       // preset: "testnet",

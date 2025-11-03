@@ -263,11 +263,14 @@ export class CascadeUploader {
     console.debug('Action registered on-chain:', txOutcome);
     
     // Extract action ID from transaction outcome
-    // The action ID should be in the transaction events or response
-    const actionId = (txOutcome as any).actionId || (txOutcome as any).action_id;
-    if (!actionId) {
-      throw new Error('Failed to extract action ID from transaction outcome');
+    // The action ID is extracted from transaction events by the blockchain adapter
+    if (!txOutcome.actionId) {
+      throw new Error(
+        'Failed to extract action ID from transaction outcome. ' +
+        'The transaction may not have emitted an action_registered event.'
+      );
     }
+    const actionId = txOutcome.actionId;
     console.debug('CascadeUploader.uploadFile actionId', { actionId });
     
     // Step 10: Initiate upload via sn-api

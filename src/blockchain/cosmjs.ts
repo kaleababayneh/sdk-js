@@ -311,11 +311,47 @@ export class CosmjsTxClient implements TxClient {
   }
 
   /**
+   * Query a transaction by hash.
+   *
+   * Retrieves the full transaction details including events from the blockchain.
+   * This is useful for extracting information from transaction events after broadcasting.
+   *
+   * @param txHash - Transaction hash (hex string)
+   * @returns Transaction response with full details including events
+   * @throws {Error} If the query fails or transaction is not found
+   *
+   * @example
+   * ```typescript
+   * const txDetails = await client.getTx("ABC123...");
+   * console.log("Events:", txDetails.events);
+   * ```
+   */
+  async getTx(txHash: string): Promise<DeliverTxResponse> {
+    const tx = await this.sg.getTx(txHash);
+    if (!tx) {
+      throw new Error(`Transaction ${txHash} not found`);
+    }
+    
+    // Map IndexedTx to DeliverTxResponse
+    return {
+      code: tx.code,
+      height: tx.height,
+      txIndex: tx.txIndex,
+      events: tx.events,
+      rawLog: tx.rawLog,
+      transactionHash: tx.hash,
+      msgResponses: tx.msgResponses ?? [],
+      gasUsed: BigInt(tx.gasUsed),
+      gasWanted: BigInt(tx.gasWanted),
+    };
+  }
+
+  /**
    * Get the underlying SigningStargateClient.
-   * 
+   *
    * Provides access to the raw CosmJS client for advanced use cases
    * not covered by this wrapper.
-   * 
+   *
    * @returns The underlying SigningStargateClient instance
    */
   getStargateClient(): SigningStargateClient {
