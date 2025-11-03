@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { SNApiClient } from "src/cascade/client";
+import { SNApiClient } from "../../src/cascade/client";
 
 const createHttpStub = () => {
   return {

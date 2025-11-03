@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getSigningLumeraClientOptions, lumeraProtoRegistry } from "src/codegen/lumera/client";
+import { getSigningLumeraClientOptions, lumeraProtoRegistry } from "../../src/codegen/lumera/client";
 
 describe("Lumera Registry", () => {
   it("creates a registry with default and Lumera message types", () => {

@@ -1,11 +1,13 @@
 # Telescope code generation: known issues and architectural decision
 
 Summary
+
 - We conducted a final, exhaustive review of Telescope configuration options against the current generator versions used in this repository and confirmed that no configuration-only combination resolves the build errors.
 - The remaining errors stem from defects in the code emitted by the upstream AST layer used by Telescope (@cosmology/ast), not from our configuration.
 - Therefore, we are adopting and justifying a post-generation fix step as the official interim solution until upstream is patched.
 
 Versions, scope, and inputs
+
 - Telescope CLI: @hyperweb/telescope 2.0.3 (see pnpm-lock: [pnpm-lock.yaml](pnpm-lock.yaml))
 - AST library: @cosmology/ast 2.0.2 (see pnpm-lock: [pnpm-lock.yaml](pnpm-lock.yaml))
 - CosmJS tendermint RPC: @cosmjs/tendermint-rpc ^0.36.2 (package.json), examples use 0.32.4 (examples lock)
@@ -15,6 +17,7 @@ Versions, scope, and inputs
 
 Final configuration review (findings)
 We reviewed the current upstream docs (hyperweb-io/telescope README) and all available options, with special focus on those likely to impact the observed errors:
+
 - rpcClients.useConnectComet and rpcClients.useMakeClient
   - These flags control the helper emitted in extern.ts and React/Vue hooks. They do not affect the code path that generates ClientFactory.createRPCQueryClient in rpc.query.ts. Evidence: generator uses createScopedRpcTmFactory from @cosmology/ast and does not consult useConnectComet.
   - References: [create-helpers.ts](node_modules/@hyperweb/telescope/src/generators/create-helpers.ts:79), [external.ts](node_modules/@hyperweb/telescope/src/helpers/external.ts:21), [external-comet.ts](node_modules/@hyperweb/telescope/src/helpers/external-comet.ts:29), [create-rpc-query-client-all.ts](node_modules/@hyperweb/telescope/src/generators/create-rpc-query-client-all.ts:91)
@@ -26,12 +29,14 @@ We reviewed the current upstream docs (hyperweb-io/telescope README) and all ava
   - These govern decimals, int64 representation, JSON safety, default enum behavior, etc. None address the two root causes below.
 
 Conclusion of config review
+
 - No combination of options available in @hyperweb/telescope v2.0.3 resolves:
   1) the AST interface optionality defect for nested messages; or
   2) the outdated Tendermint34Client usage in rpc.query.ts client factories; or
   3) the invalid double scalar code paths emitted in some files.
 
 Evidence in this repo
+
 - Outdated RPC client in createRPCQueryClient
   - Generated file imports Tendermint34Client and connects via .connect(): [src/codegen/lumera/rpc.query.ts](src/codegen/lumera/rpc.query.ts:2), [connect call](src/codegen/lumera/rpc.query.ts:9)
   - The generator templates toggled by useConnectComet apply to extern.ts/react hooks, not to rpc.query.ts factory: [create-helpers.ts switch](node_modules/@hyperweb/telescope/src/generators/create-helpers.ts:79), [external.ts uses Tendermint34Client](node_modules/@hyperweb/telescope/src/helpers/external.ts:21), [external-comet.ts uses connectComet](node_modules/@hyperweb/telescope/src/helpers/external-comet.ts:29), but rpc.query.ts is emitted by @cosmology/ast’s factory (no useConnectComet integration): [create-rpc-query-client-all.ts](node_modules/@hyperweb/telescope/src/generators/create-rpc-query-client-all.ts:91)
@@ -44,6 +49,7 @@ Evidence in this repo
   - Also see Binary stubs that throw for double as a scalar: [src/codegen/binary.ts double unsupported](src/codegen/binary.ts:221)
 
 Root causes (upstream defects)
+
 - AST interface generation bug
   - The AST emits TS interfaces with required nested message fields while its own fromPartial logic assigns undefined. This is internally inconsistent and cannot be reconciled by toggling any documented Telescope option at v2.0.3 / @cosmology/ast v2.0.2.
 - RPC factory templates lagging cosmjs tendermint-rpc API changes
@@ -53,15 +59,18 @@ Root causes (upstream defects)
   - Some generated code treats double as an object with fromPartial/toAmino methods; this is not a valid TS scalar mapping and not controlled by useSDKTypes or typingsFormat.
 
 Why configuration cannot solve these
+
 - No option bridges the interface vs fromPartial mismatch for nested message fields in @cosmology/ast output.
 - rpcClients.useConnectComet does not affect the @cosmology/ast template that emits rpc.query.ts; there is no configuration that rewrites those imports/usages today.
 - useSDKTypes, custom decimal handling, or num64 settings do not change the mapping of proto double to TS number in the affected contexts.
 
 Architectural decision
+
 - We will keep a post-generation fix step as an official, required part of our build, until upstream patches land and are verified.
 - This ADR is final for the current versions pinned above.
 
 Workaround: post-generation fix script
+
 - Location and responsibilities:
   - Script: [scripts/post-codegen-fix.ts](scripts/post-codegen-fix.ts)
   - Fixes applied:
@@ -77,6 +86,7 @@ Workaround: post-generation fix script
   - Risk: Behavioral change. Mitigation: unit tests and integration tests on SDK APIs validate runtime behavior after regeneration.
 
 Decision rationale (alternatives considered)
+
 - Attempt to fix via Telescope configuration only
   - Rejected. As documented above, options do not target the emitting sites that are defective.
 - Fork/patch @cosmology/ast or Telescope now
@@ -87,6 +97,7 @@ Decision rationale (alternatives considered)
   - Lowest-friction, scoped to generated files, reversible when upstream is fixed.
 
 Exit criteria and monitoring
+
 - Remove the fixer once upstream resolves:
   - Interfaces mark nested messages optional where fromPartial permits undefined, or fromPartial stops assigning undefined.
   - ClientFactory createRPCQueryClient imports CometClient/connectComet or otherwise aligns with @cosmjs/tendermint-rpc &#62;= 0.36.
@@ -94,6 +105,7 @@ Exit criteria and monitoring
 - Track releases of @hyperweb/telescope and @cosmology/ast; manually test generation upon upgrades.
 
 Appendix: pointers for reviewers
+
 - Telescope options reference (upstream docs): hyperweb-io/telescope README, see sections for General Options, RPC Client Options, Prototypes Options, Typings and Formatting.
 - Files illustrating current generator behavior in this repo:
   - [src/codegen/lumera/rpc.query.ts](src/codegen/lumera/rpc.query.ts:2)
