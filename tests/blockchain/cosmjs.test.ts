@@ -4,10 +4,10 @@ import type { DeliverTxResponse } from "@cosmjs/stargate";
 import { CosmjsTxClient } from "src/blockchain/cosmjs";
 import {
   buildBatchMessages,
-  buildMsgRequestAction,
   calculateCascadeFee,
   estimateGas,
 } from "src/blockchain/messages";
+import { MsgRequestAction } from "src/codegen/lumera/action/v1/tx";
 
 const createMockSigningClient = () => ({
   simulate: vi.fn<Parameters<typeof CosmjsTxClient.prototype.simulate>, Promise<number>>(),
@@ -16,6 +16,7 @@ const createMockSigningClient = () => ({
     Parameters<typeof CosmjsTxClient.prototype.signAndBroadcast>,
     Promise<DeliverTxResponse>
   >(),
+  getAccount: vi.fn<[string], Promise<{ address: string; accountNumber: number; sequence: number } | null>>(),
   disconnect: vi.fn<[], Promise<void>>(),
 });
 
@@ -87,8 +88,12 @@ describe("CosmjsTxClient", () => {
       gasWanted: 6000,
     } as unknown as DeliverTxResponse;
 
-    // Mock simulate to return a successful gas estimate
-    signingClient.simulate.mockResolvedValue(200000);
+    // Mock getAccount to return a valid account
+    signingClient.getAccount.mockResolvedValue({
+      address: "lumera1xyz",
+      accountNumber: 1,
+      sequence: 0,
+    });
     signingClient.signAndBroadcast.mockResolvedValue(deliverResponse);
 
     const client = new CosmjsTxClient(signingClient as unknown as any);
@@ -98,10 +103,10 @@ describe("CosmjsTxClient", () => {
 
     const result = await client.signAndBroadcast("lumera1xyz", messages, fee, "memo", timeoutHeight);
 
-    // Verify simulate was called first
-    expect(signingClient.simulate).toHaveBeenCalledWith("lumera1xyz", messages, "memo");
+    // Verify getAccount was called to validate the account exists
+    expect(signingClient.getAccount).toHaveBeenCalledWith("lumera1xyz");
 
-    // Verify signAndBroadcast was called after successful simulation
+    // Verify signAndBroadcast was called with correct arguments
     expect(signingClient.signAndBroadcast).toHaveBeenCalledWith(
       "lumera1xyz",
       messages,
@@ -161,20 +166,26 @@ describe("blockchain message helpers", () => {
     vi.restoreAllMocks();
   });
 
-  it("buildMsgRequestAction constructs EncodeObject with metadata", () => {
+  it("constructs MsgRequestAction EncodeObject with metadata using generated types", () => {
     const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
-    const msg = buildMsgRequestAction(
-      {
-        data_hash: "hash",
-        file_name: "test.txt",
-        rq_ids_ic: 5,
-        signatures: "sig==",
-        public: false,
+    
+    // Use generated MsgRequestAction type directly
+    const msg: EncodeObject = {
+      typeUrl: MsgRequestAction.typeUrl,
+      value: {
+        creator: "lumera1creator",
+        actionType: "cascade",
+        metadata: JSON.stringify({
+          data_hash: "hash",
+          file_name: "test.txt",
+          rq_ids_ic: 5,
+          signatures: "sig==",
+          public: false,
+        }),
+        price: "1000",
+        expirationTime: "1735689600",
       },
-      "1000",
-      "1735689600",
-      "lumera1creator",
-    );
+    };
 
     expect(msg).toEqual({
       typeUrl: "/lumera.action.v1.MsgRequestAction",

@@ -9,9 +9,7 @@
 
 import { SigningStargateClient, type StdFee, type DeliverTxResponse } from "@cosmjs/stargate";
 import type { EncodeObject } from "@cosmjs/proto-signing";
-import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import type { TxClient } from "./interfaces";
-import { broadcastTx } from "./rest";
 
 /**
  * Transaction broadcast result
@@ -35,12 +33,6 @@ export interface CosmjsTxClientOptions {
    * reflection service is unavailable. Default: 1.5
    */
   gasMultiplier?: number;
-
-  /**
-   * LCD/REST API base URL for fallback broadcasting.
-   * Required for REST-based fallback when gRPC is unavailable.
-   */
-  lcdBaseUrl?: string;
 }
 
 /**
@@ -50,21 +42,16 @@ export interface CosmjsTxClientOptions {
  * signing, and broadcasting capabilities. Handles gas estimation and
  * transaction lifecycle management.
  *
- * Implements a hybrid broadcasting strategy: attempts to simulate via gRPC,
- * but falls back to REST broadcasting if simulation fails due to type
- * resolution errors (indicating unavailable gRPC reflection service).
- *
  * @example
  * ```typescript
  * const client = new CosmjsTxClient(signingClient, {
- *   lcdBaseUrl: "https://lcd.testnet.lumera.io",
  *   gasMultiplier: 1.5
  * });
  *
  * // Simulate to estimate gas
  * const gasEstimate = await client.simulate(address, msgs, "memo");
  *
- * // Sign and broadcast (with automatic REST fallback if needed)
+ * // Sign and broadcast
  * const result = await client.signAndBroadcast(
  *   address,
  *   msgs,
@@ -76,20 +63,18 @@ export interface CosmjsTxClientOptions {
  */
 export class CosmjsTxClient implements TxClient {
   private readonly gasMultiplier: number;
-  private readonly lcdBaseUrl?: string;
 
   /**
    * Create a new CosmJS transaction client
    *
    * @param sg - CosmJS SigningStargateClient instance
-   * @param options - Optional configuration for hybrid broadcasting
+   * @param options - Optional configuration
    */
   constructor(
     private readonly sg: SigningStargateClient,
     options?: CosmjsTxClientOptions
   ) {
     this.gasMultiplier = options?.gasMultiplier ?? 1.5;
-    this.lcdBaseUrl = options?.lcdBaseUrl;
   }
 
   /**
@@ -174,12 +159,6 @@ export class CosmjsTxClient implements TxClient {
    * transaction lifecycle: signing with the wallet, broadcasting to the chain, and
    * waiting for confirmation (in "block" mode).
    *
-   * Implements a hybrid broadcasting strategy:
-   * 1. First attempts to simulate the transaction via gRPC
-   * 2. If simulation succeeds, uses the estimated gas with CosmJS
-   * 3. If simulation fails due to type resolution errors (gRPC reflection unavailable),
-   *    falls back to REST broadcasting with a pre-configured gas multiplier
-   *
    * @param signerAddress - Address of the transaction signer
    * @param messages - Array of Cosmos messages to include in the transaction
    * @param fee - Transaction fee (gas amount and denomination)
@@ -218,70 +197,6 @@ export class CosmjsTxClient implements TxClient {
       timeoutHeightValue: timeoutHeight?.toString(),
     });
 
-    // Try to simulate first to check if gRPC is available
-    const simulationResult = await this.simulate(signerAddress, messages, memo);
-
-    if (simulationResult === null) {
-      // Simulation failed due to type resolution - use REST fallback
-      if (!this.lcdBaseUrl) {
-        throw new Error(
-          "Simulation unavailable and no LCD base URL configured for REST fallback. " +
-          "Please provide lcdBaseUrl in CosmjsTxClient options."
-        );
-      }
-
-      console.debug("Using REST fallback for transaction broadcasting");
-
-      // Apply gas multiplier to the provided fee
-      const adjustedGas = Math.ceil(Number(fee.gas) * this.gasMultiplier);
-      const adjustedFee: StdFee = {
-        ...fee,
-        gas: String(adjustedGas),
-      };
-
-      console.debug("Adjusted gas for REST fallback", {
-        originalGas: fee.gas,
-        adjustedGas: adjustedGas,
-        multiplier: this.gasMultiplier,
-      });
-
-      // Sign the transaction
-      const signedTxRaw = await this.sg.sign(
-        signerAddress,
-        messages,
-        adjustedFee,
-        memo ?? ""
-      );
-
-      // Encode the signed transaction to bytes
-      const signedTxBytes = TxRaw.encode(signedTxRaw).finish();
-
-      // Broadcast via REST
-      const restResult = await broadcastTx(this.lcdBaseUrl, signedTxBytes, "sync");
-
-      console.debug("REST broadcast result", restResult);
-
-      // Create a DeliverTxResponse-like object for consistency
-      const response: DeliverTxResponse = {
-        code: 0,
-        height: Number(restResult.height ?? 0n),
-        txIndex: 0,
-        events: [],
-        rawLog: "",
-        transactionHash: restResult.txHash,
-        msgResponses: [],
-        gasUsed: BigInt(adjustedGas),
-        gasWanted: BigInt(adjustedGas),
-      };
-
-      return {
-        txHash: restResult.txHash,
-        height: restResult.height ?? 0n,
-        response,
-      };
-    }
-
-    // Standard path: simulation succeeded, use CosmJS signAndBroadcast
     // Explicitly fetch and validate the signer's account
     const account = await this.sg.getAccount(signerAddress);
     if (!account) {

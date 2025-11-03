@@ -9,8 +9,10 @@ const createHttpStub = () => {
         Authorization: "Bearer token",
       },
     },
+    baseUrl: "https://snapi.test",
     post: vi.fn(),
     get: vi.fn(),
+    requestRaw: vi.fn(),
   };
 };
 
@@ -30,39 +32,36 @@ describe("SNApiClient", () => {
   it("startCascade uploads multipart form data via fetch", async () => {
     const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
     const responsePayload = { taskId: "task-123" };
-    const fetchSpy = vi.fn().mockResolvedValue(
-      new Response(JSON.stringify(responsePayload), { status: 200 })
-    );
-
-    globalThis.fetch = fetchSpy as typeof fetch;
+    const mockResponse = new Response(JSON.stringify(responsePayload), { status: 200 });
+    
+    // Mock requestRaw to return a response
+    httpStub.requestRaw.mockResolvedValue(mockResponse);
 
     const client = new SNApiClient(httpStub as unknown as any);
     const file = new Blob([new Uint8Array([1, 2, 3])], { type: "application/octet-stream" });
 
-    const result = await client.startCascade({ file });
+    const result = await client.startCascade({
+      actionId: "action-123",
+      signature: "test-signature",
+      file
+    });
 
-    expect(fetchSpy).toHaveBeenCalledTimes(1);
-    const [url, options] = fetchSpy.mock.calls[0];
-    expect(url).toBe("https://snapi.test/api/actions/cascade");
-    expect(options?.method).toBe("POST");
+    expect(httpStub.requestRaw).toHaveBeenCalledTimes(1);
+    const [method, path, body, options] = httpStub.requestRaw.mock.calls[0];
+    expect(method).toBe("POST");
+    expect(path).toBe("/api/v1/actions/cascade");
+    expect(body).toBeInstanceOf(FormData);
+    expect(options).toEqual({ noRetry: true });
 
-    const body = options?.body as FormData;
-    const appended = body.get("file");
+    const formData = body as FormData;
+    const appended = formData.get("file");
     expect(appended).toBeInstanceOf(Blob);
     expect((appended as Blob).size).toBe(file.size);
+    expect(formData.get("action_id")).toBe("action-123");
+    expect(formData.get("signature")).toBe("test-signature");
 
     expect(result).toEqual(responsePayload);
 
-    console.debug("startCascade request", {
-      url,
-      method: options?.method,
-      hasFile: appended instanceof Blob,
-    });
-    expect(debugSpy).toHaveBeenCalledWith("startCascade request", {
-      url: "https://snapi.test/api/actions/cascade",
-      method: "POST",
-      hasFile: true,
-    });
     debugSpy.mockRestore();
   });
 
@@ -124,19 +123,19 @@ describe("SNApiClient", () => {
   it("downloadFile streams data via fetch with propagated headers", async () => {
     const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
     const streamResponse = new Response("file-bytes", { status: 200 });
-    const fetchSpy = vi.fn().mockResolvedValue(streamResponse);
-    globalThis.fetch = fetchSpy as typeof fetch;
+    
+    // Mock requestRaw to return a response
+    httpStub.requestRaw.mockResolvedValue(streamResponse);
 
     const client = new SNApiClient(httpStub as unknown as any);
 
     const stream = await client.downloadFile("task-stream");
 
-    expect(fetchSpy).toHaveBeenCalledWith(
-      "https://snapi.test/api/downloads/cascade/task-stream/file",
-      {
-        method: "GET",
-        headers: httpStub.config.headers,
-      }
+    expect(httpStub.requestRaw).toHaveBeenCalledWith(
+      "GET",
+      "/api/downloads/cascade/task-stream/file",
+      undefined,
+      { noRetry: true }
     );
     expect(stream).toBe(streamResponse.body);
 

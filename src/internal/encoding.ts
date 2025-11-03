@@ -138,3 +138,30 @@ export function toCanonicalJson(obj: Record<string, unknown>): string {
 export function toB64(bytes: Uint8Array): string {
   return toBase64(bytes);
 }
+
+/**
+ * Safely serializes an object to JSON, converting BigInt values to strings.
+ *
+ * This function ensures that BigInt values are converted to strings during JSON
+ * serialization to prevent precision loss and JSON serialization errors. This is
+ * critical when working with blockchain data that may contain large numbers.
+ *
+ * @param obj - The object to serialize
+ * @returns A JSON string with all BigInt values converted to strings
+ *
+ * @example
+ * ```typescript
+ * const data = { height: 123456789012345678901n, amount: "1000" };
+ * const json = safeJsonStringify(data);
+ * // Result: '{"height":"123456789012345678901","amount":"1000"}'
+ * ```
+ */
+export function safeJsonStringify(obj: any): string {
+  return JSON.stringify(obj, (_, value) => {
+    // Convert BigInt to string to prevent precision loss
+    if (typeof value === 'bigint') {
+      return value.toString();
+    }
+    return value;
+  });
+}

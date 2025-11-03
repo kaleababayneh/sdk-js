@@ -1,10 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createRegistry, createAminoTypes } from "src/blockchain/registry";
-import { lumeraProtoRegistry } from "src/codegen/lumera/client";
+import { getSigningLumeraClientOptions, lumeraProtoRegistry } from "src/codegen/lumera/client";
 
 describe("Lumera Registry", () => {
   it("creates a registry with default and Lumera message types", () => {
-    const registry = createRegistry();
+    const { registry } = getSigningLumeraClientOptions();
     
     expect(registry).toBeDefined();
   });
@@ -42,7 +41,7 @@ describe("Lumera Registry", () => {
   });
 
   it("registry can encode and decode Lumera messages", () => {
-    const registry = createRegistry();
+    const { registry } = getSigningLumeraClientOptions();
     
     // Verify registry has lookup method
     const requestActionType = registry.lookupType("/lumera.action.v1.MsgRequestAction");
@@ -53,7 +52,7 @@ describe("Lumera Registry", () => {
   });
 
   it("creates amino types for Ledger support", () => {
-    const aminoTypes = createAminoTypes();
+    const { aminoTypes } = getSigningLumeraClientOptions();
     
     expect(aminoTypes).toBeDefined();
   });

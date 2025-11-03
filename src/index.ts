@@ -17,10 +17,10 @@ export {
 export * from "./blockchain/interfaces";
 
 // Blockchain layer - client factory and implementations
-export { 
+export {
   makeBlockchainClient,
-  CosmjsRestBlockchainClient,
-  type BlockchainClientOptions 
+  CosmjsRpcBlockchainClient,
+  type BlockchainClientOptions
 } from "./blockchain/client";
 
 // Blockchain layer - transaction client

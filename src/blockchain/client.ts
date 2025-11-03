@@ -21,19 +21,13 @@ import type {
   ActionParams,
   ActionRecord,
   SupernodeParams,
-  SupernodeRecord
+  SuperNode
 } from "./interfaces";
 import { CosmjsTxClient } from "./cosmjs";
-import { createRegistry, createAminoTypes } from "./registry";
 import { QueryClientImpl as ActionQueryClient } from "../codegen/lumera/action/v1/query.rpc.Query";
 import { QueryClientImpl as SupernodeQueryClient } from "../codegen/lumera/supernode/v1/query.rpc.Query";
-import { base64FromBytes } from "../codegen/helpers";
-import type { SuperNode } from "../codegen/lumera/supernode/v1/super_node";
-import type { SuperNodeStateRecord } from "../codegen/lumera/supernode/v1/supernode_state";
-import type { Evidence } from "../codegen/lumera/supernode/v1/evidence";
-import type { IPAddressHistory } from "../codegen/lumera/supernode/v1/ip_address_history";
-import type { SupernodeAccountHistory } from "../codegen/lumera/supernode/v1/supernode_account_history";
-import { c } from "node_modules/formdata-node/lib/File-cfd9c54a";
+import { getSigningLumeraClientOptions } from "../codegen/lumera/client";
+import { safeJsonStringify } from "../internal/encoding";
 
 /**
  * RPC-based Action query client adapter.
@@ -67,7 +61,7 @@ class RpcActionQuery implements ActionQuery {
     // Decode the metadata bytes as JSON
     const decodedMetadata = JSON.parse(new TextDecoder().decode(action.metadata));
 
-    return {
+    const result = {
       creator: action.creator,
       actionID: action.actionID,
       actionType: action.actionType as any,
@@ -78,6 +72,9 @@ class RpcActionQuery implements ActionQuery {
       blockHeight: Number(action.blockHeight),
       superNodes: action.superNodes,
     };
+
+    // Convert any BigInt values to strings to prevent precision loss
+    return JSON.parse(safeJsonStringify(result));
   }
 
   async getActionFee(dataSize: number): Promise<{ amount: string }> {
@@ -93,50 +90,8 @@ class RpcActionQuery implements ActionQuery {
  * RPC-based Supernode query client adapter.
  *
  * Wraps the generated Telescope RPC query client and adapts it to the SupernodeQuery interface.
- * Provides backward compatibility while using the type-safe generated clients internally.
+ * Now returns generated SuperNode types directly without conversion.
  */
-/**
- * Helper to convert generated SuperNode to SupernodeRecord interface.
- */
-function convertSupernodeRecord(sn: SuperNode): SupernodeRecord {
-  return {
-    validatorAddress: sn.validatorAddress,
-    supernodeAccount: sn.supernodeAccount,
-    p2pPort: sn.p2pPort,
-    states: (sn.states || []).map((s: SuperNodeStateRecord) => ({
-      state: s.state as any,
-      height: Number(s.height),
-    })),
-    evidence: (sn.evidence || []).map((e: Evidence) => ({
-      reporterAddress: e.reporterAddress,
-      validatorAddress: e.validatorAddress,
-      actionId: e.actionId,
-      evidenceType: e.evidenceType,
-      description: e.description,
-      severity: Number(e.severity),
-      height: Number(e.height),
-    })),
-    prevIpAddresses: (sn.prevIpAddresses || []).map((ip: IPAddressHistory) => ({
-      address: ip.address,
-      height: Number(ip.height),
-    })),
-    note: sn.note,
-    metrics: {
-      metrics: Object.fromEntries(
-        Object.entries(sn.metrics?.metrics || {}).map(([key, value]) => [
-          key,
-          parseFloat(value?.toString() ?? "0"),
-        ])
-      ),
-      reportCount: Number(sn.metrics?.reportCount ?? 0),
-      height: Number(sn.metrics?.height ?? 0),
-    },
-    prevSupernodeAccounts: (sn.prevSupernodeAccounts || []).map((acc: SupernodeAccountHistory) => ({
-      account: acc.account,
-      height: Number(acc.height),
-    })),
-  };
-}
 
 class RpcSupernodeQuery implements SupernodeQuery {
   constructor(private readonly client: SupernodeQueryClient) {}
@@ -148,17 +103,17 @@ class RpcSupernodeQuery implements SupernodeQuery {
     return response.params ? { ...response.params } : {};
   }
 
-  async getSupernode(validatorAddress: string): Promise<SupernodeRecord> {
+  async getSupernode(validatorAddress: string): Promise<SuperNode> {
     const response = await this.client.getSuperNode({ validatorAddress });
 
     if (!response.supernode) {
       throw new Error(`Supernode not found: ${validatorAddress}`);
     }
 
-    return convertSupernodeRecord(response.supernode);
+    return response.supernode;
   }
 
-  async getSupernodeByAddress(supernodeAddress: string): Promise<SupernodeRecord> {
+  async getSupernodeByAddress(supernodeAddress: string): Promise<SuperNode> {
     const response = await this.client.getSuperNodeBySuperNodeAddress({
       supernodeAddress,
     });
@@ -167,13 +122,17 @@ class RpcSupernodeQuery implements SupernodeQuery {
       throw new Error(`Supernode not found: ${supernodeAddress}`);
     }
 
-    return convertSupernodeRecord(response.supernode);
+    // Convert any BigInt values to strings to prevent precision loss
+    return JSON.parse(safeJsonStringify(response.supernode));
   }
 
-  async listSupernodes(): Promise<SupernodeRecord[]> {
+  async listSupernodes(): Promise<SuperNode[]> {
     const response = await this.client.listSuperNodes({});
 
-    return (response.supernodes || []).map(convertSupernodeRecord);
+    const supernodes = response.supernodes || [];
+    
+    // Convert any BigInt values to strings to prevent precision loss
+    return JSON.parse(safeJsonStringify(supernodes));
   }
 }
 
@@ -204,13 +163,13 @@ async function createQueryClients(rpcEndpoint: string) {
 }
 
 /**
- * Implementation of BlockchainClient using CosmJS and RPC query clients.
+ * Implementation of BlockchainClient using CosmJS for transactions and RPC for queries.
  *
- * This class combines a CosmJS transaction client with RPC-based query clients
- * to provide a complete blockchain interaction interface. It serves as the facade
- * for all blockchain operations.
+ * This class provides a complete RPC-based blockchain interaction interface, using
+ * CosmJS for transaction signing and broadcasting, and Telescope-generated RPC clients
+ * for type-safe module queries. It serves as the facade for all blockchain operations.
  */
-export class CosmjsRestBlockchainClient implements BlockchainClient {
+export class CosmjsRpcBlockchainClient implements BlockchainClient {
   /**
    * Create a new blockchain client instance.
    * 
@@ -254,8 +213,8 @@ export interface BlockchainClientOptions {
   /** Tendermint RPC URL for transaction and query operations (e.g., "https://rpc.testnet.lumera.io") */
   rpcUrl: string;
 
-  /** LCD REST API URL for transaction broadcasting fallback (e.g., "https://lcd.testnet.lumera.io") */
-  lcdUrl: string;
+  /** LCD REST API URL (optional, no longer used for transaction broadcasting) */
+  lcdUrl?: string;
 
   /** Blockchain network identifier (e.g., "lumera-testnet-2") */
   chainId: string;
@@ -271,12 +230,11 @@ export interface BlockchainClientOptions {
 }
 
 /**
- * Create a new blockchain client.
+ * Create a new RPC-based blockchain client.
  *
- * This factory function initializes a complete blockchain client with transaction
- * and query capabilities. It connects to the Tendermint RPC endpoint for both
- * transactions and queries, using Telescope-generated type-safe query clients.
- * The LCD REST API is used as a fallback for transaction broadcasting.
+ * This factory function initializes a complete blockchain client using RPC for all
+ * operations. It uses CosmJS for transaction signing and broadcasting via RPC, and
+ * Telescope-generated type-safe RPC clients for all module queries.
  *
  * @param opts - Configuration options for the client
  * @returns Promise resolving to a configured BlockchainClient
@@ -293,10 +251,9 @@ export interface BlockchainClientOptions {
  * });
  * const [account] = await wallet.getAccounts();
  *
- * // Create the blockchain client
+ * // Create the RPC-based blockchain client
  * const client = await makeBlockchainClient({
  *   rpcUrl: "https://rpc.testnet.lumera.io",
- *   lcdUrl: "https://lcd.testnet.lumera.io",
  *   chainId: "lumera-testnet-2",
  *   signer: wallet,
  *   address: account.address,
@@ -316,7 +273,7 @@ export interface BlockchainClientOptions {
  *   expirationTime: "1735689600"
  * });
  *
- * // Simulate and broadcast a transaction
+ * // Simulate and broadcast a transaction via RPC
  * const gas = await client.Tx.simulate(account.address, [msg]);
  * const result = await client.Tx.signAndBroadcast(
  *   account.address,
@@ -329,11 +286,10 @@ export interface BlockchainClientOptions {
 export async function makeBlockchainClient(
   opts: BlockchainClientOptions
 ): Promise<BlockchainClient> {
-  // Create registry and amino types with Lumera-specific message types
-  const registry = createRegistry();
-  const aminoTypes = createAminoTypes();
+  // Create registry and amino types with Lumera-specific message types using generated helper
+  const { registry, aminoTypes } = getSigningLumeraClientOptions();
   
-  console.debug("Created registry and amino types");
+  console.debug("Created registry and amino types from generated code");
   console.debug("Connecting to RPC endpoint:", opts.rpcUrl);
 
   // Connect to Tendermint RPC via CosmJS SigningStargateClient
@@ -356,13 +312,12 @@ export async function makeBlockchainClient(
   }
   console.debug("Created transaction client");
 
-  // Create transaction client with REST fallback support
+  // Create transaction client
   const txClient = new CosmjsTxClient(signingClient, {
-    lcdBaseUrl: opts.lcdUrl,
     gasMultiplier: 1.5,
   });
 
-  console.debug("Created transaction client with LCD fallback");
+  console.debug("Created transaction client");
   console.debug("Creating RPC query clients");
 
   // Create RPC query clients using a direct CometClient connection
@@ -379,7 +334,7 @@ export async function makeBlockchainClient(
   console.debug("Blockchain client creation complete");
 
   // Compose into the unified blockchain client facade
-  return new CosmjsRestBlockchainClient(
+  return new CosmjsRpcBlockchainClient(
     txClient,
     actionQuery,
     supernodeQuery,
@@ -390,7 +345,6 @@ export async function makeBlockchainClient(
 
 // Export classes and types for direct use if needed
 export { CosmjsTxClient } from "./cosmjs";
-export { broadcastTx } from "./rest";
 export * from "./interfaces";
 export * from "./messages";
 export * from "./registry";

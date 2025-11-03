@@ -134,7 +134,7 @@ export class HttpClient {
 
   /**
    * Create a new HttpClient
-   * 
+   *
    * @param config - HTTP client configuration
    */
   constructor(config: HttpClientConfig) {
@@ -150,6 +150,15 @@ export class HttpClient {
         retryableStatusCodes: config.retry?.retryableStatusCodes ?? [408, 429, 500, 502, 503, 504],
       },
     };
+  }
+
+  /**
+   * Get the base URL for this client
+   *
+   * @returns The base URL
+   */
+  get baseUrl(): string {
+    return this.config.baseUrl;
   }
 
   /**
@@ -242,8 +251,127 @@ export class HttpClient {
   }
 
   /**
+   * Perform an HTTP request with streaming response support
+   *
+   * Returns the raw Response object for streaming or custom handling.
+   * The caller is responsible for reading and closing the response body.
+   *
+   * @param method - HTTP method
+   * @param path - Request path
+   * @param body - Request body
+   * @param options - Request options
+   * @returns Raw Response object
+   * @throws {HttpError} If the request fails
+   */
+  async requestRaw(
+    method: string,
+    path: string,
+    body?: unknown,
+    options?: RequestOptions
+  ): Promise<Response> {
+    const url = this.buildUrl(path, options?.params);
+    const headers = { ...this.config.headers, ...options?.headers };
+    const timeout = options?.timeout ?? this.config.timeout;
+    const noRetry = options?.noRetry ?? false;
+
+    // Prepare body and set Content-Type if needed
+    let requestBody: BodyInit | undefined;
+    if (body !== undefined) {
+      if (body instanceof FormData || body instanceof Blob || body instanceof ArrayBuffer || body instanceof URLSearchParams) {
+        // For FormData, Blob, ArrayBuffer, URLSearchParams, pass through directly
+        // The browser/fetch will set the correct Content-Type automatically
+        requestBody = body as BodyInit;
+      } else if (body instanceof Uint8Array) {
+        // Convert Uint8Array to Blob for compatibility
+        // Create a new Uint8Array copy to ensure it's backed by ArrayBuffer
+        const copy = new Uint8Array(body);
+        requestBody = new Blob([copy.buffer]);
+      } else if (typeof body === 'string') {
+        requestBody = body;
+        if (!headers['Content-Type']) {
+          headers['Content-Type'] = 'text/plain';
+        }
+      } else {
+        // For plain objects, JSON stringify
+        requestBody = JSON.stringify(body);
+        if (!headers['Content-Type']) {
+          headers['Content-Type'] = 'application/json';
+        }
+      }
+    }
+
+    const makeRequest = async (signal: AbortSignal): Promise<Response> => {
+      const fetchFn = await this.getFetch();
+      return fetchFn(url, {
+        method,
+        headers,
+        body: requestBody,
+        signal,
+      });
+    };
+
+    if (noRetry) {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeout);
+      
+      if (options?.signal) {
+        options.signal.addEventListener('abort', () => controller.abort(), { once: true });
+      }
+
+      try {
+        const response = await makeRequest(controller.signal);
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          let errorBody: unknown;
+          try {
+            const contentType = response.headers.get('content-type');
+            if (contentType?.includes('application/json')) {
+              errorBody = await response.json();
+            } else {
+              errorBody = await response.text();
+            }
+          } catch {
+            errorBody = undefined;
+          }
+          
+          const isRetryable = this.config.retry.retryableStatusCodes.includes(response.status);
+          throw new HttpError(
+            `HTTP ${response.status}: ${response.statusText}`,
+            response.status,
+            url,
+            isRetryable,
+            errorBody
+          );
+        }
+        
+        return response;
+      } catch (error) {
+        clearTimeout(timeoutId);
+        
+        if (controller.signal.aborted) {
+          if (options?.signal?.aborted) {
+            throw new HttpError('Request cancelled', 0, url, false);
+          }
+          throw new HttpError(`Request timeout after ${timeout}ms`, 0, url, true);
+        }
+        
+        if (error instanceof Error && error.name === 'TypeError') {
+          throw new HttpError(`Network error: ${error.message}`, 0, url, true);
+        }
+        
+        throw error;
+      }
+    } else {
+      // For retry logic with raw responses, we need to handle it carefully
+      // as the response body can only be read once
+      throw new Error('Retry is not supported for raw/streaming requests. Use noRetry: true option.');
+    }
+  }
+
+  /**
    * Perform an HTTP request
-   * 
+   *
    * @param method - HTTP method
    * @param path - Request path
    * @param body - Request body
@@ -261,9 +389,30 @@ export class HttpClient {
     const timeout = options?.timeout ?? this.config.timeout;
     const noRetry = options?.noRetry ?? false;
 
-    // Set Content-Type for requests with body
-    if (body !== undefined && !headers['Content-Type']) {
-      headers['Content-Type'] = 'application/json';
+    // Prepare body and set Content-Type if needed
+    let requestBody: BodyInit | undefined;
+    if (body !== undefined) {
+      if (body instanceof FormData || body instanceof Blob || body instanceof ArrayBuffer || body instanceof URLSearchParams) {
+        // For FormData, Blob, ArrayBuffer, URLSearchParams, pass through directly
+        // The browser/fetch will set the correct Content-Type automatically
+        requestBody = body as BodyInit;
+      } else if (body instanceof Uint8Array) {
+        // Convert Uint8Array to Blob for compatibility
+        // Create a new Uint8Array copy to ensure it's backed by ArrayBuffer
+        const copy = new Uint8Array(body);
+        requestBody = new Blob([copy.buffer]);
+      } else if (typeof body === 'string') {
+        requestBody = body;
+        if (!headers['Content-Type']) {
+          headers['Content-Type'] = 'text/plain';
+        }
+      } else {
+        // For plain objects, JSON stringify
+        requestBody = JSON.stringify(body);
+        if (!headers['Content-Type']) {
+          headers['Content-Type'] = 'application/json';
+        }
+      }
     }
 
     const makeRequest = async (signal: AbortSignal): Promise<Response> => {
@@ -271,7 +420,7 @@ export class HttpClient {
       return fetchFn(url, {
         method,
         headers,
-        body: body !== undefined ? JSON.stringify(body) : undefined,
+        body: requestBody,
         signal,
       });
     };

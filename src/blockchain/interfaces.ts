@@ -1,15 +1,39 @@
 /**
  * Core interfaces for the Blockchain Layer.
- * 
+ *
  * This module defines the public API surface for blockchain interactions,
  * supporting adapter implementations (CosmJS + REST/LCD initially, with
  * future support for gRPC-web without breaking changes).
- * 
+ *
  * @module blockchain/interfaces
  */
 
 import type { EncodeObject } from "@cosmjs/proto-signing";
 import type { StdFee, DeliverTxResponse } from "@cosmjs/stargate";
+
+// Import generated types from Telescope codegen
+import { ActionState } from "../codegen/lumera/action/v1/action_state";
+import { ActionType } from "../codegen/lumera/action/v1/action_type";
+import type { Action } from "../codegen/lumera/action/v1/action";
+import { SuperNodeState } from "../codegen/lumera/supernode/v1/supernode_state";
+import type { SuperNodeStateRecord } from "../codegen/lumera/supernode/v1/supernode_state";
+import type { SuperNode } from "../codegen/lumera/supernode/v1/super_node";
+import type { Evidence } from "../codegen/lumera/supernode/v1/evidence";
+import type { IPAddressHistory } from "../codegen/lumera/supernode/v1/ip_address_history";
+import type { MetricsAggregate } from "../codegen/lumera/supernode/v1/metrics_aggregate";
+import type { SupernodeAccountHistory } from "../codegen/lumera/supernode/v1/supernode_account_history";
+
+// Re-export generated types for public API
+export { ActionState, ActionType, SuperNodeState };
+export type {
+  Action,
+  SuperNode,
+  SuperNodeStateRecord,
+  Evidence,
+  IPAddressHistory,
+  MetricsAggregate,
+  SupernodeAccountHistory
+};
 
 /**
  * Transaction client interface.
@@ -162,32 +186,12 @@ export interface SenseMetadata {
 }
 
 /**
- * ActionState enum represents the various states an action can be in.
- */
-export enum ActionState {
-  UNSPECIFIED = "ACTION_STATE_UNSPECIFIED",
-  PENDING = "ACTION_STATE_PENDING",
-  PROCESSING = "ACTION_STATE_PROCESSING",
-  DONE = "ACTION_STATE_DONE",
-  APPROVED = "ACTION_STATE_APPROVED",
-  REJECTED = "ACTION_STATE_REJECTED",
-  FAILED = "ACTION_STATE_FAILED",
-  EXPIRED = "ACTION_STATE_EXPIRED",
-}
-
-/**
- * ActionType enum represents the various types of actions that can be performed.
- */
-export enum ActionType {
-  UNSPECIFIED = "ACTION_TYPE_UNSPECIFIED",
-  SENSE = "ACTION_TYPE_SENSE",
-  CASCADE = "ACTION_TYPE_CASCADE",
-}
-
-/**
  * Action record from the blockchain.
  *
  * Represents a registered action's current state on-chain.
+ * This is an alias for backward compatibility - internally uses the generated Action type.
+ *
+ * @deprecated Use the generated `Action` type directly for new code.
  */
 export interface ActionRecord {
   /** Creator address */
@@ -212,8 +216,13 @@ export interface ActionRecord {
 
 /**
  * Action module query client interface.
- * 
- * Provides read-only access to action module state via LCD/REST.
+ *
+ * Provides read-only access to action module state via RPC.
+ *
+ * **Note:** All `BigInt` fields from the underlying generated types are automatically
+ * converted to strings in the returned data to prevent precision loss when working
+ * with JavaScript's number type limitations. This ensures safe handling of large
+ * blockchain values like block heights and timestamps.
  */
 export interface ActionQuery {
   /**
@@ -260,108 +269,24 @@ export interface SupernodeParams {
 }
 
 /**
- * SuperNodeState enum represents the various states a supernode can be in.
- */
-export enum SuperNodeState {
-  UNSPECIFIED = "SUPERNODE_STATE_UNSPECIFIED",
-  ACTIVE = "SUPERNODE_STATE_ACTIVE",
-  DISABLED = "SUPERNODE_STATE_DISABLED",
-  STOPPED = "SUPERNODE_STATE_STOPPED",
-  PENALIZED = "SUPERNODE_STATE_PENALIZED",
-}
-
-/**
- * SuperNodeStateRecord represents a state change record for a supernode.
- */
-export interface SuperNodeStateRecord {
-  /** Current state */
-  state: SuperNodeState;
-  /** Block height when state changed */
-  height: number;
-}
-
-/**
- * Evidence defines the evidence structure for the supernode module.
- */
-export interface Evidence {
-  /** Reporter address */
-  reporterAddress: string;
-  /** Validator address */
-  validatorAddress: string;
-  /** Action ID related to the evidence */
-  actionId: string;
-  /** Type of evidence */
-  evidenceType: string;
-  /** Description of the evidence */
-  description: string;
-  /** Severity level */
-  severity: number;
-  /** Block height when evidence was submitted */
-  height: number;
-}
-
-/**
- * IPAddressHistory tracks historical IP addresses for a supernode.
- */
-export interface IPAddressHistory {
-  /** IP address */
-  address: string;
-  /** Block height when this IP was recorded */
-  height: number;
-}
-
-/**
- * MetricsAggregate contains aggregated metrics for a supernode.
- */
-export interface MetricsAggregate {
-  /** Map of metric names to values */
-  metrics: Record<string, number>;
-  /** Number of reports aggregated */
-  reportCount: number;
-  /** Block height of the aggregate */
-  height: number;
-}
-
-/**
- * SupernodeAccountHistory tracks historical supernode account changes.
- */
-export interface SupernodeAccountHistory {
-  /** Account address */
-  account: string;
-  /** Block height when this account was active */
-  height: number;
-}
-
-/**
  * SuperNode record from the blockchain.
  *
  * Represents a supernode's current state on-chain.
+ * This is an alias for backward compatibility - internally uses the generated SuperNode type.
+ *
+ * @deprecated Use the generated `SuperNode` type directly for new code.
  */
-export interface SupernodeRecord {
-  /** Validator address */
-  validatorAddress: string;
-  /** State history records */
-  states: SuperNodeStateRecord[];
-  /** Evidence records */
-  evidence: Evidence[];
-  /** Previous IP addresses */
-  prevIpAddresses: IPAddressHistory[];
-  /** Optional note */
-  note: string;
-  /** Aggregated metrics */
-  metrics: MetricsAggregate;
-  /** Supernode account address */
-  supernodeAccount: string;
-  /** P2P port */
-  p2pPort: string;
-  /** Previous supernode accounts */
-  prevSupernodeAccounts: SupernodeAccountHistory[];
-}
+export type Supernode = SuperNode;
 
 /**
  * Supernode module query client interface.
  *
- * Provides read-only access to supernode module state via LCD/REST.
+ * Provides read-only access to supernode module state via RPC.
+ *
+ * **Note:** All `BigInt` fields from the underlying generated types are automatically
+ * converted to strings in the returned data to prevent precision loss when working
+ * with JavaScript's number type limitations. This ensures safe handling of large
+ * blockchain values like block heights, token amounts, and counters.
  */
 export interface SupernodeQuery {
   /**
@@ -383,7 +308,7 @@ export interface SupernodeQuery {
    * @returns Supernode record details
    * @throws {Error} If the query fails or supernode is not found
    */
-  getSupernode(validatorAddress: string): Promise<SupernodeRecord>;
+  getSupernode(validatorAddress: string): Promise<SuperNode>;
 
   /**
    * Get a supernode by supernode address.
@@ -394,7 +319,7 @@ export interface SupernodeQuery {
    * @returns Supernode record details
    * @throws {Error} If the query fails or supernode is not found
    */
-  getSupernodeByAddress(supernodeAddress: string): Promise<SupernodeRecord>;
+  getSupernodeByAddress(supernodeAddress: string): Promise<SuperNode>;
 
   /**
    * List all supernodes.
@@ -404,7 +329,7 @@ export interface SupernodeQuery {
    * @returns Array of supernode records
    * @throws {Error} If the query fails
    */
-  listSupernodes(): Promise<SupernodeRecord[]>;
+  listSupernodes(): Promise<SuperNode[]>;
 }
 
 /**

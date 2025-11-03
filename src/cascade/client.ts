@@ -139,14 +139,13 @@ export class SNApiClient {
       });
     }
 
-    const response = await fetch(`${this.http["config"].baseUrl}/api/v1/actions/cascade`, {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
+    // Use HttpClient's requestRaw for FormData upload
+    const response = await this.http.requestRaw(
+      "POST",
+      "/api/v1/actions/cascade",
+      formData,
+      { noRetry: true }
+    );
 
     return response.json();
   }
@@ -269,18 +268,13 @@ export class SNApiClient {
    * ```
    */
   async downloadFile(taskId: string): Promise<ReadableStream> {
-    // For streaming responses, we need to use fetch directly
-    const response = await fetch(
-      `${this.http['config'].baseUrl}/api/downloads/cascade/${taskId}/file`,
-      {
-        method: 'GET',
-        headers: this.http['config'].headers,
-      }
+    // Use HttpClient's requestRaw for streaming response
+    const response = await this.http.requestRaw(
+      "GET",
+      `/api/downloads/cascade/${taskId}/file`,
+      undefined,
+      { noRetry: true }
     );
-
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
 
     if (!response.body) {
       throw new Error('Response body is null');
@@ -315,7 +309,8 @@ export class SNApiClient {
    * ```
    */
   watchDownloadTask(taskId: string): EventSource {
-    const url = `${this.http['config'].baseUrl}/api/v1/downloads/cascade/${taskId}/status`;
+    // Use HttpClient's public baseUrl getter
+    const url = `${this.http.baseUrl}/api/v1/downloads/cascade/${taskId}/status`;
     return new EventSource(url);
   }
 }

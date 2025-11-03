@@ -24,8 +24,8 @@ export interface ChainPreset {
   chainId: string;
   /** Tendermint RPC endpoint URL */
   rpcUrl: string;
-  /** LCD REST API endpoint URL */
-  lcdUrl: string;
+  /** LCD REST API endpoint URL (optional) */
+  lcdUrl?: string;
   /** SN-API base URL for Cascade storage */
   snapiUrl: string;
   /** Address prefix for bech32 addresses */
@@ -253,7 +253,7 @@ export async function createLumeraClient(
   // Apply chain preset if specified
   let chainId: string;
   let rpcUrl: string;
-  let lcdUrl: string;
+  let lcdUrl: string | undefined;
   let snapiUrl: string;
   
   if (config.preset) {
@@ -263,10 +263,10 @@ export async function createLumeraClient(
     lcdUrl = config.lcdUrl ?? preset.lcdUrl;
     snapiUrl = config.snapiUrl ?? preset.snapiUrl;
   } else {
-    // Require all endpoints if no preset is specified
-    if (!config.rpcUrl || !config.lcdUrl || !config.chainId || !config.snapiUrl) {
+    // Require essential endpoints if no preset is specified (lcdUrl is optional)
+    if (!config.rpcUrl || !config.chainId || !config.snapiUrl) {
       throw new Error(
-        "Either 'preset' or all of 'rpcUrl', 'lcdUrl', 'chainId', and 'snapiUrl' must be provided"
+        "Either 'preset' or all of 'rpcUrl', 'chainId', and 'snapiUrl' must be provided"
       );
     }
     chainId = config.chainId;
@@ -275,7 +275,7 @@ export async function createLumeraClient(
     snapiUrl = config.snapiUrl;
   }
 
-  console.debug(`Creating LumeraClient for chainId=${chainId}, rpcUrl=${rpcUrl}, lcdUrl=${lcdUrl}, snapiUrl=${snapiUrl}`);
+  console.debug(`Creating LumeraClient for chainId=${chainId}, rpcUrl=${rpcUrl}, lcdUrl=${lcdUrl ?? 'none'}, snapiUrl=${snapiUrl}`);
   
   // Initialize WASM bridge
   console.debug(`Initializing WASM proxy`);
