@@ -390,12 +390,15 @@ export const defaultSignaturePrompter = createDefaultSignaturePrompter();
  * });
  * ```
  */
-export function createBatchedSignaturePrompter(): SignaturePrompter {
+export function createBatchedSignaturePrompter(): SignaturePrompter & { reset: () => void } {
   let hasUserGesture = false;
 
-  return async (context, signAction) => {
+  const prompter: SignaturePrompter & { reset: () => void } = async (context, signAction) => {
     // If we already have user gesture, bypass the modal and sign directly
     if (hasUserGesture) {
+      console.debug('createBatchedSignaturePrompter bypassing modal due to existing gesture', {
+        kind: context.kind,
+      });
       return signAction();
     }
 
@@ -484,6 +487,9 @@ export function createBatchedSignaturePrompter(): SignaturePrompter {
 
           // Set flag to bypass modal for subsequent signatures
           hasUserGesture = true;
+          console.debug('createBatchedSignaturePrompter captured user gesture', {
+            kind: context.kind,
+          });
 
           (async () => {
             try {
@@ -492,6 +498,9 @@ export function createBatchedSignaturePrompter(): SignaturePrompter {
               resolve(result);
             } catch (error) {
               // Reset flag on error so user can try again
+              console.debug('createBatchedSignaturePrompter signAction failed, resetting gesture state', {
+                error,
+              });
               hasUserGesture = false;
               cleanup();
               reject(error);
@@ -528,6 +537,13 @@ export function createBatchedSignaturePrompter(): SignaturePrompter {
       return signAction();
     }
   };
+
+  prompter.reset = () => {
+    console.debug('createBatchedSignaturePrompter.reset invoked; clearing stored gesture state');
+    hasUserGesture = false;
+  };
+
+  return prompter;
 }
 
 /**

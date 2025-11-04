@@ -168,7 +168,8 @@ async function connectWallet() {
       chainId: "lumera-devnet-1",
       rpcUrl: "https://rpc.pastel.network",
       lcdUrl: "https://lcd.pastel.network",
-      snapiUrl: "https://sn-api.testnet.lumera.io",
+      // snapiUrl: "https://sn-api.testnet.lumera.io",
+      snapiUrl: "http://localhost:3100",
 
       // preset: "testnet",
       signer,
