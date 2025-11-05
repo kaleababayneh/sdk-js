@@ -49,6 +49,50 @@ export type SignaturePrompter = (
 ) => Promise<ArbitrarySignResponse>;
 
 /**
+ * Result of file preparation
+ */
+export interface PreparedFile {
+  /** File content as bytes */
+  fileBytes: Uint8Array;
+  /** BLAKE3 hash of file bytes (Base64 encoded) */
+  dataHash: string;
+}
+
+/**
+ * Result of action registration
+ */
+export interface RegisteredAction {
+  /** Action ID returned from blockchain transaction */
+  actionId: string;
+  /** Auth signature for upload (Base64 encoded) */
+  authSignature: string;
+}
+
+/**
+ * Parameters for registering an action
+ */
+export interface RegisterActionParams {
+  /** File name */
+  fileName?: string;
+  /** Whether storage is public or private */
+  isPublic?: boolean;
+  /** Expiration time for action (Unix timestamp in seconds) */
+  expirationTime: string;
+  /** Optional callback for signature prompts */
+  signaturePrompter?: SignaturePrompter;
+  /** Optional callback for transaction prompts */
+  txPrompter?: TxPrompter;
+}
+
+/**
+ * Parameters for sending file to supernodes
+ */
+export interface SendFileParams {
+  /** Optional task monitoring configuration */
+  taskOptions?: TaskManagerOptions;
+}
+
+/**
  * Parameters required for a Cascade upload operation
  */
 export interface UploadParams {
@@ -127,24 +171,289 @@ export class CascadeUploader {
   ) {}
 
   /**
-   * Upload a file to Cascade storage
+   * Step 1: Prepare file for upload
    *
-   * This method orchestrates the complete upload workflow:
+   * Converts the file to bytes and calculates its BLAKE3 hash.
+   * This is required before registering an action or creating an auth signature.
    *
-   * 1. Fetches action parameters from the blockchain (max_raptor_q_symbols)
-   * 2. Generates a random initial counter (rq_ids_ic) for layout ID derivation
-   * 3. Converts the file to bytes and calculates data_hash (BLAKE3)
-   * 4. Generates a single-block RaptorQ layout using rq-wasm
-   * 5. Derives layout IDs per LEP-1 specification
-   * 6. Constructs the index file with layout metadata
-   * 7. Registers the action on-chain via single-call transaction flow
-   * 8. Signs hash of file bytes to create start_signature
-   * 9. Initiates upload via sn-api with multipart form data
-   * 10. Monitors the upload task until completion
-   * 11. Returns the completed task details
+   * @param file - The file to prepare (as Blob, ArrayBuffer, or Uint8Array)
+   * @returns Promise resolving to prepared file data
+   *
+   * @example
+   * ```typescript
+   * const prepared = await uploader.prepareFile(fileBlob);
+   * console.log('File hash:', prepared.dataHash);
+   * ```
+   */
+  async prepareFile(
+    file: Blob | ArrayBuffer | Uint8Array
+  ): Promise<PreparedFile> {
+    // Step 3: Convert file to bytes
+    const fileBytes = await this.toBytes(file);
+    console.debug('CascadeUploader.prepareFile fileBytes', { length: fileBytes.length });
+    
+    // Step 4: Calculate data_hash using BLAKE3
+    const dataHash = await blake3Hash(fileBytes);
+    console.debug('CascadeUploader.prepareFile dataHash', { dataHash });
+
+    return { fileBytes, dataHash };
+  }
+
+  /**
+   * Step 2: Register action on blockchain
+   *
+   * This method performs the complete action registration workflow:
+   * - Fetches action parameters from blockchain
+   * - Generates RaptorQ layout and signs it
+   * - Builds LEP-1 index file and signs it
+   * - Creates auth signature for upload
+   * - Registers the action on-chain via transaction
+   *
+   * @param preparedFile - Result from prepareFile()
+   * @param params - Registration parameters
+   * @returns Promise resolving to registered action details
+   *
+   * @example
+   * ```typescript
+   * const prepared = await uploader.prepareFile(fileBlob);
+   * const registered = await uploader.registerAction(prepared, {
+   *   fileName: 'document.pdf',
+   *   isPublic: true,
+   *   expirationTime: '1234567890'
+   * });
+   * ```
+   */
+  async registerAction(
+    preparedFile: PreparedFile,
+    params: RegisterActionParams
+  ): Promise<RegisteredAction> {
+    const operationStartMs = Date.now();
+    const signaturePrompter = params.signaturePrompter;
+    const prompterWithReset = signaturePrompter as SignaturePrompter & { reset?: () => void };
+
+    try {
+      const { fileBytes, dataHash } = preparedFile;
+
+      // Step 1: Get action params from blockchain
+      const actionParams = await this.chainPort.getActionParams();
+      const rq_ids_max = actionParams.max_raptor_q_symbols;
+      console.debug('CascadeUploader.registerAction actionParams', { actionParams });
+      
+      // Step 2: Generate random initial counter for layout ID derivation
+      const rq_ids_ic = Math.floor(Math.random() * rq_ids_max);
+      console.debug('CascadeUploader.registerAction generated rq_ids_ic', { rq_ids_ic });
+
+      // Step 5: Generate LEP-1 layout using rq-wasm
+      const layoutBytes = await createSingleBlockLayout(fileBytes);
+      const layoutBytesB64 = toBase64(layoutBytes);
+      console.debug('CascadeUploader.registerAction layoutBytesB64', { layoutBytesB64 });
+      
+      // Sign the layout using wallet (ADR-036 signArbitrary)
+      const layoutSignatureResponse = await this.requestSignature(
+        "layout",
+        layoutBytesB64,
+        signaturePrompter,
+        operationStartMs
+      );
+      const layoutSignatureB64 = layoutSignatureResponse.signature;
+      console.debug('CascadeUploader.registerAction layoutSignatureB64', { layoutSignatureB64 });
+      
+      // Step 6: Generate layout IDs using the new algorithm
+      const layoutIds = await generateIds(
+        layoutBytesB64,
+        layoutSignatureB64,
+        rq_ids_ic,
+        rq_ids_max
+      );
+      console.debug('CascadeUploader.registerAction layoutIds', { layoutIds });
+      
+      // Step 7: Build index_file
+      const indexFile = buildIndexFile(layoutIds, layoutSignatureB64);
+      const indexFileBytes = toCanonicalJsonBytes(indexFile);
+      const indexFileB64 = toBase64(indexFileBytes);
+      const indexFileString = new TextDecoder().decode(indexFileBytes);
+      console.debug('CascadeUploader.registerAction indexFile', { indexFileB64 });
+      
+      const indexSignatureResponse = await this.requestSignature(
+        "index",
+        indexFileString,
+        signaturePrompter,
+        operationStartMs
+      );
+      const indexWithSignature = `${indexFileB64}.${indexSignatureResponse.signature}`;
+      console.debug('CascadeUploader.registerAction indexWithSignature', { indexWithSignature });
+      
+      // Step 8: Prepare auth_signature for upload
+      const authSignatureResponse = await this.requestSignature(
+        "auth",
+        dataHash,
+        signaturePrompter,
+        operationStartMs
+      );
+      const authSignature = authSignatureResponse.signature;
+      console.debug('CascadeUploader.registerAction authSignature', { authSignature });
+
+      // Step 9: Register the action on-chain
+      const txOutcome = await this.chainPort.requestActionTx({
+        msg: {
+          data_hash: dataHash,
+          file_name: params.fileName,
+          rq_ids_ic,
+          signatures: indexWithSignature,
+          public: params.isPublic,
+        },
+        expirationTime: params.expirationTime,
+        txPrompter: params.txPrompter,
+      }, fileBytes.length);
+      console.debug('CascadeUploader.registerAction tx outcome:', txOutcome);
+      
+      if (!txOutcome.actionId) {
+        throw new Error(
+          'Failed to extract action ID from transaction outcome. ' +
+          'The transaction may not have emitted an action_registered event.'
+        );
+      }
+      const actionId = txOutcome.actionId;
+      console.debug('CascadeUploader.registerAction actionId', { actionId });
+
+      return { actionId, authSignature };
+    } finally {
+      if (prompterWithReset?.reset) {
+        console.debug('CascadeUploader.registerAction invoking signaturePrompter.reset');
+        try {
+          prompterWithReset.reset();
+        } catch (resetError) {
+          console.warn('CascadeUploader.registerAction signaturePrompter.reset threw', { resetError });
+        }
+      }
+    }
+  }
+
+  /**
+   * Create auth signature for an existing action
+   *
+   * This is useful when you already have an action ID and need to create
+   * a new auth signature for uploading the file. Uses a single signature prompt.
+   *
+   * @param actionId - Existing action ID from blockchain
+   * @param dataHash - BLAKE3 hash of file (from prepareFile)
+   * @returns Promise resolving to auth signature (Base64 encoded)
+   *
+   * @example
+   * ```typescript
+   * const prepared = await uploader.prepareFile(fileBlob);
+   * const authSig = await uploader.makeAuthSignature(
+   *   'action-123',
+   *   prepared.dataHash
+   * );
+   * ```
+   */
+  async makeAuthSignature(
+    actionId: string,
+    dataHash: string
+  ): Promise<string> {
+    const operationStartMs = Date.now();
+    
+    console.debug('CascadeUploader.makeAuthSignature', { actionId, dataHash });
+    
+    // Create a single signature prompter with custom message
+    const singleSignaturePrompter = createDefaultSignaturePrompter();
+    
+    const authSignatureResponse = await this.requestSignature(
+      "auth",
+      dataHash,
+      singleSignaturePrompter,
+      operationStartMs
+    );
+    
+    console.debug('CascadeUploader.makeAuthSignature created', {
+      actionId,
+      signature: authSignatureResponse.signature
+    });
+    
+    return authSignatureResponse.signature;
+  }
+
+  /**
+   * Step 3: Send file to supernodes
+   *
+   * Initiates the upload via sn-api and monitors the task until completion.
+   *
+   * @param actionId - Action ID from registerAction()
+   * @param authSignature - Auth signature from registerAction() or makeAuthSignature()
+   * @param file - Original file or fileBytes from prepareFile()
+   * @param params - Send parameters
+   * @returns Promise resolving to completed upload task
+   *
+   * @example
+   * ```typescript
+   * const task = await uploader.sendFileToSupernodes(
+   *   registered.actionId,
+   *   registered.authSignature,
+   *   fileBlob,
+   *   { taskOptions: { timeout: 300000 } }
+   * );
+   * ```
+   */
+  async sendFileToSupernodes(
+    actionId: string,
+    authSignature: string,
+    file: Blob | ArrayBuffer | Uint8Array,
+    params: SendFileParams = {}
+  ): Promise<Task> {
+    // Step 10: Convert file to Blob if needed for FormData
+    const fileBytes = await this.toBytes(file);
+    let fileBlob: Blob;
+    if (file instanceof Blob) {
+      fileBlob = file;
+    } else {
+      const normalizedBytes =
+        fileBytes.byteOffset === 0 && fileBytes.byteLength === fileBytes.buffer.byteLength
+          ? fileBytes
+          : fileBytes.slice();
+      const copy = new Uint8Array(normalizedBytes);
+      fileBlob = new Blob([copy.buffer], { type: "application/octet-stream" });
+    }
+
+    console.debug("CascadeUploader.sendFileToSupernodes startCascade", {
+      actionId,
+      inputType: file instanceof Blob ? "Blob" : file.constructor?.name ?? typeof file,
+      blobSize: fileBlob.size,
+      blobType: fileBlob.type || "application/octet-stream",
+    });
+
+    // Step 11: Initiate upload via sn-api with required fields
+    const response = await this.client.startCascade({
+      actionId,
+      signature: authSignature,
+      file: fileBlob,
+    });
+    console.debug('CascadeUploader.sendFileToSupernodes startCascade response', { response });
+    
+    // Step 12: Monitor upload task until completion
+    const taskManager = new TaskManager(
+      this.client,
+      response.task_id!,
+      params.taskOptions
+    );
+    console.debug('CascadeUploader.sendFileToSupernodes taskManager created', { taskId: response.task_id });
+    
+    const completedTask = await taskManager.waitForCompletion();
+    console.debug('CascadeUploader.sendFileToSupernodes upload completed', { completedTask });
+    
+    return completedTask;
+  }
+
+  /**
+   * Upload a file to Cascade storage (unified workflow)
+   *
+   * This method orchestrates the complete upload workflow by calling:
+   * 1. prepareFile() - Convert to bytes and hash
+   * 2. registerAction() - Generate layout, register on-chain (handles prompter reset internally)
+   * 3. sendFileToSupernodes() - Upload and monitor
    *
    * @param file - The file to upload (as Blob, ArrayBuffer, or Uint8Array)
-   * @param params - Upload parameters including action ID
+   * @param params - Upload parameters
    * @returns Promise resolving to the completed upload task
    * @throws {Error} If any step of the upload workflow fails
    *
@@ -152,12 +461,10 @@ export class CascadeUploader {
    * ```typescript
    * const uploader = new CascadeUploader(snapiClient, chainPort);
    *
-   * // Upload from a file input
-   * const fileInput = document.querySelector('input[type="file"]');
-   * const file = fileInput.files[0];
-   *
    * const result = await uploader.uploadFile(file, {
-   *   actionId: 'action-123',
+   *   fileName: 'document.pdf',
+   *   isPublic: true,
+   *   expirationTime: '1234567890',
    *   taskOptions: {
    *     pollInterval: 2000,
    *     timeout: 300000
@@ -171,161 +478,27 @@ export class CascadeUploader {
     file: Blob | ArrayBuffer | Uint8Array,
     params: UploadParams
   ): Promise<Task> {
-    const uploadStartMs = Date.now();
-    const signaturePrompter = params.signaturePrompter;
-    const prompterWithReset = signaturePrompter as SignaturePrompter & { reset?: () => void };
-
-    try {
-      // Step 1: Get action params from blockchain
-      const actionParams = await this.chainPort.getActionParams();
-      const rq_ids_max = actionParams.max_raptor_q_symbols;
-      console.debug('CascadeUploader.uploadFile actionParams', { actionParams });
-      
-      // Step 2: Generate random initial counter for layout ID derivation
-      const rq_ids_ic = Math.floor(Math.random() * rq_ids_max);
-      console.debug('CascadeUploader.uploadFile generated rq_ids_ic', { rq_ids_ic });
-
-      // Step 3: Convert file to bytes
-      const fileBytes = await this.toBytes(file);
-      console.debug('CascadeUploader.uploadFile fileBytes', { length: fileBytes.length });
-      
-      // Step 4: Calculate data_hash using BLAKE3
-      // returns Base64-encoded string
-      const dataHash64 = await blake3Hash(fileBytes);
-      console.debug('CascadeUploader.uploadFile dataHash64', { dataHash64 });
-
-      // Step 5: Generate LEP-1 layout using rq-wasm
-      // Returns raw layout file bytes (JSON format)
-      const layoutBytes = await createSingleBlockLayout(fileBytes);
-      const layoutBytesB64 = toBase64(layoutBytes);
-      console.debug('CascadeUploader.uploadFile layoutBytes', { layoutBytes });
-      console.debug('CascadeUploader.uploadFile layoutBytesB64', { layoutBytesB64 });
-      
-      // Sign the layout using wallet (ADR-036 signArbitrary)
-      const layoutSignatureResponse = await this.requestSignature(
-        "layout",
-        layoutBytesB64,
-        signaturePrompter,
-        uploadStartMs
-      );
-      const layoutSignatureB64 = layoutSignatureResponse.signature; // this is already Base64
-      console.debug('CascadeUploader.uploadFile layoutSignatureB64', { layoutSignatureB64 });
-      
-      // Step 6: Generate layout IDs using the new algorithm
-      const layoutIds = await generateIds(
-        layoutBytesB64,
-        layoutSignatureB64,
-        rq_ids_ic,
-        rq_ids_max
-      );
-      console.debug('CascadeUploader.uploadFile layoutIds', { layoutIds });
-      
-      // Step 7: Build index_file
-      const indexFile = buildIndexFile(layoutIds, layoutSignatureB64);
-      console.debug('CascadeUploader.uploadFile built indexFile', { indexFile });
-
-      const indexFileBytes = toCanonicalJsonBytes(indexFile);
-      const indexFileB64 = toBase64(indexFileBytes);
-      // indexFile to string
-      const indexFileString = new TextDecoder().decode(indexFileBytes);
-      console.debug('CascadeUploader.uploadFile indexFile', { indexFileB64 });
-      
-      const indexSignatureResponse = await this.requestSignature(
-        "index",
-        indexFileString,
-        signaturePrompter,
-        uploadStartMs
-      );
-      const indexWithSignature = `${indexFileB64}.${indexSignatureResponse.signature}`; // indexSignatureResponse.signature is Base64
-      console.debug('CascadeUploader.uploadFile indexWithSignature', { indexWithSignature });
-      
-      // Step 8: Prepare auth_signature for upload
-      // Use wallet signature over BLAKE3(file_bytes)
-      const authSignatureResponse = await this.requestSignature(
-        "auth",
-        dataHash64,
-        signaturePrompter,
-        uploadStartMs
-      );
-      const authSignature = authSignatureResponse.signature;
-      console.debug('CascadeUploader.uploadFile authSignature', { authSignature });
-
-      // Step 9: Register the action on-chain
-      const txOutcome = await this.chainPort.requestActionTx({
-        msg: {
-          data_hash: dataHash64,
-          file_name: params.fileName,
-          rq_ids_ic,
-          signatures: indexWithSignature,
-          public: params.isPublic,
-        },
-        expirationTime: params.expirationTime,
-        txPrompter: params.txPrompter,
-      }, fileBytes.length);
-      console.debug('Action registered on-chain:', txOutcome);
-      
-      // Extract action ID from transaction outcome
-      // The action ID is extracted from transaction events by the blockchain adapter
-      if (!txOutcome.actionId) {
-        throw new Error(
-          'Failed to extract action ID from transaction outcome. ' +
-          'The transaction may not have emitted an action_registered event.'
-        );
-      }
-      const actionId = txOutcome.actionId;
-      console.debug('CascadeUploader.uploadFile actionId', { actionId });
-      
-      // Step 10: Initiate upload via sn-api
-      // Convert file to Blob if needed for FormData
-      let fileBlob: Blob;
-      if (file instanceof Blob) {
-        fileBlob = file;
-      } else {
-        const normalizedBytes =
-          fileBytes.byteOffset === 0 && fileBytes.byteLength === fileBytes.buffer.byteLength
-            ? fileBytes
-            : fileBytes.slice();
-        const copy = new Uint8Array(normalizedBytes);
-        fileBlob = new Blob([copy.buffer], { type: "application/octet-stream" });
-      }
-
-      console.debug("CascadeUploader.uploadFile startCascade", {
-        actionId,
-        inputType: file instanceof Blob ? "Blob" : file.constructor?.name ?? typeof file,
-        blobSize: fileBlob.size,
-        blobType: fileBlob.type || "application/octet-stream",
-      });
-
-      // Step 10: Initiate upload via sn-api with required fields
-      const response = await this.client.startCascade({
-        actionId,
-        signature: authSignature,
-        file: fileBlob,
-      });
-      console.debug('CascadeUploader.uploadFile startCascade response', { response });
-      
-      // Step 11: Monitor upload task until completion
-      const taskManager = new TaskManager(
-        this.client,
-        response.task_id!,
-        params.taskOptions
-      );
-      console.debug('CascadeUploader.uploadFile taskManager created', { taskId: response.task_id });
-      
-      const completedTask = await taskManager.waitForCompletion();
-      console.debug('CascadeUploader.uploadFile upload completed', { completedTask });
-      
-      return completedTask;
-    } finally {
-      if (prompterWithReset?.reset) {
-        console.debug('CascadeUploader.uploadFile invoking signaturePrompter.reset after upload attempt');
-        try {
-          prompterWithReset.reset();
-        } catch (resetError) {
-          console.warn('CascadeUploader.uploadFile signaturePrompter.reset threw', { resetError });
-        }
-      }
-    }
+    // Step 1: Prepare file
+    const preparedFile = await this.prepareFile(file);
+    
+    // Step 2: Register action (handles prompter reset internally)
+    const registeredAction = await this.registerAction(preparedFile, {
+      fileName: params.fileName,
+      isPublic: params.isPublic,
+      expirationTime: params.expirationTime,
+      signaturePrompter: params.signaturePrompter,
+      txPrompter: params.txPrompter,
+    });
+    
+    // Step 3: Send file to supernodes
+    const task = await this.sendFileToSupernodes(
+      registeredAction.actionId,
+      registeredAction.authSignature,
+      file,
+      { taskOptions: params.taskOptions }
+    );
+    
+    return task;
   }
 
   private async requestSignature(

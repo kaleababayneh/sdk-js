@@ -69,6 +69,10 @@ export {
   type SignaturePrompter,
   type SignaturePromptContext,
   type CascadeSignatureKind,
+  type PreparedFile,
+  type RegisteredAction,
+  type RegisterActionParams,
+  type SendFileParams,
 } from "./cascade/uploader";
 
 export {
