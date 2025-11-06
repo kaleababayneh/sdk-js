@@ -27,7 +27,7 @@ export type StartCascadeResponse = operations["startCascade"]["responses"]["202"
 
 /**
  * Request body for requesting a download
- * Maps to POST /api/actions/cascade/{action_id}/downloads
+ * Maps to POST /api/v1/actions/cascade/{action_id}/downloads
  */
 export type RequestDownloadBody = Record<string, never>; // No body params in spec
 
@@ -38,13 +38,13 @@ export type RequestDownloadResponse = operations["requestCascadeDownload"]["resp
 
 /**
  * Task information
- * Maps to GET /api/actions/cascade/tasks/{task_id}
+ * Maps to GET /api/v1/actions/cascade/tasks/{task_id}
  */
 export type Task = operations["getCascadeTask"]["responses"]["200"]["content"]["application/json"];
 
 /**
  * Task status information
- * Maps to GET /api/actions/cascade/tasks/{task_id}/status
+ * Maps to GET /api/v1/actions/cascade/tasks/{task_id}/status
  */
 export type TaskStatus = operations["getCascadeTaskStatus"]["responses"]["200"]["content"]["application/json"];
 
@@ -180,7 +180,7 @@ export class SNApiClient {
    *
    * Retrieves detailed information about a Cascade task, including
    * its status and progress.
-   * Maps to: GET /api/actions/cascade/tasks/{task_id}
+   * Maps to: GET /api/v1/actions/cascade/tasks/{task_id}
    * 
    * @param taskId - The task ID to query
    * @returns Promise resolving to task information
@@ -194,7 +194,7 @@ export class SNApiClient {
    * ```
    */
   async getTask(taskId: string): Promise<Task> {
-    return this.http.get(`/api/actions/cascade/tasks/${taskId}`);
+    return this.http.get(`/api/v1/actions/cascade/tasks/${taskId}`);
   }
 
   /**
@@ -202,7 +202,7 @@ export class SNApiClient {
    *
    * Retrieves just the status information for a Cascade task,
    * which is lighter weight than getting the full task details.
-   * Maps to: GET /api/actions/cascade/tasks/{task_id}/status
+   * Maps to: GET /api/v1/actions/cascade/tasks/{task_id}/status
    * 
    * @param taskId - The task ID to query
    * @returns Promise resolving to task status
@@ -217,14 +217,14 @@ export class SNApiClient {
    * ```
    */
   async getTaskStatus(taskId: string): Promise<TaskStatus> {
-    return this.http.get(`/api/actions/cascade/tasks/${taskId}/status`);
+    return this.http.get(`/api/v1/actions/cascade/tasks/${taskId}/status`);
   }
 
   /**
    * Request a download for a specific Cascade action
    *
    * Initiates a download task for a previously stored Cascade action.
-   * Maps to: POST /api/actions/cascade/{action_id}/downloads
+   * Maps to: POST /api/v1/actions/cascade/{action_id}/downloads
    * 
    * @param actionId - The action ID to download
    * @param body - Request body (currently unused in spec)
@@ -241,7 +241,7 @@ export class SNApiClient {
     actionId: string,
     body: RequestDownloadBody
   ): Promise<RequestDownloadResponse> {
-    return this.http.post(`/api/actions/cascade/${actionId}/downloads`, body);
+    return this.http.post(`/api/v1/actions/cascade/${actionId}/downloads`, body);
   }
 
   /**
@@ -249,7 +249,7 @@ export class SNApiClient {
    *
    * Downloads the file data as a ReadableStream for efficient streaming
    * of large files without loading them entirely into memory.
-   * Maps to: GET /api/downloads/cascade/{task_id}/file
+   * Maps to: GET /api/v1/downloads/cascade/{task_id}/file
    *
    * @param taskId - The task ID to download
    * @returns Promise resolving to a ReadableStream of the file data
@@ -271,7 +271,7 @@ export class SNApiClient {
     // Use HttpClient's requestRaw for streaming response
     const response = await this.http.requestRaw(
       "GET",
-      `/api/downloads/cascade/${taskId}/file`,
+      `/api/v1/downloads/cascade/${taskId}/file`,
       undefined,
       { noRetry: true }
     );

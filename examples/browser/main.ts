@@ -125,6 +125,7 @@ function updateWalletUI(connected: boolean) {
     `;
     
     elements.connectBtn.style.display = "inline-block";
+    elements.connectBtn.disabled = false;
     elements.disconnectBtn.style.display = "none";
     elements.uploadBtn.disabled = true;
     elements.downloadBtn.disabled = true;

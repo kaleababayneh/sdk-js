@@ -21,7 +21,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/actions/cascade/{action_id}/downloads": {
+    "/api/v1/actions/cascade/{action_id}/downloads": {
         parameters: {
             query?: never;
             header?: never;
@@ -38,7 +38,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/actions/cascade/tasks/{task_id}": {
+    "/api/v1/actions/cascade/tasks/{task_id}": {
         parameters: {
             query?: never;
             header?: never;
@@ -55,7 +55,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/actions/cascade/tasks/{task_id}/status": {
+    "/api/v1/actions/cascade/tasks/{task_id}/status": {
         parameters: {
             query?: never;
             header?: never;
@@ -72,7 +72,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/downloads/cascade/{task_id}/file": {
+    "/api/v1/downloads/cascade/{task_id}/file": {
         parameters: {
             query?: never;
             header?: never;
