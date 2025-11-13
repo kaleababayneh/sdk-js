@@ -1,4 +1,4 @@
-import { createHash as createBlake3Hash } from "@lumera/sdk-js/compat/blake3";
+import { createHash as createBlake3Hash } from "@lumera-protocol/sdk-js/compat/blake3";
 import { toBase64 } from "./encoding.js";
 
 /**

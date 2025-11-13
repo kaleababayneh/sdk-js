@@ -5,7 +5,7 @@
  * For building messages, use the Telescope-generated message composers:
  *
  * ```typescript
- * import { lumera } from '@lumera/sdk-js';
+ * import { lumera } from '@lumera-protocol/sdk-js';
  *
  * // Action messages
  * lumera.action.v1.MessageComposer.withTypeUrl.requestAction({...});

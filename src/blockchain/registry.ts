@@ -22,7 +22,7 @@ export {
    *
    * @example
    * ```typescript
-   * import { getSigningLumeraClientOptions } from "@lumera/sdk-js/codegen/lumera/client";
+   * import { getSigningLumeraClientOptions } from "@lumera-protocol/sdk-js/codegen/lumera/client";
    *
    * const { registry, aminoTypes } = getSigningLumeraClientOptions();
    * const client = await SigningStargateClient.connectWithSigner(

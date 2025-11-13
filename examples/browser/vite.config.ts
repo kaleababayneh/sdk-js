@@ -1,5 +1,4 @@
 import { defineConfig } from 'vite';
-import path from 'path';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 
 export default defineConfig({
@@ -13,15 +12,6 @@ export default defineConfig({
       ]
     })
   ],
-  resolve: {
-    alias: {
-      // Alias for compat modules to use browser versions (must come before main alias)
-      '@lumera/sdk-js/compat/blake3': path.resolve(__dirname, '../../src/compat/blake3.browser.ts'),
-      '@lumera/sdk-js/compat/zstd': path.resolve(__dirname, '../../src/compat/zstd.browser.ts'),
-      // Alias for the SDK to use the local source
-      '@lumera/sdk-js': path.resolve(__dirname, '../../src'),
-    },
-  },
   build: {
     outDir: 'dist',
     sourcemap: true,
@@ -34,6 +24,7 @@ export default defineConfig({
     }
   },
   optimizeDeps: {
-    exclude: ['@lumera/sdk-js', 'rq-library-wasm'],
+    // Only exclude WASM module, let Vite optimize the SDK
+    exclude: ['rq-library-wasm'],
   },
 });

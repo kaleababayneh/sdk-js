@@ -120,7 +120,7 @@ export interface LumeraClientConfig {
  * 
  * @example
  * ```typescript
- * import { createLumeraClient } from "@lumera/sdk-js";
+ * import { createLumeraClient } from "@lumera-protocol/sdk-js";
  * import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
  * 
  * // Create a wallet

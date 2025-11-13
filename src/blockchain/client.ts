@@ -243,7 +243,7 @@ export interface BlockchainClientOptions {
  * @example
  * ```typescript
  * import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
- * import { makeBlockchainClient, lumera } from "@lumera/sdk-js";
+ * import { makeBlockchainClient, lumera } from "@lumera-protocol/sdk-js";
  *
  * // Create a wallet
  * const wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {

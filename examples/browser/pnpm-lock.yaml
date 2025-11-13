@@ -14,9 +14,9 @@ importers:
       '@cosmjs/stargate':
         specifier: ^0.36.0
         version: 0.36.2
-      '@lumera/sdk-js':
-        specifier: file:../..
-        version: file:../..(@chain-registry/v2-types@0.53.146)(@chain-registry/v2@1.71.237)
+      '@lumera-protocol/sdk-js':
+        specifier: ^0.2.2
+        version: 0.2.2(@chain-registry/v2-types@0.53.146)(@chain-registry/v2@1.71.237)
     devDependencies:
       '@vitejs/plugin-basic-ssl':
         specifier: ^1.1.0
@@ -33,8 +33,8 @@ importers:
 
 packages:
 
-  '@bufbuild/protobuf@2.10.0':
-    resolution: {integrity: sha512-fdRs9PSrBF7QUntpZpq6BTw58fhgGJojgg39m9oFOJGZT+nip9b0so5cYY1oWl5pvemDLr0cPPsH46vwThEbpQ==}
+  '@bufbuild/protobuf@2.10.1':
+    resolution: {integrity: sha512-ckS3+vyJb5qGpEYv/s1OebUHDi/xSNtfgw1wqKZo7MR9F2z+qXr0q5XagafAG/9O0QPVIUfST0smluYSTpYFkg==}
 
   '@chain-registry/v2-types@0.53.146':
     resolution: {integrity: sha512-GnqdNnEJ+ZTAc/0S9fQbwL5GpIvF3LZ/P3o6qh6EyITSiRA1Y55FXs59eSddltpPX5EgyWDwNpJjY+Q5uYlAkA==}
@@ -246,8 +246,8 @@ packages:
       '@chain-registry/v2': ^1.71.186
       '@chain-registry/v2-types': ^0.53.115
 
-  '@lumera/sdk-js@file:../..':
-    resolution: {directory: ../.., type: directory}
+  '@lumera-protocol/sdk-js@0.2.2':
+    resolution: {integrity: sha512-8/FfK4EahpLPgm7MXmU1xdihcZDFwKnvoiiFMUrGL1wTvSRwUdEnDivclnN7MmsG32Dhp5DLOrmlf9RXi3fQRg==}
     engines: {node: '>=18'}
 
   '@mongodb-js/zstd@2.0.1':
@@ -648,8 +648,8 @@ packages:
   napi-build-utils@2.0.0:
     resolution: {integrity: sha512-GEbrYkbfF7MoNaoh2iGG84Mnf/WZfB0GdGEsM8wz7Expx/LlWf5U8t9nvJKXSp3qr5IsEbK04cBGhol/KwOsWA==}
 
-  node-abi@3.78.0:
-    resolution: {integrity: sha512-E2wEyrgX/CqvicaQYU3Ze1PFGjc4QYPGsjUrlYkqAE0WjHEZwgOsGMPMzkMse4LjJbDmaEuDX3CM036j5K2DSQ==}
+  node-abi@3.80.0:
+    resolution: {integrity: sha512-LyPuZJcI9HVwzXK1GPxWNzrr+vr8Hp/3UqlmWxxh8p54U1ZbclOqbSog9lWHaCX+dBaiGi6n/hIX+mKu74GmPA==}
     engines: {node: '>=10'}
 
   node-addon-api@4.3.0:
@@ -852,7 +852,7 @@ packages:
 
 snapshots:
 
-  '@bufbuild/protobuf@2.10.0': {}
+  '@bufbuild/protobuf@2.10.1': {}
 
   '@chain-registry/v2-types@0.53.146': {}
 
@@ -1118,9 +1118,9 @@ snapshots:
       bech32: 2.0.0
       decimal.js: 10.6.0
 
-  '@lumera/sdk-js@file:../..(@chain-registry/v2-types@0.53.146)(@chain-registry/v2@1.71.237)':
+  '@lumera-protocol/sdk-js@0.2.2(@chain-registry/v2-types@0.53.146)(@chain-registry/v2@1.71.237)':
     dependencies:
-      '@bufbuild/protobuf': 2.10.0
+      '@bufbuild/protobuf': 2.10.1
       '@cosmjs/amino': 0.36.2
       '@cosmjs/crypto': 0.36.2
       '@cosmjs/encoding': 0.36.2
@@ -1509,7 +1509,7 @@ snapshots:
 
   napi-build-utils@2.0.0: {}
 
-  node-abi@3.78.0:
+  node-abi@3.80.0:
     dependencies:
       semver: 7.7.3
 
@@ -1541,7 +1541,7 @@ snapshots:
       minimist: 1.2.8
       mkdirp-classic: 0.5.3
       napi-build-utils: 2.0.0
-      node-abi: 3.78.0
+      node-abi: 3.80.0
       pump: 3.0.3
       rc: 1.2.8
       simple-get: 4.0.1

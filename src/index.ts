@@ -1,7 +1,7 @@
 /**
  * Lumera SDK - Main entry point
  *
- * @module @lumera/sdk-js
+ * @module @lumera-protocol/sdk-js
  */
 
 // Main client - unified facade
@@ -109,4 +109,10 @@ export {
   createDefaultSignaturePrompter,
   createBatchedSignaturePrompter,
   defaultSignaturePrompter,
+  createDefaultTxPrompter,
+  type TxPrompter,
+  type TxPromptContext,
 } from "./wallets/prompter";
+
+// Wallet utilities - Keplr adapter
+export { getKeplrSigner, isKeplrAvailable } from "./wallets/keplr";

@@ -12,7 +12,7 @@
   "dependencies": {
     "@cosmjs/proto-signing": "^0.36.0",
     "@cosmjs/stargate": "^0.36.0",
-    "@lumera/sdk-js": "file:../.."
+    "@lumera-protocol/sdk-js": "^0.2.2"
   },
   "devDependencies": {
     "@vitejs/plugin-basic-ssl": "^1.1.0",

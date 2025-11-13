@@ -1,4 +1,4 @@
-import { compress as zstdCompress } from "@lumera/sdk-js/compat/zstd";
+import { compress as zstdCompress } from "@lumera-protocol/sdk-js/compat/zstd";
 
 /**
  * Compress a string using ZSTD compression

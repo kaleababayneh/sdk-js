@@ -9,9 +9,14 @@
  * 5. Display progress and results in the UI
  */
 
-import { createLumeraClient, type LumeraClient } from "../../src/client";
-import { getKeplrSigner, isKeplrAvailable } from "../../src/wallets/keplr";
-import { createBatchedSignaturePrompter, createDefaultTxPrompter } from "../../src/wallets/prompter";
+import {
+  createLumeraClient,
+  type LumeraClient,
+  getKeplrSigner,
+  isKeplrAvailable,
+  createBatchedSignaturePrompter,
+  createDefaultTxPrompter,
+} from "@lumera-protocol/sdk-js";
 
 // ============================================================================
 // State Management
@@ -174,8 +179,8 @@ async function connectWallet() {
       snapiUrl: "http://localhost:3100",
 
       // preset: "testnet",
-      signer,
-      address: state.address,
+  signer,
+  address: state.address!,
       gasPrice: "0.025ulume",
       http: {
         timeout: 45000,
