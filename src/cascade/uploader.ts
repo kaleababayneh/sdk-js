@@ -248,9 +248,15 @@ export class CascadeUploader {
 
       // Remove whitespace from WASM output to match Go's compact json.Marshal()
       // WASM outputs pretty-printed JSON; we need compact format for signature matching
-      const layoutObj = JSON.parse(new TextDecoder().decode(layoutBytes));
-      const compactLayoutJSON = JSON.stringify(layoutObj); // Compact, no whitespace
-      const compactLayoutBytes = new TextEncoder().encode(compactLayoutJSON);
+      let compactLayoutBytes: Uint8Array;
+      let compactLayoutJSON: string;
+      try {
+        const layoutObj = JSON.parse(new TextDecoder().decode(layoutBytes));
+        compactLayoutJSON = JSON.stringify(layoutObj); // Compact, no whitespace
+        compactLayoutBytes = new TextEncoder().encode(compactLayoutJSON);
+      } catch (error) {
+        throw new Error(`Failed to parse WASM layout output: ${error instanceof Error ? error.message : String(error)}`);
+      }
       const layoutBytesB64 = toBase64(compactLayoutBytes);
 
       console.debug('JS SDK LAYOUT DETAILS (compact JSON):');
