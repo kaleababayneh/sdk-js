@@ -245,9 +245,28 @@ export class CascadeUploader {
 
       // Step 5: Generate LEP-1 layout using rq-wasm
       const layoutBytes = await createSingleBlockLayout(fileBytes);
-      const layoutBytesB64 = toBase64(layoutBytes);
+
+      // Remove whitespace from WASM output to match Go's compact json.Marshal()
+      // WASM outputs pretty-printed JSON; we need compact format for signature matching
+      let compactLayoutBytes: Uint8Array;
+      let compactLayoutJSON: string;
+      try {
+        const layoutObj = JSON.parse(new TextDecoder().decode(layoutBytes));
+        compactLayoutJSON = JSON.stringify(layoutObj); // Compact, no whitespace
+        compactLayoutBytes = new TextEncoder().encode(compactLayoutJSON);
+      } catch (error) {
+        throw new Error(`Failed to parse WASM layout output: ${error instanceof Error ? error.message : String(error)}`);
+      }
+      const layoutBytesB64 = toBase64(compactLayoutBytes);
+
+      console.debug('JS SDK LAYOUT DETAILS (compact JSON):', {
+        rawWasmLength: layoutBytes.length,
+        compactLength: compactLayoutBytes.length,
+        layoutBytesB64,
+        layoutJSON: compactLayoutJSON
+      });
       console.debug('CascadeUploader.registerAction layoutBytesB64', { layoutBytesB64 });
-      
+
       // Sign the layout using wallet (ADR-036 signArbitrary)
       const layoutSignatureResponse = await this.requestSignature(
         "layout",

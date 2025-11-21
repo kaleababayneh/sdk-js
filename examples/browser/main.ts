@@ -177,6 +177,7 @@ async function connectWallet() {
       // rpcUrl: "https://rpc.pastel.network",
       // lcdUrl: "https://lcd.pastel.network",
       snapiUrl: "http://localhost:3100",
+      //snapiUrl: "http://localhost:3000",
 
       // preset: "testnet",
   signer,
