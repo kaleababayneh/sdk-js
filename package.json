@@ -1,6 +1,6 @@
 {
   "name": "@lumera-protocol/sdk-js",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Lumera JS/TS SDK — CosmJS+REST blockchain client and Cascade (sn-api) client",
   "publishConfig": { "access": "public" },
   "files": [
@@ -32,6 +32,7 @@
       "types": "./dist/types/compat/zstd.node.d.ts"
     }
   },
+  "sideEffects": false,
   "scripts": {
     "clean": "rm -rf dist",
     "build:esm": "tsc -p tsconfig.json",
