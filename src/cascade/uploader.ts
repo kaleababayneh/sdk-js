@@ -139,6 +139,20 @@ export interface CascadeUploaderOptions {
 }
 
 /**
+ * Result of a complete upload operation
+ */
+export interface UploadResult {
+  /** Action ID from blockchain registration */
+  actionId: string;
+  /** Completed upload task */
+  task: Task;
+  /** Task ID (convenience accessor for task.taskId) */
+  taskId?: string;
+  /** Task status (convenience accessor for task.status) */
+  status?: string;
+}
+
+/**
  * CascadeUploader manages the complete file upload workflow.
  * 
  * This class integrates all components of the storage layer to provide
@@ -473,7 +487,7 @@ export class CascadeUploader {
    *
    * @param file - The file to upload (as Blob, ArrayBuffer, or Uint8Array)
    * @param params - Upload parameters
-   * @returns Promise resolving to the completed upload task
+   * @returns Promise resolving to the upload result with actionId and task details
    * @throws {Error} If any step of the upload workflow fails
    *
    * @example
@@ -490,16 +504,16 @@ export class CascadeUploader {
    *   }
    * });
    *
-   * console.log('Upload complete:', result);
+   * console.log('Upload complete:', result.actionId, result.status);
    * ```
    */
   async uploadFile(
     file: Blob | ArrayBuffer | Uint8Array,
     params: UploadParams
-  ): Promise<Task> {
+  ): Promise<UploadResult> {
     // Step 1: Prepare file
     const preparedFile = await this.prepareFile(file);
-    
+
     // Step 2: Register action (handles prompter reset internally)
     const registeredAction = await this.registerAction(preparedFile, {
       fileName: params.fileName,
@@ -508,7 +522,7 @@ export class CascadeUploader {
       signaturePrompter: params.signaturePrompter,
       txPrompter: params.txPrompter,
     });
-    
+
     // Step 3: Send file to supernodes
     const task = await this.sendFileToSupernodes(
       registeredAction.actionId,
@@ -516,8 +530,13 @@ export class CascadeUploader {
       file,
       { taskOptions: params.taskOptions }
     );
-    
-    return task;
+
+    return {
+      actionId: registeredAction.actionId,
+      task,
+      taskId: task.taskId,
+      status: task.status,
+    };
   }
 
   private async requestSignature(

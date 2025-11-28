@@ -65,6 +65,7 @@ export type { BlockchainActionAdapterOptions } from "./blockchain/adapters/casca
 export {
   CascadeUploader,
   type UploadParams,
+  type UploadResult,
   type CascadeUploaderOptions,
   type SignaturePrompter,
   type SignaturePromptContext,

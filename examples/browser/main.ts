@@ -176,8 +176,8 @@ async function connectWallet() {
       // chainId: "lumera-devnet-1",
       // rpcUrl: "https://rpc.pastel.network",
       // lcdUrl: "https://lcd.pastel.network",
-      snapiUrl: "http://localhost:3100",
-      //snapiUrl: "http://localhost:3000",
+      // snapiUrl: "http://localhost:3100",
+      snapiUrl: "http://localhost:3000",
 
       // preset: "testnet",
   signer,
@@ -254,19 +254,32 @@ async function uploadFile() {
       signaturePrompter: keplrSignaturePrompter,
       txPrompter: keplrTxPrompter,
     });
-    
+
     showProgress("upload", 100);
-    
-    log(`✓ Upload completed! Task ID: ${uploadResult.taskId}`, "success");
-    log(`Status: ${uploadResult.status}`, "success");
-    
+
+    // Save the action ID for download (always present in new SDK)
+    state.lastActionId = uploadResult.actionId;
+
+    log(`✓ Upload completed!`, "success");
+    log(`Action ID: ${uploadResult.actionId}`, "success");
+    log(`Task ID: ${uploadResult.taskId || 'N/A'}`, "info");
+    log(`Status: ${uploadResult.status || 'N/A'}`, "info");
+
     // Enable download button
     elements.downloadBtn.disabled = false;
-    
+
     setTimeout(() => hideProgress("upload"), 2000);
-    
+
   } catch (error) {
-    log(`Upload failed: ${error instanceof Error ? error.message : String(error)}`, "error");
+    const errorMsg = error instanceof Error ? error.message : String(error);
+
+    // Check for Keplr rejection
+    if (errorMsg.includes("reject") || errorMsg.includes("denied") || errorMsg.includes("cancelled")) {
+      log(`⚠️ Signature rejected by user. Please approve Keplr prompts to complete upload.`, "warning");
+    } else {
+      log(`Upload failed: ${errorMsg}`, "error");
+    }
+
     console.error("Upload error:", error);
     hideProgress("upload");
     elements.signaturePrompts.innerHTML = "";

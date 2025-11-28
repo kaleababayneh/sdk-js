@@ -145,16 +145,19 @@ export class CascadeDownloader {
    */
   async downloadFile(params: DownloadParams): Promise<ReadableStream> {
     // Step 1: Prepare download_auth signature
-    // For private downloads, this should be a wallet signature over the action ID.
-    // For public downloads, the signature can be empty or omitted.
-    const downloadSignatureB64 = params.isPrivate
-      ? await this.simulateDownloadSignature(params.actionId)
-      : undefined;
-    
+    // Sign the action ID for authentication (required for both public and private downloads)
+    const downloadSignatureB64 = await this.createDownloadSignature(params.actionId);
+
+    console.debug('CascadeDownloader.downloadFile preparing request', {
+      actionId: params.actionId,
+      signatureLength: downloadSignatureB64.length,
+      signature: downloadSignatureB64.substring(0, 20) + '...'
+    });
+
     // Step 2: Initiate download task via sn-api
     const response = await this.client.requestDownload(
       params.actionId,
-      {} // Empty body as per API spec
+      { signature: downloadSignatureB64 }
     );
     
     // Step 3: Monitor download task until ready using SSE
@@ -227,15 +230,15 @@ export class CascadeDownloader {
   }
 
   /**
-   * Generate download signature for private file authentication
+   * Generate download signature for file authentication
    *
    * Signs the action ID using ADR-036 signArbitrary with the wallet.
-   * This signature authenticates the download request for private files.
+   * This signature authenticates the download request.
    *
    * @param actionId - The action ID to sign
    * @returns Promise resolving to Base64-encoded signature
    */
-  private async simulateDownloadSignature(actionId: string): Promise<string> {
+  private async createDownloadSignature(actionId: string): Promise<string> {
     const signatureResponse = await this.signer.signArbitrary(
       this.chainId,
       this.signerAddress,

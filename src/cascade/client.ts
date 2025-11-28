@@ -29,7 +29,10 @@ export type StartCascadeResponse = operations["startCascade"]["responses"]["202"
  * Request body for requesting a download
  * Maps to POST /api/v1/actions/cascade/{action_id}/downloads
  */
-export type RequestDownloadBody = Record<string, never>; // No body params in spec
+export type RequestDownloadBody = {
+  /** Authentication signature for download (Base64 encoded) */
+  signature: string;
+};
 
 /**
  * Response from requesting a download
@@ -241,6 +244,7 @@ export class SNApiClient {
     actionId: string,
     body: RequestDownloadBody
   ): Promise<RequestDownloadResponse> {
+    console.debug('SNApiClient.requestDownload', { actionId, body });
     return this.http.post(`/api/v1/actions/cascade/${actionId}/downloads`, body);
   }
 
