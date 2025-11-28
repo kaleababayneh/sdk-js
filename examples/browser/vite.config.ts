@@ -12,6 +12,13 @@ export default defineConfig({
       ]
     })
   ],
+  resolve: {
+    conditions: ['browser', 'import', 'module', 'default'],
+    alias: {
+      '@lumera-protocol/sdk-js/compat/zstd': '/home/behzad/Lumera/sdk-js/src/compat/zstd.browser.ts',
+      '@lumera-protocol/sdk-js/compat/blake3': '/home/behzad/Lumera/sdk-js/src/compat/blake3.browser.ts',
+    }
+  },
   build: {
     outDir: 'dist',
     sourcemap: true,

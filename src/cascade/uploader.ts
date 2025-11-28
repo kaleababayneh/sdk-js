@@ -273,11 +273,12 @@ export class CascadeUploader {
       }
       const layoutBytesB64 = toBase64(compactLayoutBytes);
 
-      console.debug('JS SDK LAYOUT DETAILS (compact JSON):', {
+      console.log('🔼 JS SDK LAYOUT DETAILS (compact JSON):', {
         rawWasmLength: layoutBytes.length,
         compactLength: compactLayoutBytes.length,
         layoutBytesB64,
-        layoutJSON: compactLayoutJSON
+        layoutJSON: compactLayoutJSON,
+        startsWithZstdMagic: layoutBytesB64.startsWith('KLUv/')
       });
       console.debug('CascadeUploader.registerAction layoutBytesB64', { layoutBytesB64 });
 

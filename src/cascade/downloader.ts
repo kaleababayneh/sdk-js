@@ -148,7 +148,7 @@ export class CascadeDownloader {
     // Sign the action ID for authentication (required for both public and private downloads)
     const downloadSignatureB64 = await this.createDownloadSignature(params.actionId);
 
-    console.debug('CascadeDownloader.downloadFile preparing request', {
+    console.log('🔽 CascadeDownloader.downloadFile preparing request', {
       actionId: params.actionId,
       signatureLength: downloadSignatureB64.length,
       signature: downloadSignatureB64.substring(0, 20) + '...'

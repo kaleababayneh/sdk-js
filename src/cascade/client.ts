@@ -244,7 +244,7 @@ export class SNApiClient {
     actionId: string,
     body: RequestDownloadBody
   ): Promise<RequestDownloadResponse> {
-    console.debug('SNApiClient.requestDownload', { actionId, body });
+    console.log('🌐 SNApiClient.requestDownload', { actionId, body });
     return this.http.post(`/api/v1/actions/cascade/${actionId}/downloads`, body);
   }
 
