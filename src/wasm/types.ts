@@ -81,11 +81,11 @@ export interface SourceBlock {
 export interface IndexFile {
   /**
    * LEP-1 protocol version
-   * 
+   *
    * @remarks
-   * Currently fixed at 1 for LEP-1 specification
+   * Optional - Go implementation doesn't set this field
    */
-  version: number;
+  version?: number;
   
   /**
    * Array of 50 derived layout IDs.

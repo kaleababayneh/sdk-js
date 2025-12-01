@@ -134,9 +134,39 @@ class KeplrSigner implements UniversalSigner {
     signerAddress: string,
     data: string
   ): Promise<ArbitrarySignResponse> {
+    // CRITICAL DEBUG: Log exactly what we're sending to Keplr
+    console.log('🔐 KEPLR SIGN ARBITRARY DEBUG [VERSION 3]:', {
+      version: 'SDK_V3_SIGNATURE_DEBUG',
+      chainId,
+      signerAddress,
+      dataToSign: data,
+      dataLength: data.length,
+      dataType: typeof data,
+      // Check if data looks like JSON
+      isJSON: data.trim().startsWith('{') || data.trim().startsWith('['),
+      // First 100 chars
+      dataPreview: data.substring(0, 100),
+      // Convert to bytes to see encoding
+      bytesHex: Array.from(new TextEncoder().encode(data).slice(0, 50))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join(' '),
+      timestamp: new Date().toISOString()
+    });
+
     // Keplr's signArbitrary returns a slightly different format
     const result = await this.keplr.signArbitrary(chainId, signerAddress, data);
-    
+
+    console.log('🔐 KEPLR SIGNATURE RECEIVED [VERSION 3]:', {
+      version: 'SDK_V3_SIGNATURE_DEBUG',
+      signature: result.signature,
+      signatureLength: result.signature.length,
+      pubKeyType: result.pub_key.type,
+      pubKeyValue: result.pub_key.value,
+      // Check if signature is base64
+      isBase64: /^[A-Za-z0-9+/]+=*$/.test(result.signature),
+      timestamp: new Date().toISOString()
+    });
+
     return {
       signed: data, // Keplr doesn't modify the data
       signature: result.signature,

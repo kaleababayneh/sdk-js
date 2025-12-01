@@ -90,8 +90,8 @@ export function parseLayoutFile(layoutBytes: Uint8Array): Layout {
  *    - counter_i = rq_ids_ic + i
  *    - layout_id_i = Base58(BLAKE3(zstd(layout_with_signature + "." + decimal(counter_i))))
  *
- * @param layoutFile - The RaptorQ layout file as a Uint8Array
- * @param layoutSignature - The cryptographic signature over the layout data
+ * @param layoutFileB64 - The RaptorQ layout file as Base64 string
+ * @param layoutSignatureB64 - The cryptographic signature over the layout data as Base64 string
  * @param rq_ids_ic - The initial counter value from blockchain action parameters
  * @param rq_ids_max - The number of layout IDs to generate
  * @returns A promise resolving to an array of Base58-encoded layout IDs
@@ -106,9 +106,9 @@ export function parseLayoutFile(layoutBytes: Uint8Array): Layout {
  *
  * @example
  * ```typescript
- * const layoutFile = new Uint8Array([...]);
- * const layoutSignature = new Uint8Array([...]);
- * const layoutIds = await generateIds(layoutFile, layoutSignature, 1000, 50);
+ * const layoutFileB64 = "...";
+ * const layoutSignatureB64 = "...";
+ * const layoutIds = await generateIds(layoutFileB64, layoutSignatureB64, 1000, 50);
  * console.log('First ID:', layoutIds[0]);
  * console.log('Last ID:', layoutIds[49]);
  * ```
@@ -123,11 +123,11 @@ export async function generateIds(
   if (rq_ids_max <= 0) {
     throw new Error(`rq_ids_max must be positive, got ${rq_ids_max}`);
   }
-  
+
   if (layoutFileB64.length === 0) {
     throw new Error('layoutFile must not be empty');
   }
-  
+
   if (layoutSignatureB64.length === 0) {
     throw new Error('layoutSignature must not be empty');
   }
@@ -141,19 +141,76 @@ export async function generateIds(
     const counter = rq_ids_ic + i;
     // Create the input string: layout_with_signature + "." + counter
     const input = `${layoutWithSignature}.${counter}`;
-    
+
     // Compress with zstd
     const compressed = await compress(input);
-    
+
     // Hash with BLAKE3 (get bytes directly for Base58 encoding)
     const hashBytes = await blake3HashBytes(compressed);
-    
+
     // Encode with Base58
     const layoutId = bs58.encode(hashBytes);
     layoutIds.push(layoutId);
   }
 
   return layoutIds;
+}
+
+/**
+ * Derives a sequence of IDs from an already-combined input string.
+ *
+ * This function is used when the input is already in the combined format
+ * (e.g., "index_b64.signature" for index IDs). It's crucial for matching
+ * the Go SDK's ID generation which passes the full combined string.
+ *
+ * @param combinedInput - The already-combined input string (e.g., "index_b64.signature")
+ * @param rq_ids_ic - The initial counter value from blockchain action parameters
+ * @param rq_ids_max - The number of IDs to generate
+ * @returns A promise resolving to an array of Base58-encoded IDs
+ *
+ * @throws {Error} If rq_ids_max is zero or negative
+ * @throws {Error} If combinedInput is empty
+ *
+ * @example
+ * ```typescript
+ * const combinedInput = "index_b64.signature";
+ * const ids = await generateIdsFromCombined(combinedInput, 6, 50);
+ * console.log('First ID:', ids[0]);
+ * ```
+ */
+export async function generateIdsFromCombined(
+  combinedInput: string,
+  rq_ids_ic: number,
+  rq_ids_max: number
+): Promise<string[]> {
+  // Validate inputs
+  if (rq_ids_max <= 0) {
+    throw new Error(`rq_ids_max must be positive, got ${rq_ids_max}`);
+  }
+
+  if (combinedInput.length === 0) {
+    throw new Error('combinedInput must not be empty');
+  }
+
+  // Generate IDs
+  const ids: string[] = [];
+  for (let i = 0; i < rq_ids_max; i++) {
+    const counter = rq_ids_ic + i;
+    // Create the input string: combinedInput + "." + counter
+    const input = `${combinedInput}.${counter}`;
+
+    // Compress with zstd
+    const compressed = await compress(input);
+
+    // Hash with BLAKE3 (get bytes directly for Base58 encoding)
+    const hashBytes = await blake3HashBytes(compressed);
+
+    // Encode with Base58
+    const id = bs58.encode(hashBytes);
+    ids.push(id);
+  }
+
+  return ids;
 }
 
 /**
@@ -205,8 +262,9 @@ export function buildIndexFile(
   }
 
   // Construct the index file per LEP-1 specification
+  // IMPORTANT: Do NOT include version field to match Go implementation
+  // Go's BuildIndex doesn't set version, and with omitempty it's excluded from JSON
   return {
-    version: 1, // LEP-1 version
     layout_ids,
     layout_signature,
   };

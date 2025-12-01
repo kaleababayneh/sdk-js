@@ -48,7 +48,7 @@ export class RaptorQProxy {
    */
   private static readonly DEFAULT_SYMBOL_SIZE = 65535; // 64KB - 1
   private static readonly DEFAULT_REDUNDANCY_FACTOR = 6;
-  private static readonly DEFAULT_MAX_MEMORY_MB = 4096n; // 4GB
+  private static readonly DEFAULT_MAX_MEMORY_MB = 8192n; // 8GB - MUST match Go SDK (8 * 1024)
   private static readonly DEFAULT_CONCURRENCY_LIMIT = 1n;
   private static readonly DEFAULT_BLOCK_SIZE = 1280 * 1024 * 1024; // 1,280 MiB
 
@@ -196,8 +196,39 @@ export class RaptorQProxy {
       const session = await this.createSession();
       
       // Step 3: Call create_metadata to generate the layout
-      // block_size = 0 means auto-calculate
-      const metadata = await session.create_metadata(inputPath, layoutPath, 0);
+      // CRITICAL: Use fixed block size to match Go SDK (1280 MiB)
+      // Go SDK uses: rqBlockSize = 1280 * 1024 * 1024
+      const blockSize = RaptorQProxy.DEFAULT_BLOCK_SIZE; // 1280 MiB
+
+      console.log('🔧 RAPTORQ LAYOUT GENERATION [VERSION 4 - MEMORY FIX]:', {
+        VERSION: 'SDK_V4_MEMORY_FIX',
+        // CRITICAL: All parameters MUST match Go SDK exactly
+        symbolSize: RaptorQProxy.DEFAULT_SYMBOL_SIZE,          // Go: 65535
+        redundancyFactor: RaptorQProxy.DEFAULT_REDUNDANCY_FACTOR, // Go: 6
+        maxMemoryMB: Number(RaptorQProxy.DEFAULT_MAX_MEMORY_MB),   // Go: 8192 (8*1024)
+        concurrency: Number(RaptorQProxy.DEFAULT_CONCURRENCY_LIMIT), // Go: 1
+        blockSize: blockSize,                                   // Go: 1280 * 1024 * 1024
+        blockSizeMB: blockSize / (1024 * 1024),
+        fileSize: fileBytes.length,
+        fileSizeMB: fileBytes.length / (1024 * 1024),
+        // Verification
+        matchesGoSDK: {
+          symbolSize: RaptorQProxy.DEFAULT_SYMBOL_SIZE === 65535,
+          redundancyFactor: RaptorQProxy.DEFAULT_REDUNDANCY_FACTOR === 6,
+          maxMemoryMB: Number(RaptorQProxy.DEFAULT_MAX_MEMORY_MB) === 8192,
+          concurrency: Number(RaptorQProxy.DEFAULT_CONCURRENCY_LIMIT) === 1,
+          blockSize: blockSize === 1280 * 1024 * 1024,
+          ALL_MATCH: (
+            RaptorQProxy.DEFAULT_SYMBOL_SIZE === 65535 &&
+            RaptorQProxy.DEFAULT_REDUNDANCY_FACTOR === 6 &&
+            Number(RaptorQProxy.DEFAULT_MAX_MEMORY_MB) === 8192 &&
+            Number(RaptorQProxy.DEFAULT_CONCURRENCY_LIMIT) === 1 &&
+            blockSize === 1280 * 1024 * 1024
+          )
+        }
+      });
+
+      const metadata = await session.create_metadata(inputPath, layoutPath, blockSize);
       
       // Step 4: Read the layout file from in-memory FS
       const layoutSize = getFileSize(layoutPath);

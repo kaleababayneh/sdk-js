@@ -30,7 +30,7 @@ import type { CascadeChainPort, TxPrompter } from './ports';
 import { TaskManager, TaskManagerOptions } from './task';
 import { blake3Hash } from '../internal/hash';
 import { toBase64, fromBase64, toCanonicalJsonBytes } from '../internal/encoding';
-import { createSingleBlockLayout, generateIds, buildIndexFile } from '../wasm/lep1';
+import { createSingleBlockLayout, generateIds, generateIdsFromCombined, buildIndexFile } from '../wasm/lep1';
 import type { UniversalSigner, ArbitrarySignResponse } from '../wallets/signer';
 import { createDefaultSignaturePrompter } from '../wallets/prompter';
 
@@ -246,6 +246,18 @@ export class CascadeUploader {
     const prompterWithReset = signaturePrompter as SignaturePrompter & { reset?: () => void };
 
     try {
+      // Version indicator - immediately shows which SDK version is running
+      console.log('🚀 CascadeUploader [VERSION 4] - MEMORY & PARAMS FIX', {
+        version: 'SDK_V4_ALL_PARAMS_FIXED',
+        timestamp: new Date().toISOString(),
+        features: [
+          'Signing raw JSON layout (not base64)',
+          'Fixed block size: 1280 MiB',
+          'Fixed memory limit: 8192 MB',
+          'All RaptorQ params match Go SDK'
+        ]
+      });
+
       const { fileBytes, dataHash } = preparedFile;
 
       // Step 1: Get action params from blockchain
@@ -253,21 +265,64 @@ export class CascadeUploader {
       const rq_ids_max = actionParams.max_raptor_q_symbols;
       console.debug('CascadeUploader.registerAction actionParams', { actionParams });
       
-      // Step 2: Generate random initial counter for layout ID derivation
-      const rq_ids_ic = Math.floor(Math.random() * rq_ids_max);
-      console.debug('CascadeUploader.registerAction generated rq_ids_ic', { rq_ids_ic });
+      // Step 2: Use fixed initial counter to match Go SDK implementation
+      // IMPORTANT: The Go SDK (used by sn-api-manager) hardcodes ic=6
+      // We must match this for ID generation to be consistent between browser and supernode
+      const rq_ids_ic = 6; // Fixed value matching Go SDK's client.go line 286
+      console.log('🔧 Using fixed rq_ids_ic=6 to match Go SDK', { rq_ids_ic, rq_ids_max });
 
       // Step 5: Generate LEP-1 layout using rq-wasm
       const layoutBytes = await createSingleBlockLayout(fileBytes);
+
+      // CRITICAL DEBUGGING: Log raw WASM output
+      const rawLayoutString = new TextDecoder().decode(layoutBytes);
+      console.log('🔬 RAW WASM LAYOUT OUTPUT [VERSION 3]:', {
+        rawLength: layoutBytes.length,
+        rawPreview: rawLayoutString.substring(0, 200),
+        isJSON: rawLayoutString.trim().startsWith('{'),
+        firstBytes: Array.from(layoutBytes.slice(0, 20))
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join(' ')
+      });
 
       // Remove whitespace from WASM output to match Go's compact json.Marshal()
       // WASM outputs pretty-printed JSON; we need compact format for signature matching
       let compactLayoutBytes: Uint8Array;
       let compactLayoutJSON: string;
+      let layoutObj: any;
       try {
-        const layoutObj = JSON.parse(new TextDecoder().decode(layoutBytes));
+        layoutObj = JSON.parse(rawLayoutString);
+
+        // CRITICAL: Check the structure of the layout object
+        console.log('🔬 PARSED LAYOUT STRUCTURE:', {
+          hasBlocks: 'blocks' in layoutObj,
+          blocksLength: layoutObj.blocks?.length,
+          firstBlockKeys: layoutObj.blocks?.[0] ? Object.keys(layoutObj.blocks[0]).sort() : null,
+          firstBlock: layoutObj.blocks?.[0],
+          // Check if keys are in specific order
+          keysInOrder: JSON.stringify(Object.keys(layoutObj.blocks?.[0] || {})),
+          // CRITICAL: Check exact layout values
+          transferLength: layoutObj.transfer_length,
+          symbolSize: layoutObj.symbol_size,
+          numSourceBlocks: layoutObj.num_source_blocks,
+          // Check block details
+          blockDetails: layoutObj.blocks?.[0] ? {
+            blockId: layoutObj.blocks[0].block_id,
+            numSourceSymbols: layoutObj.blocks[0].num_source_symbols,
+            symbolBound: layoutObj.blocks[0].symbol_bound
+          } : null
+        });
+
         compactLayoutJSON = JSON.stringify(layoutObj); // Compact, no whitespace
         compactLayoutBytes = new TextEncoder().encode(compactLayoutJSON);
+
+        // Compare raw vs compact
+        console.log('🔬 LAYOUT COMPACTION:', {
+          rawLength: rawLayoutString.length,
+          compactLength: compactLayoutJSON.length,
+          reduction: rawLayoutString.length - compactLayoutJSON.length,
+          compactPreview: compactLayoutJSON.substring(0, 200)
+        });
       } catch (error) {
         throw new Error(`Failed to parse WASM layout output: ${error instanceof Error ? error.message : String(error)}`);
       }
@@ -283,31 +338,106 @@ export class CascadeUploader {
       console.debug('CascadeUploader.registerAction layoutBytesB64', { layoutBytesB64 });
 
       // Sign the layout using wallet (ADR-036 signArbitrary)
+      // IMPORTANT: Sign the actual layout JSON string, not its base64 encoding!
+      // The signature must be over the raw content for consistency with Go SDK
+      console.log('📝 SIGNING LAYOUT [VERSION 3]:', {
+        VERSION: 'SDK_V3_SIGNATURE_DEBUG',
+        timestamp: new Date().toISOString(),
+        signingData: compactLayoutJSON,
+        signingDataLength: compactLayoutJSON.length,
+        layoutBytesB64: layoutBytesB64,
+        layoutB64Length: layoutBytesB64.length
+      });
       const layoutSignatureResponse = await this.requestSignature(
         "layout",
-        layoutBytesB64,
+        compactLayoutJSON,  // Sign the actual JSON string, not base64!
         signaturePrompter,
         operationStartMs
       );
       const layoutSignatureB64 = layoutSignatureResponse.signature;
+      console.log('✍️ LAYOUT SIGNATURE RECEIVED [VERSION 3]:', {
+        VERSION: 'SDK_V3_SIGNATURE_DEBUG',
+        layoutSignatureB64,
+        signatureLength: layoutSignatureB64.length,
+        // Decode to see raw bytes
+        signatureHex: (() => {
+          try {
+            const bytes = fromBase64(layoutSignatureB64);
+            return Array.from(bytes.slice(0, 32))
+              .map(b => b.toString(16).padStart(2, '0'))
+              .join(' ') + '...';
+          } catch (e) {
+            return 'decode-error';
+          }
+        })(),
+        timestamp: new Date().toISOString()
+      });
       console.debug('CascadeUploader.registerAction layoutSignatureB64', { layoutSignatureB64 });
       
-      // Step 6: Generate layout IDs using the new algorithm
+      // Step 6: Generate LAYOUT IDs (for the index file's layout_ids field)
+      // These are needed for the index file structure, but NOT for storage
+      console.log('🔑 GENERATING LAYOUT IDs [VERSION 3]:', {
+        VERSION: 'SDK_V3_LAYOUT_ID_DEBUG',
+        input: {
+          layoutBytesB64: layoutBytesB64.substring(0, 50) + '...',
+          layoutBytesB64Length: layoutBytesB64.length,
+          layoutSignatureB64: layoutSignatureB64,
+          rq_ids_ic: rq_ids_ic,
+          rq_ids_max: rq_ids_max
+        },
+        // The combined input that will be used for ID generation
+        combinedInput: `${layoutBytesB64}.${layoutSignatureB64}`,
+        combinedLength: `${layoutBytesB64}.${layoutSignatureB64}`.length,
+        timestamp: new Date().toISOString()
+      });
+
       const layoutIds = await generateIds(
         layoutBytesB64,
         layoutSignatureB64,
         rq_ids_ic,
         rq_ids_max
       );
+
+      console.log('🔑 LAYOUT IDs GENERATED:', {
+        count: layoutIds.length,
+        firstId: layoutIds[0],
+        lastId: layoutIds[layoutIds.length - 1],
+        sample: layoutIds.slice(0, 3)
+      });
+
       console.debug('CascadeUploader.registerAction layoutIds', { layoutIds });
-      
+
       // Step 7: Build index_file
       const indexFile = buildIndexFile(layoutIds, layoutSignatureB64);
       const indexFileBytes = toCanonicalJsonBytes(indexFile);
       const indexFileB64 = toBase64(indexFileBytes);
       const indexFileString = new TextDecoder().decode(indexFileBytes);
+
+      console.log('📄 INDEX FILE DETAILS [VERSION 3]:', {
+        VERSION: 'SDK_V3_INDEX_DEBUG',
+        indexFile: indexFile,  // The actual object
+        indexFileString: indexFileString,  // The JSON string
+        indexFileB64: indexFileB64,
+        indexFileB64Length: indexFileB64.length,
+        layoutIdsCount: layoutIds.length,
+        firstLayoutId: layoutIds[0],
+        lastLayoutId: layoutIds[layoutIds.length - 1],
+        layoutSignatureInIndex: layoutSignatureB64,
+        // Check if the layout_ids match what we expect
+        layoutIdsPreview: layoutIds.slice(0, 3).concat(['...']),
+        // CRITICAL: Check exact JSON formatting
+        indexJsonByteCount: indexFileBytes.length,
+        indexJsonFirstBytes: Array.from(indexFileBytes.slice(0, 50))
+          .map(b => String.fromCharCode(b))
+          .join(''),
+        // Check if it matches Go's json.Marshal format
+        indexKeysOrder: Object.keys(indexFile),
+        hasVersion: 'version' in indexFile,
+        timestamp: new Date().toISOString()
+      });
+
       console.debug('CascadeUploader.registerAction indexFile', { indexFileB64 });
-      
+
       const indexSignatureResponse = await this.requestSignature(
         "index",
         indexFileString,
@@ -316,6 +446,26 @@ export class CascadeUploader {
       );
       const indexWithSignature = `${indexFileB64}.${indexSignatureResponse.signature}`;
       console.debug('CascadeUploader.registerAction indexWithSignature', { indexWithSignature });
+
+      // Step 7b: Generate INDEX IDs to debug what the supernode SHOULD generate
+      // NOTE: These aren't sent anywhere - the supernode generates its own from the signatures field
+      // IMPORTANT: Pass the already-combined string, not separate parts!
+      // Go SDK passes the full "index_b64.signature" string, not separate components
+      const debugIndexIds = await generateIdsFromCombined(
+        indexWithSignature,  // Already "index_b64.signature"
+        rq_ids_ic,
+        rq_ids_max
+      );
+
+      console.log('🔍 DEBUG: Expected Index IDs that supernode should generate:', {
+        indexIds: debugIndexIds,
+        fromInput: `${indexFileB64}.${indexSignatureResponse.signature}`,
+        ic: rq_ids_ic,
+        max: rq_ids_max,
+        firstId: debugIndexIds[0],
+        lastId: debugIndexIds[debugIndexIds.length - 1],
+        count: debugIndexIds.length
+      });
       
       // Step 8: Prepare auth_signature for upload
       const authSignatureResponse = await this.requestSignature(
@@ -328,6 +478,17 @@ export class CascadeUploader {
       console.debug('CascadeUploader.registerAction authSignature', { authSignature });
 
       // Step 9: Register the action on-chain
+      console.log('🚀 SENDING TO BLOCKCHAIN:', {
+        data_hash: dataHash,
+        rq_ids_ic,
+        rq_ids_max,
+        signatures: indexWithSignature,
+        signaturesLength: indexWithSignature.length,
+        indexFileB64Length: indexFileB64.length,
+        indexSigLength: indexSignatureResponse.signature.length,
+        public: params.isPublic,
+      });
+
       const txOutcome = await this.chainPort.requestActionTx({
         msg: {
           data_hash: dataHash,
