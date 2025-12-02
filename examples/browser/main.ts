@@ -18,6 +18,8 @@ import {
   createDefaultTxPrompter,
 } from "@lumera-protocol/sdk-js";
 
+const LUMERA_CHAIN_ID = "lumera-testnet-2";
+
 // ============================================================================
 // State Management
 // ============================================================================
@@ -48,6 +50,8 @@ const elements = {
   fileName: document.getElementById("file-name") as HTMLDivElement,
   uploadBtn: document.getElementById("upload-btn") as HTMLButtonElement,
   downloadBtn: document.getElementById("download-btn") as HTMLButtonElement,
+  downloadActionIdInput: document.getElementById("download-action-id-input") as HTMLInputElement,
+  downloadByIdBtn: document.getElementById("download-by-id-btn") as HTMLButtonElement,
   logContainer: document.getElementById("log-container") as HTMLDivElement,
   uploadProgress: document.getElementById("upload-progress") as HTMLDivElement,
   uploadProgressFill: document.getElementById("upload-progress-fill") as HTMLDivElement,
@@ -123,6 +127,8 @@ function updateWalletUI(connected: boolean) {
     elements.connectBtn.style.display = "none";
     elements.disconnectBtn.style.display = "inline-block";
     elements.uploadBtn.disabled = !state.selectedFile;
+    elements.downloadBtn.disabled = !state.lastActionId;
+    elements.downloadByIdBtn.disabled = false;
   } else {
     elements.walletInfo.innerHTML = `
       <span class="status-indicator disconnected"></span>
@@ -134,6 +140,7 @@ function updateWalletUI(connected: boolean) {
     elements.disconnectBtn.style.display = "none";
     elements.uploadBtn.disabled = true;
     elements.downloadBtn.disabled = true;
+    elements.downloadByIdBtn.disabled = true;
   }
 }
 
@@ -154,8 +161,18 @@ async function connectWallet() {
     log("Connecting to Keplr...", "info");
     elements.connectBtn.disabled = true;
     
-    // Get Keplr signer (this will prompt the user to connect)
-    const signer = await getKeplrSigner("lumera-testnet-2");
+    const anyWindow = window as any;
+    const keplr = anyWindow?.keplr;
+
+    if (!keplr) {
+      throw new Error("Keplr extension not found on window. Make sure the extension is installed and enabled.");
+    }
+
+    // Mirror the working keplr-test flow: first enable the chain in Keplr
+    await keplr.enable(LUMERA_CHAIN_ID);
+
+    // Get Keplr-based UniversalSigner (wraps the same offline signer)
+    const signer = await getKeplrSigner(LUMERA_CHAIN_ID);
     const accounts = await signer.getAccounts();
     
     if (accounts.length === 0) {
@@ -168,20 +185,12 @@ async function connectWallet() {
     // Create LumeraClient with Keplr signer
     log("Initializing Lumera client...", "info");
     state.client = await createLumeraClient({
-      chainId: "lumera-testnet-2",
+      chainId: LUMERA_CHAIN_ID,
       rpcUrl: "https://rpc.testnet.lumera.io",
       lcdUrl: "https://lcd.testnet.lumera.io",
-      // snapiUrl: "https://sn-api.testnet.lumera.io",
-
-      // chainId: "lumera-devnet-1",
-      // rpcUrl: "https://rpc.pastel.network",
-      // lcdUrl: "https://lcd.pastel.network",
-      snapiUrl: "http://localhost:3100",
-      //snapiUrl: "http://localhost:3000",
-
-      // preset: "testnet",
-  signer,
-  address: state.address!,
+      snapiUrl: "http://localhost:3000",
+      signer,
+      address: state.address!,
       gasPrice: "0.025ulume",
       http: {
         timeout: 45000,
@@ -239,30 +248,52 @@ async function uploadFile() {
     
     // Calculate expiration time (default to 24 hours from now)
     // Date.now() returns milliseconds, convert to seconds
-    const expirationTime = Math.floor(Date.now() / 1000 + 86400 * 1.5).toString();  
-  
-    // Upload to Cascade
-    log("Uploading to Cascade storage...", "info");
-    const uploadResult = await state.client.Cascade.uploader.uploadFile(fileBytes, {
+    const expirationTime = Math.floor(Date.now() / 1000 + 86400 * 1.5).toString();
+
+    const uploader = state.client.Cascade.uploader;
+
+    // Step 1: Prepare file (hash + bytes)
+    log("Preparing file for upload (hashing)...", "info");
+    const prepared = await uploader.prepareFile(fileBytes);
+    log(`File hash (BLAKE3, Base64): ${prepared.dataHash}`, "info");
+
+    // Step 2: Register action on-chain (generates LEP-1 layout + index and actionId)
+    log("Registering Cascade action on blockchain (wallet signatures required)...", "info");
+    const registered = await uploader.registerAction(prepared, {
       fileName: state.selectedFile.name,
       isPublic: false,
-      expirationTime: expirationTime,
-      taskOptions: {
-        pollInterval: 2000,
-        timeout: 300000,
-      },
+      expirationTime,
       signaturePrompter: keplrSignaturePrompter,
       txPrompter: keplrTxPrompter,
     });
+
+    state.lastActionId = registered.actionId;
+
+    log(`Action registered with ID: ${registered.actionId}`, "success");
+
+    // Step 3: Upload file bytes to Cascade supernodes
+    log("Uploading file to Cascade storage via sn-api...", "info");
+    const uploadTask = await uploader.sendFileToSupernodes(
+      registered.actionId,
+      registered.authSignature,
+      fileBytes,
+      {
+        taskOptions: {
+          pollInterval: 2000,
+          timeout: 300000,
+        },
+      }
+    );
     
     showProgress("upload", 100);
     
-    log(`✓ Upload completed! Task ID: ${uploadResult.taskId}`, "success");
-    log(`Status: ${uploadResult.status}`, "success");
+    log(`✓ Upload completed! Task ID: ${uploadTask.taskId ?? uploadTask.id}`, "success");
+    log(`Status: ${uploadTask.status}`, "success");
     
-    // Enable download button
+    // Enable download buttons
     elements.downloadBtn.disabled = false;
-    
+    elements.downloadByIdBtn.disabled = false;
+
     setTimeout(() => hideProgress("upload"), 2000);
     
   } catch (error) {
@@ -280,22 +311,28 @@ async function uploadFile() {
 // File Download
 // ============================================================================
 
-async function downloadFile() {
-  if (!state.client || !state.lastActionId) {
-    log("No wallet connected or no file to download", "error");
+async function downloadFileByActionId(actionId: string) {
+  if (!state.client) {
+    log("No wallet connected", "error");
+    return;
+  }
+
+  if (!actionId) {
+    log("No action ID provided to download", "error");
     return;
   }
   
   try {
     elements.downloadBtn.disabled = true;
+    elements.downloadByIdBtn.disabled = true;
     showProgress("download", 0);
     
-    log(`Starting download: ${state.lastActionId}`, "info");
+    log(`Starting download for action: ${actionId}`, "info");
     showProgress("download", 20);
     
     // Download from Cascade
     log("Requesting file from Cascade storage...", "info");
-    const stream = await state.client.Cascade.downloader.download(state.lastActionId, {
+    const stream = await state.client.Cascade.downloader.download(actionId, {
       pollInterval: 2000,
       timeout: 300000,
     });
@@ -336,7 +373,7 @@ async function downloadFile() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `downloaded-${state.lastActionId}.bin`;
+    a.download = `downloaded-${actionId}.bin`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -352,35 +389,72 @@ async function downloadFile() {
     console.error("Download error:", error);
     hideProgress("download");
   } finally {
-    elements.downloadBtn.disabled = false;
+    elements.downloadBtn.disabled = !state.lastActionId;
+    elements.downloadByIdBtn.disabled = false;
   }
+}
+
+async function downloadLastFile() {
+  if (!state.lastActionId) {
+    log("No last action ID available. Upload a file first or enter an action ID manually.", "error");
+    return;
+  }
+  await downloadFileByActionId(state.lastActionId);
 }
 
 // ============================================================================
 // Event Listeners
 // ============================================================================
 
-elements.connectBtn.addEventListener("click", connectWallet);
-elements.disconnectBtn.addEventListener("click", disconnectWallet);
+if (elements.connectBtn) {
+  elements.connectBtn.addEventListener("click", connectWallet);
+} else {
+  console.error("Connect button element with id 'connect-btn' not found in DOM.");
+}
 
-elements.fileInput.addEventListener("change", (e) => {
-  const target = e.target as HTMLInputElement;
-  const file = target.files?.[0];
-  
-  if (file) {
-    state.selectedFile = file;
-    elements.fileName.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
-    elements.uploadBtn.disabled = !state.client;
-    log(`File selected: ${file.name}`, "info");
-  } else {
-    state.selectedFile = null;
-    elements.fileName.textContent = "";
-    elements.uploadBtn.disabled = true;
-  }
-});
+if (elements.disconnectBtn) {
+  elements.disconnectBtn.addEventListener("click", disconnectWallet);
+}
 
-elements.uploadBtn.addEventListener("click", uploadFile);
-elements.downloadBtn.addEventListener("click", downloadFile);
+if (elements.fileInput) {
+  elements.fileInput.addEventListener("change", (e) => {
+    const target = e.target as HTMLInputElement;
+    const file = target.files?.[0];
+    
+    if (file) {
+      state.selectedFile = file;
+      elements.fileName.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(2)} KB)`;
+      elements.uploadBtn.disabled = !state.client;
+      log(`File selected: ${file.name}`, "info");
+    } else {
+      state.selectedFile = null;
+      elements.fileName.textContent = "";
+      elements.uploadBtn.disabled = true;
+    }
+  });
+}
+
+if (elements.uploadBtn) {
+  elements.uploadBtn.addEventListener("click", uploadFile);
+}
+
+if (elements.downloadBtn) {
+  elements.downloadBtn.addEventListener("click", () => {
+    void downloadLastFile();
+  });
+}
+
+if (elements.downloadByIdBtn && elements.downloadActionIdInput) {
+  elements.downloadByIdBtn.addEventListener("click", () => {
+    const actionId = elements.downloadActionIdInput.value.trim();
+    if (!actionId) {
+      log("Please enter an action ID to download.", "warning");
+      return;
+    }
+    void downloadFileByActionId(actionId);
+  });
+}
+
 
 // ============================================================================
 // Initialization

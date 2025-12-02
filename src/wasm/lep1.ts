@@ -10,10 +10,10 @@
 
 import { RaptorQProxy } from './raptorq-proxy.js';
 import type { Layout, IndexFile } from './types.js';
-import { toBase64 } from '../internal/encoding.js';
-import { blake3HashBytes } from '../internal/hash.js';
-import { compress } from '../internal/zstd.js';
-import bs58 from 'bs58';
+import { toBase64 } from "./../internal/encoding.js";
+import { blake3HashBytes } from "./../internal/hash.js";
+import { compress } from "./../internal/zstd.js";
+import bs58 from "bs58";
 
 /**
  * Creates a single-block RaptorQ layout from file bytes.
@@ -90,8 +90,8 @@ export function parseLayoutFile(layoutBytes: Uint8Array): Layout {
  *    - counter_i = rq_ids_ic + i
  *    - layout_id_i = Base58(BLAKE3(zstd(layout_with_signature + "." + decimal(counter_i))))
  *
- * @param layoutFile - The RaptorQ layout file as a Uint8Array
- * @param layoutSignature - The cryptographic signature over the layout data
+ * @param layoutFileB64 - The RaptorQ layout file as a Base64 string
+ * @param layoutSignatureB64 - The cryptographic signature over the layout data as a Base64 string
  * @param rq_ids_ic - The initial counter value from blockchain action parameters
  * @param rq_ids_max - The number of layout IDs to generate
  * @returns A promise resolving to an array of Base58-encoded layout IDs
@@ -123,13 +123,13 @@ export async function generateIds(
   if (rq_ids_max <= 0) {
     throw new Error(`rq_ids_max must be positive, got ${rq_ids_max}`);
   }
-  
+
   if (layoutFileB64.length === 0) {
-    throw new Error('layoutFile must not be empty');
+    throw new Error("layoutFile must not be empty");
   }
-  
+
   if (layoutSignatureB64.length === 0) {
-    throw new Error('layoutSignature must not be empty');
+    throw new Error("layoutSignature must not be empty");
   }
 
   // Create layout_with_signature = Base64(layout_file) + "." + Base64(layout_signature)
@@ -141,13 +141,13 @@ export async function generateIds(
     const counter = rq_ids_ic + i;
     // Create the input string: layout_with_signature + "." + counter
     const input = `${layoutWithSignature}.${counter}`;
-    
+
     // Compress with zstd
     const compressed = await compress(input);
-    
+
     // Hash with BLAKE3 (get bytes directly for Base58 encoding)
     const hashBytes = await blake3HashBytes(compressed);
-    
+
     // Encode with Base58
     const layoutId = bs58.encode(hashBytes);
     layoutIds.push(layoutId);
@@ -197,11 +197,11 @@ export function buildIndexFile(
 ): IndexFile {
   // Validate inputs
   if (layout_ids.length === 0) {
-    throw new Error('layout_ids must not be empty');
+    throw new Error("layout_ids must not be empty");
   }
-  
+
   if (layout_signature.length === 0) {
-    throw new Error('layout_signature must not be empty');
+    throw new Error("layout_signature must not be empty");
   }
 
   // Construct the index file per LEP-1 specification
@@ -215,4 +215,4 @@ export function buildIndexFile(
 /**
  * Re-export types for convenience
  */
-export type { Layout, IndexFile, SourceBlock } from './types.js';
+export type { Layout, IndexFile, SourceBlock } from "./types.js";

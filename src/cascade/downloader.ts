@@ -30,8 +30,6 @@
 
 import type { SNApiClient } from './client';
 import { TaskManager, TaskManagerOptions } from './task';
-import { toBase64 } from '../internal/encoding';
-import { blake3Hash } from '../internal/hash';
 import type { UniversalSigner } from '../wallets/signer';
 
 /**
@@ -144,18 +142,16 @@ export class CascadeDownloader {
    * ```
    */
   async downloadFile(params: DownloadParams): Promise<ReadableStream> {
-    // Step 1: Prepare download_auth signature
-    // For private downloads, this should be a wallet signature over the action ID.
-    // For public downloads, the signature can be empty or omitted.
-    const downloadSignatureB64 = params.isPrivate
-      ? await this.simulateDownloadSignature(params.actionId)
-      : undefined;
+    // Step 1: Prepare download_auth signature (always required by sn-api)
+    // We sign the action ID using ADR-36 via the configured wallet. On the
+    // server side, this is validated using VerifyStringRawOrADR36, which
+    // accepts both raw and ADR-36 style signatures.
+    const downloadSignatureB64 = await this.simulateDownloadSignature(params.actionId);
     
-    // Step 2: Initiate download task via sn-api
-    const response = await this.client.requestDownload(
-      params.actionId,
-      {} // Empty body as per API spec
-    );
+    // Step 2: Initiate download task via sn-api, including the signature
+    const response = await this.client.requestDownload(params.actionId, {
+      signature: downloadSignatureB64,
+    });
     
     // Step 3: Monitor download task until ready using SSE
     const taskManager = new TaskManager(
@@ -195,7 +191,6 @@ export class CascadeDownloader {
   ): Promise<ReadableStream> {
     return this.downloadFile({
       actionId,
-      isPrivate: false,
       taskOptions,
     });
   }

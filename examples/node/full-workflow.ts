@@ -115,29 +115,48 @@ This file demonstrates the complete upload/download workflow.`;
   console.log(`  File size: ${fileBytes.length} bytes`);
   console.log(`  Content preview: ${sampleContent.split('\n')[0]}...`);
 
-  // Generate a unique action ID for this upload
-  const actionId = `demo-action-${Date.now()}-${crypto.randomBytes(4).toString("hex")}`;
-  console.log(`  Action ID: ${actionId}`);
-
   try {
-    console.log(`  Initiating upload...`);
+    console.log(`  Preparing file...`);
 
-    // Upload the file to Cascade storage
-    const uploadResult = await client.Cascade.uploader.uploadFile(fileBytes, {
-      actionId: actionId,
-      rq_ids_ic: actionParams.rq_ids_ic,
-      rq_ids_max: actionParams.rq_ids_max,
-      taskOptions: {
-        pollInterval: 2000,  // Poll every 2 seconds
-        timeout: 300000,     // 5 minute timeout
-      },
+    // Step 4a: Prepare file (hash + bytes)
+    const prepared = await client.Cascade.uploader.prepareFile(fileBytes);
+    console.log(`  Data hash (BLAKE3, Base64): ${prepared.dataHash}`);
+
+    // Calculate expiration time (24 hours from now)
+    const expirationTime = Math.floor(Date.now() / 1000 + 86400).toString();
+
+    // Step 4b: Register action on-chain (generates layout + index and actionId)
+    console.log(`  Registering action on-chain...`);
+    const registered = await client.Cascade.uploader.registerAction(prepared, {
+      fileName: "full-workflow-demo.txt",
+      isPublic: false,
+      expirationTime,
     });
 
+    const actionId = registered.actionId;
+    console.log(`✓ Action registered successfully!`);
+    console.log(`  Action ID (from chain events): ${actionId}`);
+    console.log(`  Auth signature (Base64): ${registered.authSignature.slice(0, 32)}...`);
+
+    // Step 4c: Send file bytes to supernodes and wait for completion
+    console.log(`  Initiating upload to supernodes...`);
+    const uploadTask = await client.Cascade.uploader.sendFileToSupernodes(
+      actionId,
+      registered.authSignature,
+      fileBytes,
+      {
+        taskOptions: {
+          pollInterval: 2000,  // Poll every 2 seconds
+          timeout: 300000,     // 5 minute timeout
+        },
+      }
+    );
+
     console.log(`✓ Upload completed successfully!`);
-    console.log(`  Task ID: ${uploadResult.id}`);
-    console.log(`  Status: ${uploadResult.status}`);
-    if (uploadResult.completedAt) {
-      console.log(`  Completed at: ${new Date(uploadResult.completedAt).toISOString()}`);
+    console.log(`  Task ID: ${uploadTask.id}`);
+    console.log(`  Status: ${uploadTask.status}`);
+    if ((uploadTask as any).completedAt) {
+      console.log(`  Completed at: ${new Date((uploadTask as any).completedAt).toISOString()}`);
     }
 
     // ============================================================================

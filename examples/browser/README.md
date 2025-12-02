@@ -47,6 +47,14 @@ This will:
 - Start a local development server (typically at `http://localhost:3000`)
 - Automatically open your browser
 
+If you are **developing or debugging the SDK itself** and want this example to use your local `sdk-js` sources instead of the published npm package, switch Vite to the local config by renaming:
+
+```bash
+mv vite.local.config.ts vite.config.ts
+```
+
+This makes Vite resolve `@lumera-protocol/sdk-js` to the code in `../../src` so any changes you make in the SDK are reflected immediately in the browser example.
+
 ## Using the Application
 
 ### Step 1: Connect Your Wallet
