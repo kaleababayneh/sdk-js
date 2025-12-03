@@ -130,7 +130,7 @@ The examples connect to the Lumera testnet endpoints. If you experience timeouts
 ### Client Initialization
 
 ```typescript
-import { createLumeraClient } from "@lumera/sdk-js";
+import { createLumeraClient } from "@lumera-protocol/sdk-js";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 
 // Create wallet from mnemonic

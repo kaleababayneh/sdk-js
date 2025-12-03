@@ -44,16 +44,11 @@ pnpm run dev
 This will:
 
 - Build the application with Vite
-- Start a local development server (typically at `http://localhost:3000`)
+- Start a local development server (at `http://localhost:3001` by default)
 - Automatically open your browser
 
-If you are **developing or debugging the SDK itself** and want this example to use your local `sdk-js` sources instead of the published npm package, switch Vite to the local config by renaming:
-
-```bash
-mv vite.local.config.ts vite.config.ts
-```
-
-This makes Vite resolve `@lumera-protocol/sdk-js` to the code in `../../src` so any changes you make in the SDK are reflected immediately in the browser example.
+The browser example is **always wired to the local SDK source**.  
+Vite resolves `@lumera-protocol/sdk-js` and its browser shims to the code in `../../src`, so any changes you make in `sdk-js/src` are immediately reflected when you run the example.
 
 ## Using the Application
 
@@ -111,7 +106,7 @@ examples/browser/
 ├── index.html         # Main HTML file with UI structure
 ├── main.ts           # TypeScript application logic
 ├── package.json      # Dependencies and scripts
-├── vite.config.ts    # Vite build configuration
+├── vite.config.ts    # Vite build configuration (uses local sdk-js/src)
 ├── tsconfig.json     # TypeScript configuration
 └── README.md         # This file
 ```

@@ -229,7 +229,7 @@ export class TaskManager {
 
         // When status is an array or SSE string, find the failed item to extract error message
         let statusPayload: unknown = status;
-        
+
         if (typeof statusPayload === 'string' && statusPayload.includes('data:')) {
           // Parse SSE data to find the failed item
           const lines = statusPayload.split('\n');
@@ -241,8 +241,8 @@ export class TaskManager {
                 try {
                   const parsed = JSON.parse(jsonStr);
                   if (parsed && typeof parsed === 'object' &&
-                      typeof parsed.status === 'string' &&
-                      TERMINAL_FAILURE_STATUSES.has(parsed.status)) {
+                    typeof parsed.status === 'string' &&
+                    TERMINAL_FAILURE_STATUSES.has(parsed.status)) {
                     statusPayload = parsed;
                     break;
                   }
@@ -378,23 +378,29 @@ export class TaskManager {
         });
       };
 
-      const attachListeners = (
-        statuses: Set<string>,
-        listener: (status: string, event: unknown) => void
-      ) => {
-        for (const status of statuses) {
-          eventSource.addEventListener(status, (event) => {
-            listener(status, event);
-          });
+      // sn-api emits SSE events without explicit `event:` types; the payload
+      // is an ActionStatusResponse with a `status` field. We listen for the
+      // default "message" event and derive the terminal status from its data.
+      eventSource.addEventListener('message', (event: MessageEvent) => {
+        if (settled) {
+          return;
         }
-      };
 
-      attachListeners(TERMINAL_SUCCESS_STATUSES, (status, event) => {
-        handleSuccess(status, event);
-      });
+        const payload = this.parseEventPayload(event);
+        const status = this.extractStatus(payload);
 
-      attachListeners(TERMINAL_FAILURE_STATUSES, (status, event) => {
-        void handleFailure(status, event);
+        if (!status) {
+          return;
+        }
+
+        if (TERMINAL_SUCCESS_STATUSES.has(status)) {
+          handleSuccess(status, event);
+          return;
+        }
+
+        if (TERMINAL_FAILURE_STATUSES.has(status)) {
+          void handleFailure(status, event);
+        }
       });
 
       eventSource.addEventListener('error', (event) => {
@@ -459,19 +465,27 @@ export class TaskManager {
 
     // Handle array of status updates - find the most recent or any terminal status
     if (Array.isArray(value)) {
-      // First, look for any terminal status (success or failure)
+      // First, prefer any terminal *failure* status if present
       for (const item of value) {
         const status = this.extractStatus(item);
-        if (status && (TERMINAL_SUCCESS_STATUSES.has(status) || TERMINAL_FAILURE_STATUSES.has(status))) {
+        if (status && TERMINAL_FAILURE_STATUSES.has(status)) {
           return status;
         }
       }
-      
+
+      // If no failure found, look for any terminal success status
+      for (const item of value) {
+        const status = this.extractStatus(item);
+        if (status && TERMINAL_SUCCESS_STATUSES.has(status)) {
+          return status;
+        }
+      }
+
       // If no terminal status found, return the last status in the array
       if (value.length > 0) {
         return this.extractStatus(value[value.length - 1]);
       }
-      
+
       return undefined;
     }
 
@@ -516,9 +530,16 @@ export class TaskManager {
       }
     }
 
-    // First, look for any terminal status (success or failure)
+    // Prefer any terminal *failure* status if present
     for (const obj of statusObjects) {
-      if (obj.status && (TERMINAL_SUCCESS_STATUSES.has(obj.status) || TERMINAL_FAILURE_STATUSES.has(obj.status))) {
+      if (obj.status && TERMINAL_FAILURE_STATUSES.has(obj.status)) {
+        return obj.status;
+      }
+    }
+
+    // If no failure found, look for any terminal success status
+    for (const obj of statusObjects) {
+      if (obj.status && TERMINAL_SUCCESS_STATUSES.has(obj.status)) {
         return obj.status;
       }
     }

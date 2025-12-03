@@ -70,6 +70,7 @@
     "@interchainjs/types": "^1.18.0",
     "@interchainjs/utils": "^1.18.0",
     "@mongodb-js/zstd": "^2.0.0",
+    "@bokuweb/zstd-wasm": "^0.0.27",
     "blake3": "^2.1.7",
     "bs58": "^6.0.0",
     "cosmjs-types": "^0.9.0",

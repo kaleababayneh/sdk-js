@@ -152,11 +152,21 @@ export class CascadeDownloader {
     const response = await this.client.requestDownload(params.actionId, {
       signature: downloadSignatureB64,
     });
+
+    const rawResponse: any = response as any;
+    const downloadTaskId =
+      rawResponse?.taskId ?? rawResponse?.task_id ?? rawResponse?.id;
+
+    if (!downloadTaskId) {
+      throw new Error(
+        "sn-api download request did not return a task identifier (expected one of taskId, task_id, or id)"
+      );
+    }
     
     // Step 3: Monitor download task until ready using SSE
     const taskManager = new TaskManager(
       this.client,
-      response.taskId!,
+      downloadTaskId,
       params.taskOptions
     );
     
@@ -164,7 +174,7 @@ export class CascadeDownloader {
     await taskManager.waitForDownloadCompletion();
     
     // Step 4: Retrieve the file stream
-    const fileStream = await this.client.downloadFile(response.taskId!);
+    const fileStream = await this.client.downloadFile(downloadTaskId);
     
     return fileStream;
   }

@@ -1,4 +1,4 @@
-# @lumera/sdk-js
+# @lumera-protocol/sdk-js
 
 **Official JavaScript/TypeScript SDK for Lumera Protocol**
 
@@ -28,7 +28,7 @@ A unified SDK providing seamless access to the Lumera blockchain and Cascade dis
 ## 📦 Installation
 
 ```bash
-pnpm install @lumera/sdk
+pnpm install @lumera-protocol/sdk-js
 ```
 
 ### Peer Dependencies
@@ -44,7 +44,7 @@ pnpm install @cosmjs/proto-signing @cosmjs/stargate
 ### 1. Initialize the Client
 
 ```typescript
-import { createLumeraClient } from "@lumera/sdk";
+import { createLumeraClient } from "@lumera-protocol/sdk-js";
 import { DirectSecp256k1HdWallet } from "@cosmjs/proto-signing";
 
 // Create a wallet
@@ -208,6 +208,38 @@ const result = await uploader.uploadFile(fileBytes, {
 const downloader = client.Cascade.downloader;
 const stream = await downloader.download("action-id");
 ```
+
+### LEP-1 Helpers & Deterministic IDs
+
+For low-level control over LEP-1 layout generation and ID derivation, the SDK exposes helpers:
+
+```typescript
+import {
+  createSingleBlockLayout,
+  generateIds,
+  buildIndexFile,
+} from "@lumera-protocol/sdk-js";
+
+// 1. Create a single-block RaptorQ layout from file bytes
+const layoutBytes = await createSingleBlockLayout(fileBytes);
+
+// 2. Sign the canonical JSON layout bytes with your wallet (ADR-036)
+//    and obtain the base64-encoded signature string.
+
+// 3. Derive deterministic layout IDs (must match on-chain validation)
+const layoutIds = await generateIds(
+  layoutFileB64,
+  layoutSignatureB64,
+  rq_ids_ic,
+  rq_ids_max,
+);
+
+// 4. Build the LEP-1 index file
+const index = buildIndexFile(layoutIds, layoutSignatureB64);
+```
+
+To debug or validate determinism across Go and JS implementations, use the
+[`lep1-id-lab`](../lep1-id-lab/README.md) golden-vector setup at the repo root.
 
 ## 🧪 Development
 
