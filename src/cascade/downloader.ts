@@ -42,12 +42,6 @@ export interface DownloadParams {
   actionId: string;
   
   /**
-   * Whether this is a private download requiring authentication
-   * @default false
-   */
-  isPrivate?: boolean;
-  
-  /**
    * Optional task monitoring configuration
    */
   taskOptions?: TaskManagerOptions;
@@ -114,7 +108,6 @@ export class CascadeDownloader {
    * // Download a private file (requires authentication)
    * const privateStream = await downloader.downloadFile({
    *   actionId: 'action-456',
-   *   isPrivate: true,
    *   taskOptions: {
    *     pollInterval: 2000,
    *     timeout: 300000
@@ -226,7 +219,6 @@ export class CascadeDownloader {
   ): Promise<ReadableStream> {
     return this.downloadFile({
       actionId,
-      isPrivate: true,
       taskOptions,
     });
   }

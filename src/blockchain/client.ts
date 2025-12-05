@@ -12,7 +12,6 @@
 import { SigningStargateClient, GasPrice, QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
 import type { OfflineSigner } from "@cosmjs/proto-signing";
 import { connectComet } from "@cosmjs/tendermint-rpc";
-import type { CometClient } from "@cosmjs/tendermint-rpc";
 import type {
   TxClient,
   ActionQuery,

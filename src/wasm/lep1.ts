@@ -10,10 +10,9 @@
 
 import { RaptorQProxy } from './raptorq-proxy.js';
 import type { Layout, IndexFile } from './types.js';
-import { toBase64 } from "./../internal/encoding.js";
-import { blake3HashBytes } from "./../internal/hash.js";
-import { compress } from "./../internal/zstd.js";
-import bs58 from "bs58";
+import { blake3HashBytes } from './../internal/hash.js';
+import { compress } from './../internal/zstd.js';
+import bs58 from 'bs58';
 
 /**
  * Creates a single-block RaptorQ layout from file bytes.

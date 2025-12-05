@@ -29,7 +29,7 @@ import type { SNApiClient, Task } from './client';
 import type { CascadeChainPort, TxPrompter } from './ports';
 import { TaskManager, TaskManagerOptions } from './task';
 import { blake3Hash } from '../internal/hash';
-import { toBase64, fromBase64, toCanonicalJsonBytes } from '../internal/encoding';
+import { toBase64, toCanonicalJsonBytes } from '../internal/encoding';
 import { createSingleBlockLayout, generateIds, buildIndexFile } from '../wasm/lep1';
 import type { UniversalSigner, ArbitrarySignResponse } from '../wallets/signer';
 import { createDefaultSignaturePrompter } from '../wallets/prompter';
