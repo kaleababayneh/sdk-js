@@ -30,8 +30,6 @@
 
 import type { SNApiClient } from './client';
 import { TaskManager, TaskManagerOptions } from './task';
-import { toBase64 } from '../internal/encoding';
-import { blake3Hash } from '../internal/hash';
 import type { UniversalSigner } from '../wallets/signer';
 
 /**
@@ -42,12 +40,6 @@ export interface DownloadParams {
    * The blockchain action ID to download
    */
   actionId: string;
-  
-  /**
-   * Whether this is a private download requiring authentication
-   * @default false
-   */
-  isPrivate?: boolean;
   
   /**
    * Optional task monitoring configuration
@@ -116,7 +108,6 @@ export class CascadeDownloader {
    * // Download a private file (requires authentication)
    * const privateStream = await downloader.downloadFile({
    *   actionId: 'action-456',
-   *   isPrivate: true,
    *   taskOptions: {
    *     pollInterval: 2000,
    *     timeout: 300000
@@ -144,23 +135,31 @@ export class CascadeDownloader {
    * ```
    */
   async downloadFile(params: DownloadParams): Promise<ReadableStream> {
-    // Step 1: Prepare download_auth signature
-    // For private downloads, this should be a wallet signature over the action ID.
-    // For public downloads, the signature can be empty or omitted.
-    const downloadSignatureB64 = params.isPrivate
-      ? await this.simulateDownloadSignature(params.actionId)
-      : undefined;
+    // Step 1: Prepare download_auth signature (always required by sn-api)
+    // We sign the action ID using ADR-36 via the configured wallet. On the
+    // server side, this is validated using VerifyStringRawOrADR36, which
+    // accepts both raw and ADR-36 style signatures.
+    const downloadSignatureB64 = await this.simulateDownloadSignature(params.actionId);
     
-    // Step 2: Initiate download task via sn-api
-    const response = await this.client.requestDownload(
-      params.actionId,
-      {} // Empty body as per API spec
-    );
+    // Step 2: Initiate download task via sn-api, including the signature
+    const response = await this.client.requestDownload(params.actionId, {
+      signature: downloadSignatureB64,
+    });
+
+    const rawResponse: any = response as any;
+    const downloadTaskId =
+      rawResponse?.taskId ?? rawResponse?.task_id ?? rawResponse?.id;
+
+    if (!downloadTaskId) {
+      throw new Error(
+        "sn-api download request did not return a task identifier (expected one of taskId, task_id, or id)"
+      );
+    }
     
     // Step 3: Monitor download task until ready using SSE
     const taskManager = new TaskManager(
       this.client,
-      response.taskId!,
+      downloadTaskId,
       params.taskOptions
     );
     
@@ -168,7 +167,7 @@ export class CascadeDownloader {
     await taskManager.waitForDownloadCompletion();
     
     // Step 4: Retrieve the file stream
-    const fileStream = await this.client.downloadFile(response.taskId!);
+    const fileStream = await this.client.downloadFile(downloadTaskId);
     
     return fileStream;
   }
@@ -195,7 +194,6 @@ export class CascadeDownloader {
   ): Promise<ReadableStream> {
     return this.downloadFile({
       actionId,
-      isPrivate: false,
       taskOptions,
     });
   }
@@ -221,7 +219,6 @@ export class CascadeDownloader {
   ): Promise<ReadableStream> {
     return this.downloadFile({
       actionId,
-      isPrivate: true,
       taskOptions,
     });
   }

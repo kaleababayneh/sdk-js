@@ -303,7 +303,17 @@
       <h2 class="section-title">3. Download File</h2>
       <div class="info-box">
         After uploading, you can download the file using its action ID.
-        The most recently uploaded file's action ID will be pre-filled.
+        The most recently uploaded file's action ID will be pre-filled, or you can
+        download any action by ID.
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+        <input
+          id="download-action-id-input"
+          type="text"
+          placeholder="Enter action ID to download"
+          style="flex: 1 1 260px; padding: 8px 10px; border-radius: 6px; border: 1px solid #e5e7eb; font-size: 14px;"
+        />
+        <button id="download-by-id-btn" class="secondary" disabled>Download by Action ID</button>
       </div>
       <button id="download-btn" disabled>Download Last Uploaded File</button>
       <div class="progress-bar" id="download-progress">

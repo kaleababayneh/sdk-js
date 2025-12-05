@@ -1,7 +1,4 @@
-import type { BlockchainClient } from "../blockchain/interfaces";
-import { toCanonicalJson, toB64 } from "../internal/encoding";
-import { blake3Hash } from "../internal/hash";
-import { HttpClient } from "../internal/http";
+import { HttpClient, HttpError } from "../internal/http";
 import type { operations } from "../types/snapi.gen";
 
 // ============================================================================
@@ -28,8 +25,15 @@ export type StartCascadeResponse = operations["startCascade"]["responses"]["202"
 /**
  * Request body for requesting a download
  * Maps to POST /api/v1/actions/cascade/{action_id}/downloads
+ *
+ * NOTE: The bundled OpenAPI spec in docs/snapi-swagger.json is slightly out of
+ * date and omits this body. The running sn-api (see sn-api-server swagger) expects
+ * a JSON object containing a non-empty `signature` field.
  */
-export type RequestDownloadBody = Record<string, never>; // No body params in spec
+export interface RequestDownloadBody {
+  /** Download signature (typically ADR-36 over the action ID) */
+  signature: string;
+}
 
 /**
  * Response from requesting a download
@@ -194,7 +198,15 @@ export class SNApiClient {
    * ```
    */
   async getTask(taskId: string): Promise<Task> {
-    return this.http.get(`/api/v1/actions/cascade/tasks/${taskId}`);
+    // Prefer the versioned path; fall back to legacy/non-versioned path on 404
+    try {
+      return await this.http.get(`/api/v1/actions/cascade/tasks/${taskId}`);
+    } catch (err) {
+      if (err instanceof HttpError && err.statusCode === 404) {
+        return this.http.get(`/api/actions/cascade/tasks/${taskId}`);
+      }
+      throw err;
+    }
   }
 
   /**
@@ -217,7 +229,15 @@ export class SNApiClient {
    * ```
    */
   async getTaskStatus(taskId: string): Promise<TaskStatus> {
-    return this.http.get(`/api/v1/actions/cascade/tasks/${taskId}/status`);
+    // Prefer the versioned path; fall back to legacy/non-versioned path on 404
+    try {
+      return await this.http.get(`/api/v1/actions/cascade/tasks/${taskId}/status`);
+    } catch (err) {
+      if (err instanceof HttpError && err.statusCode === 404) {
+        return this.http.get(`/api/actions/cascade/tasks/${taskId}/status`);
+      }
+      throw err;
+    }
   }
 
   /**
@@ -241,7 +261,15 @@ export class SNApiClient {
     actionId: string,
     body: RequestDownloadBody
   ): Promise<RequestDownloadResponse> {
-    return this.http.post(`/api/v1/actions/cascade/${actionId}/downloads`, body);
+    // Prefer the versioned path; fall back to legacy/non-versioned path on 404
+    try {
+      return await this.http.post(`/api/v1/actions/cascade/${actionId}/downloads`, body);
+    } catch (err) {
+      if (err instanceof HttpError && err.statusCode === 404) {
+        return this.http.post(`/api/actions/cascade/${actionId}/downloads`, body);
+      }
+      throw err;
+    }
   }
 
   /**

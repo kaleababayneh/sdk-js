@@ -44,8 +44,11 @@ pnpm run dev
 This will:
 
 - Build the application with Vite
-- Start a local development server (typically at `http://localhost:3000`)
+- Start a local development server (at `http://localhost:3001` by default)
 - Automatically open your browser
+
+The browser example is **always wired to the local SDK source**.  
+Vite resolves `@lumera-protocol/sdk-js` and its browser shims to the code in `../../src`, so any changes you make in `sdk-js/src` are immediately reflected when you run the example.
 
 ## Using the Application
 
@@ -103,7 +106,7 @@ examples/browser/
 ├── index.html         # Main HTML file with UI structure
 ├── main.ts           # TypeScript application logic
 ├── package.json      # Dependencies and scripts
-├── vite.config.ts    # Vite build configuration
+├── vite.config.ts    # Vite build configuration (uses local sdk-js/src)
 ├── tsconfig.json     # TypeScript configuration
 └── README.md         # This file
 ```
@@ -223,6 +226,52 @@ pnpm exec tsc --noEmit
 ### Browser Console
 
 Use the browser's developer console (F12) to see detailed logs and debug issues. All log messages are duplicated to the console.
+
+## Automated End-to-End Test (Browser + sn-api + Keplr)
+
+The SDK includes a Playwright-based harness that drives this example end-to-end using your existing sn-api config and Keplr profile.
+
+**Prerequisites**
+
+- `sn-api-server` built at `../sn-api-server/bin/snapi` (from repo root: `cd sn-api-server && API_BIN=snapi make build`)
+- A Chrome/Chromium profile with Keplr installed and a Lumera testnet account (e.g. profile name "Matee")
+- `~/.snapi/.env` configured for your sn-api instance (HTTP_PORT, GRPC_ADDR, CHAIN_ID, KEY_NAME, etc.)
+
+**Environment variables**
+
+From `sdk-js/` set:
+
+```bash
+export E2E_CHROME_EXECUTABLE="/usr/bin/google-chrome"              # or your Chromium path
+export E2E_CHROME_PROFILE_DIR="$HOME/.config/google-chrome-playwright-matee"
+# Optional overrides:
+# export E2E_SNAPI_BIN="$PWD/../sn-api-server/bin/snapi"
+# export E2E_SNAPI_URL="http://localhost:3000"
+# export E2E_BROWSER_URL="http://localhost:3001"
+# Optional Keplr automation:
+# export E2E_KEPLR_PASSWORD="your-keplr-password"   # used to unlock the wallet
+# export E2E_KEPLR_AUTO_APPROVE=1                   # auto-approve Keplr popups (default)
+```
+
+**Run the harness**
+
+```bash
+cd sdk-js
+pnpm install
+pnpm run e2e:browser
+```
+
+The harness will:
+
+- Ensure sn-api is running (reusing an existing instance on `E2E_SNAPI_URL` or starting `snapi serve`)
+- Ensure this browser example dev server is running on `E2E_BROWSER_URL`
+- Launch Chrome with your Keplr profile
+- Click **Connect Keplr Wallet** and wait until the app shows `Connected:` in the wallet info
+- Select a small test file (`examples/browser/test-assets/hello-lep1.txt`)
+- Click **Upload to Cascade** and wait for an **Upload completed** log entry
+- Click **Download Last Uploaded File** and wait for **File saved to browser downloads**
+
+If `E2E_KEPLR_PASSWORD` is set and the selected profile has Keplr installed and enabled, the harness will attempt to unlock the wallet and auto-approve Keplr popups (connect, ADR-036 signatures, transaction, download auth). Otherwise, it will fail fast if `window.keplr` is not present on the test page. All other steps are fully automated, and the script fails with a non-zero exit code on timeout or error.
 
 ## Understanding the Workflow
 
