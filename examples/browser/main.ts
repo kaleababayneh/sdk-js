@@ -16,10 +16,13 @@ import {
   isKeplrAvailable,
   createBatchedSignaturePrompter,
   createDefaultTxPrompter,
+  CHAIN_PRESETS,
 } from "@lumera-protocol/sdk-js";
 
-const LUMERA_CHAIN_ID = "lumera-testnet-2";
-const SNAPI_URL = "http://localhost:3000";
+
+// const presetName = "testnet";
+const presetName = "mainnet";
+const preset = CHAIN_PRESETS[presetName];
 
 // ============================================================================
 // State Management
@@ -175,10 +178,10 @@ async function connectWallet() {
     }
 
     // Mirror the working keplr-test flow: first enable the chain in Keplr
-    await keplr.enable(LUMERA_CHAIN_ID);
+    await keplr.enable(preset.chainId);
 
     // Get Keplr-based UniversalSigner (wraps the same offline signer)
-    const signer = await getKeplrSigner(LUMERA_CHAIN_ID);
+    const signer = await getKeplrSigner(preset.chainId);
     const accounts = await signer.getAccounts();
 
     if (accounts.length === 0) {
@@ -192,10 +195,11 @@ async function connectWallet() {
     // Create LumeraClient with Keplr signer
     log("Initializing Lumera client...", "info");
     state.client = await createLumeraClient({
-      chainId: LUMERA_CHAIN_ID,
-      rpcUrl: "https://rpc.testnet.lumera.io",
-      lcdUrl: "https://lcd.testnet.lumera.io",
-      snapiUrl: SNAPI_URL,
+      preset: presetName,
+      // chainId: LUMERA_CHAIN_ID,
+      // rpcUrl: "https://rpc.testnet.lumera.io",
+      // lcdUrl: "https://lcd.testnet.lumera.io",
+      // snapiUrl: SNAPI_URL,
       signer,
       address: state.address!,
       gasPrice: "0.025ulume",
@@ -447,7 +451,7 @@ async function downloadFileByActionId(actionId: string) {
 async function resolveSnapiDownloadUrl(actionId: string): Promise<string | null> {
   try {
     const query = new URLSearchParams({ action_id: actionId });
-    const response = await fetch(`${SNAPI_URL}/api/v1/downloads/cascade/tasks?${query.toString()}`);
+    const response = await fetch(`${preset.snapiUrl}/api/v1/downloads/cascade/tasks?${query.toString()}`);
     if (!response.ok) {
       log(
         `sn-api download tasks query failed with status ${response.status}`,
@@ -472,7 +476,7 @@ async function resolveSnapiDownloadUrl(actionId: string): Promise<string | null>
       return null;
     }
 
-    return `${SNAPI_URL}/api/v1/downloads/cascade/${encodeURIComponent(
+    return `${preset.snapiUrl}/api/v1/downloads/cascade/${encodeURIComponent(
       latest.task_id
     )}/file`;
   } catch (error) {

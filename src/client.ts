@@ -40,14 +40,14 @@ export const CHAIN_PRESETS = {
     chainId: "lumera-testnet-2",
     rpcUrl: "https://rpc.testnet.lumera.io",
     lcdUrl: "https://lcd.testnet.lumera.io",
-    snapiUrl: "https://sn-api.testnet.lumera.io",
+    snapiUrl: "https://snapi.testnet.lumera.io",
   } as ChainPreset,
   
   mainnet: {
     chainId: "lumera-mainnet-1",
     rpcUrl: "https://rpc.lumera.io",
     lcdUrl: "https://lcd.lumera.io",
-    snapiUrl: "https://sn-api.lumera.io",
+    snapiUrl: "https://snapi.lumera.io",
   } as ChainPreset,
 } as const;
 
