@@ -465,18 +465,18 @@ export class TaskManager {
 
     // Handle array of status updates - find the most recent or any terminal status
     if (Array.isArray(value)) {
-      // First, prefer any terminal *failure* status if present
+      // First, prefer any terminal *success* status if present (retries may have succeeded)
       for (const item of value) {
         const status = this.extractStatus(item);
-        if (status && TERMINAL_FAILURE_STATUSES.has(status)) {
+        if (status && TERMINAL_SUCCESS_STATUSES.has(status)) {
           return status;
         }
       }
 
-      // If no failure found, look for any terminal success status
+      // If no success found, look for any terminal failure status
       for (const item of value) {
         const status = this.extractStatus(item);
-        if (status && TERMINAL_SUCCESS_STATUSES.has(status)) {
+        if (status && TERMINAL_FAILURE_STATUSES.has(status)) {
           return status;
         }
       }
@@ -530,16 +530,16 @@ export class TaskManager {
       }
     }
 
-    // Prefer any terminal *failure* status if present
+    // Prefer any terminal *success* status if present (retries may have succeeded)
     for (const obj of statusObjects) {
-      if (obj.status && TERMINAL_FAILURE_STATUSES.has(obj.status)) {
+      if (obj.status && TERMINAL_SUCCESS_STATUSES.has(obj.status)) {
         return obj.status;
       }
     }
 
-    // If no failure found, look for any terminal success status
+    // If no success found, look for any terminal failure status
     for (const obj of statusObjects) {
-      if (obj.status && TERMINAL_SUCCESS_STATUSES.has(obj.status)) {
+      if (obj.status && TERMINAL_FAILURE_STATUSES.has(obj.status)) {
         return obj.status;
       }
     }

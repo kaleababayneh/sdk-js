@@ -20,8 +20,8 @@ import {
 } from "@lumera-protocol/sdk-js";
 
 
-// const presetName = "testnet";
-const presetName = "mainnet";
+const presetName = "testnet";
+//const presetName = "mainnet";
 const preset = CHAIN_PRESETS[presetName];
 
 // ============================================================================

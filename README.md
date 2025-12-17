@@ -155,6 +155,7 @@ const client = await createLumeraClient({
 ```
 
 Available presets:
+
 - `testnet` - Lumera testnet configuration
 - `mainnet` - Lumera mainnet configuration
 
