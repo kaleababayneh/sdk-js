@@ -20,6 +20,7 @@ export interface Action {
   state: ActionState;
   blockHeight: bigint;
   superNodes: string[];
+  fileSizeKbs: bigint;
 }
 export interface ActionProtoMsg {
   typeUrl: "/lumera.action.v1.Action";
@@ -41,6 +42,7 @@ export interface ActionAmino {
   state: ActionState;
   blockHeight: string;
   superNodes: string[];
+  fileSizeKbs: string;
 }
 export interface ActionAminoMsg {
   type: "/lumera.action.v1.Action";
@@ -56,7 +58,8 @@ function createBaseAction(): Action {
     expirationTime: BigInt(0),
     state: 0,
     blockHeight: BigInt(0),
-    superNodes: []
+    superNodes: [],
+    fileSizeKbs: BigInt(0)
   };
 }
 /**
@@ -68,10 +71,10 @@ function createBaseAction(): Action {
 export const Action = {
   typeUrl: "/lumera.action.v1.Action",
   is(o: any): o is Action {
-    return o && (o.$typeUrl === Action.typeUrl || typeof o.creator === "string" && typeof o.actionID === "string" && isSet(o.actionType) && (o.metadata instanceof Uint8Array || typeof o.metadata === "string") && typeof o.price === "string" && typeof o.expirationTime === "bigint" && isSet(o.state) && typeof o.blockHeight === "bigint" && Array.isArray(o.superNodes) && (!o.superNodes.length || typeof o.superNodes[0] === "string"));
+    return o && (o.$typeUrl === Action.typeUrl || typeof o.creator === "string" && typeof o.actionID === "string" && isSet(o.actionType) && (o.metadata instanceof Uint8Array || typeof o.metadata === "string") && typeof o.price === "string" && typeof o.expirationTime === "bigint" && isSet(o.state) && typeof o.blockHeight === "bigint" && Array.isArray(o.superNodes) && (!o.superNodes.length || typeof o.superNodes[0] === "string") && typeof o.fileSizeKbs === "bigint");
   },
   isAmino(o: any): o is ActionAmino {
-    return o && (o.$typeUrl === Action.typeUrl || typeof o.creator === "string" && typeof o.actionID === "string" && isSet(o.actionType) && (o.metadata instanceof Uint8Array || typeof o.metadata === "string") && typeof o.price === "string" && typeof o.expirationTime === "bigint" && isSet(o.state) && typeof o.blockHeight === "bigint" && Array.isArray(o.superNodes) && (!o.superNodes.length || typeof o.superNodes[0] === "string"));
+    return o && (o.$typeUrl === Action.typeUrl || typeof o.creator === "string" && typeof o.actionID === "string" && isSet(o.actionType) && (o.metadata instanceof Uint8Array || typeof o.metadata === "string") && typeof o.price === "string" && typeof o.expirationTime === "bigint" && isSet(o.state) && typeof o.blockHeight === "bigint" && Array.isArray(o.superNodes) && (!o.superNodes.length || typeof o.superNodes[0] === "string") && typeof o.fileSizeKbs === "bigint");
   },
   encode(message: Action, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.creator !== "") {
@@ -100,6 +103,9 @@ export const Action = {
     }
     for (const v of message.superNodes) {
       writer.uint32(74).string(v!);
+    }
+    if (message.fileSizeKbs !== BigInt(0)) {
+      writer.uint32(80).int64(message.fileSizeKbs);
     }
     return writer;
   },
@@ -137,6 +143,9 @@ export const Action = {
         case 9:
           message.superNodes.push(reader.string());
           break;
+        case 10:
+          message.fileSizeKbs = reader.int64();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -155,6 +164,7 @@ export const Action = {
     message.state = object.state ?? 0;
     message.blockHeight = object.blockHeight !== undefined && object.blockHeight !== null ? BigInt(object.blockHeight.toString()) : BigInt(0);
     message.superNodes = object.superNodes?.map(e => e) || [];
+    message.fileSizeKbs = object.fileSizeKbs !== undefined && object.fileSizeKbs !== null ? BigInt(object.fileSizeKbs.toString()) : BigInt(0);
     return message;
   },
   fromAmino(object: ActionAmino): Action {
@@ -184,6 +194,9 @@ export const Action = {
       message.blockHeight = BigInt(object.blockHeight);
     }
     message.superNodes = object.superNodes?.map(e => e) || [];
+    if (object.fileSizeKbs !== undefined && object.fileSizeKbs !== null) {
+      message.fileSizeKbs = BigInt(object.fileSizeKbs);
+    }
     return message;
   },
   toAmino(message: Action): ActionAmino {
@@ -201,6 +214,7 @@ export const Action = {
     } else {
       obj.superNodes = message.superNodes;
     }
+    obj.fileSizeKbs = message.fileSizeKbs !== BigInt(0) ? message.fileSizeKbs?.toString() : undefined;
     return obj;
   },
   fromAminoMsg(object: ActionAminoMsg): Action {

@@ -80,6 +80,7 @@ export interface MsgRequestAction {
   metadata: string;
   price: string;
   expirationTime: string;
+  fileSizeKbs: string;
 }
 export interface MsgRequestActionProtoMsg {
   typeUrl: "/lumera.action.v1.MsgRequestAction";
@@ -97,6 +98,7 @@ export interface MsgRequestActionAmino {
   metadata: string;
   price: string;
   expirationTime: string;
+  fileSizeKbs: string;
 }
 export interface MsgRequestActionAminoMsg {
   type: "/lumera.action.v1.MsgRequestAction";
@@ -410,7 +412,8 @@ function createBaseMsgRequestAction(): MsgRequestAction {
     actionType: "",
     metadata: "",
     price: "",
-    expirationTime: ""
+    expirationTime: "",
+    fileSizeKbs: ""
   };
 }
 /**
@@ -422,10 +425,10 @@ function createBaseMsgRequestAction(): MsgRequestAction {
 export const MsgRequestAction = {
   typeUrl: "/lumera.action.v1.MsgRequestAction",
   is(o: any): o is MsgRequestAction {
-    return o && (o.$typeUrl === MsgRequestAction.typeUrl || typeof o.creator === "string" && typeof o.actionType === "string" && typeof o.metadata === "string" && typeof o.price === "string" && typeof o.expirationTime === "string");
+    return o && (o.$typeUrl === MsgRequestAction.typeUrl || typeof o.creator === "string" && typeof o.actionType === "string" && typeof o.metadata === "string" && typeof o.price === "string" && typeof o.expirationTime === "string" && typeof o.fileSizeKbs === "string");
   },
   isAmino(o: any): o is MsgRequestActionAmino {
-    return o && (o.$typeUrl === MsgRequestAction.typeUrl || typeof o.creator === "string" && typeof o.actionType === "string" && typeof o.metadata === "string" && typeof o.price === "string" && typeof o.expirationTime === "string");
+    return o && (o.$typeUrl === MsgRequestAction.typeUrl || typeof o.creator === "string" && typeof o.actionType === "string" && typeof o.metadata === "string" && typeof o.price === "string" && typeof o.expirationTime === "string" && typeof o.fileSizeKbs === "string");
   },
   encode(message: MsgRequestAction, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.creator !== "") {
@@ -442,6 +445,9 @@ export const MsgRequestAction = {
     }
     if (message.expirationTime !== "") {
       writer.uint32(42).string(message.expirationTime);
+    }
+    if (message.fileSizeKbs !== "") {
+      writer.uint32(50).string(message.fileSizeKbs);
     }
     return writer;
   },
@@ -467,6 +473,9 @@ export const MsgRequestAction = {
         case 5:
           message.expirationTime = reader.string();
           break;
+        case 6:
+          message.fileSizeKbs = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -481,6 +490,7 @@ export const MsgRequestAction = {
     message.metadata = object.metadata ?? "";
     message.price = object.price ?? "";
     message.expirationTime = object.expirationTime ?? "";
+    message.fileSizeKbs = object.fileSizeKbs ?? "";
     return message;
   },
   fromAmino(object: MsgRequestActionAmino): MsgRequestAction {
@@ -500,6 +510,9 @@ export const MsgRequestAction = {
     if (object.expirationTime !== undefined && object.expirationTime !== null) {
       message.expirationTime = object.expirationTime;
     }
+    if (object.fileSizeKbs !== undefined && object.fileSizeKbs !== null) {
+      message.fileSizeKbs = object.fileSizeKbs;
+    }
     return message;
   },
   toAmino(message: MsgRequestAction): MsgRequestActionAmino {
@@ -509,6 +522,7 @@ export const MsgRequestAction = {
     obj.metadata = message.metadata === "" ? undefined : message.metadata;
     obj.price = message.price === "" ? undefined : message.price;
     obj.expirationTime = message.expirationTime === "" ? undefined : message.expirationTime;
+    obj.fileSizeKbs = message.fileSizeKbs === "" ? undefined : message.fileSizeKbs;
     return obj;
   },
   fromAminoMsg(object: MsgRequestActionAminoMsg): MsgRequestAction {

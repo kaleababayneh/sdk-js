@@ -213,6 +213,7 @@ export class BlockchainActionAdapter implements CascadeChainPort {
         }),
         price: priceAmount+"ulume",
         expirationTime: input.expirationTime,
+        fileSizeKbs: fileSize > 0 ? Math.ceil(fileSize / 1024).toString() : "0",
       }),
     };
 

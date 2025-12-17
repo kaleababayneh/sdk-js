@@ -206,6 +206,8 @@ export interface ActionRecord {
   price: string;
   /** Expiration time (Unix timestamp) */
   expirationTime: number;
+  /** File size in KiB (ceil(bytes/1024)); 0 if unknown */
+  fileSizeKbs: number;
   /** Current action state */
   state: ActionState;
   /** Block height when action was created */

@@ -67,6 +67,7 @@ class RpcActionQuery implements ActionQuery {
       metadata: decodedMetadata,
       price: action.price,
       expirationTime: Number(action.expirationTime),
+      fileSizeKbs: Number(action.fileSizeKbs),
       state: action.state as any,
       blockHeight: Number(action.blockHeight),
       superNodes: action.superNodes,
