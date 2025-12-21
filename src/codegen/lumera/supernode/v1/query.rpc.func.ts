@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { buildQuery } from "../../../helper-func-types";
-import { QueryParamsRequest, QueryParamsResponse, QueryGetSuperNodeRequest, QueryGetSuperNodeResponse, QueryGetSuperNodeBySuperNodeAddressRequest, QueryGetSuperNodeBySuperNodeAddressResponse, QueryListSuperNodesRequest, QueryListSuperNodesResponse, QueryGetTopSuperNodesForBlockRequest, QueryGetTopSuperNodesForBlockResponse } from "./query";
+import { QueryParamsRequest, QueryParamsResponse, QueryGetSuperNodeRequest, QueryGetSuperNodeResponse, QueryGetSuperNodeBySuperNodeAddressRequest, QueryGetSuperNodeBySuperNodeAddressResponse, QueryListSuperNodesRequest, QueryListSuperNodesResponse, QueryGetTopSuperNodesForBlockRequest, QueryGetTopSuperNodesForBlockResponse, QueryGetMetricsRequest, QueryGetMetricsResponse } from "./query";
 /**
  * Parameters queries the parameters of the module.
  * @name getParams
@@ -66,4 +66,17 @@ export const getGetTopSuperNodesForBlock = buildQuery<QueryGetTopSuperNodesForBl
   service: "lumera.supernode.v1.Query",
   method: "GetTopSuperNodesForBlock",
   deps: [QueryGetTopSuperNodesForBlockRequest, QueryGetTopSuperNodesForBlockResponse]
+});
+/**
+ * Queries the latest metrics state for a validator.
+ * @name getGetMetrics
+ * @package lumera.supernode.v1
+ * @see proto service: lumera.supernode.v1.GetMetrics
+ */
+export const getGetMetrics = buildQuery<QueryGetMetricsRequest, QueryGetMetricsResponse>({
+  encode: QueryGetMetricsRequest.encode,
+  decode: QueryGetMetricsResponse.decode,
+  service: "lumera.supernode.v1.Query",
+  method: "GetMetrics",
+  deps: [QueryGetMetricsRequest, QueryGetMetricsResponse]
 });

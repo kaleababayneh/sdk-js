@@ -3,6 +3,7 @@
 import { PageRequest, PageRequestAmino, PageResponse, PageResponseAmino } from "../../../cosmos/base/query/v1beta1/pagination";
 import { Params, ParamsAmino } from "./params";
 import { SuperNode, SuperNodeAmino } from "./super_node";
+import { SupernodeMetricsState, SupernodeMetricsStateAmino } from "./metrics";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { DeepPartial } from "../../../helpers";
 import { GlobalDecoderRegistry } from "../../../registry";
@@ -273,6 +274,58 @@ export interface QueryGetTopSuperNodesForBlockResponseAmino {
 export interface QueryGetTopSuperNodesForBlockResponseAminoMsg {
   type: "/lumera.supernode.v1.QueryGetTopSuperNodesForBlockResponse";
   value: QueryGetTopSuperNodesForBlockResponseAmino;
+}
+/**
+ * QueryGetMetricsRequest is request type for the Query/GetMetrics RPC method.
+ * @name QueryGetMetricsRequest
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.QueryGetMetricsRequest
+ */
+export interface QueryGetMetricsRequest {
+  validatorAddress: string;
+}
+export interface QueryGetMetricsRequestProtoMsg {
+  typeUrl: "/lumera.supernode.v1.QueryGetMetricsRequest";
+  value: Uint8Array;
+}
+/**
+ * QueryGetMetricsRequest is request type for the Query/GetMetrics RPC method.
+ * @name QueryGetMetricsRequestAmino
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.QueryGetMetricsRequest
+ */
+export interface QueryGetMetricsRequestAmino {
+  validatorAddress: string;
+}
+export interface QueryGetMetricsRequestAminoMsg {
+  type: "/lumera.supernode.v1.QueryGetMetricsRequest";
+  value: QueryGetMetricsRequestAmino;
+}
+/**
+ * QueryGetMetricsResponse is response type for the Query/GetMetrics RPC method.
+ * @name QueryGetMetricsResponse
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.QueryGetMetricsResponse
+ */
+export interface QueryGetMetricsResponse {
+  metricsState?: SupernodeMetricsState;
+}
+export interface QueryGetMetricsResponseProtoMsg {
+  typeUrl: "/lumera.supernode.v1.QueryGetMetricsResponse";
+  value: Uint8Array;
+}
+/**
+ * QueryGetMetricsResponse is response type for the Query/GetMetrics RPC method.
+ * @name QueryGetMetricsResponseAmino
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.QueryGetMetricsResponse
+ */
+export interface QueryGetMetricsResponseAmino {
+  metrics_state?: SupernodeMetricsStateAmino;
+}
+export interface QueryGetMetricsResponseAminoMsg {
+  type: "/lumera.supernode.v1.QueryGetMetricsResponse";
+  value: QueryGetMetricsResponseAmino;
 }
 function createBaseQueryParamsRequest(): QueryParamsRequest {
   return {};
@@ -1090,5 +1143,162 @@ export const QueryGetTopSuperNodesForBlockResponse = {
       return;
     }
     SuperNode.registerTypeUrl();
+  }
+};
+function createBaseQueryGetMetricsRequest(): QueryGetMetricsRequest {
+  return {
+    validatorAddress: ""
+  };
+}
+/**
+ * QueryGetMetricsRequest is request type for the Query/GetMetrics RPC method.
+ * @name QueryGetMetricsRequest
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.QueryGetMetricsRequest
+ */
+export const QueryGetMetricsRequest = {
+  typeUrl: "/lumera.supernode.v1.QueryGetMetricsRequest",
+  is(o: any): o is QueryGetMetricsRequest {
+    return o && (o.$typeUrl === QueryGetMetricsRequest.typeUrl || typeof o.validatorAddress === "string");
+  },
+  isAmino(o: any): o is QueryGetMetricsRequestAmino {
+    return o && (o.$typeUrl === QueryGetMetricsRequest.typeUrl || typeof o.validatorAddress === "string");
+  },
+  encode(message: QueryGetMetricsRequest, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+    if (message.validatorAddress !== "") {
+      writer.uint32(10).string(message.validatorAddress);
+    }
+    return writer;
+  },
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryGetMetricsRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetMetricsRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.validatorAddress = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<QueryGetMetricsRequest>): QueryGetMetricsRequest {
+    const message = createBaseQueryGetMetricsRequest();
+    message.validatorAddress = object.validatorAddress ?? "";
+    return message;
+  },
+  fromAmino(object: QueryGetMetricsRequestAmino): QueryGetMetricsRequest {
+    const message = createBaseQueryGetMetricsRequest();
+    if (object.validatorAddress !== undefined && object.validatorAddress !== null) {
+      message.validatorAddress = object.validatorAddress;
+    }
+    return message;
+  },
+  toAmino(message: QueryGetMetricsRequest): QueryGetMetricsRequestAmino {
+    const obj: any = {};
+    obj.validatorAddress = message.validatorAddress === "" ? undefined : message.validatorAddress;
+    return obj;
+  },
+  fromAminoMsg(object: QueryGetMetricsRequestAminoMsg): QueryGetMetricsRequest {
+    return QueryGetMetricsRequest.fromAmino(object.value);
+  },
+  fromProtoMsg(message: QueryGetMetricsRequestProtoMsg): QueryGetMetricsRequest {
+    return QueryGetMetricsRequest.decode(message.value);
+  },
+  toProto(message: QueryGetMetricsRequest): Uint8Array {
+    return QueryGetMetricsRequest.encode(message).finish();
+  },
+  toProtoMsg(message: QueryGetMetricsRequest): QueryGetMetricsRequestProtoMsg {
+    return {
+      typeUrl: "/lumera.supernode.v1.QueryGetMetricsRequest",
+      value: QueryGetMetricsRequest.encode(message).finish()
+    };
+  },
+  registerTypeUrl() {}
+};
+function createBaseQueryGetMetricsResponse(): QueryGetMetricsResponse {
+  return {
+    metricsState: undefined
+  };
+}
+/**
+ * QueryGetMetricsResponse is response type for the Query/GetMetrics RPC method.
+ * @name QueryGetMetricsResponse
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.QueryGetMetricsResponse
+ */
+export const QueryGetMetricsResponse = {
+  typeUrl: "/lumera.supernode.v1.QueryGetMetricsResponse",
+  is(o: any): o is QueryGetMetricsResponse {
+    return o && o.$typeUrl === QueryGetMetricsResponse.typeUrl;
+  },
+  isAmino(o: any): o is QueryGetMetricsResponseAmino {
+    return o && o.$typeUrl === QueryGetMetricsResponse.typeUrl;
+  },
+  encode(message: QueryGetMetricsResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+    if (message.metricsState !== undefined) {
+      SupernodeMetricsState.encode(message.metricsState, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryGetMetricsResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryGetMetricsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.metricsState = SupernodeMetricsState.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<QueryGetMetricsResponse>): QueryGetMetricsResponse {
+    const message = createBaseQueryGetMetricsResponse();
+    message.metricsState = object.metricsState !== undefined && object.metricsState !== null ? SupernodeMetricsState.fromPartial(object.metricsState) : undefined;
+    return message;
+  },
+  fromAmino(object: QueryGetMetricsResponseAmino): QueryGetMetricsResponse {
+    const message = createBaseQueryGetMetricsResponse();
+    if (object.metrics_state !== undefined && object.metrics_state !== null) {
+      message.metricsState = SupernodeMetricsState.fromAmino(object.metrics_state);
+    }
+    return message;
+  },
+  toAmino(message: QueryGetMetricsResponse): QueryGetMetricsResponseAmino {
+    const obj: any = {};
+    obj.metrics_state = message.metricsState ? SupernodeMetricsState.toAmino(message.metricsState) : undefined;
+    return obj;
+  },
+  fromAminoMsg(object: QueryGetMetricsResponseAminoMsg): QueryGetMetricsResponse {
+    return QueryGetMetricsResponse.fromAmino(object.value);
+  },
+  fromProtoMsg(message: QueryGetMetricsResponseProtoMsg): QueryGetMetricsResponse {
+    return QueryGetMetricsResponse.decode(message.value);
+  },
+  toProto(message: QueryGetMetricsResponse): Uint8Array {
+    return QueryGetMetricsResponse.encode(message).finish();
+  },
+  toProtoMsg(message: QueryGetMetricsResponse): QueryGetMetricsResponseProtoMsg {
+    return {
+      typeUrl: "/lumera.supernode.v1.QueryGetMetricsResponse",
+      value: QueryGetMetricsResponse.encode(message).finish()
+    };
+  },
+  registerTypeUrl() {
+    if (!GlobalDecoderRegistry.registerExistingTypeUrl(QueryGetMetricsResponse.typeUrl)) {
+      return;
+    }
+    SupernodeMetricsState.registerTypeUrl();
   }
 };

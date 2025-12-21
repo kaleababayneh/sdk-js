@@ -8,6 +8,7 @@ export enum SuperNodeState {
   SUPERNODE_STATE_DISABLED = 2,
   SUPERNODE_STATE_STOPPED = 3,
   SUPERNODE_STATE_PENALIZED = 4,
+  SUPERNODE_STATE_POSTPONED = 5,
   UNRECOGNIZED = -1,
 }
 export const SuperNodeStateAmino = SuperNodeState;
@@ -28,6 +29,9 @@ export function superNodeStateFromJSON(object: any): SuperNodeState {
     case 4:
     case "SUPERNODE_STATE_PENALIZED":
       return SuperNodeState.SUPERNODE_STATE_PENALIZED;
+    case 5:
+    case "SUPERNODE_STATE_POSTPONED":
+      return SuperNodeState.SUPERNODE_STATE_POSTPONED;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -46,6 +50,8 @@ export function superNodeStateToJSON(object: SuperNodeState): string {
       return "SUPERNODE_STATE_STOPPED";
     case SuperNodeState.SUPERNODE_STATE_PENALIZED:
       return "SUPERNODE_STATE_PENALIZED";
+    case SuperNodeState.SUPERNODE_STATE_POSTPONED:
+      return "SUPERNODE_STATE_POSTPONED";
     case SuperNodeState.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";

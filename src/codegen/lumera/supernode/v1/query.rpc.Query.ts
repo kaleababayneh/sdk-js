@@ -3,7 +3,7 @@
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
 import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
-import { QueryParamsRequest, QueryParamsResponse, QueryGetSuperNodeRequest, QueryGetSuperNodeResponse, QueryGetSuperNodeBySuperNodeAddressRequest, QueryGetSuperNodeBySuperNodeAddressResponse, QueryListSuperNodesRequest, QueryListSuperNodesResponse, QueryGetTopSuperNodesForBlockRequest, QueryGetTopSuperNodesForBlockResponse } from "./query";
+import { QueryParamsRequest, QueryParamsResponse, QueryGetSuperNodeRequest, QueryGetSuperNodeResponse, QueryGetSuperNodeBySuperNodeAddressRequest, QueryGetSuperNodeBySuperNodeAddressResponse, QueryListSuperNodesRequest, QueryListSuperNodesResponse, QueryGetTopSuperNodesForBlockRequest, QueryGetTopSuperNodesForBlockResponse, QueryGetMetricsRequest, QueryGetMetricsResponse } from "./query";
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -16,6 +16,8 @@ export interface Query {
   listSuperNodes(request?: QueryListSuperNodesRequest): Promise<QueryListSuperNodesResponse>;
   /** Queries a list of GetTopSuperNodesForBlock items. */
   getTopSuperNodesForBlock(request: QueryGetTopSuperNodesForBlockRequest): Promise<QueryGetTopSuperNodesForBlockResponse>;
+  /** Queries the latest metrics state for a validator. */
+  getMetrics(request: QueryGetMetricsRequest): Promise<QueryGetMetricsResponse>;
 }
 export class QueryClientImpl implements Query {
   private readonly rpc: TxRpc;
@@ -54,6 +56,12 @@ export class QueryClientImpl implements Query {
     const promise = this.rpc.request("lumera.supernode.v1.Query", "GetTopSuperNodesForBlock", data);
     return promise.then(data => QueryGetTopSuperNodesForBlockResponse.decode(new BinaryReader(data)));
   };
+  /* Queries the latest metrics state for a validator. */
+  getMetrics = async (request: QueryGetMetricsRequest): Promise<QueryGetMetricsResponse> => {
+    const data = QueryGetMetricsRequest.encode(request).finish();
+    const promise = this.rpc.request("lumera.supernode.v1.Query", "GetMetrics", data);
+    return promise.then(data => QueryGetMetricsResponse.decode(new BinaryReader(data)));
+  };
 }
 export const createRpcQueryExtension = (base: QueryClient) => {
   const rpc = createProtobufRpcClient(base);
@@ -73,6 +81,9 @@ export const createRpcQueryExtension = (base: QueryClient) => {
     },
     getTopSuperNodesForBlock(request: QueryGetTopSuperNodesForBlockRequest): Promise<QueryGetTopSuperNodesForBlockResponse> {
       return queryService.getTopSuperNodesForBlock(request);
+    },
+    getMetrics(request: QueryGetMetricsRequest): Promise<QueryGetMetricsResponse> {
+      return queryService.getMetrics(request);
     }
   };
 };

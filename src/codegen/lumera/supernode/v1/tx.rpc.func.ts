@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { buildTx } from "../../../helper-func-types";
-import { MsgUpdateParams, MsgRegisterSupernode, MsgDeregisterSupernode, MsgStartSupernode, MsgStopSupernode, MsgUpdateSupernode } from "./tx";
+import { MsgUpdateParams, MsgRegisterSupernode, MsgDeregisterSupernode, MsgStartSupernode, MsgStopSupernode, MsgUpdateSupernode, MsgReportSupernodeMetrics } from "./tx";
 /**
  * UpdateParams defines a (governance) operation for updating the module
  * parameters. The authority defaults to the x/gov module account.
@@ -51,4 +51,12 @@ export const stopSupernode = buildTx<MsgStopSupernode>({
  */
 export const updateSupernode = buildTx<MsgUpdateSupernode>({
   msg: MsgUpdateSupernode
+});
+/**
+ * @name reportSupernodeMetrics
+ * @package lumera.supernode.v1
+ * @see proto service: lumera.supernode.v1.ReportSupernodeMetrics
+ */
+export const reportSupernodeMetrics = buildTx<MsgReportSupernodeMetrics>({
+  msg: MsgReportSupernodeMetrics
 });

@@ -1,6 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { Params, ParamsAmino } from "./params";
+import { SupernodeMetrics, SupernodeMetricsAmino } from "./metrics";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
 import { DeepPartial } from "../../../helpers";
@@ -313,6 +314,60 @@ export interface MsgUpdateSupernodeResponseAmino {}
 export interface MsgUpdateSupernodeResponseAminoMsg {
   type: "/lumera.supernode.v1.MsgUpdateSupernodeResponse";
   value: MsgUpdateSupernodeResponseAmino;
+}
+/**
+ * @name MsgReportSupernodeMetrics
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.MsgReportSupernodeMetrics
+ */
+export interface MsgReportSupernodeMetrics {
+  validatorAddress: string;
+  supernodeAccount: string;
+  metrics: SupernodeMetrics;
+}
+export interface MsgReportSupernodeMetricsProtoMsg {
+  typeUrl: "/lumera.supernode.v1.MsgReportSupernodeMetrics";
+  value: Uint8Array;
+}
+/**
+ * @name MsgReportSupernodeMetricsAmino
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.MsgReportSupernodeMetrics
+ */
+export interface MsgReportSupernodeMetricsAmino {
+  validator_address: string;
+  supernode_account: string;
+  metrics: SupernodeMetricsAmino;
+}
+export interface MsgReportSupernodeMetricsAminoMsg {
+  type: "/lumera.supernode.v1.MsgReportSupernodeMetrics";
+  value: MsgReportSupernodeMetricsAmino;
+}
+/**
+ * @name MsgReportSupernodeMetricsResponse
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.MsgReportSupernodeMetricsResponse
+ */
+export interface MsgReportSupernodeMetricsResponse {
+  compliant: boolean;
+  issues: string[];
+}
+export interface MsgReportSupernodeMetricsResponseProtoMsg {
+  typeUrl: "/lumera.supernode.v1.MsgReportSupernodeMetricsResponse";
+  value: Uint8Array;
+}
+/**
+ * @name MsgReportSupernodeMetricsResponseAmino
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.MsgReportSupernodeMetricsResponse
+ */
+export interface MsgReportSupernodeMetricsResponseAmino {
+  compliant: boolean;
+  issues: string[];
+}
+export interface MsgReportSupernodeMetricsResponseAminoMsg {
+  type: "/lumera.supernode.v1.MsgReportSupernodeMetricsResponse";
+  value: MsgReportSupernodeMetricsResponseAmino;
 }
 function createBaseMsgUpdateParams(): MsgUpdateParams {
   return {
@@ -1315,6 +1370,199 @@ export const MsgUpdateSupernodeResponse = {
     return {
       typeUrl: "/lumera.supernode.v1.MsgUpdateSupernodeResponse",
       value: MsgUpdateSupernodeResponse.encode(message).finish()
+    };
+  },
+  registerTypeUrl() {}
+};
+function createBaseMsgReportSupernodeMetrics(): MsgReportSupernodeMetrics {
+  return {
+    validatorAddress: "",
+    supernodeAccount: "",
+    metrics: SupernodeMetrics.fromPartial({})
+  };
+}
+/**
+ * @name MsgReportSupernodeMetrics
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.MsgReportSupernodeMetrics
+ */
+export const MsgReportSupernodeMetrics = {
+  typeUrl: "/lumera.supernode.v1.MsgReportSupernodeMetrics",
+  is(o: any): o is MsgReportSupernodeMetrics {
+    return o && (o.$typeUrl === MsgReportSupernodeMetrics.typeUrl || typeof o.validatorAddress === "string" && typeof o.supernodeAccount === "string" && SupernodeMetrics.is(o.metrics));
+  },
+  isAmino(o: any): o is MsgReportSupernodeMetricsAmino {
+    return o && (o.$typeUrl === MsgReportSupernodeMetrics.typeUrl || typeof o.validator_address === "string" && typeof o.supernode_account === "string" && SupernodeMetrics.isAmino(o.metrics));
+  },
+  encode(message: MsgReportSupernodeMetrics, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+    if (message.validatorAddress !== "") {
+      writer.uint32(10).string(message.validatorAddress);
+    }
+    if (message.supernodeAccount !== "") {
+      writer.uint32(18).string(message.supernodeAccount);
+    }
+    if (message.metrics !== undefined) {
+      SupernodeMetrics.encode(message.metrics, writer.uint32(26).fork()).ldelim();
+    }
+    return writer;
+  },
+  decode(input: BinaryReader | Uint8Array, length?: number): MsgReportSupernodeMetrics {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgReportSupernodeMetrics();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.validatorAddress = reader.string();
+          break;
+        case 2:
+          message.supernodeAccount = reader.string();
+          break;
+        case 3:
+          message.metrics = SupernodeMetrics.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<MsgReportSupernodeMetrics>): MsgReportSupernodeMetrics {
+    const message = createBaseMsgReportSupernodeMetrics();
+    message.validatorAddress = object.validatorAddress ?? "";
+    message.supernodeAccount = object.supernodeAccount ?? "";
+    message.metrics = object.metrics !== undefined && object.metrics !== null ? SupernodeMetrics.fromPartial(object.metrics) : undefined;
+    return message;
+  },
+  fromAmino(object: MsgReportSupernodeMetricsAmino): MsgReportSupernodeMetrics {
+    const message = createBaseMsgReportSupernodeMetrics();
+    if (object.validator_address !== undefined && object.validator_address !== null) {
+      message.validatorAddress = object.validator_address;
+    }
+    if (object.supernode_account !== undefined && object.supernode_account !== null) {
+      message.supernodeAccount = object.supernode_account;
+    }
+    if (object.metrics !== undefined && object.metrics !== null) {
+      message.metrics = SupernodeMetrics.fromAmino(object.metrics);
+    }
+    return message;
+  },
+  toAmino(message: MsgReportSupernodeMetrics): MsgReportSupernodeMetricsAmino {
+    const obj: any = {};
+    obj.validator_address = message.validatorAddress === "" ? undefined : message.validatorAddress;
+    obj.supernode_account = message.supernodeAccount === "" ? undefined : message.supernodeAccount;
+    obj.metrics = message.metrics ? SupernodeMetrics.toAmino(message.metrics) : undefined;
+    return obj;
+  },
+  fromAminoMsg(object: MsgReportSupernodeMetricsAminoMsg): MsgReportSupernodeMetrics {
+    return MsgReportSupernodeMetrics.fromAmino(object.value);
+  },
+  fromProtoMsg(message: MsgReportSupernodeMetricsProtoMsg): MsgReportSupernodeMetrics {
+    return MsgReportSupernodeMetrics.decode(message.value);
+  },
+  toProto(message: MsgReportSupernodeMetrics): Uint8Array {
+    return MsgReportSupernodeMetrics.encode(message).finish();
+  },
+  toProtoMsg(message: MsgReportSupernodeMetrics): MsgReportSupernodeMetricsProtoMsg {
+    return {
+      typeUrl: "/lumera.supernode.v1.MsgReportSupernodeMetrics",
+      value: MsgReportSupernodeMetrics.encode(message).finish()
+    };
+  },
+  registerTypeUrl() {
+    if (!GlobalDecoderRegistry.registerExistingTypeUrl(MsgReportSupernodeMetrics.typeUrl)) {
+      return;
+    }
+    SupernodeMetrics.registerTypeUrl();
+  }
+};
+function createBaseMsgReportSupernodeMetricsResponse(): MsgReportSupernodeMetricsResponse {
+  return {
+    compliant: false,
+    issues: []
+  };
+}
+/**
+ * @name MsgReportSupernodeMetricsResponse
+ * @package lumera.supernode.v1
+ * @see proto type: lumera.supernode.v1.MsgReportSupernodeMetricsResponse
+ */
+export const MsgReportSupernodeMetricsResponse = {
+  typeUrl: "/lumera.supernode.v1.MsgReportSupernodeMetricsResponse",
+  is(o: any): o is MsgReportSupernodeMetricsResponse {
+    return o && (o.$typeUrl === MsgReportSupernodeMetricsResponse.typeUrl || typeof o.compliant === "boolean" && Array.isArray(o.issues) && (!o.issues.length || typeof o.issues[0] === "string"));
+  },
+  isAmino(o: any): o is MsgReportSupernodeMetricsResponseAmino {
+    return o && (o.$typeUrl === MsgReportSupernodeMetricsResponse.typeUrl || typeof o.compliant === "boolean" && Array.isArray(o.issues) && (!o.issues.length || typeof o.issues[0] === "string"));
+  },
+  encode(message: MsgReportSupernodeMetricsResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+    if (message.compliant === true) {
+      writer.uint32(8).bool(message.compliant);
+    }
+    for (const v of message.issues) {
+      writer.uint32(18).string(v!);
+    }
+    return writer;
+  },
+  decode(input: BinaryReader | Uint8Array, length?: number): MsgReportSupernodeMetricsResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseMsgReportSupernodeMetricsResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.compliant = reader.bool();
+          break;
+        case 2:
+          message.issues.push(reader.string());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<MsgReportSupernodeMetricsResponse>): MsgReportSupernodeMetricsResponse {
+    const message = createBaseMsgReportSupernodeMetricsResponse();
+    message.compliant = object.compliant ?? false;
+    message.issues = object.issues?.map(e => e) || [];
+    return message;
+  },
+  fromAmino(object: MsgReportSupernodeMetricsResponseAmino): MsgReportSupernodeMetricsResponse {
+    const message = createBaseMsgReportSupernodeMetricsResponse();
+    if (object.compliant !== undefined && object.compliant !== null) {
+      message.compliant = object.compliant;
+    }
+    message.issues = object.issues?.map(e => e) || [];
+    return message;
+  },
+  toAmino(message: MsgReportSupernodeMetricsResponse): MsgReportSupernodeMetricsResponseAmino {
+    const obj: any = {};
+    obj.compliant = message.compliant === false ? undefined : message.compliant;
+    if (message.issues) {
+      obj.issues = message.issues.map(e => e);
+    } else {
+      obj.issues = message.issues;
+    }
+    return obj;
+  },
+  fromAminoMsg(object: MsgReportSupernodeMetricsResponseAminoMsg): MsgReportSupernodeMetricsResponse {
+    return MsgReportSupernodeMetricsResponse.fromAmino(object.value);
+  },
+  fromProtoMsg(message: MsgReportSupernodeMetricsResponseProtoMsg): MsgReportSupernodeMetricsResponse {
+    return MsgReportSupernodeMetricsResponse.decode(message.value);
+  },
+  toProto(message: MsgReportSupernodeMetricsResponse): Uint8Array {
+    return MsgReportSupernodeMetricsResponse.encode(message).finish();
+  },
+  toProtoMsg(message: MsgReportSupernodeMetricsResponse): MsgReportSupernodeMetricsResponseProtoMsg {
+    return {
+      typeUrl: "/lumera.supernode.v1.MsgReportSupernodeMetricsResponse",
+      value: MsgReportSupernodeMetricsResponse.encode(message).finish()
     };
   },
   registerTypeUrl() {}

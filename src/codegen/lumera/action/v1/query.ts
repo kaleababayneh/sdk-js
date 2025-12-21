@@ -233,6 +233,64 @@ export interface QueryListActionsResponseAminoMsg {
   value: QueryListActionsResponseAmino;
 }
 /**
+ * QueryListActionsByCreatorRequest is a request type to list actions for a specific creator
+ * @name QueryListActionsByCreatorRequest
+ * @package lumera.action.v1
+ * @see proto type: lumera.action.v1.QueryListActionsByCreatorRequest
+ */
+export interface QueryListActionsByCreatorRequest {
+  creator: string;
+  pagination?: PageRequest;
+}
+export interface QueryListActionsByCreatorRequestProtoMsg {
+  typeUrl: "/lumera.action.v1.QueryListActionsByCreatorRequest";
+  value: Uint8Array;
+}
+/**
+ * QueryListActionsByCreatorRequest is a request type to list actions for a specific creator
+ * @name QueryListActionsByCreatorRequestAmino
+ * @package lumera.action.v1
+ * @see proto type: lumera.action.v1.QueryListActionsByCreatorRequest
+ */
+export interface QueryListActionsByCreatorRequestAmino {
+  creator: string;
+  pagination?: PageRequestAmino;
+}
+export interface QueryListActionsByCreatorRequestAminoMsg {
+  type: "/lumera.action.v1.QueryListActionsByCreatorRequest";
+  value: QueryListActionsByCreatorRequestAmino;
+}
+/**
+ * QueryListActionsByCreatorResponse is a response type to list actions for a specific creator
+ * @name QueryListActionsByCreatorResponse
+ * @package lumera.action.v1
+ * @see proto type: lumera.action.v1.QueryListActionsByCreatorResponse
+ */
+export interface QueryListActionsByCreatorResponse {
+  actions: Action[];
+  pagination?: PageResponse;
+  total: bigint;
+}
+export interface QueryListActionsByCreatorResponseProtoMsg {
+  typeUrl: "/lumera.action.v1.QueryListActionsByCreatorResponse";
+  value: Uint8Array;
+}
+/**
+ * QueryListActionsByCreatorResponse is a response type to list actions for a specific creator
+ * @name QueryListActionsByCreatorResponseAmino
+ * @package lumera.action.v1
+ * @see proto type: lumera.action.v1.QueryListActionsByCreatorResponse
+ */
+export interface QueryListActionsByCreatorResponseAmino {
+  actions: ActionAmino[];
+  pagination?: PageResponseAmino;
+  total: string;
+}
+export interface QueryListActionsByCreatorResponseAminoMsg {
+  type: "/lumera.action.v1.QueryListActionsByCreatorResponse";
+  value: QueryListActionsByCreatorResponseAmino;
+}
+/**
  * QueryListActionsBySuperNodeRequest is a request type to list actions for a specific supernode
  * @name QueryListActionsBySuperNodeRequest
  * @package lumera.action.v1
@@ -1130,6 +1188,207 @@ export const QueryListActionsResponse = {
   },
   registerTypeUrl() {
     if (!GlobalDecoderRegistry.registerExistingTypeUrl(QueryListActionsResponse.typeUrl)) {
+      return;
+    }
+    Action.registerTypeUrl();
+    PageResponse.registerTypeUrl();
+  }
+};
+function createBaseQueryListActionsByCreatorRequest(): QueryListActionsByCreatorRequest {
+  return {
+    creator: "",
+    pagination: undefined
+  };
+}
+/**
+ * QueryListActionsByCreatorRequest is a request type to list actions for a specific creator
+ * @name QueryListActionsByCreatorRequest
+ * @package lumera.action.v1
+ * @see proto type: lumera.action.v1.QueryListActionsByCreatorRequest
+ */
+export const QueryListActionsByCreatorRequest = {
+  typeUrl: "/lumera.action.v1.QueryListActionsByCreatorRequest",
+  is(o: any): o is QueryListActionsByCreatorRequest {
+    return o && (o.$typeUrl === QueryListActionsByCreatorRequest.typeUrl || typeof o.creator === "string");
+  },
+  isAmino(o: any): o is QueryListActionsByCreatorRequestAmino {
+    return o && (o.$typeUrl === QueryListActionsByCreatorRequest.typeUrl || typeof o.creator === "string");
+  },
+  encode(message: QueryListActionsByCreatorRequest, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+    if (message.creator !== "") {
+      writer.uint32(10).string(message.creator);
+    }
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryListActionsByCreatorRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryListActionsByCreatorRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.creator = reader.string();
+          break;
+        case 2:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<QueryListActionsByCreatorRequest>): QueryListActionsByCreatorRequest {
+    const message = createBaseQueryListActionsByCreatorRequest();
+    message.creator = object.creator ?? "";
+    message.pagination = object.pagination !== undefined && object.pagination !== null ? PageRequest.fromPartial(object.pagination) : undefined;
+    return message;
+  },
+  fromAmino(object: QueryListActionsByCreatorRequestAmino): QueryListActionsByCreatorRequest {
+    const message = createBaseQueryListActionsByCreatorRequest();
+    if (object.creator !== undefined && object.creator !== null) {
+      message.creator = object.creator;
+    }
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromAmino(object.pagination);
+    }
+    return message;
+  },
+  toAmino(message: QueryListActionsByCreatorRequest): QueryListActionsByCreatorRequestAmino {
+    const obj: any = {};
+    obj.creator = message.creator === "" ? undefined : message.creator;
+    obj.pagination = message.pagination ? PageRequest.toAmino(message.pagination) : undefined;
+    return obj;
+  },
+  fromAminoMsg(object: QueryListActionsByCreatorRequestAminoMsg): QueryListActionsByCreatorRequest {
+    return QueryListActionsByCreatorRequest.fromAmino(object.value);
+  },
+  fromProtoMsg(message: QueryListActionsByCreatorRequestProtoMsg): QueryListActionsByCreatorRequest {
+    return QueryListActionsByCreatorRequest.decode(message.value);
+  },
+  toProto(message: QueryListActionsByCreatorRequest): Uint8Array {
+    return QueryListActionsByCreatorRequest.encode(message).finish();
+  },
+  toProtoMsg(message: QueryListActionsByCreatorRequest): QueryListActionsByCreatorRequestProtoMsg {
+    return {
+      typeUrl: "/lumera.action.v1.QueryListActionsByCreatorRequest",
+      value: QueryListActionsByCreatorRequest.encode(message).finish()
+    };
+  },
+  registerTypeUrl() {
+    if (!GlobalDecoderRegistry.registerExistingTypeUrl(QueryListActionsByCreatorRequest.typeUrl)) {
+      return;
+    }
+    PageRequest.registerTypeUrl();
+  }
+};
+function createBaseQueryListActionsByCreatorResponse(): QueryListActionsByCreatorResponse {
+  return {
+    actions: [],
+    pagination: undefined,
+    total: BigInt(0)
+  };
+}
+/**
+ * QueryListActionsByCreatorResponse is a response type to list actions for a specific creator
+ * @name QueryListActionsByCreatorResponse
+ * @package lumera.action.v1
+ * @see proto type: lumera.action.v1.QueryListActionsByCreatorResponse
+ */
+export const QueryListActionsByCreatorResponse = {
+  typeUrl: "/lumera.action.v1.QueryListActionsByCreatorResponse",
+  is(o: any): o is QueryListActionsByCreatorResponse {
+    return o && (o.$typeUrl === QueryListActionsByCreatorResponse.typeUrl || Array.isArray(o.actions) && (!o.actions.length || Action.is(o.actions[0])) && typeof o.total === "bigint");
+  },
+  isAmino(o: any): o is QueryListActionsByCreatorResponseAmino {
+    return o && (o.$typeUrl === QueryListActionsByCreatorResponse.typeUrl || Array.isArray(o.actions) && (!o.actions.length || Action.isAmino(o.actions[0])) && typeof o.total === "bigint");
+  },
+  encode(message: QueryListActionsByCreatorResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+    for (const v of message.actions) {
+      Action.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.pagination !== undefined) {
+      PageResponse.encode(message.pagination, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.total !== BigInt(0)) {
+      writer.uint32(24).uint64(message.total);
+    }
+    return writer;
+  },
+  decode(input: BinaryReader | Uint8Array, length?: number): QueryListActionsByCreatorResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseQueryListActionsByCreatorResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.actions.push(Action.decode(reader, reader.uint32()));
+          break;
+        case 2:
+          message.pagination = PageResponse.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.total = reader.uint64();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<QueryListActionsByCreatorResponse>): QueryListActionsByCreatorResponse {
+    const message = createBaseQueryListActionsByCreatorResponse();
+    message.actions = object.actions?.map(e => Action.fromPartial(e)) || [];
+    message.pagination = object.pagination !== undefined && object.pagination !== null ? PageResponse.fromPartial(object.pagination) : undefined;
+    message.total = object.total !== undefined && object.total !== null ? BigInt(object.total.toString()) : BigInt(0);
+    return message;
+  },
+  fromAmino(object: QueryListActionsByCreatorResponseAmino): QueryListActionsByCreatorResponse {
+    const message = createBaseQueryListActionsByCreatorResponse();
+    message.actions = object.actions?.map(e => Action.fromAmino(e)) || [];
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageResponse.fromAmino(object.pagination);
+    }
+    if (object.total !== undefined && object.total !== null) {
+      message.total = BigInt(object.total);
+    }
+    return message;
+  },
+  toAmino(message: QueryListActionsByCreatorResponse): QueryListActionsByCreatorResponseAmino {
+    const obj: any = {};
+    if (message.actions) {
+      obj.actions = message.actions.map(e => e ? Action.toAmino(e) : undefined);
+    } else {
+      obj.actions = message.actions;
+    }
+    obj.pagination = message.pagination ? PageResponse.toAmino(message.pagination) : undefined;
+    obj.total = message.total !== BigInt(0) ? message.total?.toString() : undefined;
+    return obj;
+  },
+  fromAminoMsg(object: QueryListActionsByCreatorResponseAminoMsg): QueryListActionsByCreatorResponse {
+    return QueryListActionsByCreatorResponse.fromAmino(object.value);
+  },
+  fromProtoMsg(message: QueryListActionsByCreatorResponseProtoMsg): QueryListActionsByCreatorResponse {
+    return QueryListActionsByCreatorResponse.decode(message.value);
+  },
+  toProto(message: QueryListActionsByCreatorResponse): Uint8Array {
+    return QueryListActionsByCreatorResponse.encode(message).finish();
+  },
+  toProtoMsg(message: QueryListActionsByCreatorResponse): QueryListActionsByCreatorResponseProtoMsg {
+    return {
+      typeUrl: "/lumera.action.v1.QueryListActionsByCreatorResponse",
+      value: QueryListActionsByCreatorResponse.encode(message).finish()
+    };
+  },
+  registerTypeUrl() {
+    if (!GlobalDecoderRegistry.registerExistingTypeUrl(QueryListActionsByCreatorResponse.typeUrl)) {
       return;
     }
     Action.registerTypeUrl();

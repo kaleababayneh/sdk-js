@@ -1,7 +1,7 @@
 // @ts-nocheck
 /* eslint-disable */
 import { buildQuery } from "../../../helper-func-types";
-import { QueryParamsRequest, QueryParamsResponse, QueryGetActionRequest, QueryGetActionResponse, QueryGetActionFeeRequest, QueryGetActionFeeResponse, QueryListActionsRequest, QueryListActionsResponse, QueryListActionsBySuperNodeRequest, QueryListActionsBySuperNodeResponse, QueryListActionsByBlockHeightRequest, QueryListActionsByBlockHeightResponse, QueryListExpiredActionsRequest, QueryListExpiredActionsResponse, QueryActionByMetadataRequest, QueryActionByMetadataResponse } from "./query";
+import { QueryParamsRequest, QueryParamsResponse, QueryGetActionRequest, QueryGetActionResponse, QueryGetActionFeeRequest, QueryGetActionFeeResponse, QueryListActionsRequest, QueryListActionsResponse, QueryListActionsByCreatorRequest, QueryListActionsByCreatorResponse, QueryListActionsBySuperNodeRequest, QueryListActionsBySuperNodeResponse, QueryListActionsByBlockHeightRequest, QueryListActionsByBlockHeightResponse, QueryListExpiredActionsRequest, QueryListExpiredActionsResponse, QueryActionByMetadataRequest, QueryActionByMetadataResponse } from "./query";
 /**
  * Parameters queries the parameters of the module.
  * @name getParams
@@ -53,6 +53,19 @@ export const getListActions = buildQuery<QueryListActionsRequest, QueryListActio
   service: "lumera.action.v1.Query",
   method: "ListActions",
   deps: [QueryListActionsRequest, QueryListActionsResponse]
+});
+/**
+ * List actions created by a specific address.
+ * @name getListActionsByCreator
+ * @package lumera.action.v1
+ * @see proto service: lumera.action.v1.ListActionsByCreator
+ */
+export const getListActionsByCreator = buildQuery<QueryListActionsByCreatorRequest, QueryListActionsByCreatorResponse>({
+  encode: QueryListActionsByCreatorRequest.encode,
+  decode: QueryListActionsByCreatorResponse.decode,
+  service: "lumera.action.v1.Query",
+  method: "ListActionsByCreator",
+  deps: [QueryListActionsByCreatorRequest, QueryListActionsByCreatorResponse]
 });
 /**
  * List actions for a specific supernode.

@@ -68,7 +68,7 @@ Add to your `package.json`:
     "proto:clean": "rm -rf proto",
     "proto:download": "npm run proto:clean && npm run proto:download:lumera && npm run proto:download:deps",
     "proto:download:lumera": "buf export buf.build/lumera-protocol/lumera:c295734a4bed4c689888f309149678f6 -o protos",
-    "proto:download:deps": "buf export buf.build/cosmos/cosmos-sdk:5a6ab7bc14314acaa912d5e53aef1c2f -o protos && buf export buf.build/cosmos/cosmos-proto:04467658e59e44bbb22fe568206e1f70 -o protos && buf export buf.build/googleapis/googleapis:61b203b9a9164be9a834f58c37be6f62 -o protos",
+    "proto:download:deps": "buf export buf.build/cosmos/cosmos-sdk:5a6ab7bc14314acaa912d5e53aef1c2f -o protos && buf export buf.build/cosmos/cosmos-proto:04467658e59e44bbb22fe568206e1f70 -o protos && buf export buf.build/googleapis/googleapis:004180b77378443887d3b55cabc00384 -o protos",
 
     "codegen:clean": "rm -rf src/codegen",
     "codegen": "telescope transpile --config .telescope.json",
@@ -82,9 +82,16 @@ Add to your `package.json`:
 **Explanation:**
 
 - `buf export` downloads protos from buf.build
-- `buf.build/lumera-protocol/lumera:c295734a4bed4c689888f309149678f6` is the module reference (with commit hash for pinning)
+- `buf.build/lumera-protocol/lumera:76f5a5038df84649b0b0557064206d4e` is the module reference (with commit hash for pinning)
 - `-o protos` specifies output directory
 - `--include-imports` automatically downloads all dependencies (cosmos-sdk, googleapis, etc.)
+
+#### Buf commits
+
+- `76f5a5038df84649b0b0557064206d4e` is the commit for the latest Lumera proto - <https://buf.build/lumera-protocol/lumera/commits>
+- `5a6ab7bc14314acaa912d5e53aef1c2f` is the commit for `v0.50.0` - <https://buf.build/cosmos/cosmos-sdk/docs/v0.50.0>
+- `04467658e59e44bbb22fe568206e1f70` is the commit for the latest Cosmos proto - <https://buf.build/cosmos/cosmos-proto/docs/main>
+- `004180b77378443887d3b55cabc00384` is the commit for the latest Google APIs proto - <https://buf.build/googleapis/googleapis/commits>
 
 ---
 
@@ -120,7 +127,7 @@ Create `.telescope.json` in your project root:
   "protoDirs": ["protos"],
   "outPath": "src/codegen",
   "options": {
-    "prototypes": {
+    "prototypes": {https://buf.build/googleapis/googleapis/commits
       "enabled": true,
       "typingsFormat": {
         "useExact": true
@@ -158,7 +165,7 @@ Create `.telescope.json` in your project root:
 **Key Options Explained:**
 
 | Option | Value | Purpose |
-|--------|-------|---------|
+| ------ | ----- | ------- |
 | `prototypes.enabled` | `true` | Generate TypeScript types and encode/decode functions |
 | `aminoEncoding.enabled` | `true` | Generate Amino converters (needed for Ledger support) |
 | `rpcClients.enabled` | `true` | Generate RPC query clients (replaces REST/LCD) |

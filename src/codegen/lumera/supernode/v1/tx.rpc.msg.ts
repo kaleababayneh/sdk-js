@@ -2,7 +2,7 @@
 /* eslint-disable */
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
-import { MsgUpdateParams, MsgUpdateParamsResponse, MsgRegisterSupernode, MsgRegisterSupernodeResponse, MsgDeregisterSupernode, MsgDeregisterSupernodeResponse, MsgStartSupernode, MsgStartSupernodeResponse, MsgStopSupernode, MsgStopSupernodeResponse, MsgUpdateSupernode, MsgUpdateSupernodeResponse } from "./tx";
+import { MsgUpdateParams, MsgUpdateParamsResponse, MsgRegisterSupernode, MsgRegisterSupernodeResponse, MsgDeregisterSupernode, MsgDeregisterSupernodeResponse, MsgStartSupernode, MsgStartSupernodeResponse, MsgStopSupernode, MsgStopSupernodeResponse, MsgUpdateSupernode, MsgUpdateSupernodeResponse, MsgReportSupernodeMetrics, MsgReportSupernodeMetricsResponse } from "./tx";
 /** Msg defines the Msg service. */
 export interface Msg {
   /**
@@ -15,6 +15,7 @@ export interface Msg {
   startSupernode(request: MsgStartSupernode): Promise<MsgStartSupernodeResponse>;
   stopSupernode(request: MsgStopSupernode): Promise<MsgStopSupernodeResponse>;
   updateSupernode(request: MsgUpdateSupernode): Promise<MsgUpdateSupernodeResponse>;
+  reportSupernodeMetrics(request: MsgReportSupernodeMetrics): Promise<MsgReportSupernodeMetricsResponse>;
 }
 export class MsgClientImpl implements Msg {
   private readonly rpc: TxRpc;
@@ -57,6 +58,12 @@ export class MsgClientImpl implements Msg {
     const data = MsgUpdateSupernode.encode(request).finish();
     const promise = this.rpc.request("lumera.supernode.v1.Msg", "UpdateSupernode", data);
     return promise.then(data => MsgUpdateSupernodeResponse.decode(new BinaryReader(data)));
+  };
+  /* ReportSupernodeMetrics */
+  reportSupernodeMetrics = async (request: MsgReportSupernodeMetrics): Promise<MsgReportSupernodeMetricsResponse> => {
+    const data = MsgReportSupernodeMetrics.encode(request).finish();
+    const promise = this.rpc.request("lumera.supernode.v1.Msg", "ReportSupernodeMetrics", data);
+    return promise.then(data => MsgReportSupernodeMetricsResponse.decode(new BinaryReader(data)));
   };
 }
 export const createClientImpl = (rpc: TxRpc) => {

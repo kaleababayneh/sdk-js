@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import * as _81 from "./cosmos";
+import * as _87 from "./cosmos";
 export const cosmos_proto = {
-  ..._81
+  ..._87
 };

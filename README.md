@@ -134,7 +134,8 @@ console.log("Downloaded:", downloadedContent);
 
 ## 📚 Documentation
 
-- **[API Reference](./docs/api/README.md)** - Complete TypeScript API documentation
+- **[Developer Guide](./docs/developer-guide.md)** - Environment setup, codegen, testing, and publishing workflows
+- **[API Reference](./docs/api/index.html)** - Complete TypeScript API documentation (Typedoc HTML output)
 - **[Migration Guide](./MIGRATION.md)** - Migrate from direct fetch/LCD calls to the SDK
 - **[Examples](./examples/)** - Working code examples
   - [Node.js Examples](./examples/node/) - Full workflow and standalone examples

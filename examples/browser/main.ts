@@ -179,9 +179,11 @@ async function connectWallet() {
 
     // Mirror the working keplr-test flow: first enable the chain in Keplr
     await keplr.enable(preset.chainId);
+    // await keplr.enable("lumera-devnet-1");
 
     // Get Keplr-based UniversalSigner (wraps the same offline signer)
     const signer = await getKeplrSigner(preset.chainId);
+    // const signer = await getKeplrSigner("lumera-devnet-1");
     const accounts = await signer.getAccounts();
 
     if (accounts.length === 0) {
@@ -196,10 +198,10 @@ async function connectWallet() {
     log("Initializing Lumera client...", "info");
     state.client = await createLumeraClient({
       preset: presetName,
-      // chainId: LUMERA_CHAIN_ID,
-      // rpcUrl: "https://rpc.testnet.lumera.io",
-      // lcdUrl: "https://lcd.testnet.lumera.io",
-      // snapiUrl: SNAPI_URL,
+      // chainId: "lumera-devnet-1",
+      // rpcUrl: "https://rpc.pastel.network",
+      // lcdUrl: "https://lcd.pastel.network",
+      // snapiUrl: "https://lcd.pastel.network",
       signer,
       address: state.address!,
       gasPrice: "0.025ulume",

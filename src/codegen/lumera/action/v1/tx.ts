@@ -3,7 +3,7 @@
 import { Params, ParamsAmino } from "./params";
 import { BinaryReader, BinaryWriter } from "../../../binary";
 import { GlobalDecoderRegistry } from "../../../registry";
-import { DeepPartial } from "../../../helpers";
+import { DeepPartial, bytesFromBase64, base64FromBytes } from "../../../helpers";
 /**
  * MsgUpdateParams is the Msg/UpdateParams request type.
  * @name MsgUpdateParams
@@ -81,6 +81,7 @@ export interface MsgRequestAction {
   price: string;
   expirationTime: string;
   fileSizeKbs: string;
+  appPubkey: Uint8Array;
 }
 export interface MsgRequestActionProtoMsg {
   typeUrl: "/lumera.action.v1.MsgRequestAction";
@@ -99,6 +100,7 @@ export interface MsgRequestActionAmino {
   price: string;
   expirationTime: string;
   fileSizeKbs: string;
+  app_pubkey: string;
 }
 export interface MsgRequestActionAminoMsg {
   type: "/lumera.action.v1.MsgRequestAction";
@@ -226,7 +228,10 @@ export interface MsgApproveActionAminoMsg {
  * @package lumera.action.v1
  * @see proto type: lumera.action.v1.MsgApproveActionResponse
  */
-export interface MsgApproveActionResponse {}
+export interface MsgApproveActionResponse {
+  actionId: string;
+  status: string;
+}
 export interface MsgApproveActionResponseProtoMsg {
   typeUrl: "/lumera.action.v1.MsgApproveActionResponse";
   value: Uint8Array;
@@ -237,7 +242,10 @@ export interface MsgApproveActionResponseProtoMsg {
  * @package lumera.action.v1
  * @see proto type: lumera.action.v1.MsgApproveActionResponse
  */
-export interface MsgApproveActionResponseAmino {}
+export interface MsgApproveActionResponseAmino {
+  actionId: string;
+  status: string;
+}
 export interface MsgApproveActionResponseAminoMsg {
   type: "/lumera.action.v1.MsgApproveActionResponse";
   value: MsgApproveActionResponseAmino;
@@ -413,7 +421,8 @@ function createBaseMsgRequestAction(): MsgRequestAction {
     metadata: "",
     price: "",
     expirationTime: "",
-    fileSizeKbs: ""
+    fileSizeKbs: "",
+    appPubkey: new Uint8Array()
   };
 }
 /**
@@ -425,10 +434,10 @@ function createBaseMsgRequestAction(): MsgRequestAction {
 export const MsgRequestAction = {
   typeUrl: "/lumera.action.v1.MsgRequestAction",
   is(o: any): o is MsgRequestAction {
-    return o && (o.$typeUrl === MsgRequestAction.typeUrl || typeof o.creator === "string" && typeof o.actionType === "string" && typeof o.metadata === "string" && typeof o.price === "string" && typeof o.expirationTime === "string" && typeof o.fileSizeKbs === "string");
+    return o && (o.$typeUrl === MsgRequestAction.typeUrl || typeof o.creator === "string" && typeof o.actionType === "string" && typeof o.metadata === "string" && typeof o.price === "string" && typeof o.expirationTime === "string" && typeof o.fileSizeKbs === "string" && (o.appPubkey instanceof Uint8Array || typeof o.appPubkey === "string"));
   },
   isAmino(o: any): o is MsgRequestActionAmino {
-    return o && (o.$typeUrl === MsgRequestAction.typeUrl || typeof o.creator === "string" && typeof o.actionType === "string" && typeof o.metadata === "string" && typeof o.price === "string" && typeof o.expirationTime === "string" && typeof o.fileSizeKbs === "string");
+    return o && (o.$typeUrl === MsgRequestAction.typeUrl || typeof o.creator === "string" && typeof o.actionType === "string" && typeof o.metadata === "string" && typeof o.price === "string" && typeof o.expirationTime === "string" && typeof o.fileSizeKbs === "string" && (o.app_pubkey instanceof Uint8Array || typeof o.app_pubkey === "string"));
   },
   encode(message: MsgRequestAction, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
     if (message.creator !== "") {
@@ -448,6 +457,9 @@ export const MsgRequestAction = {
     }
     if (message.fileSizeKbs !== "") {
       writer.uint32(50).string(message.fileSizeKbs);
+    }
+    if (message.appPubkey.length !== 0) {
+      writer.uint32(58).bytes(message.appPubkey);
     }
     return writer;
   },
@@ -476,6 +488,9 @@ export const MsgRequestAction = {
         case 6:
           message.fileSizeKbs = reader.string();
           break;
+        case 7:
+          message.appPubkey = reader.bytes();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -491,6 +506,7 @@ export const MsgRequestAction = {
     message.price = object.price ?? "";
     message.expirationTime = object.expirationTime ?? "";
     message.fileSizeKbs = object.fileSizeKbs ?? "";
+    message.appPubkey = object.appPubkey ?? new Uint8Array();
     return message;
   },
   fromAmino(object: MsgRequestActionAmino): MsgRequestAction {
@@ -513,6 +529,9 @@ export const MsgRequestAction = {
     if (object.fileSizeKbs !== undefined && object.fileSizeKbs !== null) {
       message.fileSizeKbs = object.fileSizeKbs;
     }
+    if (object.app_pubkey !== undefined && object.app_pubkey !== null) {
+      message.appPubkey = bytesFromBase64(object.app_pubkey);
+    }
     return message;
   },
   toAmino(message: MsgRequestAction): MsgRequestActionAmino {
@@ -523,6 +542,7 @@ export const MsgRequestAction = {
     obj.price = message.price === "" ? undefined : message.price;
     obj.expirationTime = message.expirationTime === "" ? undefined : message.expirationTime;
     obj.fileSizeKbs = message.fileSizeKbs === "" ? undefined : message.fileSizeKbs;
+    obj.app_pubkey = message.appPubkey ? base64FromBytes(message.appPubkey) : undefined;
     return obj;
   },
   fromAminoMsg(object: MsgRequestActionAminoMsg): MsgRequestAction {
@@ -894,7 +914,10 @@ export const MsgApproveAction = {
   registerTypeUrl() {}
 };
 function createBaseMsgApproveActionResponse(): MsgApproveActionResponse {
-  return {};
+  return {
+    actionId: "",
+    status: ""
+  };
 }
 /**
  * MsgApproveActionResponse defines the response structure for executing a MsgApproveAction
@@ -905,12 +928,18 @@ function createBaseMsgApproveActionResponse(): MsgApproveActionResponse {
 export const MsgApproveActionResponse = {
   typeUrl: "/lumera.action.v1.MsgApproveActionResponse",
   is(o: any): o is MsgApproveActionResponse {
-    return o && o.$typeUrl === MsgApproveActionResponse.typeUrl;
+    return o && (o.$typeUrl === MsgApproveActionResponse.typeUrl || typeof o.actionId === "string" && typeof o.status === "string");
   },
   isAmino(o: any): o is MsgApproveActionResponseAmino {
-    return o && o.$typeUrl === MsgApproveActionResponse.typeUrl;
+    return o && (o.$typeUrl === MsgApproveActionResponse.typeUrl || typeof o.actionId === "string" && typeof o.status === "string");
   },
-  encode(_: MsgApproveActionResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+  encode(message: MsgApproveActionResponse, writer: BinaryWriter = BinaryWriter.create()): BinaryWriter {
+    if (message.actionId !== "") {
+      writer.uint32(10).string(message.actionId);
+    }
+    if (message.status !== "") {
+      writer.uint32(18).string(message.status);
+    }
     return writer;
   },
   decode(input: BinaryReader | Uint8Array, length?: number): MsgApproveActionResponse {
@@ -920,6 +949,12 @@ export const MsgApproveActionResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          message.actionId = reader.string();
+          break;
+        case 2:
+          message.status = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -927,16 +962,26 @@ export const MsgApproveActionResponse = {
     }
     return message;
   },
-  fromPartial(_: DeepPartial<MsgApproveActionResponse>): MsgApproveActionResponse {
+  fromPartial(object: DeepPartial<MsgApproveActionResponse>): MsgApproveActionResponse {
     const message = createBaseMsgApproveActionResponse();
+    message.actionId = object.actionId ?? "";
+    message.status = object.status ?? "";
     return message;
   },
-  fromAmino(_: MsgApproveActionResponseAmino): MsgApproveActionResponse {
+  fromAmino(object: MsgApproveActionResponseAmino): MsgApproveActionResponse {
     const message = createBaseMsgApproveActionResponse();
+    if (object.actionId !== undefined && object.actionId !== null) {
+      message.actionId = object.actionId;
+    }
+    if (object.status !== undefined && object.status !== null) {
+      message.status = object.status;
+    }
     return message;
   },
-  toAmino(_: MsgApproveActionResponse): MsgApproveActionResponseAmino {
+  toAmino(message: MsgApproveActionResponse): MsgApproveActionResponseAmino {
     const obj: any = {};
+    obj.actionId = message.actionId === "" ? undefined : message.actionId;
+    obj.status = message.status === "" ? undefined : message.status;
     return obj;
   },
   fromAminoMsg(object: MsgApproveActionResponseAminoMsg): MsgApproveActionResponse {

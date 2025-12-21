@@ -3,7 +3,7 @@
 import { TxRpc } from "../../../types";
 import { BinaryReader } from "../../../binary";
 import { QueryClient, createProtobufRpcClient } from "@cosmjs/stargate";
-import { QueryParamsRequest, QueryParamsResponse, QueryGetActionRequest, QueryGetActionResponse, QueryGetActionFeeRequest, QueryGetActionFeeResponse, QueryListActionsRequest, QueryListActionsResponse, QueryListActionsBySuperNodeRequest, QueryListActionsBySuperNodeResponse, QueryListActionsByBlockHeightRequest, QueryListActionsByBlockHeightResponse, QueryListExpiredActionsRequest, QueryListExpiredActionsResponse, QueryActionByMetadataRequest, QueryActionByMetadataResponse } from "./query";
+import { QueryParamsRequest, QueryParamsResponse, QueryGetActionRequest, QueryGetActionResponse, QueryGetActionFeeRequest, QueryGetActionFeeResponse, QueryListActionsRequest, QueryListActionsResponse, QueryListActionsByCreatorRequest, QueryListActionsByCreatorResponse, QueryListActionsBySuperNodeRequest, QueryListActionsBySuperNodeResponse, QueryListActionsByBlockHeightRequest, QueryListActionsByBlockHeightResponse, QueryListExpiredActionsRequest, QueryListExpiredActionsResponse, QueryActionByMetadataRequest, QueryActionByMetadataResponse } from "./query";
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -14,6 +14,8 @@ export interface Query {
   getActionFee(request: QueryGetActionFeeRequest): Promise<QueryGetActionFeeResponse>;
   /** List actions with optional type and state filters. */
   listActions(request: QueryListActionsRequest): Promise<QueryListActionsResponse>;
+  /** List actions created by a specific address. */
+  listActionsByCreator(request: QueryListActionsByCreatorRequest): Promise<QueryListActionsByCreatorResponse>;
   /** List actions for a specific supernode. */
   listActionsBySuperNode(request: QueryListActionsBySuperNodeRequest): Promise<QueryListActionsBySuperNodeResponse>;
   /** List actions created at a specific block height. */
@@ -51,6 +53,12 @@ export class QueryClientImpl implements Query {
     const data = QueryListActionsRequest.encode(request).finish();
     const promise = this.rpc.request("lumera.action.v1.Query", "ListActions", data);
     return promise.then(data => QueryListActionsResponse.decode(new BinaryReader(data)));
+  };
+  /* List actions created by a specific address. */
+  listActionsByCreator = async (request: QueryListActionsByCreatorRequest): Promise<QueryListActionsByCreatorResponse> => {
+    const data = QueryListActionsByCreatorRequest.encode(request).finish();
+    const promise = this.rpc.request("lumera.action.v1.Query", "ListActionsByCreator", data);
+    return promise.then(data => QueryListActionsByCreatorResponse.decode(new BinaryReader(data)));
   };
   /* List actions for a specific supernode. */
   listActionsBySuperNode = async (request: QueryListActionsBySuperNodeRequest): Promise<QueryListActionsBySuperNodeResponse> => {
@@ -94,6 +102,9 @@ export const createRpcQueryExtension = (base: QueryClient) => {
     },
     listActions(request: QueryListActionsRequest): Promise<QueryListActionsResponse> {
       return queryService.listActions(request);
+    },
+    listActionsByCreator(request: QueryListActionsByCreatorRequest): Promise<QueryListActionsByCreatorResponse> {
+      return queryService.listActionsByCreator(request);
     },
     listActionsBySuperNode(request: QueryListActionsBySuperNodeRequest): Promise<QueryListActionsBySuperNodeResponse> {
       return queryService.listActionsBySuperNode(request);

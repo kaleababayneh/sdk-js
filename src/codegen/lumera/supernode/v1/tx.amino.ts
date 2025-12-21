@@ -1,6 +1,6 @@
 // @ts-nocheck
 /* eslint-disable */
-import { MsgUpdateParams, MsgRegisterSupernode, MsgDeregisterSupernode, MsgStartSupernode, MsgStopSupernode, MsgUpdateSupernode } from "./tx";
+import { MsgUpdateParams, MsgRegisterSupernode, MsgDeregisterSupernode, MsgStartSupernode, MsgStopSupernode, MsgUpdateSupernode, MsgReportSupernodeMetrics } from "./tx";
 export const AminoConverter = {
   "/lumera.supernode.v1.MsgUpdateParams": {
     aminoType: "lumera/x/supernode/v1/MsgUpdateParams",
@@ -31,5 +31,10 @@ export const AminoConverter = {
     aminoType: "/lumera.supernode.v1.MsgUpdateSupernode",
     toAmino: MsgUpdateSupernode.toAmino,
     fromAmino: MsgUpdateSupernode.fromAmino
+  },
+  "/lumera.supernode.v1.MsgReportSupernodeMetrics": {
+    aminoType: "/lumera.supernode.v1.MsgReportSupernodeMetrics",
+    toAmino: MsgReportSupernodeMetrics.toAmino,
+    fromAmino: MsgReportSupernodeMetrics.fromAmino
   }
 };
