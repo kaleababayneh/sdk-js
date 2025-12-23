@@ -193,8 +193,10 @@ export class BlockchainActionAdapter implements CascadeChainPort {
    * ```
    */
   async requestActionTx(input: RequestActionTxInput, fileSize: number): Promise<TxOutcome> {
-    // Step 1: Fetch action fee from blockchain based on data size
-    const feeInfo = await this.blockchainClient.Action.getActionFee(fileSize);
+    // Step 1: Fetch action fee from blockchain based on data size (in KB, rounded up)
+    // Must match supernode-side verification: (bytes + 1023) / 1024.
+    const fileSizeKbs = fileSize > 0 ? Math.ceil(fileSize / 1024) : 0;
+    const feeInfo = await this.blockchainClient.Action.getActionFee(fileSizeKbs);
     const priceAmount = feeInfo.amount;
     const metadata = input.msg as any; // Type assertion for the metadata payload
 
@@ -213,7 +215,7 @@ export class BlockchainActionAdapter implements CascadeChainPort {
         }),
         price: priceAmount+"ulume",
         expirationTime: input.expirationTime,
-        fileSizeKbs: fileSize > 0 ? Math.ceil(fileSize / 1024).toString() : "0",
+        fileSizeKbs: fileSizeKbs.toString(),
       }),
     };
 

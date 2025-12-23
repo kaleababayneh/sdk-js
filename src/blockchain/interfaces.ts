@@ -254,7 +254,7 @@ export interface ActionQuery {
    * Queries the blockchain to calculate the required fee for an action
    * based on the size of the data being stored.
    *
-   * @param dataSize - Size of the data in bytes
+   * @param dataSize - Size of the data in KB (rounded up)
    * @returns Object containing the fee amount as a string
    * @throws {Error} If the query fails
    */
