@@ -154,8 +154,14 @@ export class BlockchainActionAdapter implements CascadeChainPort {
       );
     }
 
+    // LEP-5 SVC params — zero means use defaults
+    const svcChallengeCount = parseInt(params.svc_challenge_count, 10) || 0;
+    const svcMinChunksForChallenge = parseInt(params.svc_min_chunks_for_challenge, 10) || 0;
+
     return {
       max_raptor_q_symbols: maxRaptorQSymbols,
+      svc_challenge_count: svcChallengeCount,
+      svc_min_chunks_for_challenge: svcMinChunksForChallenge,
     };
   }
 
@@ -212,6 +218,7 @@ export class BlockchainActionAdapter implements CascadeChainPort {
           rq_ids_ic: metadata.rq_ids_ic,
           signatures: metadata.signatures,
           public: metadata.public,
+          ...(metadata.availability_commitment ? { availability_commitment: metadata.availability_commitment } : {}),
         }),
         price: priceAmount+"ulume",
         expirationTime: input.expirationTime,

@@ -35,6 +35,14 @@ export interface Params {
    */
   superNodeFeeShare: string;
   foundationFeeShare: string;
+  /**
+   * LEP-5: Number of chunks to challenge during SVC (default: 8)
+   */
+  svcChallengeCount: number;
+  /**
+   * LEP-5: Minimum chunks required for SVC (default: 4)
+   */
+  svcMinChunksForChallenge: number;
 }
 export interface ParamsProtoMsg {
   typeUrl: "/lumera.action.v1.Params";
@@ -70,6 +78,8 @@ export interface ParamsAmino {
    */
   super_node_fee_share: string;
   foundation_fee_share: string;
+  svc_challenge_count: number;
+  svc_min_chunks_for_challenge: number;
 }
 export interface ParamsAminoMsg {
   type: "/lumera.action.v1.Params";
@@ -87,7 +97,9 @@ function createBaseParams(): Params {
     minProcessingTime: Duration.fromPartial({}),
     maxProcessingTime: Duration.fromPartial({}),
     superNodeFeeShare: "",
-    foundationFeeShare: ""
+    foundationFeeShare: "",
+    svcChallengeCount: 0,
+    svcMinChunksForChallenge: 0
   };
 }
 /**
@@ -138,6 +150,12 @@ export const Params = {
     if (message.foundationFeeShare !== "") {
       writer.uint32(90).string(message.foundationFeeShare);
     }
+    if (message.svcChallengeCount !== 0) {
+      writer.uint32(96).uint32(message.svcChallengeCount);
+    }
+    if (message.svcMinChunksForChallenge !== 0) {
+      writer.uint32(104).uint32(message.svcMinChunksForChallenge);
+    }
     return writer;
   },
   decode(input: BinaryReader | Uint8Array, length?: number): Params {
@@ -180,6 +198,12 @@ export const Params = {
         case 11:
           message.foundationFeeShare = reader.string();
           break;
+        case 12:
+          message.svcChallengeCount = reader.uint32();
+          break;
+        case 13:
+          message.svcMinChunksForChallenge = reader.uint32();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -200,6 +224,8 @@ export const Params = {
     message.maxProcessingTime = object.maxProcessingTime !== undefined && object.maxProcessingTime !== null ? Duration.fromPartial(object.maxProcessingTime) : undefined;
     message.superNodeFeeShare = object.superNodeFeeShare ?? "";
     message.foundationFeeShare = object.foundationFeeShare ?? "";
+    message.svcChallengeCount = object.svcChallengeCount ?? 0;
+    message.svcMinChunksForChallenge = object.svcMinChunksForChallenge ?? 0;
     return message;
   },
   fromAmino(object: ParamsAmino): Params {
@@ -237,6 +263,12 @@ export const Params = {
     if (object.foundation_fee_share !== undefined && object.foundation_fee_share !== null) {
       message.foundationFeeShare = object.foundation_fee_share;
     }
+    if (object.svc_challenge_count !== undefined && object.svc_challenge_count !== null) {
+      message.svcChallengeCount = object.svc_challenge_count;
+    }
+    if (object.svc_min_chunks_for_challenge !== undefined && object.svc_min_chunks_for_challenge !== null) {
+      message.svcMinChunksForChallenge = object.svc_min_chunks_for_challenge;
+    }
     return message;
   },
   toAmino(message: Params): ParamsAmino {
@@ -252,6 +284,8 @@ export const Params = {
     obj.max_processing_time = message.maxProcessingTime ? Duration.toAmino(message.maxProcessingTime) : Duration.toAmino(Duration.fromPartial({}));
     obj.super_node_fee_share = message.superNodeFeeShare === "" ? undefined : message.superNodeFeeShare;
     obj.foundation_fee_share = message.foundationFeeShare === "" ? undefined : message.foundationFeeShare;
+    obj.svc_challenge_count = message.svcChallengeCount === 0 ? undefined : message.svcChallengeCount;
+    obj.svc_min_chunks_for_challenge = message.svcMinChunksForChallenge === 0 ? undefined : message.svcMinChunksForChallenge;
     return obj;
   },
   fromAminoMsg(object: ParamsAminoMsg): Params {

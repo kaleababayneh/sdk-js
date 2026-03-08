@@ -131,6 +131,10 @@ export interface ActionParams {
   fee_per_kb: string;
   /** Maximum number of RaptorQ symbols allowed */
   max_raptor_q_symbols: string;
+  /** LEP-5: Number of chunks to challenge during SVC (0 = default 8) */
+  svc_challenge_count: string;
+  /** LEP-5: Minimum chunks for SVC (0 = default 4) */
+  svc_min_chunks_for_challenge: string;
 }
 
 /**

@@ -56,6 +56,28 @@ export type {
   TxOutcome,
 } from "./cascade/ports";
 
+// Storage layer - LEP-5 availability commitment
+export {
+  buildCommitment,
+  selectChunkSize,
+  deriveIndices,
+  hashLeaf,
+  hashNode,
+  buildTree,
+  DEFAULT_CHUNK_SIZE,
+  MIN_TOTAL_SIZE,
+  COMMITMENT_TYPE,
+  DEFAULT_SVC_CHALLENGE_COUNT,
+  DEFAULT_SVC_MIN_CHUNKS_FOR_CHALLENGE,
+} from "./cascade/commitment";
+
+// Codegen - LEP-5 types
+export {
+  AvailabilityCommitment,
+  ChunkProof,
+  HashAlgo,
+} from "./codegen/lumera/action/v1/metadata";
+
 // Blockchain adapter for Cascade port
 export { BlockchainActionAdapter } from "./blockchain/adapters/cascade-port";
 export type { BlockchainActionAdapterOptions } from "./blockchain/adapters/cascade-port";

@@ -37,6 +37,18 @@ export interface CascadeActionParams {
    * Used for layout ID derivation in LEP-1.
    */
   max_raptor_q_symbols: number;
+
+  /**
+   * LEP-5: Number of chunks to challenge during SVC.
+   * Zero means use default (8).
+   */
+  svc_challenge_count: number;
+
+  /**
+   * LEP-5: Minimum chunks required for SVC.
+   * Zero means use default (4).
+   */
+  svc_min_chunks_for_challenge: number;
 }
 
 /**

@@ -45,6 +45,8 @@ class RpcActionQuery implements ActionQuery {
       fee_base: params?.baseActionFee?.amount ?? "0",
       fee_per_kb: params?.feePerKbyte?.amount ?? "0",
       max_raptor_q_symbols: params?.maxRaptorQSymbols?.toString() ?? "0",
+      svc_challenge_count: params?.svcChallengeCount?.toString() ?? "0",
+      svc_min_chunks_for_challenge: params?.svcMinChunksForChallenge?.toString() ?? "0",
     };
   }
 
