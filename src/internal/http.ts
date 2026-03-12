@@ -600,7 +600,14 @@ export class HttpClient {
    * @returns Full URL
    */
   private buildUrl(path: string, params?: Record<string, string | number | boolean>): string {
-    const url = new URL(path, this.config.baseUrl);
+    const base = new URL(this.config.baseUrl);
+    const baseHasPath = base.pathname !== '' && base.pathname !== '/';
+
+    // When baseUrl contains a path prefix (e.g. /proxy/snapi), absolute request
+    // paths like "/api/v1/..." would otherwise drop that prefix. Preserve it.
+    const resolvedPath = baseHasPath && path.startsWith('/') ? path.slice(1) : path;
+    const baseHref = this.config.baseUrl.endsWith('/') ? this.config.baseUrl : `${this.config.baseUrl}/`;
+    const url = new URL(resolvedPath, baseHref);
 
     if (params) {
       Object.entries(params).forEach(([key, value]) => {

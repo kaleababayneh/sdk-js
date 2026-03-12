@@ -341,7 +341,16 @@ export class CascadeUploader {
           commitment_type: availabilityCommitment.commitmentType,
           hash_algo: availabilityCommitment.hashAlgo,
           chunk_size: availabilityCommitment.chunkSize,
-          total_size: availabilityCommitment.totalSize.toString(),
+          total_size: (() => {
+            const v = availabilityCommitment.totalSize;
+            if (typeof v === "bigint") {
+              if (v > BigInt(Number.MAX_SAFE_INTEGER)) {
+                throw new Error(`availability_commitment.total_size exceeds Number.MAX_SAFE_INTEGER: ${v.toString()}`);
+              }
+              return Number(v);
+            }
+            return v;
+          })(),
           num_chunks: availabilityCommitment.numChunks,
           root: Array.from(availabilityCommitment.root),
           challenge_indices: availabilityCommitment.challengeIndices,
