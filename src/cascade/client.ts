@@ -229,14 +229,31 @@ export class SNApiClient {
    * ```
    */
   async getTaskStatus(taskId: string): Promise<TaskStatus> {
-    // Prefer the versioned path; fall back to legacy/non-versioned path on 404
+    // `/status` is SSE on sn-api-server and can block when polled via fetch text.
+    // Use `/history` for polling and return the latest status entry.
+    try {
+      const history = await this.http.get<Array<Record<string, unknown>>>(`/api/v1/actions/cascade/tasks/${taskId}/history`);
+      if (Array.isArray(history) && history.length > 0) {
+        return history[history.length - 1] as unknown as TaskStatus;
+      }
+    } catch (err) {
+      if (!(err instanceof HttpError && err.statusCode === 404)) {
+        throw err;
+      }
+      const legacyHistory = await this.http.get<Array<Record<string, unknown>>>(`/api/actions/cascade/tasks/${taskId}/history`);
+      if (Array.isArray(legacyHistory) && legacyHistory.length > 0) {
+        return legacyHistory[legacyHistory.length - 1] as unknown as TaskStatus;
+      }
+    }
+
+    // Fallback to explicit status endpoint for deployments where it is plain JSON.
     try {
       return await this.http.get(`/api/v1/actions/cascade/tasks/${taskId}/status`);
-    } catch (err) {
-      if (err instanceof HttpError && err.statusCode === 404) {
+    } catch (statusErr) {
+      if (statusErr instanceof HttpError && statusErr.statusCode === 404) {
         return this.http.get(`/api/actions/cascade/tasks/${taskId}/status`);
       }
-      throw err;
+      throw statusErr;
     }
   }
 

@@ -33,6 +33,8 @@ import { toBase64, toCanonicalJsonBytes } from '../internal/encoding';
 import { createSingleBlockLayout, generateIds, buildIndexFile } from '../wasm/lep1';
 import type { UniversalSigner, ArbitrarySignResponse } from '../wallets/signer';
 import { createDefaultSignaturePrompter } from '../wallets/prompter';
+import { buildCommitment, DEFAULT_SVC_CHALLENGE_COUNT, DEFAULT_SVC_MIN_CHUNKS_FOR_CHALLENGE } from './commitment';
+import type { AvailabilityCommitment } from '../codegen/lumera/action/v1/metadata';
 
 export type CascadeSignatureKind = "layout" | "index" | "auth";
 
@@ -237,7 +239,9 @@ export class CascadeUploader {
       // Step 1: Get action params from blockchain
       const actionParams = await this.chainPort.getActionParams();
       const rq_ids_max = actionParams.max_raptor_q_symbols;
-      console.debug('CascadeUploader.registerAction actionParams', { actionParams });
+      const svcChallengeCount = actionParams.svc_challenge_count || DEFAULT_SVC_CHALLENGE_COUNT;
+      const svcMinChunks = actionParams.svc_min_chunks_for_challenge || DEFAULT_SVC_MIN_CHUNKS_FOR_CHALLENGE;
+      console.debug('CascadeUploader.registerAction actionParams', { actionParams, svcChallengeCount, svcMinChunks });
       
       // Step 2: Generate random initial counter for layout ID derivation
       const rq_ids_ic = Math.floor(Math.random() * rq_ids_max);
@@ -302,6 +306,18 @@ export class CascadeUploader {
       const indexWithSignature = `${indexFileB64}.${indexSignatureResponse.signature}`;
       console.debug('CascadeUploader.registerAction indexWithSignature', { indexWithSignature });
       
+      // Step 7b: Build LEP-5 availability commitment (Merkle tree over file chunks)
+      let availabilityCommitment: AvailabilityCommitment | undefined;
+      const commitmentResult = await buildCommitment(fileBytes, svcChallengeCount, svcMinChunks);
+      if (commitmentResult) {
+        availabilityCommitment = commitmentResult.commitment;
+        console.debug('CascadeUploader.registerAction built availability commitment', {
+          chunkSize: availabilityCommitment.chunkSize,
+          numChunks: availabilityCommitment.numChunks,
+          challengeIndices: availabilityCommitment.challengeIndices,
+        });
+      }
+
       // Step 8: Prepare auth_signature for upload
       const authSignatureResponse = await this.requestSignature(
         "auth",
@@ -313,14 +329,35 @@ export class CascadeUploader {
       console.debug('CascadeUploader.registerAction authSignature', { authSignature });
 
       // Step 9: Register the action on-chain
+      const msg: Record<string, unknown> = {
+        data_hash: dataHash,
+        file_name: params.fileName,
+        rq_ids_ic,
+        signatures: indexWithSignature,
+        public: params.isPublic,
+      };
+      if (availabilityCommitment) {
+        msg.availability_commitment = {
+          commitment_type: availabilityCommitment.commitmentType,
+          hash_algo: availabilityCommitment.hashAlgo,
+          chunk_size: availabilityCommitment.chunkSize,
+          total_size: (() => {
+            const v = availabilityCommitment.totalSize;
+            if (typeof v === "bigint") {
+              if (v > BigInt(Number.MAX_SAFE_INTEGER)) {
+                throw new Error(`availability_commitment.total_size exceeds Number.MAX_SAFE_INTEGER: ${v.toString()}`);
+              }
+              return Number(v);
+            }
+            return v;
+          })(),
+          num_chunks: availabilityCommitment.numChunks,
+          root: Array.from(availabilityCommitment.root),
+          challenge_indices: availabilityCommitment.challengeIndices,
+        };
+      }
       const txOutcome = await this.chainPort.requestActionTx({
-        msg: {
-          data_hash: dataHash,
-          file_name: params.fileName,
-          rq_ids_ic,
-          signatures: indexWithSignature,
-          public: params.isPublic,
-        },
+        msg,
         expirationTime: params.expirationTime,
         txPrompter: params.txPrompter,
       }, fileBytes.length);
