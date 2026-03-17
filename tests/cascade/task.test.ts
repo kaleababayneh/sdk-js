@@ -72,11 +72,12 @@ describe("TaskManager", () => {
     });
 
     const promise = manager.waitForCompletion();
+    const assertion = expect(promise).rejects.toThrowError("Task failed with status sdk:failed: boom");
 
     await vi.advanceTimersByTimeAsync(500);
     await vi.advanceTimersByTimeAsync(500);
 
-    await expect(promise).rejects.toThrowError("Task failed with status sdk:failed: boom");
+    await assertion;
 
     console.debug("task manager failure", {
       polls: snapi.getTaskStatus.mock.calls.length,
@@ -106,11 +107,12 @@ data: {"id":20,"task_id":"2228e481","status":"sdk:failed","data":{"error":"no el
     });
 
     const promise = manager.waitForCompletion();
+    const assertion = expect(promise).rejects.toThrowError("Task failed with status sdk:failed: no eligible supernodes to register");
 
     await vi.advanceTimersByTimeAsync(500);
     await vi.advanceTimersByTimeAsync(500);
 
-    await expect(promise).rejects.toThrowError("Task failed with status sdk:failed: no eligible supernodes to register");
+    await assertion;
     
     expect(debugSpy).toHaveBeenCalled();
     debugSpy.mockRestore();
@@ -135,11 +137,12 @@ data: {"id":20,"task_id":"2228e481","status":"sdk:failed","data":{"error":"no el
     });
 
     const promise = manager.waitForCompletion();
+    const assertion = expect(promise).rejects.toThrowError("Task failed with status sdk:failed: no eligible supernodes to register");
 
     await vi.advanceTimersByTimeAsync(500);
     await vi.advanceTimersByTimeAsync(500);
 
-    await expect(promise).rejects.toThrowError("Task failed with status sdk:failed: no eligible supernodes to register");
+    await assertion;
     
     expect(debugSpy).toHaveBeenCalled();
     debugSpy.mockRestore();
@@ -155,11 +158,12 @@ data: {"id":20,"task_id":"2228e481","status":"sdk:failed","data":{"error":"no el
     });
 
     const promise = manager.waitForCompletion();
+    const assertion = expect(promise).rejects.toThrowError("Task task-3 timed out after 1000ms");
 
     await vi.advanceTimersByTimeAsync(1000);
     await vi.runAllTimersAsync();
 
-    await expect(promise).rejects.toThrowError("Task task-3 timed out after 1000ms");
+    await assertion;
 
     console.debug("task manager timeout", {
       polls: snapi.getTaskStatus.mock.calls.length,

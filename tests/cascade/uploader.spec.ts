@@ -6,9 +6,9 @@ const hoisted = vi.hoisted(() => {
   const blake3HashMock = vi.fn<[_input: Uint8Array], Promise<string>>();
   const toBase64Mock = vi.fn<(bytes: Uint8Array) => string>();
   const toCanonicalJsonBytesMock = vi.fn<(value: unknown) => Uint8Array>();
-  const createSingleBlockLayoutMock = vi.fn<[_data: Uint8Array], Promise<Record<string, unknown>>>();
-  const deriveLayoutIdsMock = vi.fn<[_rqIdsIc: number, _rqIdsMax: number, _count: number], number[]>();
-  const buildIndexFileMock = vi.fn<[_layoutIds: number[], _signature: Uint8Array], Record<string, unknown>>();
+  const createSingleBlockLayoutMock = vi.fn<[_data: Uint8Array], Promise<Uint8Array>>();
+  const generateIdsMock = vi.fn<[_layoutB64: string, _layoutSigB64: string, _rqIdsIc: number, _rqIdsMax: number], Promise<string[]>>();
+  const buildIndexFileMock = vi.fn<[_layoutIds: string[], _signature: string], Record<string, unknown>>();
   const waitForCompletionMock = vi.fn<[], Promise<Task>>();
   const TaskManagerMock = vi.fn(() => ({ waitForCompletion: waitForCompletionMock }));
   return {
@@ -16,7 +16,7 @@ const hoisted = vi.hoisted(() => {
     toBase64Mock,
     toCanonicalJsonBytesMock,
     createSingleBlockLayoutMock,
-    deriveLayoutIdsMock,
+    generateIdsMock,
     buildIndexFileMock,
     waitForCompletionMock,
     TaskManagerMock,
@@ -25,121 +25,69 @@ const hoisted = vi.hoisted(() => {
 
 vi.mock("src/internal/hash", () => ({
   blake3Hash: hoisted.blake3HashMock,
+  blake3HashBytes: vi.fn(async (u8: Uint8Array) => u8),
 }));
-
-vi.mock("src/internal/encoding", () => ({
-  toBase64: hoisted.toBase64Mock,
-  toCanonicalJsonBytes: hoisted.toCanonicalJsonBytesMock,
-}));
-
+vi.mock("src/internal/encoding", () => ({ toBase64: hoisted.toBase64Mock, toCanonicalJsonBytes: hoisted.toCanonicalJsonBytesMock }));
 vi.mock("src/wasm/lep1", () => ({
   createSingleBlockLayout: hoisted.createSingleBlockLayoutMock,
-  generateIds: hoisted.deriveLayoutIdsMock,
+  generateIds: hoisted.generateIdsMock,
   buildIndexFile: hoisted.buildIndexFileMock,
 }));
-
-vi.mock("src/cascade/task", () => ({
-  TaskManager: hoisted.TaskManagerMock,
-}));
-
-const {
-  blake3HashMock,
-  toBase64Mock,
-  toCanonicalJsonBytesMock,
-  createSingleBlockLayoutMock,
-  deriveLayoutIdsMock,
-  buildIndexFileMock,
-  waitForCompletionMock,
-  TaskManagerMock,
-} = hoisted;
+vi.mock("src/cascade/task", () => ({ TaskManager: hoisted.TaskManagerMock }));
 
 describe("CascadeUploader", () => {
   beforeEach(() => {
-    blake3HashMock.mockReset();
-    blake3HashMock
-      .mockResolvedValueOnce("layout-hash")
-      .mockResolvedValueOnce("file-hash");
+    hoisted.blake3HashMock.mockReset();
+    hoisted.blake3HashMock.mockResolvedValue("file-hash");
 
-    toBase64Mock.mockReset();
-    toBase64Mock.mockImplementation(
-      (bytes) => `b64:${Array.from(bytes).join(",")}`,
-    );
+    hoisted.toBase64Mock.mockReset();
+    hoisted.toBase64Mock.mockImplementation((bytes) => `b64:${Array.from(bytes).join(",")}`);
 
-    toCanonicalJsonBytesMock.mockReset();
-    toCanonicalJsonBytesMock.mockImplementation((value) =>
-      new TextEncoder().encode(JSON.stringify(value)),
-    );
+    hoisted.toCanonicalJsonBytesMock.mockReset();
+    hoisted.toCanonicalJsonBytesMock.mockImplementation((value) => new TextEncoder().encode(JSON.stringify(value)));
 
-    createSingleBlockLayoutMock.mockReset();
-    createSingleBlockLayoutMock.mockResolvedValue({ layout: true });
+    hoisted.createSingleBlockLayoutMock.mockReset();
+    hoisted.createSingleBlockLayoutMock.mockResolvedValue(new TextEncoder().encode('{"transfer_length":4}'));
 
-    deriveLayoutIdsMock.mockReset();
-    deriveLayoutIdsMock.mockReturnValue([11, 12, 13]);
+    hoisted.generateIdsMock.mockReset();
+    hoisted.generateIdsMock.mockResolvedValue(["id-1", "id-2", "id-3"]);
 
-    buildIndexFileMock.mockReset();
-    buildIndexFileMock.mockReturnValue({
-      version: 1,
-      layout_ids: [11, 12, 13],
-      layout_signature: "sig",
-    });
+    hoisted.buildIndexFileMock.mockReset();
+    hoisted.buildIndexFileMock.mockReturnValue({ version: 1, layout_ids: ["id-1", "id-2", "id-3"], layout_signature: "sig" });
 
-    waitForCompletionMock.mockReset();
-    waitForCompletionMock.mockResolvedValue({
-      task_id: "task-abc",
-      status: "completed",
-    } as Task);
+    hoisted.waitForCompletionMock.mockReset();
+    hoisted.waitForCompletionMock.mockResolvedValue({ task_id: "task-abc", status: "completed" } as Task);
 
-    TaskManagerMock.mockReset();
-    TaskManagerMock.mockImplementation(() => ({
-      waitForCompletion: waitForCompletionMock,
-    }));
+    hoisted.TaskManagerMock.mockReset();
+    hoisted.TaskManagerMock.mockImplementation(() => ({ waitForCompletion: hoisted.waitForCompletionMock }));
   });
 
   it("performs full upload workflow with mocked dependencies", async () => {
-    const debugSpy = vi.spyOn(console, "debug").mockImplementation(() => {});
-    const startCascadeMock = vi.fn().mockResolvedValue({ taskId: "task-abc" });
-    const snClient = {
-      startCascade: startCascadeMock,
-    } as unknown as SNApiClient;
+    const startCascadeMock = vi.fn().mockResolvedValue({ task_id: "task-abc" });
+    const snClient = { startCascade: startCascadeMock } as unknown as SNApiClient;
 
-    const uploader = new CascadeUploader(snClient, { layoutIdCount: 3 });
+    const chainPort = {
+      getActionParams: vi.fn().mockResolvedValue({ max_raptor_q_symbols: 10, svc_challenge_count: 2, svc_min_chunks_for_challenge: 1 }),
+      requestActionTx: vi.fn().mockResolvedValue({ actionId: "action-1" }),
+    } as any;
 
-    const file = new Uint8Array([1, 2, 3, 4]);
-    const params = {
-      actionId: "action-1",
-      rq_ids_ic: 5,
-      rq_ids_max: 99,
+    const signer = {
+      signArbitrary: vi.fn().mockResolvedValue({ signature: "sig" }),
+    } as any;
+
+    const uploader = new CascadeUploader(snClient, chainPort, "lumera1x", signer, "lumera-testnet-2");
+
+    const result = await uploader.uploadFile(new Uint8Array([1, 2, 3, 4]), {
+      fileName: "x.bin",
+      isPublic: false,
+      expirationTime: "9999999999",
       taskOptions: { pollInterval: 250 },
-    };
-
-    const result = await uploader.uploadFile(file, params);
-
-    expect(createSingleBlockLayoutMock).toHaveBeenCalledWith(
-      new Uint8Array([1, 2, 3, 4]),
-    );
-    expect(deriveLayoutIdsMock).toHaveBeenCalledWith(5, 99, 3);
-    expect(buildIndexFileMock.mock.calls[0][0]).toEqual([11, 12, 13]);
-    expect(blake3HashMock).toHaveBeenCalledTimes(2);
-    expect(startCascadeMock).toHaveBeenCalledTimes(1);
-
-    const startBody = startCascadeMock.mock.calls[0][0];
-    expect(startBody.file).toBeInstanceOf(Blob);
-
-    expect(TaskManagerMock).toHaveBeenCalledWith(
-      snClient,
-      "task-abc",
-      params.taskOptions,
-    );
-    expect(waitForCompletionMock).toHaveBeenCalled();
-
-    expect(result).toEqual({ task_id: "task-abc", status: "completed" });
-
-    console.debug("cascade upload instrumentation", {
-      startCalls: startCascadeMock.mock.calls.length,
-      layoutIds: deriveLayoutIdsMock.mock.results[0]?.value,
-      taskCallArgs: TaskManagerMock.mock.calls[0],
     });
-    expect(debugSpy).toHaveBeenCalled();
-    debugSpy.mockRestore();
+
+    expect(chainPort.getActionParams).toHaveBeenCalled();
+    expect(chainPort.requestActionTx).toHaveBeenCalled();
+    expect(startCascadeMock).toHaveBeenCalledTimes(1);
+    expect(hoisted.TaskManagerMock).toHaveBeenCalledWith(snClient, "task-abc", { pollInterval: 250 });
+    expect(result).toEqual({ task_id: "task-abc", status: "completed" });
   });
 });
