@@ -21,8 +21,10 @@ async function getRqModule() {
   return _rqMod;
 }
 
+const isNode = typeof process !== "undefined" && !!process.versions?.node;
+
 async function getWasmSource(): Promise<any> {
-  if (typeof window === "undefined") {
+  if (isNode) {
     // Node.js: read the .wasm file from disk as a buffer
     const { readFileSync } = await import("node:fs");
     // Use require.resolve if available (CJS), otherwise createRequire (ESM)

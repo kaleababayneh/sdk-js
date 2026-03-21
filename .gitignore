@@ -173,4 +173,5 @@ coverage/
 
 # Vitest
 coverage.data
-coverage/
+coverage/package-lock.json
+package-lock.json
