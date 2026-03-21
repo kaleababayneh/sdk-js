@@ -6,18 +6,42 @@
  * interface for RaptorQ operations.
  */
 
-import init, {
-  RaptorQSession,
-  writeFileChunk,
-  readFileChunk,
-  getFileSize,
-  createDirAll,
-  dirExists,
-  syncDirExists,
-  flushFile
-} from "rq-library-wasm";
-import wasmUrl from 'rq-library-wasm/rq_library_bg.wasm?url';
 import type { Layout } from "./types.js";
+
+// Lazy-load rq-library-wasm to avoid eager evaluation of browser-only code (window)
+let _rqMod: typeof import("rq-library-wasm") | null = null;
+async function getRqModule() {
+  if (!_rqMod) {
+    // Shim window for Node.js — rq-library-wasm's browser_fs_mem.js expects it
+    if (typeof globalThis.window === "undefined") {
+      (globalThis as any).window = globalThis;
+    }
+    _rqMod = await import("rq-library-wasm");
+  }
+  return _rqMod;
+}
+
+async function getWasmSource(): Promise<any> {
+  if (typeof window === "undefined") {
+    // Node.js: read the .wasm file from disk as a buffer
+    const { readFileSync } = await import("node:fs");
+    // Use require.resolve if available (CJS), otherwise createRequire (ESM)
+    let wasmPath: string;
+    if (typeof require !== "undefined" && typeof require.resolve === "function") {
+      wasmPath = require.resolve("rq-library-wasm/rq_library_bg.wasm");
+    } else {
+      const { createRequire } = await import("node:module");
+      // @ts-ignore - import.meta.url is only available in ESM
+      const req = createRequire(import.meta.url);
+      wasmPath = req.resolve("rq-library-wasm/rq_library_bg.wasm");
+    }
+    return readFileSync(wasmPath);
+  } else {
+    // Browser: use the Vite ?url import
+    const mod = await import("rq-library-wasm/rq_library_bg.wasm?url");
+    return mod.default;
+  }
+}
 
 /**
  * Proxy to the rq-library-wasm package for RaptorQ operations.
@@ -119,7 +143,9 @@ export class RaptorQProxy {
     try {
       // Pass the wasmUrl to the init function for browser environments
       // The init() function will use the URL to fetch the WASM module
-      await init(wasmUrl);
+      const wasmSource = await getWasmSource();
+      const rq = await getRqModule();
+      await rq.default(wasmSource);
       this.initialized = true;
     } catch (error) {
       this.initPromise = null;
@@ -145,10 +171,11 @@ export class RaptorQProxy {
     redundancyFactor: number = RaptorQProxy.DEFAULT_REDUNDANCY_FACTOR,
     maxMemoryMb: bigint = RaptorQProxy.DEFAULT_MAX_MEMORY_MB,
     concurrencyLimit: bigint = RaptorQProxy.DEFAULT_CONCURRENCY_LIMIT
-  ): Promise<RaptorQSession> {
+  ): Promise<InstanceType<Awaited<ReturnType<typeof getRqModule>>["RaptorQSession"]>> {
     await this.ensureInitialized();
-    
-    return new RaptorQSession(
+    const rq = await getRqModule();
+
+    return new rq.RaptorQSession(
       symbolSize,
       redundancyFactor,
       maxMemoryMb,
@@ -188,20 +215,22 @@ export class RaptorQProxy {
     const layoutPath = `/temp_layout_${timestamp}.json`;
     
     try {
+      const rq = await getRqModule();
+
       // Step 1: Write file bytes to in-memory FS
       // IMPORTANT: File must be in FS before creating session!
-      await writeFileChunk(inputPath, 0, fileBytes);
-      
+      await rq.writeFileChunk(inputPath, 0, fileBytes);
+
       // Step 2: Create a session for metadata generation
       const session = await this.createSession();
-      
+
       // Step 3: Call create_metadata to generate the layout
       // block_size = 0 means auto-calculate
       const metadata = await session.create_metadata(inputPath, layoutPath, 0);
-      
+
       // Step 4: Read the layout file from in-memory FS
-      const layoutSize = getFileSize(layoutPath);
-      const layoutBytes = await readFileChunk(layoutPath, 0, layoutSize);
+      const layoutSize = rq.getFileSize(layoutPath);
+      const layoutBytes = await rq.readFileChunk(layoutPath, 0, layoutSize);
       
       // Step 5: Clean up
       session.free();
@@ -245,7 +274,8 @@ export class RaptorQProxy {
   public async getVersion(): Promise<string> {
     await this.ensureInitialized();
     
-    return RaptorQSession.version();
+    const rq = await getRqModule();
+    return rq.RaptorQSession.version();
   }
 
   /**
@@ -270,16 +300,35 @@ export function parseLayoutFile(layoutBytes: Uint8Array): Layout {
   return JSON.parse(text) as Layout;
 }
 
-// Re-export types and classes for convenience
-export type { RaptorQSession };
+// Re-export types for convenience
+export type { RaptorQSession } from "rq-library-wasm";
 
-// Re-export filesystem utilities for advanced use cases
-export {
-  writeFileChunk,
-  readFileChunk,
-  getFileSize,
-  createDirAll,
-  dirExists,
-  syncDirExists,
-  flushFile
-};
+// Re-export filesystem utilities as lazy async wrappers
+export async function writeFileChunk(...args: Parameters<typeof import("rq-library-wasm").writeFileChunk>) {
+  const rq = await getRqModule();
+  return rq.writeFileChunk(...args);
+}
+export async function readFileChunk(...args: Parameters<typeof import("rq-library-wasm").readFileChunk>) {
+  const rq = await getRqModule();
+  return rq.readFileChunk(...args);
+}
+export async function getFileSize(...args: Parameters<typeof import("rq-library-wasm").getFileSize>) {
+  const rq = await getRqModule();
+  return rq.getFileSize(...args);
+}
+export async function createDirAll(...args: Parameters<typeof import("rq-library-wasm").createDirAll>) {
+  const rq = await getRqModule();
+  return rq.createDirAll(...args);
+}
+export async function dirExists(...args: Parameters<typeof import("rq-library-wasm").dirExists>) {
+  const rq = await getRqModule();
+  return rq.dirExists(...args);
+}
+export async function syncDirExists(...args: Parameters<typeof import("rq-library-wasm").syncDirExists>) {
+  const rq = await getRqModule();
+  return rq.syncDirExists(...args);
+}
+export async function flushFile(...args: Parameters<typeof import("rq-library-wasm").flushFile>) {
+  const rq = await getRqModule();
+  return rq.flushFile(...args);
+}

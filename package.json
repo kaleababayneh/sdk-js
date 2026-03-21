@@ -12,13 +12,13 @@
     "LICENSE"
   ],
   "type": "module",
-  "main": "dist/cjs/index.cjs",
+  "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/types/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/esm/index.js",
-      "require": "./dist/cjs/index.cjs",
+      "require": "./dist/cjs/index.js",
       "types": "./dist/types/index.d.ts"
     },
     "./compat/blake3": {
@@ -37,7 +37,7 @@
     "clean": "rm -rf dist",
     "build:esm": "tsc -p tsconfig.json",
     "build:cjs": "tsc -p tsconfig.cjs.json",
-    "build": "npm run clean && npm run build:esm && npm run build:cjs",
+    "build": "npm run clean && npm run build:esm && npm run build:cjs && echo '{\"type\":\"commonjs\"}' > dist/cjs/package.json",
     "gen:snapi": "openapi-typescript docs/snapi-swagger.json -o src/types/snapi.gen.ts",
     "lint": "eslint 'src/**/*.{ts,tsx}'",
     "test": "vitest run",
