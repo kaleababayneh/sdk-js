@@ -27,16 +27,10 @@ async function getWasmSource(): Promise<any> {
   if (isNode) {
     // Node.js: read the .wasm file from disk as a buffer
     const { readFileSync } = await import("node:fs");
-    // Use require.resolve if available (CJS), otherwise createRequire (ESM)
-    let wasmPath: string;
-    if (typeof require !== "undefined" && typeof require.resolve === "function") {
-      wasmPath = require.resolve("rq-library-wasm/rq_library_bg.wasm");
-    } else {
-      const { createRequire } = await import("node:module");
-      // @ts-ignore - import.meta.url is only available in ESM
-      const req = createRequire(import.meta.url);
-      wasmPath = req.resolve("rq-library-wasm/rq_library_bg.wasm");
-    }
+    const { createRequire } = await import("node:module");
+    // __filename exists in CJS; for ESM, anchor on cwd — Node resolves up to node_modules either way
+    const req = createRequire(typeof __filename !== "undefined" ? __filename : process.cwd() + "/");
+    const wasmPath = req.resolve("rq-library-wasm/rq_library_bg.wasm");
     return readFileSync(wasmPath);
   } else {
     // Browser: use the Vite ?url import
@@ -305,32 +299,31 @@ export function parseLayoutFile(layoutBytes: Uint8Array): Layout {
 // Re-export types for convenience
 export type { RaptorQSession } from "rq-library-wasm";
 
-// Re-export filesystem utilities as lazy async wrappers
-export async function writeFileChunk(...args: Parameters<typeof import("rq-library-wasm").writeFileChunk>) {
-  const rq = await getRqModule();
-  return rq.writeFileChunk(...args);
+// Re-export filesystem utilities — preserves original sync/async signatures.
+// Requires RaptorQProxy.initialize() to have been called first.
+function assertInitialized() {
+  if (!_rqMod) throw new Error("WASM module not initialized. Call RaptorQProxy.initialize() first.");
+  return _rqMod;
 }
-export async function readFileChunk(...args: Parameters<typeof import("rq-library-wasm").readFileChunk>) {
-  const rq = await getRqModule();
-  return rq.readFileChunk(...args);
+
+export function writeFileChunk(...args: Parameters<typeof import("rq-library-wasm").writeFileChunk>) {
+  return assertInitialized().writeFileChunk(...args);
 }
-export async function getFileSize(...args: Parameters<typeof import("rq-library-wasm").getFileSize>) {
-  const rq = await getRqModule();
-  return rq.getFileSize(...args);
+export function readFileChunk(...args: Parameters<typeof import("rq-library-wasm").readFileChunk>) {
+  return assertInitialized().readFileChunk(...args);
 }
-export async function createDirAll(...args: Parameters<typeof import("rq-library-wasm").createDirAll>) {
-  const rq = await getRqModule();
-  return rq.createDirAll(...args);
+export function getFileSize(...args: Parameters<typeof import("rq-library-wasm").getFileSize>) {
+  return assertInitialized().getFileSize(...args);
 }
-export async function dirExists(...args: Parameters<typeof import("rq-library-wasm").dirExists>) {
-  const rq = await getRqModule();
-  return rq.dirExists(...args);
+export function createDirAll(...args: Parameters<typeof import("rq-library-wasm").createDirAll>) {
+  return assertInitialized().createDirAll(...args);
 }
-export async function syncDirExists(...args: Parameters<typeof import("rq-library-wasm").syncDirExists>) {
-  const rq = await getRqModule();
-  return rq.syncDirExists(...args);
+export function dirExists(...args: Parameters<typeof import("rq-library-wasm").dirExists>) {
+  return assertInitialized().dirExists(...args);
 }
-export async function flushFile(...args: Parameters<typeof import("rq-library-wasm").flushFile>) {
-  const rq = await getRqModule();
-  return rq.flushFile(...args);
+export function syncDirExists(...args: Parameters<typeof import("rq-library-wasm").syncDirExists>) {
+  return assertInitialized().syncDirExists(...args);
+}
+export function flushFile(...args: Parameters<typeof import("rq-library-wasm").flushFile>) {
+  return assertInitialized().flushFile(...args);
 }
